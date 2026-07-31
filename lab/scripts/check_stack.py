@@ -1,10 +1,10 @@
-"""Verifica las dos mitades del stack antes de proyectar nada.
+"""Verify both halves of the stack before projecting anything.
 
-1. Que el driver de Python habla con la instancia del laboratorio.
-2. Que rdflib parsea los dos TTL y que el censo coincide con lo declarado
-   (17 KnowledgeArea, 162 KnowledgeUnit, 1 LearningResource).
+1. That the Python driver talks to the lab instance.
+2. That rdflib parses both Turtle files and the census matches what is
+   declared (17 KnowledgeArea, 162 KnowledgeUnit, 1 LearningResource).
 
-Uso: uv run python lab/scripts/check_stack.py
+Usage: uv run python lab/scripts/check_stack.py
 """
 
 from __future__ import annotations
@@ -14,64 +14,62 @@ from pathlib import Path
 
 from rdflib import OWL, RDF, Graph, Namespace
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src"))
 
-from iekg.db import BASE, sesion  # noqa: E402
+from iekg.db import DATABASE, session  # noqa: E402
 
-RAIZ = Path(__file__).resolve().parents[2]
 IE = Namespace("http://www.informatics-engineering-kms.org/ontology/informatic-engineering#")
 
-ONTOLOGIA = RAIZ / "ontology" / "ontologia_informatica.ttl"
-BACKBONE = RAIZ / "ontology" / "backbone_cs2023.ttl"
+ONTOLOGY = ROOT / "ontology" / "ontologia_informatica.ttl"
+BACKBONE = ROOT / "ontology" / "backbone_cs2023.ttl"
 
-ESPERADO = {"KnowledgeArea": 17, "KnowledgeUnit": 162, "LearningResource": 1}
+EXPECTED = {"KnowledgeArea": 17, "KnowledgeUnit": 162, "LearningResource": 1}
 
 
 def check_neo4j() -> bool:
-    print("=== conexion a Neo4j ===")
+    print("=== Neo4j connection ===")
     try:
-        with sesion() as s:
-            fila = s.run(
+        with session() as s:
+            row = s.run(
                 "CALL dbms.components() YIELD name, versions, edition "
                 "RETURN versions[0] AS version, edition"
             ).single()
-            print(f"  servidor      {fila['version']} {fila['edition']}, base '{BASE}'")
+            print(f"  server        {row['version']} {row['edition']}, database '{DATABASE}'")
             gds = s.run("RETURN gds.version() AS v").single()["v"]
             print(f"  GDS           {gds}")
             n = s.run("MATCH (n) RETURN count(n) AS n").single()["n"]
-            print(f"  nodos actuales {n}")
+            print(f"  current nodes {n}")
         return True
     except Exception as exc:  # noqa: BLE001
-        print(f"  FALLO: {exc}")
+        print(f"  FAILED: {exc}")
         return False
 
 
 def check_turtle() -> bool:
-    print("\n=== parseo de Turtle con rdflib ===")
+    print("\n=== Turtle parsing with rdflib ===")
     ok = True
 
-    onto = Graph().parse(ONTOLOGIA, format="turtle")
-    clases = set(onto.subjects(RDF.type, OWL.Class))
+    onto = Graph().parse(ONTOLOGY, format="turtle")
+    classes = set(onto.subjects(RDF.type, OWL.Class))
     props = set(onto.subjects(RDF.type, OWL.ObjectProperty))
-    print(f"  ontologia     {len(onto)} triples, {len(clases)} clases, "
-          f"{len(props)} propiedades de objeto")
+    print(f"  ontology      {len(onto)} triples, {len(classes)} classes, "
+          f"{len(props)} object properties")
 
     bb = Graph().parse(BACKBONE, format="turtle")
     print(f"  backbone      {len(bb)} triples")
 
-    for clase, esperado in ESPERADO.items():
-        hallado = len(set(bb.subjects(RDF.type, IE[clase])))
-        marca = "OK" if hallado == esperado else "DISCREPANCIA"
-        if hallado != esperado:
-            ok = False
-        print(f"  {marca:<13} {clase}: {hallado} (esperado {esperado})")
+    for cls, expected in EXPECTED.items():
+        found = len(set(bb.subjects(RDF.type, IE[cls])))
+        ok &= found == expected
+        print(f"  {'OK' if found == expected else 'MISMATCH':<13} "
+              f"{cls}: {found} (expected {expected})")
 
-    # La relacion jerarquica que el backbone si materializa.
-    aristas = len(set(bb.subject_objects(IE.knowledgeUnitInKnowledgeArea)))
-    print(f"  {'OK' if aristas == 162 else 'DISCREPANCIA':<13} "
-          f"knowledgeUnitInKnowledgeArea: {aristas} (esperado 162)")
-    if aristas != 162:
-        ok = False
+    # The hierarchical relation the backbone does materialise.
+    edges = len(set(bb.subject_objects(IE.knowledgeUnitInKnowledgeArea)))
+    ok &= edges == 162
+    print(f"  {'OK' if edges == 162 else 'MISMATCH':<13} "
+          f"knowledgeUnitInKnowledgeArea: {edges} (expected 162)")
 
     return ok
 
@@ -79,5 +77,5 @@ def check_turtle() -> bool:
 if __name__ == "__main__":
     a = check_neo4j()
     b = check_turtle()
-    print("\n" + ("Stack verificado." if a and b else "Hay fallos, revisar arriba."))
+    print("\n" + ("Stack verified." if a and b else "There are failures, see above."))
     sys.exit(0 if a and b else 1)

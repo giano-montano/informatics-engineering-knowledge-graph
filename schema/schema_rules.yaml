@@ -1,0 +1,147 @@
+# Schema rules. Single source of truth for the projector (ontology -> LPG)
+# and for the validators. None of this belongs in code.
+#
+# Every rule carries `owl_source`: the ontology axiom it comes from. That
+# traceability is what makes the mapping defensible.
+#
+# `enforcement` says how each rule is resolved:
+#   native          -> CREATE CONSTRAINT (uniqueness only; see findings/0001)
+#   pre_write       -> Python validator, before any Cypher is built
+#   integrity_query -> Cypher, after writing
+
+version: 1
+namespace: "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#"
+
+# ---------------------------------------------------------------------------
+# Structural mapping OWL -> LPG
+# ---------------------------------------------------------------------------
+
+# OWL subclassing becomes an extra label. Order is for readability only;
+# the first entry is the superclass.
+classes:
+  KnowledgeArea:    [KnowledgeElement, KnowledgeArea]
+  KnowledgeUnit:    [KnowledgeElement, KnowledgeUnit]
+  Topic:            [KnowledgeElement, Topic]
+  Concept:          [KnowledgeElement, Concept]
+  LearningResource: [LearningResource]
+  Course:           [Course]
+  ResourceType:     [ResourceType]
+
+# Object properties -> relationship types.
+# The three subproperties of isPartOf collapse into PART_OF: the endpoint
+# labels already determine the level unambiguously, so the relationship type
+# would carry no extra information. The collapse is reversible through the
+# `part-of-pairs` rule.
+object_properties:
+  conceptInTopic:               {type: PART_OF,           direction: part_to_whole}
+  topicInKnowledgeUnit:         {type: PART_OF,           direction: part_to_whole}
+  knowledgeUnitInKnowledgeArea: {type: PART_OF,           direction: part_to_whole}
+  wasDerivedFrom:               {type: WAS_DERIVED_FROM,  direction: forward}
+  hasPrerequisite:              {type: HAS_PREREQUISITE,  direction: forward}
+  teachesConcept:               {type: TEACHES_CONCEPT,   direction: forward}
+  requiresConcept:              {type: REQUIRES_CONCEPT,  direction: forward}
+  hasResource:                  {type: HAS_RESOURCE,      direction: forward}
+  hasResourceType:              {type: HAS_RESOURCE_TYPE, direction: forward}
+  specializes:                  {type: SPECIALIZES,       direction: forward}
+
+# OWL inverses are NOT materialised. Neo4j traverses a relationship in either
+# direction at the same cost, so writing both would duplicate edges and break
+# MERGE idempotency. Declared here only as read-side names.
+inverses:
+  isPartOf:          {of: PART_OF}
+  hasPart:           {of: PART_OF}
+  isPrerequisiteFor: {of: HAS_PREREQUISITE}
+  conceptTaughtBy:   {of: TEACHES_CONCEPT}
+  conceptRequiredBy: {of: REQUIRES_CONCEPT}
+  isAbout:           {of: HAS_RESOURCE}
+  hasSpecialization: {of: SPECIALIZES}
+
+# OWL transitive properties: the closure is NOT materialised, it is traversed
+# with `*`. Materialising it would make an inferred edge indistinguishable
+# from an asserted one, and the pipeline must audit what the LLM proposes.
+transitive: [PART_OF, HAS_PREREQUISITE]
+
+# Data and annotation properties -> node properties.
+data_properties:
+  "http://www.w3.org/2004/02/skos/core#prefLabel": prefLabel
+  "http://purl.org/dc/terms/description":          description
+  "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#layer": layer
+  "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#description": description
+  "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#resourceLocator": resourceLocator
+
+# ---------------------------------------------------------------------------
+# Rules
+# ---------------------------------------------------------------------------
+
+rules:
+
+  - id: unique-iri
+    type: unique_key
+    labels: [KnowledgeElement, LearningResource, Course, ResourceType]
+    property: iri
+    enforcement: [native, integrity_query]
+    owl_source: "owl:NamedIndividual identity; the IRI identifies the entity"
+
+  - id: ke-disjoint-subtypes
+    type: disjoint_labels
+    within: KnowledgeElement
+    labels: [Concept, KnowledgeArea, KnowledgeUnit, Topic]
+    cardinality: exactly_one
+    enforcement: [pre_write, integrity_query]
+    owl_source: ":KnowledgeElement owl:disjointUnionOf (Concept KnowledgeArea KnowledgeUnit Topic)"
+
+  - id: disjoint-root-types
+    type: disjoint_labels
+    labels: [Course, KnowledgeElement, LearningResource, ResourceType]
+    cardinality: at_most_one
+    enforcement: [pre_write, integrity_query]
+    owl_source: "AllDisjointClasses(Course, KnowledgeElement, LearningResource, ResourceType)"
+
+  - id: ku-in-single-ka
+    type: functional_relationship
+    relationship: PART_OF
+    from: KnowledgeUnit
+    to: KnowledgeArea
+    cardinality: exactly_one
+    enforcement: [pre_write, integrity_query]
+    owl_source: ":knowledgeUnitInKnowledgeArea rdf:type owl:FunctionalProperty"
+
+  - id: part-of-pairs
+    type: domain_range
+    relationship: PART_OF
+    allowed_pairs:
+      - [Concept, Topic]
+      - [Topic, KnowledgeUnit]
+      - [KnowledgeUnit, KnowledgeArea]
+    enforcement: [pre_write, integrity_query]
+    owl_source: "rdfs:domain/rdfs:range of conceptInTopic, topicInKnowledgeUnit and knowledgeUnitInKnowledgeArea"
+
+  - id: derived-from-resource
+    type: domain_range
+    relationship: WAS_DERIVED_FROM
+    domain: [Course, KnowledgeElement]      # owl:unionOf
+    range:  [LearningResource]
+    enforcement: [pre_write, integrity_query]
+    owl_source: ":wasDerivedFrom rdfs:domain (Course u KnowledgeElement); rdfs:range :LearningResource"
+
+  - id: prerequisite-between-concepts
+    type: domain_range
+    relationship: HAS_PREREQUISITE
+    domain: [Concept]
+    range:  [Concept]
+    enforcement: [pre_write, integrity_query]
+    owl_source: ":hasPrerequisite rdfs:domain :Concept; rdfs:range :Concept"
+
+  - id: part-of-dag
+    type: acyclicity
+    relationship: PART_OF
+    max_depth: 6
+    enforcement: [integrity_query]
+    owl_source: ":isPartOf rdf:type owl:TransitiveProperty; a transitive hierarchy with a cycle is incoherent"
+
+  - id: prerequisites-dag
+    type: acyclicity
+    relationship: HAS_PREREQUISITE
+    max_depth: 15
+    enforcement: [integrity_query]
+    owl_source: ":hasPrerequisite rdf:type owl:TransitiveProperty; a prerequisite cycle is unsatisfiable"

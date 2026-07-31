@@ -14,3 +14,5 @@ data/interim/
 
 # Volcados de Neo4j
 *.dump
+
+internal-notes/

@@ -1,7 +1,7 @@
-"""Conexion a Neo4j.
+"""Neo4j connection.
 
-Las credenciales salen de .env, nunca del codigo. La instancia del laboratorio
-es la que levanta docker-compose.yml en la raiz del repo.
+Credentials come from .env, never from code. The lab instance is the one
+docker-compose.yml brings up at the repository root.
 """
 
 from __future__ import annotations
@@ -14,39 +14,40 @@ from typing import Iterator
 from dotenv import load_dotenv
 from neo4j import Driver, GraphDatabase
 
-RAIZ = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[2]
 
-URI_POR_DEFECTO = "bolt://localhost:7687"
-USUARIO_POR_DEFECTO = "neo4j"
+DEFAULT_URI = "bolt://localhost:7687"
+DEFAULT_USER = "neo4j"
 
-# Community solo admite una base de datos de usuario, y el despliegue final
-# va a Community. Por eso todo vive en `neo4j` y nada depende de multi-base.
-BASE = "neo4j"
+# Community Edition allows a single user database, and the final deployment
+# targets Community. Everything lives in `neo4j`; nothing depends on
+# multi-database.
+DATABASE = "neo4j"
 
 
 def _password() -> str:
-    load_dotenv(RAIZ / ".env")
+    load_dotenv(ROOT / ".env")
     pw = os.getenv("NEO4J_PASSWORD")
     if not pw:
         raise RuntimeError(
-            "Falta NEO4J_PASSWORD. Copia .env.example a .env y pon la "
-            "contrasena de la instancia del laboratorio."
+            "NEO4J_PASSWORD is missing. Copy .env.example to .env and set the "
+            "lab instance password."
         )
     return pw
 
 
 def driver() -> Driver:
-    uri = os.getenv("NEO4J_URI", URI_POR_DEFECTO)
-    usuario = os.getenv("NEO4J_USER", USUARIO_POR_DEFECTO)
-    return GraphDatabase.driver(uri, auth=(usuario, _password()))
+    uri = os.getenv("NEO4J_URI", DEFAULT_URI)
+    user = os.getenv("NEO4J_USER", DEFAULT_USER)
+    return GraphDatabase.driver(uri, auth=(user, _password()))
 
 
 @contextmanager
-def sesion() -> Iterator:
-    """Sesion contra la base del laboratorio, cerrando driver y sesion."""
+def session() -> Iterator:
+    """Session against the lab database, closing both session and driver."""
     d = driver()
     try:
-        with d.session(database=BASE) as s:
+        with d.session(database=DATABASE) as s:
             yield s
     finally:
         d.close()

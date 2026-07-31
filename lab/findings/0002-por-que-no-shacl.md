@@ -5,6 +5,14 @@
 - **Afecta a:** R4 (pipeline de ingesta), archivo declarativo de reglas de esquema.
 - **Pregunta que responde:** "¿por qué inventaste un formato propio en vez de usar el estándar?" — que va a salir en la defensa.
 
+> **Nota añadida el 2026-07-31.** Este documento es un registro congelado y no se
+> reescribe, pero ese mismo día se adoptó la política de idioma de
+> `docs/estandares-de-codigo.md` y los identificadores citados abajo cambiaron a
+> inglés. La equivalencia: `ku-en-una-sola-ka` → `ku-in-single-ka`,
+> `relacion_funcional` → `functional_relationship`, `pre_escritura` → `pre_write`,
+> `consulta_integridad` → `integrity_query`, `origen_owl` → `owl_source`. El
+> argumento del documento no cambia.
+
 ---
 
 ## Parte 1. Qué es SHACL, en simple

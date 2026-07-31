@@ -50,6 +50,23 @@ disponible en los datos:
 
 Identificador estable, presentación multilingüe **como dato**.
 
+### Mensajes de commit y ramas
+
+**En inglés**, junto con los nombres de rama. Los commits son metadatos del
+código, no prosa de tesis: se leen desde GitHub, acompañan a identificadores que
+ya están en inglés, y las convenciones de git son anglófonas de origen (modo
+imperativo, *Conventional Commits*).
+
+```
+add integrity query compiler for schema rules
+fix stale constraint names after language migration
+docs: record Neo4j and Cypher walkthrough for 2026-07-31
+```
+
+Convención: asunto en **imperativo**, minúscula inicial, sin punto final, hasta
+unos 72 caracteres. Si hace falta explicar el porqué, va en el cuerpo tras una
+línea en blanco. El *qué* lo dice el diff; el commit explica el *porqué*.
+
 ### Excepción registrada
 
 Los archivos `ontology/*.ttl` conservan sus nombres actuales

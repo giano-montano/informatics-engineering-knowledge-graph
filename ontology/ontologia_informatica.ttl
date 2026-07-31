@@ -1,0 +1,251 @@
+@prefix : <http://www.informatics-engineering-kms.org/ontology/informatic-engineering#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.informatics-engineering-kms.org/ontology/informatic-engineering#> .
+
+<http://www.informatics-engineering-kms.org/ontology/informatic-engineering#> rdf:type owl:Ontology ;
+                                                                               owl:imports <http://www.informatics-engineering-kms.org/ontology/cs2023-backbone> ;
+                                                                               rdfs:comment "Invariante de cuatro niveles afirmado por los axiomas existenciales: todo Concept pertenece a ≥1 Topic; todo Topic a ≥1 KnowledgeUnit; toda KnowledgeUnit a ≥1 KnowledgeArea. Bajo mundo abierto, HermiT no detecta su incumplimiento; los nodos huérfanos se verifican mediante consultas de integridad en R3." .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#description
+:description rdf:type owl:AnnotationProperty .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#layer
+:layer rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#conceptInTopic
+:conceptInTopic rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf :isPartOf ;
+                rdfs:domain :Concept ;
+                rdfs:range :Topic .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#conceptRequiredBy
+:conceptRequiredBy rdf:type owl:ObjectProperty ;
+                   owl:inverseOf :requiresConcept ;
+                   rdfs:domain :Concept ;
+                   rdfs:range :Course .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#conceptTaughtBy
+:conceptTaughtBy rdf:type owl:ObjectProperty ;
+                 owl:inverseOf :teachesConcept ;
+                 rdfs:domain :Concept ;
+                 rdfs:range :Course .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#hasPart
+:hasPart rdf:type owl:ObjectProperty ;
+         owl:inverseOf :isPartOf ;
+         rdf:type owl:TransitiveProperty .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#hasPrerequisite
+:hasPrerequisite rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf owl:topObjectProperty ;
+                 owl:inverseOf :isPrerequisiteFor ;
+                 rdf:type owl:TransitiveProperty ;
+                 rdfs:domain :Concept ;
+                 rdfs:range :Concept .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#hasResource
+:hasResource rdf:type owl:ObjectProperty ;
+             owl:inverseOf :isAbout ;
+             rdfs:domain [ rdf:type owl:Class ;
+                           owl:unionOf ( :Course
+                                         :KnowledgeElement
+                                       )
+                         ] ;
+             rdfs:range :LearningResource .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#hasResourceType
+:hasResourceType rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf owl:topObjectProperty ;
+                 rdfs:domain :LearningResource ;
+                 rdfs:range :ResourceType .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#hasSpecialization
+:hasSpecialization rdf:type owl:ObjectProperty ;
+                   owl:inverseOf :specializes ;
+                   rdfs:domain :Concept ;
+                   rdfs:range :Concept .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#isAbout
+:isAbout rdf:type owl:ObjectProperty ;
+         rdfs:subPropertyOf owl:topObjectProperty ;
+         rdfs:domain :LearningResource ;
+         rdfs:range [ rdf:type owl:Class ;
+                      owl:unionOf ( :Course
+                                    :KnowledgeElement
+                                  )
+                    ] .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#isPartOf
+:isPartOf rdf:type owl:ObjectProperty ,
+                   owl:TransitiveProperty ;
+          rdfs:domain :KnowledgeElement ;
+          rdfs:range :KnowledgeElement .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#isPrerequisiteFor
+:isPrerequisiteFor rdf:type owl:ObjectProperty ,
+                            owl:TransitiveProperty ;
+                   rdfs:domain :Concept ;
+                   rdfs:range :Concept .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#knowledgeUnitInKnowledgeArea
+:knowledgeUnitInKnowledgeArea rdf:type owl:ObjectProperty ;
+                              rdfs:subPropertyOf :isPartOf ;
+                              rdf:type owl:FunctionalProperty ;
+                              rdfs:domain :KnowledgeUnit ;
+                              rdfs:range :KnowledgeArea .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#requiresConcept
+:requiresConcept rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf owl:topObjectProperty ;
+                 rdfs:domain :Course ;
+                 rdfs:range :Concept .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#specializes
+:specializes rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf owl:topObjectProperty ;
+             rdfs:domain :Concept ;
+             rdfs:range :Concept .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#teachesConcept
+:teachesConcept rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf owl:topObjectProperty ;
+                rdfs:domain :Course ;
+                rdfs:range :Concept .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#topicInKnowledgeUnit
+:topicInKnowledgeUnit rdf:type owl:ObjectProperty ;
+                      rdfs:subPropertyOf :isPartOf ;
+                      rdfs:domain :Topic ;
+                      rdfs:range :KnowledgeUnit .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#wasDerivedFrom
+:wasDerivedFrom rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf owl:topObjectProperty ;
+                rdfs:domain [ rdf:type owl:Class ;
+                              owl:unionOf ( :Course
+                                            :KnowledgeElement
+                                          )
+                            ] ;
+                rdfs:range :LearningResource .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#resourceLocator
+:resourceLocator rdf:type owl:DatatypeProperty ;
+                 rdfs:domain :LearningResource ;
+                 rdfs:range xsd:anyURI .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#Concept
+:Concept rdf:type owl:Class ;
+         rdfs:subClassOf :KnowledgeElement ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :conceptInTopic ;
+                           owl:someValuesFrom :Topic
+                         ] .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#Course
+:Course rdf:type owl:Class .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KnowledgeArea
+:KnowledgeArea rdf:type owl:Class ;
+               rdfs:subClassOf :KnowledgeElement .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KnowledgeElement
+:KnowledgeElement rdf:type owl:Class ;
+                  owl:disjointUnionOf ( :Concept
+                                        :KnowledgeArea
+                                        :KnowledgeUnit
+                                        :Topic
+                                      ) .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KnowledgeUnit
+:KnowledgeUnit rdf:type owl:Class ;
+               rdfs:subClassOf :KnowledgeElement ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :knowledgeUnitInKnowledgeArea ;
+                                 owl:someValuesFrom :KnowledgeArea
+                               ] .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#LearningResource
+:LearningResource rdf:type owl:Class .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#ResourceType
+:ResourceType rdf:type owl:Class .
+
+
+###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#Topic
+:Topic rdf:type owl:Class ;
+       rdfs:subClassOf :KnowledgeElement ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :topicInKnowledgeUnit ;
+                         owl:someValuesFrom :KnowledgeUnit
+                       ] .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Concept
+                :KnowledgeArea
+                :KnowledgeUnit
+                :Topic
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Course
+                :KnowledgeElement
+                :LearningResource
+                :ResourceType
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

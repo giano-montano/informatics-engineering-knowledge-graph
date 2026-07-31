@@ -1,0 +1,1270 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://www.informatics-engineering-kms.org/ontology/cs2023-backbone>
+    a owl:Ontology .
+
+@prefix :        <http://www.informatics-engineering-kms.org/ontology/informatic-engineering#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+#################################################################
+#    Capa de referencia (backbone) curada desde CS2023
+#    Generado por script. No editar a mano.
+#################################################################
+
+### Documento fuente (procedencia de nodo)
+:CS2023 rdf:type owl:NamedIndividual , :LearningResource ;
+    skos:prefLabel "Computer Science Curricula 2023"^^xsd:string ;
+    dcterms:description "Kumar et al. (2024). Computer Science Curricula 2023. ACM/IEEE-CS/AAAI."^^xsd:string ;
+    :layer "reference"^^xsd:string .
+
+### Areas de conocimiento (KnowledgeArea)
+
+:KA-AI rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Artificial Intelligence"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-AL rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Algorithmic Foundations"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-AR rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Architecture and Organization"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-DM rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Data Management"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-FPL rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Foundations of Programming Languages"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-GIT rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Graphics and Interactive Techniques"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-HCI rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Human-Computer Interaction"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-MSF rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Mathematical and Statistical Foundations"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-NC rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Networking and Communication"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-OS rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Operating Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-PDC rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Parallel and Distributed Computing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-SDF rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Software Development Fundamentals"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-SE rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Software Engineering"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-SEC rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Security"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-SEP rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-SF rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Systems Fundamentals"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+:KA-SPD rdf:type owl:NamedIndividual , :KnowledgeArea ;
+    skos:prefLabel "Specialized Platform Development"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :wasDerivedFrom :CS2023 .
+
+### Unidades de conocimiento (KnowledgeUnit)
+
+:KU-AI-Introduction rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Fundamental Issues"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-Search rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Search"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-KRR rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Fundamental Knowledge Representation and Reasoning"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-ML rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Machine Learning"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Applications and Societal Impact"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-LRR rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Logical Representation and Reasoning"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-Probability rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Probabilistic Representation and Reasoning"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-Planning rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Planning"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-Agents rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Agents and Cognitive Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-NLP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Natural Language Processing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-Robotics rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Robotics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AI-Vision rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Perception and Computer Vision"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AL-Foundational rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Foundational Data Structures and Algorithms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AL-Strategies rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Algorithmic Strategies"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AL-Complexity rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Complexity"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AL-Models rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Computational Models and Formal Languages"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AL-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Logic rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Digital Logic and Digital Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Representation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Machine-Level Data Representation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Assembly rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Assembly Level Machine Organization"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Memory rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Memory Hierarchy"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-IO rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Interfacing and Communication"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Organization rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Functional Organization"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Performance-Energy rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Performance and Energy Efficiency"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Heterogeneity rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Heterogeneous Architectures"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Security rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Secure Processor Architectures"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-Quantum rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Quantum Architectures"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-AR-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Sustainability Issues"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-AR ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Data rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "The Role of Data and the Data Life Cycle"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Core rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Core Database System Concepts"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Modeling rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Data Modeling"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Relational rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Relational Databases"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Querying rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Query Construction"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Processing rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Query Processing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Internals rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "DBMS Internals"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-NoSQL rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "NoSQL Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Security rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Data Security and Privacy"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Analytics rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Data Analytics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Distributed rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Distributed Databases/Cloud Computing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-Unstructured rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Semi-structured and Unstructured Databases"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-DM-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-DM ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-OOP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Object-Oriented Programming"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Functional rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Functional Programming"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Logic rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Logic Programming"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Scripting rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Shell Scripting"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Event-Driven rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Event-Driven and Reactive Programming"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Parallel rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Parallel and Distributed Computing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Aspect rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Aspect-Oriented Programming"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Types rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Type Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Systems rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Systems Execution and Memory Model"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Translation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Language Translation and Execution"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Abstraction rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Program Abstraction and Representation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Syntax rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Syntax Analysis"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Semantics rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Compiler Semantic Analysis"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Analysis rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Program Analysis and Analyzers"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Code rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Code Generation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Run-Time rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Run-time Behavior and Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Constructs rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Advanced Programming Constructs"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Pragmatics rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Language Pragmatics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Formalism rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Formal Semantics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Methodologies rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Formal Development Methodologies"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-Design rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Design Principles of Programming Languages"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-FPL-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-FPL ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Fundamentals rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Fundamental Concepts"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Visualization rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Visualization"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Rendering rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Applied Rendering and Techniques"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Modeling rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Geometric Modeling"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Shading rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Shading and Advanced Rendering"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Animation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Computer Animation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Simulation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Simulation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Immersion rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Immersion"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Interaction rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Interaction"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Image rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Image Processing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-Physical rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Tangible/Physical Computing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-GIT-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-GIT ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-HCI-User rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Understanding the User: Individual goals and interactions with others"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-HCI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-HCI-Accountability rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Accountability and Responsibility in Design"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-HCI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-HCI-Accessibility rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Accessibility and Inclusive Design"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-HCI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-HCI-Evaluation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Evaluating the Design"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-HCI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-HCI-Design rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "System Design"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-HCI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-HCI-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-HCI ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-MSF-Discrete rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Discrete Mathematics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-MSF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-MSF-Probability rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Probability"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-MSF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-MSF-Statistics rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Statistics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-MSF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-MSF-Linear rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Linear Algebra"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-MSF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-MSF-Calculus rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Calculus"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-MSF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-Fundamentals rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Fundamentals"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-Applications rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Networked Applications"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-Reliability rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Reliability Support"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-Routing rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Routing and Forwarding"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-SingleHop rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Single Hop Communication"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-Security rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Network Security"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-Mobility rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Mobility"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-NC-Emerging rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Emerging Topics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-NC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Purpose rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Role and Purpose of Operating Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Principles rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Principles of Operating System"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Concurrency rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Concurrency"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Protection rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Protection and Safety"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Scheduling rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Scheduling"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Process rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Process Model"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Memory rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Memory Management"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Devices rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Device management"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Files rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "File Systems API and Implementation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Advanced-Files rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Advanced File systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Virtualization rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Virtualization"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Real-time rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Real-time and Embedded Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-Faults rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Fault tolerance"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-OS-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-OS ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-PDC-Programs rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Programs"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-PDC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-PDC-Communication rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Communication"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-PDC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-PDC-Coordination rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Coordination"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-PDC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-PDC-Evaluation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Evaluation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-PDC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-PDC-Algorithms rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Algorithms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-PDC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SDF-Fundamentals rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Fundamental Programming Concepts and Practices"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SDF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SDF-Data-Structures rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Fundamental Data Structures"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SDF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SDF-Algorithms rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Algorithms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SDF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SDF-Practices rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Software Development Practices"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SDF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SDF-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SDF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Teamwork rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Teamwork"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Tools rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Tools and Environments"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Requirements rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Product Requirements"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Design rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Software Design"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Construction rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Software Construction"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Validation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Software Verification and Validation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Refactoring rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Refactoring and Code Evolution"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Reliability rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Software Reliability"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SE-Formal rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Formal Methods"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SE ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEC-Foundations rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Foundational Security"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEC-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEC-Coding rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Secure Coding"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEC-Crypto rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Cryptography"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEC-Engineering rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Security Analysis, Design, and Engineering"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEC-Forensics rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Digital Forensics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEC-Governance rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Security Governance"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEC ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Context rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Social Context"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Ethical-Analysis rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Methods for Ethical Analysis"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Professional-Ethics rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Professional Ethics"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-IP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Intellectual Property"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Privacy rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Privacy and Civil Liberties"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Communication rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Communication"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Sustainability rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Sustainability"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-History rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Computing History"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Economies rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Economies of Computing"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-Security rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Security Policies, Laws and Computer Crimes"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SEP-DEIA rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Diversity, Equity, Inclusion, and Accessibility"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SEP ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Overview rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Overview of Computer Systems"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Foundations rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Basic Concepts"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Resource rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Resource Management"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Performance rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "System Performance"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Evaluation rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Performance Evaluation"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Reliability rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "System Reliability"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Security rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "System Security"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-Design rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "System Design"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SF-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Society, Ethics, and the Profession"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SF ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-Common rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Common Aspects/Shared Concerns"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-Web rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Web Platforms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-Mobile rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Mobile Platforms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-Robot rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Robot Platforms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-Embedded rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Embedded Platforms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-Game rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Game Platforms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-Interactive rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "Interactive Computing Platforms"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+:KU-SPD-SEP rdf:type owl:NamedIndividual , :KnowledgeUnit ;
+    skos:prefLabel "SPD-SEP"^^xsd:string ;
+    :layer "reference"^^xsd:string ;
+    :knowledgeUnitInKnowledgeArea :KA-SPD ;
+    :wasDerivedFrom :CS2023 .
+
+### Identidad distinta entre todas las instancias del backbone
+### (obligatorio: OWL no asume nombres unicos)
+
+[] rdf:type owl:AllDifferent ;
+   owl:distinctMembers (
+        :KA-AI
+        :KA-AL
+        :KA-AR
+        :KA-DM
+        :KA-FPL
+        :KA-GIT
+        :KA-HCI
+        :KA-MSF
+        :KA-NC
+        :KA-OS
+        :KA-PDC
+        :KA-SDF
+        :KA-SE
+        :KA-SEC
+        :KA-SEP
+        :KA-SF
+        :KA-SPD
+        :KU-AI-Introduction
+        :KU-AI-Search
+        :KU-AI-KRR
+        :KU-AI-ML
+        :KU-AI-SEP
+        :KU-AI-LRR
+        :KU-AI-Probability
+        :KU-AI-Planning
+        :KU-AI-Agents
+        :KU-AI-NLP
+        :KU-AI-Robotics
+        :KU-AI-Vision
+        :KU-AL-Foundational
+        :KU-AL-Strategies
+        :KU-AL-Complexity
+        :KU-AL-Models
+        :KU-AL-SEP
+        :KU-AR-Logic
+        :KU-AR-Representation
+        :KU-AR-Assembly
+        :KU-AR-Memory
+        :KU-AR-IO
+        :KU-AR-Organization
+        :KU-AR-Performance-Energy
+        :KU-AR-Heterogeneity
+        :KU-AR-Security
+        :KU-AR-Quantum
+        :KU-AR-SEP
+        :KU-DM-Data
+        :KU-DM-Core
+        :KU-DM-Modeling
+        :KU-DM-Relational
+        :KU-DM-Querying
+        :KU-DM-Processing
+        :KU-DM-Internals
+        :KU-DM-NoSQL
+        :KU-DM-Security
+        :KU-DM-Analytics
+        :KU-DM-Distributed
+        :KU-DM-Unstructured
+        :KU-DM-SEP
+        :KU-FPL-OOP
+        :KU-FPL-Functional
+        :KU-FPL-Logic
+        :KU-FPL-Scripting
+        :KU-FPL-Event-Driven
+        :KU-FPL-Parallel
+        :KU-FPL-Aspect
+        :KU-FPL-Types
+        :KU-FPL-Systems
+        :KU-FPL-Translation
+        :KU-FPL-Abstraction
+        :KU-FPL-Syntax
+        :KU-FPL-Semantics
+        :KU-FPL-Analysis
+        :KU-FPL-Code
+        :KU-FPL-Run-Time
+        :KU-FPL-Constructs
+        :KU-FPL-Pragmatics
+        :KU-FPL-Formalism
+        :KU-FPL-Methodologies
+        :KU-FPL-Design
+        :KU-FPL-SEP
+        :KU-GIT-Fundamentals
+        :KU-GIT-Visualization
+        :KU-GIT-Rendering
+        :KU-GIT-Modeling
+        :KU-GIT-Shading
+        :KU-GIT-Animation
+        :KU-GIT-Simulation
+        :KU-GIT-Immersion
+        :KU-GIT-Interaction
+        :KU-GIT-Image
+        :KU-GIT-Physical
+        :KU-GIT-SEP
+        :KU-HCI-User
+        :KU-HCI-Accountability
+        :KU-HCI-Accessibility
+        :KU-HCI-Evaluation
+        :KU-HCI-Design
+        :KU-HCI-SEP
+        :KU-MSF-Discrete
+        :KU-MSF-Probability
+        :KU-MSF-Statistics
+        :KU-MSF-Linear
+        :KU-MSF-Calculus
+        :KU-NC-Fundamentals
+        :KU-NC-Applications
+        :KU-NC-Reliability
+        :KU-NC-Routing
+        :KU-NC-SingleHop
+        :KU-NC-Security
+        :KU-NC-Mobility
+        :KU-NC-Emerging
+        :KU-OS-Purpose
+        :KU-OS-Principles
+        :KU-OS-Concurrency
+        :KU-OS-Protection
+        :KU-OS-Scheduling
+        :KU-OS-Process
+        :KU-OS-Memory
+        :KU-OS-Devices
+        :KU-OS-Files
+        :KU-OS-Advanced-Files
+        :KU-OS-Virtualization
+        :KU-OS-Real-time
+        :KU-OS-Faults
+        :KU-OS-SEP
+        :KU-PDC-Programs
+        :KU-PDC-Communication
+        :KU-PDC-Coordination
+        :KU-PDC-Evaluation
+        :KU-PDC-Algorithms
+        :KU-SDF-Fundamentals
+        :KU-SDF-Data-Structures
+        :KU-SDF-Algorithms
+        :KU-SDF-Practices
+        :KU-SDF-SEP
+        :KU-SE-Teamwork
+        :KU-SE-Tools
+        :KU-SE-Requirements
+        :KU-SE-Design
+        :KU-SE-Construction
+        :KU-SE-Validation
+        :KU-SE-Refactoring
+        :KU-SE-Reliability
+        :KU-SE-Formal
+        :KU-SEC-Foundations
+        :KU-SEC-SEP
+        :KU-SEC-Coding
+        :KU-SEC-Crypto
+        :KU-SEC-Engineering
+        :KU-SEC-Forensics
+        :KU-SEC-Governance
+        :KU-SEP-Context
+        :KU-SEP-Ethical-Analysis
+        :KU-SEP-Professional-Ethics
+        :KU-SEP-IP
+        :KU-SEP-Privacy
+        :KU-SEP-Communication
+        :KU-SEP-Sustainability
+        :KU-SEP-History
+        :KU-SEP-Economies
+        :KU-SEP-Security
+        :KU-SEP-DEIA
+        :KU-SF-Overview
+        :KU-SF-Foundations
+        :KU-SF-Resource
+        :KU-SF-Performance
+        :KU-SF-Evaluation
+        :KU-SF-Reliability
+        :KU-SF-Security
+        :KU-SF-Design
+        :KU-SF-SEP
+        :KU-SPD-Common
+        :KU-SPD-Web
+        :KU-SPD-Mobile
+        :KU-SPD-Robot
+        :KU-SPD-Embedded
+        :KU-SPD-Game
+        :KU-SPD-Interactive
+        :KU-SPD-SEP
+   ) .

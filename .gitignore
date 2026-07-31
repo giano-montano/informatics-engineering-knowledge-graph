@@ -1,0 +1,16 @@
+# Secretos y configuración local
+.env
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Datos crudos (PDFs de sílabos, salidas de Docling)
+data/raw/
+data/interim/
+
+# Volcados de Neo4j
+*.dump

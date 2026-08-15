@@ -46,6 +46,7 @@ se rompe y se rehace. Nada de ADRs formales aquí.
 | `lab/findings/0004-*.md` | Qué modelos soportan salida tipada y con qué correcciones. |
 | `lab/findings/0005-*.md` | **El más reciente.** La escalera de pipelines y tres decisiones previas que la medición falsó. |
 | `lab/docs/2026-08-07-*.md` | El modelo de datos vigente y qué se ve (y qué no) dentro de Neo4j. |
+| `lab/docs/2026-08-15-pipelines-*.md` | Los cuatro pipelines explicados de punta a punta: etapas, modelos, PydanticAI, cómo se puntúa y qué dijeron los números. |
 
 ## 3. El proyecto en una pantalla
 

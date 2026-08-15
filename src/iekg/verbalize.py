@@ -44,9 +44,35 @@ def _disjointness_sentences(tbox: TBox) -> list[str]:
     return out
 
 
-def ontology_prompt(tbox: TBox, spec: Spec, coinable: list[str]) -> str:
+# How a Topic label should be worded. `verbatim` was the original wording and
+# is kept so the difference can be measured rather than asserted: against the
+# real syllabus it produced topics like "CAPITULO 3 SQL DDL (3 horas)", which
+# is a line of the table of contents, not a unit of knowledge -- and which no
+# backbone label can ever match. See findings/0005.
+LABEL_STYLE = {
+    "verbatim": [
+        "- A Topic is a unit of curricular content, at the granularity of a",
+        "  section of a syllabus.",
+    ],
+    "knowledge": [
+        "- A Topic is a unit of KNOWLEDGE, not a line of the document's table of",
+        "  contents. Strip chapter and week numbering, hour counts, and any other",
+        "  scaffolding of the document: the heading",
+        '  "CAPITULO 3 SQL DDL (3 horas)" is the topic "SQL DDL".',
+        "- Name a Topic with the shortest phrase that still identifies the subject.",
+        "  If a heading lists several subjects, split it into several Topics",
+        "  rather than keeping one long label.",
+    ],
+}
+
+
+def ontology_prompt(tbox: TBox, spec: Spec, coinable: list[str],
+                    label_style: str = "knowledge") -> str:
     """The ontology as instructions: classes, relations, and what may be created."""
     fixed = [c for c in sorted(tbox.classes) if c not in coinable]
+    if label_style not in LABEL_STYLE:
+        raise ValueError(f"unknown label_style {label_style!r}; "
+                         f"known: {', '.join(sorted(LABEL_STYLE))}")
 
     lines = [
         "# ONTOLOGY",
@@ -82,9 +108,8 @@ def ontology_prompt(tbox: TBox, spec: Spec, coinable: list[str]) -> str:
         "",
         f"- You may only create: {', '.join(coinable)}.",
         f"- These are already in the graph and must never be created: {', '.join(fixed)}.",
-        "- A Topic is a unit of curricular content, at the granularity of a section",
-        "  of a syllabus. A Concept is a single idea, technique or artifact taught",
-        "  inside a Topic.",
+        *LABEL_STYLE[label_style],
+        "- A Concept is a single idea, technique or artifact taught inside a Topic.",
         "- Course logistics are not knowledge: instructors, schedules, grading",
         "  policies, attendance rules and bibliography entries are out of scope.",
         "- Extract only what the source states. If the source does not say it, it",
@@ -93,5 +118,6 @@ def ontology_prompt(tbox: TBox, spec: Spec, coinable: list[str]) -> str:
     return "\n".join(lines)
 
 
-def build(spec: Spec, coinable: list[str], tbox_path: Path | None = None) -> str:
-    return ontology_prompt(read_tbox(tbox_path, spec), spec, coinable)
+def build(spec: Spec, coinable: list[str], tbox_path: Path | None = None,
+          label_style: str = "knowledge") -> str:
+    return ontology_prompt(read_tbox(tbox_path, spec), spec, coinable, label_style)

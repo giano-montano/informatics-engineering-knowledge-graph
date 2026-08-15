@@ -1,0 +1,276 @@
+# ONTOLOGY
+
+You extract instances for a curriculum knowledge graph. The schema below
+is closed: anything outside it is discarded downstream, so proposing it
+only costs precision.
+
+## Classes
+
+- Concept (a kind of KnowledgeElement) -- you may create these
+- Course -- already exists, never create
+- KnowledgeArea (a kind of KnowledgeElement) -- already exists, never create
+- KnowledgeElement -- already exists, never create
+- KnowledgeUnit (a kind of KnowledgeElement) -- already exists, never create
+- LearningResource -- already exists, never create
+- ResourceType -- already exists, never create
+- Topic (a kind of KnowledgeElement) -- you may create these
+
+## Relations
+
+- conceptInTopic: Concept -> Topic
+- hasPrerequisite: Concept -> Concept  [transitive]
+- hasResource: Course, KnowledgeElement -> LearningResource
+- hasResourceType: LearningResource -> ResourceType
+- knowledgeUnitInKnowledgeArea: KnowledgeUnit -> KnowledgeArea  [functional]
+- requiresConcept: Course -> Concept
+- specializes: Concept -> Concept
+- teachesConcept: Course -> Concept
+- topicInKnowledgeUnit: Topic -> KnowledgeUnit
+- wasDerivedFrom: Course, KnowledgeElement -> LearningResource
+
+## Constraints
+
+- Every KnowledgeElement is exactly one of: Concept, KnowledgeArea, KnowledgeUnit, Topic. These four are mutually exclusive: nothing is both a Topic and a Concept.
+- No individual is more than one of: Concept, KnowledgeArea, KnowledgeUnit, Topic.
+- No individual is more than one of: Course, KnowledgeElement, LearningResource, ResourceType.
+- Every Concept is linked to at least one Topic via conceptInTopic.
+- Every KnowledgeUnit is linked to at least one KnowledgeArea via knowledgeUnitInKnowledgeArea.
+- Every Topic is linked to at least one KnowledgeUnit via topicInKnowledgeUnit.
+
+## Scope
+
+- You may only create: Topic, Concept.
+- These are already in the graph and must never be created: Course, KnowledgeArea, KnowledgeElement, KnowledgeUnit, LearningResource, ResourceType.
+- A Topic is a unit of curricular content, at the granularity of a section
+  of a syllabus. A Concept is a single idea, technique or artifact taught
+  inside a Topic.
+- Course logistics are not knowledge: instructors, schedules, grading
+  policies, attendance rules and bibliography entries are out of scope.
+- Extract only what the source states. If the source does not say it, it
+  does not exist. An invented element costs more than a missing one.
+
+# TASK
+
+The Topic "CAPÍTULO 1 PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS (6 horas)" was extracted from the course below. List only the Concepts
+taught inside THAT Topic. Ignore everything the source says about other topics.
+
+If the source names no concept for it, return an empty list. An invented
+concept costs more than a missing one.
+
+--- SOURCE ---
+## FACULTAD DE CIENCIAS E INGENIERÍA
+
+## I. INFORMACIÓN GENERAL
+
+CURSO
+
+BASE DE DATOS
+
+CLAVE
+
+1INF33
+
+CRÉDITOS
+
+3.5
+
+HORAS DE DICTADO
+
+CLASE: 3 Semanal LABORATORIO: 2 Quincenal
+
+EXAMEN:
+
+HORARIO
+
+TODOS
+
+PROFESORES
+
+JOSE ISAAC YRIGOYEN MONTESTRUQUE HILMAR ANTONIO HINOJOSA LAZO CESAR AUGUSTO AGUILERA SERPA
+
+## II. PLANES CURRICULARES DONDE SE DICTA EL CURSO
+
+| ESPECIALIDAD           | ETAPA                |   NIVEL | CARÁCTER    | REQUISITOS                                                        |
+|------------------------|----------------------|---------|-------------|-------------------------------------------------------------------|
+| INGENIERÍA INFORMÁTICA | PREGRADO EN FACULTAD |       5 | OBLIGATORIO | Cred.en Especialidad : 70.00 INF144 TÉCNICAS DE PROGRAMACIÓN [05] |
+
+## Tipos de requisito
+
+04 = Haber cursado o cursar simultáneamente
+
+05 = Haber aprobado o cursar simultáneamente
+
+06 = Promedio de notas no menor de 08
+
+07 = Haber aprobado el curso
+
+## III. DESCRIPCIÓN DEL CURSO
+
+Competencias del perfil de egreso:
+
+- C1: Resolución de problemas: caracteriza, analiza y modela los problemas u oportunidades de la organización y sociedad a través del enfoque de procesos, riesgos y mejora continua para determinar necesidades de automatización de datos e información y la generación de conocimientos mediante tecnologías informáticas que apoyen a la toma de decisiones.
+- C5: Trabajo en equipo: Se desempeña eficazmente como parte de un equipo, estableciendo estrategias para un plan de acción que permita alcanzar los objetivos.
+
+## IV. SUMILLA
+
+El curso es de naturaleza teórico-práctico cuyo propósito es que el estudiante, trabajando de manera individual y en equipo, diseñe e implemente modelos de base de datos para obtener, modificar, agregar, eliminar o manipular los datos e información empresarial. Se desarrollan los temas de paradigma relacional para bases de datos, metodologías y técnicas de diseño de bases de datos relacionales, normalización y desnormalización, uso del lenguaje estructurado de consultas (SQL) y lenguaje de programación de base de datos (PL/SQL).
+
+## V. OBJETIVOS
+
+## BASE DE DATOS 2026-2
+
+<!-- image -->
+
+## FACULTAD DE CIENCIAS E INGENIERÍA 1INF33 - BASE DE DATOS
+
+El curso contribuye al logro de los siguientes Resultados de Aprendizaje
+
+RA1. Identifica los conceptos relacionados al paradigma relacional para bases de datos, las metodologías y técnicas de diseño de bases de datos relacionales, normalización, uso del lenguaje estructurado de consultas que nos permita gestionar información o datos estructurados RA2. Diseña modelos conceptuales y modelos relacionales de una base de datos para identificar las entidades (conceptual) y tablas (relacional) que participan en un proceso de negocio y visualizar las relaciones entre estos. RA3. Implementa un modelo físico de una base de datos para representar objetos de datos relacionales teniendo en cuenta la tecnología destino para la implementación. RA4. Presenta una propuesta grupal de un modelo relacional, de manera oral y escrita, que permita almacenar de forma adecuada los datos, implementando consultas para recuperar los datos y brindando posibles recomendaciones y mejoras que permitan generar información valiosa para la organización. RA5. Evalúa las propuestas de solución de otros equipos e identifica oportunidades de mejora para
+
+- analizar el impacto de cada propuesta y elegir la que considere la más adecuada.
+
+## VI. PROGRAMA ANALÍTICO
+
+## CAPÍTULO 1 PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS (6 horas)
+
+- Presentación del curso: Objetivos, metodología y proyecto de semestre. - Teoría de conjuntos y relaciones. - Datos, información y bases de datos. - Concepto de Sistema de Gestión de Base de Datos (SGBD). - Definición de Modelo. Clasificación de Modelos de Datos. - Fases del Diseño de una Base de Datos
+
+-  El  Modelo Entidad Relación. - El Modelo Relacional: Estructura y Operaciones. Reglas de Integridad.
+
+## CAPÍTULO 2 METODOLOGÍAS DE MODELAMIENTO (6 horas)
+
+Tipos de datos en SQL.
+
+- Metodología de modelamiento y convenciones: Barker e IDEF1X.
+
+## CAPÍTULO 3 SQL DDL (3 horas)
+
+SQL DDL Lenguaje para la definición de datos. - Creación, modificación y borrado de tablas. - Modificación de columnas y constraints.
+
+- Manejo de índices. Uso de Vistas.
+
+## CAPÍTULO 4 SQL DML (9 horas)
+
+- SQL DML (queries) Lenguaje para la manipulación de datos. - Uso de operadores. - Manejo de fechas y expresiones aritméticas.
+
+- Agrupaciones. Subconsultas: escalares y correlacionadas.
+
+## CAPÍTULO 5 NORMALIZACIÓN (3 horas)
+
+- Normalización de datos: Primera, segunda y tercera forma normal.
+
+PRESENTACIÓN DEL PROYECTO INTEGRADOR (AVANCE) (3 horas)
+
+- Presentación y exposición grupal.
+
+EXAMEN PARCIAL
+
+## CAPÍTULO 6 LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL) (9 horas)
+
+- Bloque de programas. - Procedimientos y Funciones. Parámetros, variables y condiciones. - Manejo de Cursores: explícitos e implícitos.
+
+- Secuencias. Manejo de excepciones.
+
+## CAPÍTULO 7 TRIGGERS (6 horas)
+
+- Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After.
+
+- Manejo de errores.
+
+## CAPÍTULO 8 TRANSACCIONES (3 horas)
+
+- Concepto general de: Transacciones, Serializabilidad, Concurrencia y Bloqueos.
+
+PRESENTACIÓN DEL PROYECTO INTEGRADOR (FINAL) (3 horas)
+
+- Presentación y exposición grupal.
+
+EXAMEN FINAL
+
+## VII. METODOLOGÍA
+
+El aprendizaje se refuerza mediante casos de estudio aplicados (por ejemplo, recursos humanos, compras, ventas, entre otros casos) y se integra en un Proyecto Integrador (Tarea Académica), desarrollado en equipos, donde se modela e implementa una solución de base de datos para procesos de negocio tales como producción, contabilidad, factoring, compras, ventas entre otros procesos.
+
+Nota: Como parte de la presentación del Proyecto Integrador, los estudiantes realizarán una crítica a su propio desempeño y el de sus compañeros, fomentando así una práctica reflexiva de sus procesos de aprendizaje (autoevaluación y coevaluación).
+
+## VIII. EVALUACIÓN
+
+## Sistema de evaluación
+
+|   N° | Codigo   | Tipo de Evaluación   |   Cant. Eval. | Forma de aplicar los pesos   | Pesos       |   Cant. Eval. Eliminables | Consideracion es adicionales   | Observaciones   |
+|------|----------|----------------------|---------------|------------------------------|-------------|---------------------------|--------------------------------|-----------------|
+|    1 | Pb       | Práctica tipo B      |             4 | Por Promedio                 | Pb=3        |                         0 |                                |                 |
+|    2 | Ta       | Tarea académica      |             1 | Por Evaluación               | Ta1=2       |                           |                                |                 |
+|    3 | Ex       | Examen               |             2 | Por Evaluación               | Ex1=3 Ex2=4 |                           |                                |                 |
+
+Modalidad de evaluación: 2
+
+Fórmula para el cálculo de la nota final
+
+( 3Pb + 2Ta1 + 3Ex1 + 4Ex2 ) / 12
+
+Aproximación de los promedios parciales No definido
+
+Aproximación de la nota final No definido
+
+## Consideraciones adicionales
+
+- Lineamientos sobre el uso de la IA.
+
+El uso de herramientas de Inteligencia Artificial Generativa deberá ser declarado y citado en las actividades  o  trabajos  que  el  docente  indique,  conforme  a  las  normas  correspondientes,  y debidamente justificado. De ser necesario, el docente podrá solicitar el reporte de los prompts utilizados, los cuales deberán adjuntarse como anexo al trabajo. En caso contrario, se considerará como una falta a la ética académica y se procederá de acuerdo con los lineamientos institucionales existentes para estos casos.
+
+## IX. BIBLIOGRAFÍA
+
+## Referencia obligatoria
+
+- -Libro
+
+Codd, E.F.
+
+1990
+
+The relational model for database management : version 2
+
+https://pucp.ent.sirsi.net/client/es\_ES/campus/search/detailnonmodal/ent:$002f$002fSD\_ILS$002f0$002fSD\_ILS:68432/on
+
+e
+
+- -Libro
+
+Date C.J. 1993 Introducción a los Sistemas de Bases de Datos
+
+Addison Wesley
+
+- -Libro
+
+Elmasri Ramez, Navathe Shamkant.
+
+2007
+
+Fundamentos de Sistemas de Bases de Datos, 5ta Edición,
+
+Ed. Pearson- Addison Wesley, ISBN 978-84-782-9085-7
+
+- -Libro
+
+Johnson, James L.
+
+2000
+
+Bases de datos : modelos, lenguajes, diseño
+
+México : Oxford University, 2000
+
+https://pucp.ent.sirsi.net/client/es\_ES/campus/search/detailnonmodal/ent:$002f$002fSD\_ILS$002f0$002fSD\_ILS:355840/o ne
+
+- -Libro
+
+Wilfred Lemahieu, Seppe Vanden Broucke, Bart Baesens Principles of Database Management
+
+Cambridge University Press
+
+## X. POLÍTICA CONTRA EL PLAGIO
+
+Para la corrección y evaluación de todos los trabajos del curso se va a tomar en cuenta el debido respeto a los derechos de autor, castigando severamente cualquier indicio de plagio con la nota CERO (00). Estas medidas serán independientes del proceso administrativo de sanción que la facultad estime conveniente de acuerdo a cada caso en particular. Para obtener más información, referirse a los siguientes sitios en internet
+
+www.pucp.edu.pe/documento/pucp/plagio.pdf

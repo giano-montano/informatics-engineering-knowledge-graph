@@ -56,6 +56,7 @@ models:
     api_key_env: GROQ_API_KEY
     tier: iteration
     limits: "30 RPM / 1K RPD / 8K TPM / 200K TPD"
+    tokens_per_minute: 8000
     thinking: false
     notes: >
       Artificial Analysis intelligence index 38, above gpt-oss-120b's 24.
@@ -71,6 +72,10 @@ models:
     api_key_env: GROQ_API_KEY
     tier: iteration
     limits: "30 RPM / 1K RPD / 8K TPM / 200K TPD"
+    # The binding ceiling, and the reason a staged pipeline has to pace itself:
+    # a 3K-token prompt is over a third of one minute's budget. Declared here
+    # so the interpreter can wait instead of the transport retrying into it.
+    tokens_per_minute: 8000
     inline_schema_defs: true
     notes: >
       Production status on Groq, ~10x faster, less capable (index 24).

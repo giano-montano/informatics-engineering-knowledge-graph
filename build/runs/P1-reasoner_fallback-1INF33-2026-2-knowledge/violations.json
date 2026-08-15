@@ -1,0 +1,48 @@
+{
+  "conformance": 0.9328,
+  "by_rule": {
+    "topic-in-ku": 8
+  },
+  "violations": [
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-course-presentation-and-basic-concepts",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-database-programming-language-pl-sql",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-modeling-methodologies",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-normalization",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-sql-ddl",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-sql-dml",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-transactions",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-triggers",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    }
+  ]
+}

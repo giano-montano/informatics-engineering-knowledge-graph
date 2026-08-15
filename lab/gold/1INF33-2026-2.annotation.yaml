@@ -48,17 +48,17 @@ blind: true           # pásalo a false si viste una extracción antes de cerrar
 # Temas esperados. Duplica el bloque tantas veces como haga falta.
 # ---------------------------------------------------------------------------
 topics:
-  - label_es: ""
-    label_en: ""
-    links_to_ku: null        # p.ej. KU-DM-Modeling, o null si ninguna encaja
+  - label_es: "Teoría de conjuntos"
+    label_en: "Set Theory"
+    links_to_ku: "KU-DM-Relational"        # p.ej. KU-DM-Modeling, o null si ninguna encaja
     confidence: high         # high | low
     note: ""
     concepts:
       - label_es: ""
         label_en: ""
         confidence: high
-  - label_es: ""
-    label_en: ""
+  - label_es: "Modelo Entidad - Relación"
+    label_en: "Entity-Relationship Model"
     links_to_ku: null        # p.ej. KU-DM-Modeling, o null si ninguna encaja
     confidence: high         # high | low
     note: ""

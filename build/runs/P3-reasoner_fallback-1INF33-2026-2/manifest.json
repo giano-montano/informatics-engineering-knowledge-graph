@@ -1,0 +1,109 @@
+{
+  "pipeline": {
+    "name": "P3",
+    "title": "+ linking con recuperación",
+    "adds": "candidatos del backbone por embedding + umbral y margen coseno",
+    "isolates": "el eslabón frágil",
+    "stages": [
+      "load",
+      "verbalize",
+      "extract_topics",
+      "extract_concepts",
+      "link_retrieval",
+      "build_abox"
+    ],
+    "options": {
+      "retries": 2,
+      "scope_iris": false,
+      "candidates": 5,
+      "threshold": 0.62,
+      "margin": 0.03,
+      "link_language": "es",
+      "reflect": false
+    },
+    "coinable": [
+      "Topic",
+      "Concept"
+    ]
+  },
+  "model": {
+    "logical_name": "reasoner_fallback",
+    "provider": "groq",
+    "model_id": "openai/gpt-oss-120b",
+    "tier": "iteration",
+    "thinking": null,
+    "inline_schema_defs": true,
+    "fallback_to": null,
+    "answered_by": [],
+    "fallback_fired": false
+  },
+  "embedding_model": "linker",
+  "document": {
+    "code": "1INF33",
+    "term": "2026-2",
+    "path": "lab/docs/syllabus/1INF33-2026-2-SILABO-BASES-DE-DATOS.PDF"
+  },
+  "started_utc": "2026-08-15T05:44:30+00:00",
+  "git_sha": "a016e49",
+  "pdf_reader": "docling 2.120.1",
+  "backbone": "backbone_cs2023_es.ttl",
+  "blind_gate_bypassed": false,
+  "reference_annotation": {
+    "path": "lab/gold/1INF33-2026-2_annotation.claude-contraste.yaml",
+    "annotator": "claude-contraste",
+    "is_gold": false
+  },
+  "stages": [
+    {
+      "stage": "load",
+      "seconds": 10.85,
+      "requests": 0,
+      "tokens": 0,
+      "note": "9137 chars"
+    },
+    {
+      "stage": "verbalize",
+      "seconds": 0.01,
+      "requests": 0,
+      "tokens": 0,
+      "note": "2419 chars"
+    },
+    {
+      "stage": "extract_topics",
+      "seconds": 44.48,
+      "requests": 1,
+      "tokens": 7638,
+      "note": "10 topics"
+    },
+    {
+      "stage": "extract_concepts",
+      "seconds": 398.97,
+      "requests": 10,
+      "tokens": 35397,
+      "note": "45 concepts over 10 topics"
+    },
+    {
+      "stage": "link_retrieval",
+      "seconds": 119.32,
+      "requests": 1,
+      "tokens": 0,
+      "note": "0/10 linked, 10 sent to review (es)"
+    },
+    {
+      "stage": "build_abox",
+      "seconds": 0.01,
+      "requests": 0,
+      "tokens": 0,
+      "note": "56 nodes / 100 edges, conformance 0.9359"
+    }
+  ],
+  "totals": {
+    "seconds": 573.64,
+    "requests": 12,
+    "tokens": 43035,
+    "topics": 10,
+    "concepts": 45,
+    "linked": 0,
+    "conformance": 0.9359
+  }
+}

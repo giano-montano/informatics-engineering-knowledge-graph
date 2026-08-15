@@ -84,8 +84,20 @@ coined:
     LearningResource: "RES-"
 
 # Data and annotation properties -> node properties.
+#
+# A key may carry a language tag (`...#prefLabel@es`). An LPG has no language
+# tags, so two SKOS literals of the same property must land on two different
+# node properties -- otherwise one silently overwrites the other and which one
+# survives depends on the order rdflib happens to yield triples. Measured on
+# the bilingual backbone: `prefLabel` came out Spanish and the English label,
+# which is what CS2023 traceability and backbone linking rest on, vanished.
+#
+# Lookup is most-specific-first: `pred@lang`, then bare `pred`. The bare entry
+# still covers the untagged literals of the original backbone.
 data_properties:
   "http://www.w3.org/2004/02/skos/core#prefLabel": prefLabel
+  "http://www.w3.org/2004/02/skos/core#prefLabel@en": prefLabel
+  "http://www.w3.org/2004/02/skos/core#prefLabel@es": prefLabelEs
   "http://purl.org/dc/terms/description":          description
   "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#layer": layer
   "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#description": description

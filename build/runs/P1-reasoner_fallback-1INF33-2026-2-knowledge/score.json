@@ -1,0 +1,145 @@
+{
+  "annotator": "claude-contraste",
+  "is_gold": false,
+  "topics": {
+    "extracted": 8,
+    "expected": 10,
+    "exact": 3,
+    "relaxed": 7,
+    "precision_exact": 0.375,
+    "precision_relaxed": 0.875,
+    "recall_exact": 0.3,
+    "recall_relaxed": 0.6
+  },
+  "concepts": {
+    "extracted": 34,
+    "expected": 41,
+    "exact": 16,
+    "relaxed": 32,
+    "precision_exact": 0.4706,
+    "precision_relaxed": 0.9412,
+    "recall_exact": 0.3902,
+    "recall_relaxed": 0.6585
+  },
+  "linking": {
+    "judged": 7,
+    "correct": 2,
+    "wrong": 0,
+    "abstained": 7,
+    "expected_no_unit": 2,
+    "accuracy": 0.2857
+  },
+  "noise": {
+    "count": 0,
+    "hits": []
+  },
+  "topic_matches": [
+    {
+      "extracted": "PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS",
+      "matched": null,
+      "kind": "none",
+      "score": 0.0
+    },
+    {
+      "extracted": "METODOLOGÍAS DE MODELAMIENTO",
+      "matched": "Diseño y modelamiento conceptual de bases de datos",
+      "kind": "relaxed",
+      "score": 0.5
+    },
+    {
+      "extracted": "SQL DDL",
+      "matched": "SQL Data Definition Language (DDL)",
+      "kind": "relaxed",
+      "score": 0.5
+    },
+    {
+      "extracted": "SQL DML",
+      "matched": "SQL Data Definition Language (DDL)",
+      "kind": "relaxed",
+      "score": 0.5
+    },
+    {
+      "extracted": "NORMALIZACIÓN",
+      "matched": "Normalización",
+      "kind": "exact",
+      "score": 1.0
+    },
+    {
+      "extracted": "LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL)",
+      "matched": "Lenguaje de programación de base de datos (PL/SQL)",
+      "kind": "exact",
+      "score": 1.0
+    },
+    {
+      "extracted": "TRIGGERS",
+      "matched": "Database Triggers",
+      "kind": "relaxed",
+      "score": 1.0
+    },
+    {
+      "extracted": "TRANSACCIONES",
+      "matched": "Transacciones",
+      "kind": "exact",
+      "score": 1.0
+    }
+  ],
+  "linking_detail": [
+    {
+      "extracted": "METODOLOGÍAS DE MODELAMIENTO",
+      "matched_gold": "Diseño y modelamiento conceptual de bases de datos",
+      "match_kind": "relaxed",
+      "expected_ku": "KU-DM-Modeling",
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "SQL DDL",
+      "matched_gold": "SQL Data Definition Language (DDL)",
+      "match_kind": "relaxed",
+      "expected_ku": "KU-DM-Querying",
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "SQL DML",
+      "matched_gold": "SQL Data Definition Language (DDL)",
+      "match_kind": "relaxed",
+      "expected_ku": "KU-DM-Querying",
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "NORMALIZACIÓN",
+      "matched_gold": "Normalización",
+      "match_kind": "exact",
+      "expected_ku": "KU-DM-Relational",
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL)",
+      "matched_gold": "Lenguaje de programación de base de datos (PL/SQL)",
+      "match_kind": "exact",
+      "expected_ku": null,
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "TRIGGERS",
+      "matched_gold": "Database Triggers",
+      "match_kind": "relaxed",
+      "expected_ku": null,
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "TRANSACCIONES",
+      "matched_gold": "Transacciones",
+      "match_kind": "exact",
+      "expected_ku": "KU-DM-Internals",
+      "got_ku": null,
+      "score": null
+    }
+  ],
+  "caveat": "Automatic, gold-based: an extraction absent from the annotation counts as wrong even when it is right. Lower bound on precision, not R4's manual figure."
+}

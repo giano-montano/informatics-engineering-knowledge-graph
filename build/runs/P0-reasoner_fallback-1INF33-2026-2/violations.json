@@ -1,0 +1,178 @@
+{
+  "conformance": 0.5072,
+  "by_rule": {
+    "topic-in-ku": 34
+  },
+  "violations": [
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-agrupaciones-group-by",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-bloqueos",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-concurrencia",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-cursores-explicitos-e-implicitos",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-datos-informacion-y-bases-de-datos",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-desnormalizacion",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-fases-del-diseno-de-una-base-de-datos-conceptual-logico-fisico",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-funciones-almacenadas",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-indices",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-manejo-de-excepciones",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-metodologia-de-modelamiento-barker",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-metodologia-de-modelamiento-idef1x",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-metodologias-de-diseno-de-bases-de-datos-relacionales",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-modelo-entidadrelacion-er",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-modelo-relacional",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-normalizacion-1a-2a-y-3a-forma-normal",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-operadores-sql",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-paradigma-relacional-para-bases-de-datos",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-pl-sql-procedural-language-sql",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-procedimientos-almacenados",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-propiedades-acid-atomicidad-consistencia-aislamiento-durabilidad",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-reglas-de-integridad",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-secuencias",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-serializabilidad",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-sistema-de-gestion-de-base-de-datos-sgbd",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-sql-ddl-data-definition-language",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-sql-dml-data-manipulation-language",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-sql-structured-query-language",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-subconsultas-escalares-y-correlacionadas",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-tipos-de-datos-en-sql",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-tipos-de-trigger-fila-sentencia-before-after",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-transacciones",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-triggers-disparadores",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    },
+    {
+      "rule": "topic-in-ku",
+      "entity": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#T-vistas",
+      "detail": "is not part of any KnowledgeUnit via PART_OF"
+    }
+  ]
+}

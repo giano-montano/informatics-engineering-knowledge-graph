@@ -1,0 +1,352 @@
+[
+  {
+    "topic_en": "Chapter 1 Introduction to the Course and Basic Concepts (6 hours)",
+    "topic_es": "CAPÍTULO 1 PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS (6 horas)",
+    "decision": null,
+    "score": 0.7676,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0166 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-SF-Foundations",
+        "label": "Conceptos Básicos",
+        "score": 0.7676
+      },
+      {
+        "key": "KU-GIT-Fundamentals",
+        "label": "Conceptos Fundamentales",
+        "score": 0.751
+      },
+      {
+        "key": "KU-DM-Core",
+        "label": "Conceptos Fundamentales de los Sistemas de Bases de Datos",
+        "score": 0.7432
+      },
+      {
+        "key": "KU-NC-Fundamentals",
+        "label": "Fundamentos",
+        "score": 0.736
+      },
+      {
+        "key": "KU-SF-Overview",
+        "label": "Descripción General de los Sistemas Informáticos",
+        "score": 0.7338
+      }
+    ]
+  },
+  {
+    "topic_en": "Chapter 2 Modeling Methodologies (6 hours)",
+    "topic_es": "CAPÍTULO 2 METODOLOGÍAS DE MODELAMIENTO (6 horas)",
+    "decision": null,
+    "score": 0.7378,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0071 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-GIT-Modeling",
+        "label": "Modelado Geométrico",
+        "score": 0.7378
+      },
+      {
+        "key": "KU-FPL-Methodologies",
+        "label": "Metodologías Formales de Desarrollo",
+        "score": 0.7307
+      },
+      {
+        "key": "KU-DM-Modeling",
+        "label": "Modelado de Datos",
+        "score": 0.7296
+      },
+      {
+        "key": "KU-SDF-Practices",
+        "label": "Prácticas de Desarrollo de Software",
+        "score": 0.7234
+      },
+      {
+        "key": "KU-SE-Construction",
+        "label": "Construcción de Software",
+        "score": 0.7163
+      }
+    ]
+  },
+  {
+    "topic_en": "Chapter 3 SQL DDL (3 hours)",
+    "topic_es": "CAPÍTULO 3 SQL DDL (3 horas)",
+    "decision": null,
+    "score": 0.7041,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0139 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-DM-Relational",
+        "label": "Bases de Datos Relacionales",
+        "score": 0.7041
+      },
+      {
+        "key": "KU-DM-Querying",
+        "label": "Construcción de Consultas",
+        "score": 0.6902
+      },
+      {
+        "key": "KU-DM-Modeling",
+        "label": "Modelado de Datos",
+        "score": 0.6798
+      },
+      {
+        "key": "KU-DM-Analytics",
+        "label": "Analítica de Datos",
+        "score": 0.6704
+      },
+      {
+        "key": "KU-DM-Core",
+        "label": "Conceptos Fundamentales de los Sistemas de Bases de Datos",
+        "score": 0.6684
+      }
+    ]
+  },
+  {
+    "topic_en": "Chapter 4 SQL DML (9 hours)",
+    "topic_es": "CAPÍTULO 4 SQL DML (9 horas)",
+    "decision": null,
+    "score": 0.6954,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0052 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-DM-Relational",
+        "label": "Bases de Datos Relacionales",
+        "score": 0.6954
+      },
+      {
+        "key": "KU-DM-Querying",
+        "label": "Construcción de Consultas",
+        "score": 0.6902
+      },
+      {
+        "key": "KU-DM-Processing",
+        "label": "Procesamiento de Consultas",
+        "score": 0.6713
+      },
+      {
+        "key": "KU-DM-Core",
+        "label": "Conceptos Fundamentales de los Sistemas de Bases de Datos",
+        "score": 0.6668
+      },
+      {
+        "key": "KU-DM-Analytics",
+        "label": "Analítica de Datos",
+        "score": 0.6656
+      }
+    ]
+  },
+  {
+    "topic_en": "Chapter 5 Normalization (3 hours)",
+    "topic_es": "CAPÍTULO 5 NORMALIZACIÓN (3 horas)",
+    "decision": null,
+    "score": 0.6892,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0018 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-FPL-Methodologies",
+        "label": "Metodologías Formales de Desarrollo",
+        "score": 0.6892
+      },
+      {
+        "key": "KU-DM-Relational",
+        "label": "Bases de Datos Relacionales",
+        "score": 0.6874
+      },
+      {
+        "key": "KU-FPL-Functional",
+        "label": "Programación Funcional",
+        "score": 0.6847
+      },
+      {
+        "key": "KU-MSF-Discrete",
+        "label": "Matemática Discreta",
+        "score": 0.6837
+      },
+      {
+        "key": "KU-MSF-Linear",
+        "label": "Álgebra Lineal",
+        "score": 0.6832
+      }
+    ]
+  },
+  {
+    "topic_en": "Integrative Project Presentation (Progress) (3 hours)",
+    "topic_es": "PRESENTACIÓN DEL PROYECTO INTEGRADOR (AVANCE) (3 horas)",
+    "decision": null,
+    "score": 0.7036,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0018 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-SF-Design",
+        "label": "Diseño de Sistemas",
+        "score": 0.7036
+      },
+      {
+        "key": "KU-NC-Emerging",
+        "label": "Temas Emergentes",
+        "score": 0.7018
+      },
+      {
+        "key": "KU-SPD-Web",
+        "label": "Plataformas Web",
+        "score": 0.7002
+      },
+      {
+        "key": "KU-SPD-SEP",
+        "label": "Desarrollo de Plataformas Especializadas - Sociedad, Ética y Profesión",
+        "score": 0.699
+      },
+      {
+        "key": "KU-SPD-Interactive",
+        "label": "Plataformas de Computación Interactiva",
+        "score": 0.6969
+      }
+    ]
+  },
+  {
+    "topic_en": "Chapter 6 Database Programming Language (PL/SQL) (9 hours)",
+    "topic_es": "CAPÍTULO 6 LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL) (9 horas)",
+    "decision": null,
+    "score": 0.6902,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0022 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-FPL-Logic",
+        "label": "Programación Lógica",
+        "score": 0.6902
+      },
+      {
+        "key": "KU-FPL-Constructs",
+        "label": "Construcciones Avanzadas de Programación",
+        "score": 0.688
+      },
+      {
+        "key": "KU-DM-Relational",
+        "label": "Bases de Datos Relacionales",
+        "score": 0.6831
+      },
+      {
+        "key": "KU-FPL-OOP",
+        "label": "Programación Orientada a Objetos",
+        "score": 0.6805
+      },
+      {
+        "key": "KU-SEC-Coding",
+        "label": "Programación Segura",
+        "score": 0.6797
+      }
+    ]
+  },
+  {
+    "topic_en": "Chapter 7 Triggers (6 hours)",
+    "topic_es": "CAPÍTULO 7 TRIGGERS (6 horas)",
+    "decision": null,
+    "score": 0.6728,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0008 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-FPL-Event-Driven",
+        "label": "Programación Orientada a Eventos y Reactiva",
+        "score": 0.6728
+      },
+      {
+        "key": "KU-FPL-Constructs",
+        "label": "Construcciones Avanzadas de Programación",
+        "score": 0.672
+      },
+      {
+        "key": "KU-FPL-Logic",
+        "label": "Programación Lógica",
+        "score": 0.6674
+      },
+      {
+        "key": "KU-FPL-OOP",
+        "label": "Programación Orientada a Objetos",
+        "score": 0.6655
+      },
+      {
+        "key": "KU-SF-Design",
+        "label": "Diseño de Sistemas",
+        "score": 0.6655
+      }
+    ]
+  },
+  {
+    "topic_en": "Chapter 8 Transactions (3 hours)",
+    "topic_es": "CAPÍTULO 8 TRANSACCIONES (3 horas)",
+    "decision": null,
+    "score": 0.7022,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0117 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-DM-Relational",
+        "label": "Bases de Datos Relacionales",
+        "score": 0.7022
+      },
+      {
+        "key": "KU-DM-Core",
+        "label": "Conceptos Fundamentales de los Sistemas de Bases de Datos",
+        "score": 0.6905
+      },
+      {
+        "key": "KU-SDF-Practices",
+        "label": "Prácticas de Desarrollo de Software",
+        "score": 0.6885
+      },
+      {
+        "key": "KU-MSF-Discrete",
+        "label": "Matemática Discreta",
+        "score": 0.6813
+      },
+      {
+        "key": "KU-SF-Resource",
+        "label": "Gestión de Recursos",
+        "score": 0.6805
+      }
+    ]
+  },
+  {
+    "topic_en": "Integrative Project Presentation (Final) (3 hours)",
+    "topic_es": "PRESENTACIÓN DEL PROYECTO INTEGRADOR (FINAL) (3 horas)",
+    "decision": null,
+    "score": 0.6962,
+    "method": "retrieval",
+    "reason": "lead over runner-up 0.0012 below margin 0.03; sent to review",
+    "candidates": [
+      {
+        "key": "KU-SPD-Web",
+        "label": "Plataformas Web",
+        "score": 0.6962
+      },
+      {
+        "key": "KU-SF-Design",
+        "label": "Diseño de Sistemas",
+        "score": 0.695
+      },
+      {
+        "key": "KU-SPD-Interactive",
+        "label": "Plataformas de Computación Interactiva",
+        "score": 0.6941
+      },
+      {
+        "key": "KU-SPD-Embedded",
+        "label": "Plataformas Embebidas",
+        "score": 0.6928
+      },
+      {
+        "key": "KU-SPD-SEP",
+        "label": "Desarrollo de Plataformas Especializadas - Sociedad, Ética y Profesión",
+        "score": 0.689
+      }
+    ]
+  }
+]

@@ -31,7 +31,7 @@ from typing import Any, Callable
 import yaml
 
 from iekg import abox as abox_mod
-from iekg import contracts, gold, linking, llm, verbalize
+from iekg import contracts, gold, linking, llm, projector, segments, verbalize
 from iekg.rules import Spec
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -119,6 +119,8 @@ class RunContext:
 
     _model: Any = None
     _backbone: list[gold.BackboneEntry] | None = None
+    # (monotonic timestamp, estimated tokens) inside the last minute.
+    _spent: list[tuple[float, int]] = field(default_factory=list)
 
     @property
     def model(self):
@@ -141,6 +143,39 @@ class RunContext:
         path.write_text(content, encoding="utf-8")
         return path
 
+    def _wait_for_budget(self, prompt: str) -> float:
+        """Sleep until this prompt fits in the model's tokens-per-minute budget.
+
+        Waiting BEFORE the call rather than retrying after it is the whole
+        point. Retrying an identical 3K-token prompt against an 8K/min ceiling
+        spends the budget it is waiting for, which is how one stage turned into
+        a twenty-two minute stall. The estimate is deliberately crude -- four
+        characters per token, output not counted -- because it only has to be
+        the right order of magnitude to keep the caller under the ceiling.
+        """
+        budget = self.catalog.entry(self.pipeline.model).tokens_per_minute
+        if not budget:
+            return 0.0
+
+        now = time.monotonic()
+        self._spent = [(t, n) for t, n in self._spent if now - t < 60]
+        estimate = len(prompt) // 4
+        used = sum(n for _, n in self._spent)
+
+        if used + estimate <= budget:
+            self._spent.append((now, estimate))
+            return 0.0
+
+        # Wait until the oldest spend leaves the window; recheck after.
+        pause = max(0.0, 60 - (now - self._spent[0][0])) + 0.5 if self._spent else 0.0
+        if pause:
+            print(f"        pacing {pause:.0f}s: {used}+{estimate} tokens over "
+                  f"{budget}/min", flush=True)
+            time.sleep(pause)
+        self._spent = [(t, n) for t, n in self._spent if time.monotonic() - t < 60]
+        self._spent.append((time.monotonic(), estimate))
+        return pause
+
     def call(self, agent, prompt: str, record: StageRecord):
         """One model call, accounted. `usage` is a property, not a method:
         wrapping this in a broad except once turned a TypeError into a run
@@ -150,11 +185,21 @@ class RunContext:
         FallbackModel switches providers without saying so, and a run credited
         to the wrong model is worse than a failed one.
         """
+        self._wait_for_budget(prompt)
         run = agent.run_sync(prompt)
         usage = run.usage
         record.requests += 1
         record.tokens += usage.total_tokens or 0
-        answered = getattr(run.all_messages()[-1], "model_name", None)
+        # Scanned backwards, not read off the last message: with a typed output
+        # the final message is the tool return, which carries no model_name.
+        # Taking [-1] reported an empty `answered_by` for every constrained
+        # pipeline while working fine for the unconstrained one -- exactly the
+        # kind of gap that shows up only where it matters least.
+        answered = next(
+            (name for message in reversed(run.all_messages())
+             if (name := getattr(message, "model_name", None))),
+            None,
+        )
         if answered:
             self.answered_by.add(answered)
         return run.output
@@ -200,7 +245,10 @@ def stage_load(ctx: RunContext, record: StageRecord) -> None:
 
 def stage_verbalize(ctx: RunContext, record: StageRecord) -> None:
     """T-box -> prompt. No model call: it is a compilation, like the Cypher."""
-    ctx.ontology = verbalize.build(ctx.spec, list(ctx.pipeline.coinable))
+    ctx.ontology = verbalize.build(
+        ctx.spec, list(ctx.pipeline.coinable),
+        label_style=ctx.option("label_style", "knowledge"),
+    )
     ctx.write("ontology_prompt.md", ctx.ontology)
     record.note = f"{len(ctx.ontology)} chars"
 
@@ -333,20 +381,40 @@ def stage_extract_topics(ctx: RunContext, record: StageRecord) -> None:
 
 
 def stage_extract_concepts(ctx: RunContext, record: StageRecord) -> None:
-    """Second rung: one focused call per topic, SPIRES style."""
+    """Second rung: one focused call per topic, SPIRES style.
+
+    Focused in the prompt AND in the text. Sending the whole document with
+    every topic is what turned this stage into a twenty-minute wait against a
+    tokens-per-minute ceiling; the section a topic owns is two orders of
+    magnitude smaller. Whether narrowing also changes what comes out is a
+    separate question, which is why it is an option and is reported.
+    """
     if not ctx.topics:
         raise PipelineError("extract_concepts needs `extract_topics` before it")
 
-    for topic in ctx.topics:
+    focus = bool(ctx.option("focus_window", True))
+    windowed = 0
+
+    for position, topic in enumerate(ctx.topics, 1):
+        view = (segments.window(ctx.text, topic.label_es) if focus
+                else segments.Window(ctx.text, "", "full"))
+        windowed += view.how == "section"
+
         prompt = _CONCEPTS_PROMPT.format(
-            ontology=ctx.ontology, topic=topic.label_es, text=ctx.text
+            ontology=ctx.ontology, topic=topic.label_es, text=view.text
         )
         ctx.write(f"prompts/extract_concepts-{contracts.slug(topic.label_en)}.txt", prompt)
+        # Printed as it goes: a stage that makes one call per topic is opaque
+        # from outside, and the first sign of a rate-limit stall is a call that
+        # takes minutes instead of seconds.
+        print(f"      [{position}/{len(ctx.topics)}] {topic.label_es[:38]:<40} "
+              f"{len(view.text):>6} chars ({view.how})", flush=True)
         output = ctx.call(_typed_agent(ctx, contracts.ConceptsOnly), prompt, record)
         topic.concepts = output.concepts
 
     ctx.extraction = contracts.from_topics(ctx.topics)
-    record.note = f"{ctx.extraction.concept_count} concepts over {len(ctx.topics)} topics"
+    record.note = (f"{ctx.extraction.concept_count} concepts over {len(ctx.topics)} "
+                   f"topics, {windowed} windowed")
 
 
 def _apply_links(ctx: RunContext, decisions: list[linking.Decision]) -> None:
@@ -371,14 +439,24 @@ def _apply_links(ctx: RunContext, decisions: list[linking.Decision]) -> None:
     ctx.write("linking.json", json.dumps(ctx.link_report, ensure_ascii=False, indent=2))
 
 
+def _link_query(ctx: RunContext, topic) -> str:
+    """The side of the mention that gets compared against the backbone."""
+    return topic.label_es if ctx.option("link_language", "en") == "es" else topic.label_en
+
+
 def stage_link_lexical(ctx: RunContext, record: StageRecord) -> None:
     """The control: normalised exact match, no model, no retrieval."""
     if ctx.extraction is None:
         raise PipelineError("link_lexical needs an extraction stage before it")
 
-    decisions = [linking.lexical(t.label_en, ctx.backbone) for t in ctx.extraction.topics]
+    language = ctx.option("link_language", "en")
+    decisions = [
+        linking.lexical(_link_query(ctx, t), ctx.backbone, language)
+        for t in ctx.extraction.topics
+    ]
     _apply_links(ctx, decisions)
-    record.note = f"{ctx.extraction.linked_count}/{len(ctx.extraction.topics)} linked"
+    record.note = (f"{ctx.extraction.linked_count}/{len(ctx.extraction.topics)} linked "
+                   f"({language})")
 
 
 def stage_link_retrieval(ctx: RunContext, record: StageRecord) -> None:
@@ -386,9 +464,10 @@ def stage_link_retrieval(ctx: RunContext, record: StageRecord) -> None:
     if ctx.extraction is None:
         raise PipelineError("link_retrieval needs an extraction stage before it")
 
+    language = ctx.option("link_language", "en")
     entry = ctx.catalog.embedding(ctx.pipeline.embedding_model)
-    index = linking.EmbeddingIndex(entry, ctx.backbone)
-    queries = [t.label_en for t in ctx.extraction.topics]
+    index = linking.EmbeddingIndex(entry, ctx.backbone, language=language)
+    queries = [_link_query(ctx, t) for t in ctx.extraction.topics]
     ranked = index.rank(queries, k=int(ctx.option("candidates", 5)))
     record.requests += 1
 
@@ -403,7 +482,7 @@ def stage_link_retrieval(ctx: RunContext, record: StageRecord) -> None:
     _apply_links(ctx, decisions)
     abstained = sum(1 for d in decisions if d.key is None and d.candidates)
     record.note = (f"{ctx.extraction.linked_count}/{len(queries)} linked, "
-                   f"{abstained} sent to review")
+                   f"{abstained} sent to review ({language})")
 
 
 def stage_build_abox(ctx: RunContext, record: StageRecord) -> None:
@@ -469,7 +548,8 @@ def run_dir(pipeline: PipelineSpec, document: abox_mod.SourceDocument) -> Path:
 
 def run(pipeline: PipelineSpec, document: abox_mod.SourceDocument, spec: Spec,
         catalog: llm.Catalog, *, out_dir: Path | None = None,
-        gate_bypassed: bool = False) -> RunContext:
+        gate_bypassed: bool = False, annotation: gold.Annotation | None = None,
+        annotation_path: Path | None = None) -> RunContext:
     """Execute the stages in order and leave the whole run on disk."""
     ctx = RunContext(
         pipeline=pipeline,
@@ -525,7 +605,15 @@ def run(pipeline: PipelineSpec, document: abox_mod.SourceDocument, spec: Spec,
         # Held constant across the comparison and recorded because it is a
         # variable nobody controlled: a different reader is a different run.
         "pdf_reader": _docling_version(),
+        "backbone": projector.DEFAULT_BACKBONE.name,
         "blind_gate_bypassed": gate_bypassed,
+        # Which reference opened the gate. `is_gold` false means the run may be
+        # inspected and discussed but its numbers are not R4's precision.
+        "reference_annotation": {
+            "path": annotation_path.as_posix() if annotation_path else None,
+            "annotator": annotation.annotator if annotation else None,
+            "is_gold": bool(annotation and annotation.annotator == gold.CANONICAL_ANNOTATOR),
+        },
         "stages": [
             {"stage": r.stage, "seconds": r.seconds, "requests": r.requests,
              "tokens": r.tokens, "note": r.note}

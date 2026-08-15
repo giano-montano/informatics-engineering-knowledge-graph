@@ -32,6 +32,24 @@ defaults:
     candidates: 5
     threshold: 0.62
     margin: 0.03
+    # Which side of the mention is compared against the backbone. The syllabi
+    # are Spanish and the backbone is now bilingual (backbone_cs2023_es.ttl),
+    # so matching in Spanish removes the language gap from the comparison and
+    # stops the run depending on the model having translated well. English
+    # stays canonical for identity; only the comparison changes language.
+    # Flip it with --option link_language=en to measure the difference.
+    link_language: es
+    # How a Topic label is asked for. `verbatim` was the first wording and on
+    # the real syllabus it returned the table of contents -- "CAPITULO 3 SQL
+    # DDL (3 horas)" -- which cannot match any backbone label. Kept as an
+    # option so the fix is a measurement, not an assertion.
+    label_style: knowledge     # knowledge | verbatim
+    # Send each per-topic call only the section of the document that topic
+    # owns, sliced deterministically from the Markdown headings. Measured
+    # 2026-08-15: with the whole syllabus attached to all ten calls, the stage
+    # spent twenty-two minutes waiting on Groq's 8K tokens-per-minute ceiling
+    # to re-send text the model had already been given nine times.
+    focus_window: true
     # OneKE-style reflection: retry feeding the validation error back to the
     # model. A flag over a pipeline, never a fifth pipeline: it is one retry
     # policy, and PydanticAI already implements the mechanism.

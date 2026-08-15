@@ -1,0 +1,307 @@
+{
+  "topics": [
+    {
+      "label_es": "CAPÍTULO 1 PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS",
+      "label_en": "Chapter 1 Presentation of the Course and Basic Concepts",
+      "concepts": [
+        {
+          "label_es": "Teoría de conjuntos y relaciones",
+          "label_en": "Set theory and relations",
+          "evidence": "Teoría de conjuntos y relaciones."
+        },
+        {
+          "label_es": "Datos, información y bases de datos",
+          "label_en": "Data, information and databases",
+          "evidence": "Datos, información y bases de datos."
+        },
+        {
+          "label_es": "Concepto de Sistema de Gestión de Base de Datos (SGBD)",
+          "label_en": "Database Management System (DBMS) concept",
+          "evidence": "Concepto de Sistema de Gestión de Base de Datos (SGBD)."
+        },
+        {
+          "label_es": "Definición de Modelo",
+          "label_en": "Definition of model",
+          "evidence": "Definición de Modelo."
+        },
+        {
+          "label_es": "Clasificación de Modelos de Datos",
+          "label_en": "Classification of data models",
+          "evidence": "Clasificación de Modelos de Datos."
+        },
+        {
+          "label_es": "Fases del Diseño de una Base de Datos",
+          "label_en": "Phases of database design",
+          "evidence": "Fases del Diseño de una Base de Datos"
+        },
+        {
+          "label_es": "Modelo Entidad Relación",
+          "label_en": "Entity‑Relationship model",
+          "evidence": "El Modelo Entidad Relación."
+        },
+        {
+          "label_es": "Modelo Relacional",
+          "label_en": "Relational model",
+          "evidence": "El Modelo Relacional: Estructura y Operaciones."
+        },
+        {
+          "label_es": "Reglas de Integridad",
+          "label_en": "Integrity rules",
+          "evidence": "Reglas de Integridad."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    },
+    {
+      "label_es": "CAPÍTULO 2 METODOLOGÍAS DE MODELAMIENTO",
+      "label_en": "Chapter 2 Modeling Methodologies",
+      "concepts": [
+        {
+          "label_es": "Tipos de datos en SQL",
+          "label_en": "SQL data types",
+          "evidence": "Tipos de datos en SQL."
+        },
+        {
+          "label_es": "Metodología de modelamiento",
+          "label_en": "Modeling methodology",
+          "evidence": "Metodología de modelamiento y convenciones: Barker e IDEF1X."
+        },
+        {
+          "label_es": "Barker",
+          "label_en": "Barker",
+          "evidence": "Metodología de modelamiento y convenciones: Barker e IDEF1X."
+        },
+        {
+          "label_es": "IDEF1X",
+          "label_en": "IDEF1X",
+          "evidence": "Metodología de modelamiento y convenciones: Barker e IDEF1X."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    },
+    {
+      "label_es": "CAPÍTULO 3 SQL DDL",
+      "label_en": "Chapter 3 SQL DDL",
+      "concepts": [
+        {
+          "label_es": "SQL DDL",
+          "label_en": "SQL DDL",
+          "evidence": "SQL DDL Lenguaje para la definición de datos."
+        },
+        {
+          "label_es": "Creación de tablas",
+          "label_en": "Table creation",
+          "evidence": "Creación, modificación y borrado de tablas."
+        },
+        {
+          "label_es": "Modificación de tablas",
+          "label_en": "Table alteration",
+          "evidence": "Creación, modificación y borrado de tablas."
+        },
+        {
+          "label_es": "Borrado de tablas",
+          "label_en": "Table deletion",
+          "evidence": "Creación, modificación y borrado de tablas."
+        },
+        {
+          "label_es": "Modificación de columnas",
+          "label_en": "Column alteration",
+          "evidence": "Modificación de columnas y constraints."
+        },
+        {
+          "label_es": "Constraints",
+          "label_en": "Constraints",
+          "evidence": "Modificación de columnas y constraints."
+        },
+        {
+          "label_es": "Manejo de índices",
+          "label_en": "Index management",
+          "evidence": "Manejo de índices."
+        },
+        {
+          "label_es": "Uso de vistas",
+          "label_en": "Use of views",
+          "evidence": "Uso de Vistas."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    },
+    {
+      "label_es": "CAPÍTULO 4 SQL DML",
+      "label_en": "Chapter 4 SQL DML",
+      "concepts": [
+        {
+          "label_es": "SQL DML (queries)",
+          "label_en": "SQL DML (queries)",
+          "evidence": "- SQL DML (queries) Lenguaje para la manipulación de datos."
+        },
+        {
+          "label_es": "Uso de operadores",
+          "label_en": "Use of operators",
+          "evidence": "- Uso de operadores."
+        },
+        {
+          "label_es": "Manejo de fechas y expresiones aritméticas",
+          "label_en": "Handling dates and arithmetic expressions",
+          "evidence": "- Manejo de fechas y expresiones aritméticas."
+        },
+        {
+          "label_es": "Agrupaciones",
+          "label_en": "Aggregations",
+          "evidence": "- Agrupaciones."
+        },
+        {
+          "label_es": "Subconsultas: escalares y correlacionadas",
+          "label_en": "Subqueries: scalar and correlated",
+          "evidence": "- Subconsultas: escalares y correlacionadas."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    },
+    {
+      "label_es": "CAPÍTULO 5 NORMALIZACIÓN",
+      "label_en": "Chapter 5 Normalization",
+      "concepts": [
+        {
+          "label_es": "Normalización de datos",
+          "label_en": "Data normalization",
+          "evidence": "- Normalización de datos: Primera, segunda y tercera forma normal."
+        },
+        {
+          "label_es": "Primera forma normal",
+          "label_en": "First normal form",
+          "evidence": "- Normalización de datos: Primera, segunda y tercera forma normal."
+        },
+        {
+          "label_es": "Segunda forma normal",
+          "label_en": "Second normal form",
+          "evidence": "- Normalización de datos: Primera, segunda y tercera forma normal."
+        },
+        {
+          "label_es": "Tercera forma normal",
+          "label_en": "Third normal form",
+          "evidence": "- Normalización de datos: Primera, segunda y tercera forma normal."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    },
+    {
+      "label_es": "CAPÍTULO 6 LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL)",
+      "label_en": "Chapter 6 Database Programming Language (PL/SQL)",
+      "concepts": [
+        {
+          "label_es": "Bloque de programas",
+          "label_en": "Program block",
+          "evidence": "- Bloque de programas."
+        },
+        {
+          "label_es": "Procedimientos y Funciones",
+          "label_en": "Procedures and functions",
+          "evidence": "- Procedimientos y Funciones."
+        },
+        {
+          "label_es": "Parámetros, variables y condiciones",
+          "label_en": "Parameters, variables and conditions",
+          "evidence": "- Parámetros, variables y condiciones."
+        },
+        {
+          "label_es": "Manejo de Cursores: explícitos e implícitos",
+          "label_en": "Cursor handling (explicit and implicit)",
+          "evidence": "- Manejo de Cursores: explícitos e implícitos."
+        },
+        {
+          "label_es": "Secuencias",
+          "label_en": "Sequences",
+          "evidence": "- Secuencias."
+        },
+        {
+          "label_es": "Manejo de excepciones",
+          "label_en": "Exception handling",
+          "evidence": "- Manejo de excepciones."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    },
+    {
+      "label_es": "CAPÍTULO 7 TRIGGERS",
+      "label_en": "Chapter 7 Triggers",
+      "concepts": [
+        {
+          "label_es": "Disparadores",
+          "label_en": "Triggers",
+          "evidence": "- Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After."
+        },
+        {
+          "label_es": "Estructura",
+          "label_en": "Structure",
+          "evidence": "- Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After."
+        },
+        {
+          "label_es": "Tipos: fila y sentencia",
+          "label_en": "Row and statement triggers",
+          "evidence": "- Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After."
+        },
+        {
+          "label_es": "Before",
+          "label_en": "Before event",
+          "evidence": "- Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After."
+        },
+        {
+          "label_es": "After",
+          "label_en": "After event",
+          "evidence": "- Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After."
+        },
+        {
+          "label_es": "Manejo de errores",
+          "label_en": "Error handling",
+          "evidence": "- Manejo de errores."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    },
+    {
+      "label_es": "CAPÍTULO 8 TRANSACCIONES",
+      "label_en": "Chapter 8 Transactions",
+      "concepts": [
+        {
+          "label_es": "Transacciones",
+          "label_en": "Transactions",
+          "evidence": "Concepto general de: Transacciones, Serializabilidad, Concurrencia y Bloqueos."
+        },
+        {
+          "label_es": "Serializabilidad",
+          "label_en": "Serializability",
+          "evidence": "Concepto general de: Transacciones, Serializabilidad, Concurrencia y Bloqueos."
+        },
+        {
+          "label_es": "Concurrencia",
+          "label_en": "Concurrency",
+          "evidence": "Concepto general de: Transacciones, Serializabilidad, Concurrencia y Bloqueos."
+        },
+        {
+          "label_es": "Bloqueos",
+          "label_en": "Locks",
+          "evidence": "Concepto general de: Transacciones, Serializabilidad, Concurrencia y Bloqueos."
+        }
+      ],
+      "links_to_ku": null,
+      "link_score": null,
+      "link_method": "lexical"
+    }
+  ],
+  "unparsed": []
+}

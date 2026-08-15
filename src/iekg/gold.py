@@ -24,11 +24,10 @@ from typing import Any
 
 import yaml
 
-from iekg.projector import read_turtle
+from iekg.projector import DEFAULT_BACKBONE, read_turtle
 from iekg.rules import Spec
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_BACKBONE = ROOT / "ontology" / "backbone_cs2023.ttl"
 GOLD_DIR = ROOT / "lab" / "gold"
 
 
@@ -38,13 +37,31 @@ class AnnotationError(RuntimeError):
 
 @dataclass(frozen=True)
 class BackboneEntry:
-    """One pickable target: a KnowledgeUnit under its KnowledgeArea."""
+    """One pickable target: a KnowledgeUnit under its KnowledgeArea.
+
+    English stays canonical -it is what CS2023 says and what the IRI encodes-
+    while the Spanish label is what a Spanish syllabus can be matched against
+    without translating first. Both, not one.
+    """
 
     key: str          # local name, e.g. KU-DM-Modeling
     label: str        # English prefLabel from CS2023
     area_key: str
     area_label: str
     iri: str
+    label_es: str = ""
+    area_label_es: str = ""
+
+    def label_in(self, language: str) -> str:
+        """The label to compare against, falling back to English.
+
+        A missing Spanish label is not an error: the original monolingual
+        backbone has none, and falling back keeps that file usable.
+        """
+        return (self.label_es or self.label) if language == "es" else self.label
+
+    def area_label_in(self, language: str) -> str:
+        return (self.area_label_es or self.area_label) if language == "es" else self.area_label
 
 
 def read_backbone(spec: Spec, path: Path | None = None) -> list[BackboneEntry]:
@@ -62,8 +79,8 @@ def read_backbone(spec: Spec, path: Path | None = None) -> list[BackboneEntry]:
         if e.rel_type == "PART_OF" and "KnowledgeArea" in by_iri[e.target].labels
     }
 
-    def label_of(iri: str) -> str:
-        return by_iri[iri].props.get("prefLabel", "<sin prefLabel>")
+    def label_of(iri: str, prop: str = "prefLabel") -> str:
+        return by_iri[iri].props.get(prop, "" if prop != "prefLabel" else "<sin prefLabel>")
 
     entries = []
     for node in nodes:
@@ -79,6 +96,8 @@ def read_backbone(spec: Spec, path: Path | None = None) -> list[BackboneEntry]:
                 area_key=area_iri.removeprefix(ns),
                 area_label=label_of(area_iri),
                 iri=node.iri,
+                label_es=label_of(node.iri, "prefLabelEs"),
+                area_label_es=label_of(area_iri, "prefLabelEs"),
             )
         )
     return sorted(entries, key=lambda e: (e.area_label, e.label))
@@ -307,19 +326,30 @@ def load_annotation(path: Path, catalog: list[BackboneEntry]) -> Annotation:
     )
 
 
-def is_sealed(path: Path) -> bool:
-    """True when a usable blind reference exists at `path`.
+# The only annotator whose annotation can ground R4's precision figure. Anyone
+# else -- a second reader, or a model writing a contrast annotation -- produces
+# a usable file that is NOT the gold standard, and every run made against one
+# has to say so in its manifest.
+CANONICAL_ANNOTATOR = "giano"
 
-    The gate every pipeline run checks before touching the annotated document:
-    a missing, unfilled or non-blind annotation means no real extraction may be
+
+def read_seal(path: Path) -> Annotation | None:
+    """The annotation at `path` if it is usable as a reference, else None.
+
+    The gate every pipeline run checks before touching an annotated document:
+    a missing, unfilled or unsealed annotation means no real extraction may be
     shown yet.
     """
     if not path.exists():
-        return False
+        return None
     try:
         from iekg import rules
 
         annotation = load_annotation(path, read_backbone(rules.load()))
     except (AnnotationError, KeyError, yaml.YAMLError):
-        return False
-    return annotation.blind and bool(annotation.date)
+        return None
+    return annotation if annotation.blind and annotation.date else None
+
+
+def is_sealed(path: Path) -> bool:
+    return read_seal(path) is not None

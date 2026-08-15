@@ -50,10 +50,29 @@ DEFAULT_CATALOG = ROOT / "lab" / "models.yaml"
 _OPENAI_COMPATIBLE = {"nvidia"}
 _NATIVE = {"google-gla", "groq"}
 
-# Transient on every provider seen so far: capacity (503) and quota (429).
-# A 413 is NOT here: Groq rejects an oversized max_tokens reservation up
+# Server-side transients worth absorbing in the transport.
+#
+# 429 IS DELIBERATELY ABSENT, and it used to be here. Measured 2026-08-15, for
+# two independent reasons:
+#
+#   it lies    the transport closes the response before re-raising, so the
+#              provider SDK never sees a status at all and reports
+#              `APIConnectionError: Connection error`. A rate limit arriving
+#              disguised as a network fault cost most of a debugging session.
+#              With 429 out of this set the same call fails as
+#              `ModelHTTPError: status_code: 429` with the body attached.
+#   it hurts   Groq's ceiling is tokens per minute. Retrying an identical
+#              3K-token prompt does not wait for room, it consumes more of the
+#              budget it is waiting for. Quota is paced by the caller, not
+#              retried by the transport.
+#
+# Surfacing it also makes it a ModelAPIError, which is what FallbackModel
+# switches on: a quota-exhausted Gemini now falls over to its stand-in instead
+# of being retried into the same wall.
+#
+# A 413 is not here either: Groq rejects an oversized max_tokens reservation up
 # front, and retrying an identical request would just fail identically.
-_RETRYABLE_STATUS = {429, 500, 502, 503, 504}
+_RETRYABLE_STATUS = {500, 502, 503, 504}
 
 
 class CatalogError(RuntimeError):
@@ -74,6 +93,9 @@ class ModelEntry:
     thinking: bool | None = None
     max_tokens: int | None = None
     fallback_to: str | None = None
+    # Declared, not guessed. A staged pipeline has to wait for room instead of
+    # retrying into a ceiling; 0 means no known limit and no pacing.
+    tokens_per_minute: int = 0
 
 
 @dataclass(frozen=True)
@@ -141,6 +163,7 @@ def load(path: Path | None = None) -> Catalog:
             thinking=cfg.get("thinking"),
             max_tokens=cfg.get("max_tokens"),
             fallback_to=cfg.get("fallback_to"),
+            tokens_per_minute=int(cfg.get("tokens_per_minute", 0)),
         )
 
     for name, entry in models.items():

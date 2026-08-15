@@ -39,7 +39,8 @@ se rompe y se rehace. Nada de ADRs formales aquí.
 |---|---|
 | `docs/tesis.md` | Las decisiones de diseño ya tomadas. Obligatorio antes de llamar "hueco" a algo. |
 | `docs/estandares-de-codigo.md` | Política de idioma, nomenclatura, escritura en la base, pruebas. **No dupliques sus reglas: síguelas.** |
-| `internal-notes/2026-08-14-handoff.md` | **El más reciente.** Estado de la experimentación de O2 y qué sigue. Ignorado por git. |
+| `internal-notes/2026-08-15-handoff.md` | **El más reciente.** Los pipelines corriendo, y cinco decisiones que la medición falsó. Ignorado por git. |
+| `internal-notes/2026-08-14-handoff.md` | Arranque de O2: catálogo de modelos y especificación de los pipelines. Ignorado por git. |
 | `internal-notes/2026-07-31-handoff.md` | Estado al cerrar julio, con la tabla larga de decisiones. Ignorado por git. |
 | `lab/findings/000{1,2,3}-*.md` | Por qué solo unicidad, por qué no SHACL, arquitectura de ingesta contra la literatura. |
 | `lab/findings/0004-*.md` | Qué modelos soportan salida tipada y con qué correcciones. |
@@ -173,7 +174,26 @@ poner una, `docker compose down -v` y volver a levantar.
 | Se registra qué modelo **contestó**, no cuál se pidió | un `FallbackModel` conmuta en silencio; ver `findings/0005` |
 | Se itera en Groq; Gemini es para la corrida final | `findings/0005`: 20 peticiones por día en capa gratuita |
 
-## 7. Estado al 2026-08-14 (cierre del día)
+## 7. Estado al 2026-08-15 (cierre del día)
+
+**Los cuatro pipelines corren sobre el sílabo real de punta a punta.** Ver el
+handoff del 2026-08-15 para los números, los cupos gastados y lo que sigue.
+**77 pruebas.**
+
+Tres cosas que cambian el plan y no son negociables:
+
+- **La anotación ciega de 1INF33 ya no es posible**: se vieron extracciones de
+  ese sílabo. El gold debe levantarse sobre otro documento. 1INF33 queda como
+  sílabo de desarrollo.
+- **Los cupos gratuitos son el cuello de botella real**, no la calidad del
+  modelo. Gemini da 20 peticiones al día por modelo; Groq, 200K tokens al día
+  **por modelo** (bolsas separadas: cuando se agota uno, el otro sigue).
+- **El enlace de entidades sigue sin resolverse.** Con etiquetas limpias, P3
+  abstiene en todos los temas porque el margen entre el primer y el segundo
+  candidato es de milésimas. La hipótesis a probar es dar contexto a la
+  consulta, no la etiqueta desnuda.
+
+### Estado anterior, al 2026-08-14
 
 Backbone cargado y verificado: 17 `KnowledgeArea` + 162 `KnowledgeUnit` + 1
 `LearningResource`, 4 restricciones de unicidad sobre `iri`, **11 reglas de
@@ -251,6 +271,16 @@ que es agnóstica al modelo, pero sí a los resultados.
 - **Que una consulta de validación no encuentre nada en datos limpios no prueba
   nada.** Toda regla de integridad necesita su prueba negativa: se inyecta la
   violación a propósito, dentro de una transacción que se revierte.
+- **Un límite de cuota puede llegar disfrazado de fallo de red.** Meter 429 en
+  la política de reintentos del transporte hacía que `AsyncTenacityTransport`
+  cerrara la respuesta antes de re-lanzar, y el SDK reportaba
+  `APIConnectionError`. Si un error de conexión aparece solo con prompts
+  grandes, es cuota. Ver `internal-notes/2026-08-15-handoff.md`.
+- **Reenviar el documento entero en cada llamada por tema mata la corrida.**
+  No es un derroche: contra un techo de tokens por minuto, es un atasco.
+  `segments.py` recorta por los encabezados del propio documento.
+- **`run.all_messages()[-1]` no lleva `model_name` con salida tipada.** El
+  último mensaje es el retorno de la herramienta; hay que recorrer hacia atrás.
 - **Un fallback declarado no es un fallback probado.** `fallback_to` estaba en
   el catálogo, documentado en `findings/0004`, y era inerte: `FallbackModel`
   conmuta ante `ModelAPIError` y el transporte con reintentos lanza

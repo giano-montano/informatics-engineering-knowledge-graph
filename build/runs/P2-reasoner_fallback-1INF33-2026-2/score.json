@@ -1,0 +1,121 @@
+{
+  "annotator": "claude-contraste",
+  "is_gold": false,
+  "topics": {
+    "extracted": 8,
+    "expected": 10,
+    "exact": 0,
+    "relaxed": 4,
+    "precision_exact": 0.0,
+    "precision_relaxed": 0.5,
+    "recall_exact": 0.0,
+    "recall_relaxed": 0.4
+  },
+  "concepts": {
+    "extracted": 46,
+    "expected": 41,
+    "exact": 21,
+    "relaxed": 46,
+    "precision_exact": 0.4565,
+    "precision_relaxed": 1.0,
+    "recall_exact": 0.5122,
+    "recall_relaxed": 0.878
+  },
+  "linking": {
+    "judged": 4,
+    "correct": 2,
+    "wrong": 0,
+    "abstained": 4,
+    "expected_no_unit": 2,
+    "accuracy": 0.5
+  },
+  "noise": {
+    "count": 0,
+    "hits": []
+  },
+  "topic_matches": [
+    {
+      "extracted": "CAPÍTULO 1 PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS",
+      "matched": null,
+      "kind": "none",
+      "score": 0.0
+    },
+    {
+      "extracted": "CAPÍTULO 2 METODOLOGÍAS DE MODELAMIENTO",
+      "matched": null,
+      "kind": "none",
+      "score": 0.25
+    },
+    {
+      "extracted": "CAPÍTULO 3 SQL DDL",
+      "matched": null,
+      "kind": "none",
+      "score": 0.25
+    },
+    {
+      "extracted": "CAPÍTULO 4 SQL DML",
+      "matched": null,
+      "kind": "none",
+      "score": 0.25
+    },
+    {
+      "extracted": "CAPÍTULO 5 NORMALIZACIÓN",
+      "matched": "Normalización",
+      "kind": "relaxed",
+      "score": 1.0
+    },
+    {
+      "extracted": "CAPÍTULO 6 LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL)",
+      "matched": "Lenguaje de programación de base de datos (PL/SQL)",
+      "kind": "relaxed",
+      "score": 1.0
+    },
+    {
+      "extracted": "CAPÍTULO 7 TRIGGERS",
+      "matched": "Database Triggers",
+      "kind": "relaxed",
+      "score": 0.5
+    },
+    {
+      "extracted": "CAPÍTULO 8 TRANSACCIONES",
+      "matched": "Transacciones",
+      "kind": "relaxed",
+      "score": 1.0
+    }
+  ],
+  "linking_detail": [
+    {
+      "extracted": "CAPÍTULO 5 NORMALIZACIÓN",
+      "matched_gold": "Normalización",
+      "match_kind": "relaxed",
+      "expected_ku": "KU-DM-Relational",
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "CAPÍTULO 6 LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL)",
+      "matched_gold": "Lenguaje de programación de base de datos (PL/SQL)",
+      "match_kind": "relaxed",
+      "expected_ku": null,
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "CAPÍTULO 7 TRIGGERS",
+      "matched_gold": "Database Triggers",
+      "match_kind": "relaxed",
+      "expected_ku": null,
+      "got_ku": null,
+      "score": null
+    },
+    {
+      "extracted": "CAPÍTULO 8 TRANSACCIONES",
+      "matched_gold": "Transacciones",
+      "match_kind": "relaxed",
+      "expected_ku": "KU-DM-Internals",
+      "got_ku": null,
+      "score": null
+    }
+  ],
+  "caveat": "Automatic, gold-based: an extraction absent from the annotation counts as wrong even when it is right. Lower bound on precision, not R4's manual figure."
+}

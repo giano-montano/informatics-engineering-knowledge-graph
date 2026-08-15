@@ -64,7 +64,8 @@ class Decision:
 # Lexical: the control
 # ---------------------------------------------------------------------------
 
-def lexical(label: str, entries: list[BackboneEntry]) -> Decision:
+def lexical(label: str, entries: list[BackboneEntry],
+            language: str = "en") -> Decision:
     """Exact match after folding case, accents and spacing. Nothing else.
 
     No substring or fuzzy matching on purpose: a control that quietly does half
@@ -72,7 +73,7 @@ def lexical(label: str, entries: list[BackboneEntry]) -> Decision:
     """
     key = normalise(label)
     for entry in entries:
-        if normalise(entry.label) == key:
+        if normalise(entry.label_in(language)) == key:
             return Decision(entry.key, 1.0, "lexical", reason="exact label match")
     return Decision(None, None, "lexical", reason="no exact match")
 
@@ -88,14 +89,20 @@ def _cosine(a: list[float], b: list[float]) -> float:
     return dot / (na * nb) if na and nb else 0.0
 
 
-def document_text(entry: BackboneEntry) -> str:
+def document_text(entry: BackboneEntry, language: str = "en") -> str:
     """What gets embedded for a backbone unit.
 
     The area is included because unit labels are ambiguous on their own:
     'Foundational Data Structures and Algorithms' and 'Data Modeling' read
     alike out of context, and the area is the context CS2023 already provides.
+
+    The language matters more than it looks. A Spanish syllabus matched against
+    English labels crosses the language gap inside the embedding, on top of the
+    domain gap; with the bilingual backbone the comparison can happen in one
+    language and that error source disappears. Which side wins is measurable,
+    so it is an option and not a decision buried here.
     """
-    return f"{entry.label} ({entry.area_label})"
+    return f"{entry.label_in(language)} ({entry.area_label_in(language)})"
 
 
 class EmbeddingIndex:
@@ -107,10 +114,11 @@ class EmbeddingIndex:
     """
 
     def __init__(self, entry: llm.EmbeddingEntry, entries: list[BackboneEntry],
-                 *, cache_dir: Path | None = None) -> None:
+                 *, language: str = "en", cache_dir: Path | None = None) -> None:
         self.entry = entry
         self.entries = entries
-        self.texts = [document_text(e) for e in entries]
+        self.language = language
+        self.texts = [document_text(e, language) for e in entries]
         self.cache_dir = cache_dir or CACHE_DIR
         self._vectors: list[list[float]] | None = None
 
@@ -206,7 +214,8 @@ class EmbeddingIndex:
         ranked = []
         for query_vector in embedded:
             scored = [
-                Candidate(e.key, e.label, round(_cosine(query_vector, v), 4))
+                Candidate(e.key, e.label_in(self.language),
+                          round(_cosine(query_vector, v), 4))
                 for e, v in zip(self.entries, vectors)
             ]
             scored.sort(key=lambda c: -c.score)

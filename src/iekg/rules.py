@@ -83,6 +83,19 @@ class Spec:
         v = self.classes.get(owl_class)
         return tuple(v) if v else None
 
+    def data_property(self, predicate: str, language: str | None) -> str | None:
+        """Node property for a literal, most specific first.
+
+        `prefLabel@es` beats `prefLabel`. Without the language in the key, two
+        SKOS literals of one property collapse onto one node property and the
+        surviving one is whichever rdflib yielded last.
+        """
+        if language:
+            tagged = self.data_properties.get(f"{predicate}@{language}")
+            if tagged:
+                return tagged
+        return self.data_properties.get(predicate)
+
     def relationship_for(self, owl_property: str) -> str | None:
         d = self.object_properties.get(owl_property)
         return d["type"] if d else None

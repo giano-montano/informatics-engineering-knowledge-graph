@@ -17,6 +17,16 @@ from iekg.rules import Edge, Node, Spec, Violation
 
 ROOT = Path(__file__).resolve().parents[2]
 
+# The R2 deliverable, in one place so nothing has to guess which file is
+# current. The bilingual edition carries skos:prefLabel in @en and @es: the
+# syllabi are Spanish and the standard is English, and linking across that gap
+# was costing a translation step inside the LLM. English stays canonical.
+#
+# NOTE: `backbone_cs2023.ttl` still exists alongside it. Two files describing
+# the same reference layer are two sources of truth; they should collapse into
+# one once the bilingual edition is verified.
+DEFAULT_BACKBONE = ROOT / "ontology" / "backbone_cs2023_es.ttl"
+
 
 class ValidationError(RuntimeError):
     def __init__(self, violations: list[Violation]) -> None:
@@ -48,8 +58,12 @@ def read_turtle(path: Path, spec: Spec) -> tuple[list[Node], list[Edge]]:
     props_by_iri: dict[str, dict[str, Any]] = defaultdict(dict)
     for iri in labels_by_iri:
         for pred, obj in g.predicate_objects(URIRef(iri)):
-            name = spec.data_properties.get(str(pred))
-            if name and isinstance(obj, Literal):
+            if not isinstance(obj, Literal):
+                continue
+            # The language tag is part of the lookup: two skos:prefLabel
+            # literals on one individual must reach two node properties.
+            name = spec.data_property(str(pred), obj.language)
+            if name:
                 props_by_iri[iri][name] = str(obj)
 
     nodes = [

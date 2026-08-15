@@ -80,6 +80,10 @@ def main() -> int:
     parser.add_argument("--list", action="store_true", help="show the compositions")
     parser.add_argument("--ungated", action="store_true",
                         help="run without a sealed reference annotation")
+    parser.add_argument("--annotation", type=Path,
+                        help="use this annotation file instead of the canonical one")
+    parser.add_argument("--tag", default="",
+                        help="suffix for the run directory, to keep a sweep apart")
     args = parser.parse_args()
 
     specs = pipeline.load_pipelines()
@@ -98,8 +102,20 @@ def main() -> int:
         raise SystemExit(f"unknown pipeline(s): {unknown}; known: {', '.join(specs)}")
 
     document = as_document(args.document)
-    annotation_path = gold.GOLD_DIR / f"{document.key}.annotation.yaml"
-    sealed = gold.is_sealed(annotation_path)
+    annotation_path = args.annotation or gold.GOLD_DIR / f"{document.key}.annotation.yaml"
+    annotation = gold.read_seal(annotation_path)
+    sealed = annotation is not None
+
+    if sealed and annotation.annotator != gold.CANONICAL_ANNOTATOR:
+        # It opens the gate -- there is a blind reference and the run cannot
+        # contaminate it -- but it is not the gold standard, and a number
+        # measured against it is not R4's precision figure. Said out loud here
+        # and written into every manifest, because a file that behaves exactly
+        # like the real one is the easiest kind to mistake for it.
+        print(f"CONTRAST ANNOTATION: {annotation_path.name}")
+        print(f"         annotator '{annotation.annotator}', not "
+              f"'{gold.CANONICAL_ANNOTATOR}'. Gate opens, gold standard does not.")
+        print("         Anything measured against this is experimental, not R4.")
 
     if not sealed and not args.ungated:
         print(f"BLOCKED  {document.key} has no sealed reference annotation.")
@@ -127,8 +143,14 @@ def main() -> int:
 
         print(f"\n=== {name}  {config.title}  ({config.model})")
         try:
+            out_dir = pipeline.run_dir(config, document)
+            if args.tag:
+                out_dir = out_dir.with_name(f"{out_dir.name}-{args.tag}")
             ctx = pipeline.run(config, document, spec, catalog,
-                               gate_bypassed=not sealed)
+                               out_dir=out_dir,
+                               gate_bypassed=not sealed,
+                               annotation=annotation,
+                               annotation_path=annotation_path)
         except Exception as exc:
             print(f"    FAILED  {type(exc).__name__}: {exc}"[:300])
             failures += 1

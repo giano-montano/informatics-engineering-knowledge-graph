@@ -1,0 +1,92 @@
+# Model catalog for the lab. Same pattern as schema/schema_rules.yaml: a
+# declarative spec plus a small interpreter (src/iekg/llm.py). Switching a
+# model is an edit here, never a change in experiment code.
+#
+# Secrets are NOT here. Each entry NAMES the .env variable holding its key.
+# Model ids are configuration, not secrets, so they belong in this versioned
+# file rather than in .env.
+#
+# `tier` gates spending:
+#   iteration -> renewable quota, safe to hammer while developing
+#   final     -> scarce (hard credit cap or very low RPD); single measured run
+
+version: 1
+
+models:
+  # ---------------------------------------------------------------- iteration
+  workhorse:
+    provider: google-gla
+    model_id: gemini-3.7-flash
+    api_key_env: GOOGLE_AI_STUDIO_API_KEY
+    tier: iteration
+    limits: "15 RPM / 1500 RPD"
+    notes: >
+      Default for development. Native structured output and thinking blocks.
+      Highest request ceiling of anything available, so iteration lives here.
+
+  reasoner:
+    provider: groq
+    model_id: qwen/qwen3.6-27b
+    api_key_env: GROQ_API_KEY
+    tier: iteration
+    limits: "30 RPM / 1K RPD / 8K TPM / 200K TPD"
+    notes: >
+      Artificial Analysis intelligence index 38, above gpt-oss-120b's 24.
+      PREVIEW on Groq: it can be withdrawn without notice, hence the fallback
+      below. Verbose reasoning burns the 8K TPM ceiling before the RPM one.
+
+  reasoner_fallback:
+    provider: groq
+    model_id: openai/gpt-oss-120b
+    api_key_env: GROQ_API_KEY
+    tier: iteration
+    limits: "30 RPM / 1K RPD / 8K TPM / 200K TPD"
+    notes: >
+      Production status on Groq, ~10x faster, less capable (index 24).
+      Swap `reasoner` to this if the preview model disappears.
+
+  # -------------------------------------------------------------------- final
+  deep:
+    provider: google-gla
+    model_id: gemini-3.1-pro
+    api_key_env: GOOGLE_AI_STUDIO_API_KEY
+    tier: final
+    limits: "2 RPM / 50 RPD"
+    notes: >
+      50 requests per day cannot sustain a multi-stage pipeline under
+      iteration. Reserved for one measured comparison run.
+
+  frontier:
+    provider: nvidia
+    model_id: z-ai/glm-5.2
+    api_key_env: NVIDIA_BUILD_API_KEY
+    base_url: https://integrate.api.nvidia.com/v1
+    tier: final
+    limits: "40 RPM; NON-RENEWABLE credit trial, then HTTP 402"
+    notes: >
+      Highest index available anywhere here (51-53), but credits do not reset
+      and large MoE models drain them fast. Known issue: malformed JSON in
+      tool-call arguments, so validate before parsing. Final run only.
+
+  frontier_alt:
+    provider: nvidia
+    model_id: nvidia/nemotron-3-ultra-550b-a55b
+    api_key_env: NVIDIA_BUILD_API_KEY
+    base_url: https://integrate.api.nvidia.com/v1
+    tier: final
+    limits: "40 RPM; NON-RENEWABLE credit trial"
+    notes: >
+      NVIDIA-native alternative to GLM-5.2. Lower index (38-48) but no
+      third-party compliance review pending against it.
+
+# Pair used for the O2 pipeline comparison. Both are `iteration` tier on
+# purpose: the four pipelines get compared without touching finite credit.
+#
+# The second slot holds gpt-oss-120b rather than the higher-scoring Qwen3.6
+# on measured grounds, not on index: findings/0004 clocked 6/6 vs 5/6 success,
+# 465 vs 1341 completion tokens and 2.0s vs 6.2s on the same task. Qwen also
+# fails outright on nested schemas. Intelligence index did not predict
+# contract conformance, which is what this pipeline actually needs.
+comparison_matrix:
+  - workhorse
+  - reasoner_fallback

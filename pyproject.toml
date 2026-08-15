@@ -9,19 +9,16 @@ dependencies = [
     # acompanhe al servidor 5.26 LTS: mismo criterio de estabilidad que
     # se uso para elegir la version del servidor.
     "neo4j>=5.28,<6",
-
     # Parseo de Turtle. rdflib es la libreria estandar de RDF en Python;
     # parsear el TTL a mano seria fragil y no sustentable.
     "rdflib>=7.1",
-
     # Archivo declarativo de reglas de esquema.
     "pyyaml>=6.0",
-
     # Salida estructurada del LLM en la fase de extraccion.
     "pydantic>=2.9",
-
     # Lectura de .env (credenciales de Neo4j fuera del codigo).
     "python-dotenv>=1.0",
+    "pydantic-ai-slim[google,groq,openai]>=1.0",
 ]
 
 [dependency-groups]

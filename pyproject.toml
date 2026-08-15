@@ -19,6 +19,7 @@ dependencies = [
     # Lectura de .env (credenciales de Neo4j fuera del codigo).
     "python-dotenv>=1.0",
     "pydantic-ai-slim[google,groq,openai]>=1.0",
+    "docling>=2.120.1",
 ]
 
 [dependency-groups]

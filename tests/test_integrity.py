@@ -91,6 +91,40 @@ def test_detects_unit_without_area(tx, queries):
 
 
 # ---------------------------------------------------------------------------
+# existential_relationship: the rules that guard what the pipeline coins.
+# Both are vacuous on the backbone -there is no Topic yet- so without an
+# injected violation they would pass while checking nothing.
+# ---------------------------------------------------------------------------
+
+def test_detects_topic_without_knowledge_unit(tx, queries):
+    tx.run("CREATE (:KnowledgeElement:Topic {iri:'urn:test:t0'})")
+    assert "urn:test:t0" in entities(tx, queries, "topic-in-ku")
+
+
+def test_topic_anchored_to_a_unit_does_not_fire(tx, queries):
+    tx.run(
+        "MATCH (ku:KnowledgeUnit) WITH ku LIMIT 1 "
+        "CREATE (t:KnowledgeElement:Topic {iri:'urn:test:t1'})-[:PART_OF]->(ku)"
+    )
+    assert "urn:test:t1" not in entities(tx, queries, "topic-in-ku")
+
+
+def test_detects_concept_without_topic(tx, queries):
+    tx.run("CREATE (:KnowledgeElement:Concept {iri:'urn:test:c0'})")
+    assert "urn:test:c0" in entities(tx, queries, "concept-in-topic")
+
+
+def test_concept_anchored_to_the_wrong_level_still_fires(tx, queries):
+    # A Concept hung directly off a KnowledgeUnit has an anchor, but not the
+    # one the axiom asks for. Counting any PART_OF would have missed it.
+    tx.run(
+        "MATCH (ku:KnowledgeUnit) WITH ku LIMIT 1 "
+        "CREATE (c:KnowledgeElement:Concept {iri:'urn:test:c1'})-[:PART_OF]->(ku)"
+    )
+    assert "urn:test:c1" in entities(tx, queries, "concept-in-topic")
+
+
+# ---------------------------------------------------------------------------
 # domain_range
 # ---------------------------------------------------------------------------
 

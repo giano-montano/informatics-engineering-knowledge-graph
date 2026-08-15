@@ -107,6 +107,23 @@ def _c_functional_relationship(rule: dict, spec: Spec) -> str:
     )
 
 
+def _c_existential_relationship(rule: dict, spec: Spec) -> str:
+    known = spec.known_labels()
+    rel_type = _safe_ident(rule["relationship"])
+    from_label = _safe_ident(rule["from"], known)
+    to_label = _safe_ident(rule["to"], known)
+
+    # A pattern predicate, not OPTIONAL MATCH + count: only existence matters
+    # here, and the negated pattern stops at the first hit.
+    return (
+        f"MATCH (a:{from_label})\n"
+        f"WHERE NOT (a)-[:{rel_type}]->(:{to_label})\n"
+        f"RETURN '{rule['id']}' AS rule, "
+        f"coalesce(a.iri, '<no iri>') AS entity, "
+        f"'is not part of any :{to_label} via {rel_type}' AS detail;"
+    )
+
+
 def _c_domain_range(rule: dict, spec: Spec) -> str:
     known = spec.known_labels()
     rel_type = _safe_ident(rule["relationship"])
@@ -155,6 +172,7 @@ _COMPILERS = {
     "unique_key": _c_unique_key,
     "disjoint_labels": _c_disjoint_labels,
     "functional_relationship": _c_functional_relationship,
+    "existential_relationship": _c_existential_relationship,
     "domain_range": _c_domain_range,
     "acyclicity": _c_acyclicity,
 }

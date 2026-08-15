@@ -38,6 +38,11 @@ from pydantic_ai import Agent  # noqa: E402
 
 from iekg import llm  # noqa: E402
 
+# Structured output on Groq is ~83% reliable per attempt even after the
+# catalog's corrections (findings/0004), so the realistic configuration --
+# and the one a pipeline would use -- includes retries.
+RETRIES = 2
+
 # Invented fragment. Deliberately NOT the Databases syllabus under test, and
 # deliberately missing any mention of prerequisites so `abstention` has
 # something real to abstain from.
@@ -113,7 +118,7 @@ def probe(name: str, catalog: llm.Catalog) -> list[Result]:
     results: list[Result] = []
 
     # 1. reach ---------------------------------------------------------------
-    agent = Agent(model)
+    agent = Agent(model, retries=RETRIES)
     run, secs, toks, rsn = _timed(agent, "Reply with exactly: OK")
     ok = "OK" in run.output.upper()
     results.append(Result("reach", ok, run.output.strip()[:60], secs, toks, rsn))
@@ -133,7 +138,7 @@ def probe(name: str, catalog: llm.Catalog) -> list[Result]:
     results.append(Result("reasoning", ok, run.output.strip()[:80], secs, toks, rsn))
 
     # 3. structured ----------------------------------------------------------
-    typed = Agent(model, output_type=Extraction)
+    typed = Agent(model, output_type=Extraction, retries=RETRIES)
     extraction: Extraction | None = None
     try:
         run, secs, toks, rsn = _timed(
@@ -150,7 +155,7 @@ def probe(name: str, catalog: llm.Catalog) -> list[Result]:
         results.append(Result("structured", False, f"{type(exc).__name__}"[:90], 0.0, 0))
         # Nesting is the usual culprit. Retry flat to tell the two apart.
         try:
-            flat = Agent(model, output_type=FlatExtraction)
+            flat = Agent(model, output_type=FlatExtraction, retries=RETRIES)
             run, secs, toks, rsn = _timed(
                 flat, "Extract the topics from this course description.\n\n" + SAMPLE
             )
@@ -173,7 +178,7 @@ def probe(name: str, catalog: llm.Catalog) -> list[Result]:
 
     # 4. abstention ----------------------------------------------------------
     # SAMPLE states no prerequisites. Anything non-empty is invention.
-    prereq = Agent(model, output_type=Prerequisites)
+    prereq = Agent(model, output_type=Prerequisites, retries=RETRIES)
     try:
         run, secs, toks, rsn = _timed(
             prereq,

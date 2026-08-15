@@ -99,8 +99,19 @@ def test_shipped_catalog_is_valid():
     """The real lab/models.yaml must parse: a typo there breaks every run."""
     catalog = llm.load()
     assert catalog.comparison_matrix
-    for name in catalog.comparison_matrix:
-        assert catalog.entry(name).tier == "iteration", (
-            f"{name} is in the comparison matrix but is not iteration tier; "
-            "comparing pipelines must not burn scarce quota"
-        )
+
+
+def test_something_in_the_matrix_can_be_iterated_on():
+    """At least one side of the comparison must be cheap to re-run.
+
+    This used to demand that BOTH be iteration tier. findings/0005 measured
+    Gemini's free tier at 20 requests per day per model -- under one P2 plus
+    one P3 run- so the Gemini side became `final` and the assertion had to
+    weaken to what is still true: you cannot develop against a matrix where
+    every entry is scarce.
+    """
+    catalog = llm.load()
+    tiers = {name: catalog.entry(name).tier for name in catalog.comparison_matrix}
+    assert "iteration" in tiers.values(), (
+        f"every model in the comparison matrix is scarce: {tiers}"
+    )

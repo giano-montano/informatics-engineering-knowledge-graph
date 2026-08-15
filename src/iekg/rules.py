@@ -55,7 +55,27 @@ class Spec:
         self.inverses: dict[str, dict] = data.get("inverses", {})
         self.transitive: list[str] = data.get("transitive", [])
         self.data_properties: dict[str, str] = data.get("data_properties", {})
+        self.coined: dict[str, Any] = data.get("coined", {})
         self.rules: list[dict] = data.get("rules", [])
+
+    # -- what the pipeline is allowed to write ------------------------------
+
+    def coined_property(self, role: str) -> str:
+        """Node property name for a role the pipeline writes (`canonical_label`...)."""
+        try:
+            return self.coined["properties"][role]
+        except KeyError:
+            raise ValueError(f"no coined property declared for role {role!r}") from None
+
+    def iri_prefix(self, owl_class: str) -> str:
+        try:
+            return self.coined["iri_prefixes"][owl_class]
+        except KeyError:
+            raise ValueError(f"{owl_class} has no IRI prefix; it cannot be coined") from None
+
+    @property
+    def institutional_layer(self) -> str:
+        return self.coined["layer_value"]
 
     # -- mapping lookups ----------------------------------------------------
 
@@ -94,10 +114,19 @@ class Spec:
 
     # -- pre-write validation -----------------------------------------------
 
-    def validate(self, nodes: Iterable[Node], edges: Iterable[Edge]) -> list[Violation]:
+    def validate(self, nodes: Iterable[Node], edges: Iterable[Edge],
+                 context: Iterable[Node] = ()) -> list[Violation]:
+        """Check `nodes` and `edges`; `context` only types edge endpoints.
+
+        The ingestion pipeline writes institutional nodes that point at
+        backbone nodes it must not touch. Those endpoints have to be known
+        -otherwise every PART_OF looks like it lands nowhere- but they must not
+        be judged: a KnowledgeUnit quoted without its KnowledgeArea edge is not
+        an orphan, it is simply not the subject of this write.
+        """
         nodes = list(nodes)
         edges = list(edges)
-        by_iri = {n.iri: n for n in nodes}
+        by_iri = {n.iri: n for n in list(context)} | {n.iri: n for n in nodes}
 
         found: list[Violation] = []
         for rule in self.rules:
@@ -108,6 +137,8 @@ class Spec:
                 found += list(_disjoint_labels(rule, nodes))
             elif kind == "functional_relationship":
                 found += list(_functional(rule, nodes, edges, by_iri))
+            elif kind == "existential_relationship":
+                found += list(_existential(rule, nodes, edges, by_iri))
             elif kind == "domain_range":
                 found += list(_domain_range(rule, edges, by_iri))
         return found
@@ -151,6 +182,28 @@ def _functional(rule: dict, nodes: list[Node], edges: list[Edge],
             yield Violation(rule["id"], iri, f"points to {n} {to_label}, must be 1")
         elif exact and n == 0:
             yield Violation(rule["id"], iri, f"points to no {to_label}")
+
+
+def _existential(rule: dict, nodes: list[Node], edges: list[Edge],
+                 by_iri: dict[str, Node]) -> Iterator[Violation]:
+    """owl:someValuesFrom: at least one target of the right type.
+
+    Separate from _functional because the two axioms bound opposite ends. A
+    node with three anchors satisfies this and violates that.
+    """
+    rel_type, from_label, to_label = rule["relationship"], rule["from"], rule["to"]
+
+    anchored = {
+        e.source
+        for e in edges
+        if e.rel_type == rel_type
+        and (target := by_iri.get(e.target)) is not None
+        and to_label in target.labels
+    }
+    for n in nodes:
+        if from_label in n.labels and n.iri not in anchored:
+            yield Violation(rule["id"], n.iri,
+                            f"is not part of any {to_label} via {rel_type}")
 
 
 def _domain_range(rule: dict, edges: list[Edge],

@@ -61,6 +61,28 @@ inverses:
 # from an asserted one, and the pipeline must audit what the LLM proposes.
 transitive: [PART_OF, HAS_PREREQUISITE]
 
+# Node properties and IRI prefixes the ingestion pipeline writes when it coins
+# an element. Declared here, not in the pipeline, for the same reason as
+# everything else in this file: a label invented in Python is a second source
+# of truth.
+#
+# `canonical_label` is the SAME property the backbone carries, because linking
+# compares against it. The Spanish surface form goes in its own property: an
+# LPG has no language tags, and dropping the wording of the source would make
+# an extraction impossible to audit against the syllabus it came from.
+coined:
+  properties:
+    canonical_label: prefLabel
+    source_label:    prefLabelEs
+    layer:           layer
+  layer_value: institutional
+  # Minted IRI = namespace + prefix + slug. Deterministic: the same label must
+  # mint the same IRI on every run, or MERGE stops being idempotent.
+  iri_prefixes:
+    Topic:            "T-"
+    Concept:          "C-"
+    LearningResource: "RES-"
+
 # Data and annotation properties -> node properties.
 data_properties:
   "http://www.w3.org/2004/02/skos/core#prefLabel": prefLabel
@@ -105,6 +127,31 @@ rules:
     cardinality: exactly_one
     enforcement: [pre_write, integrity_query]
     owl_source: ":knowledgeUnitInKnowledgeArea rdf:type owl:FunctionalProperty"
+
+  # The two rules below come from owl:someValuesFrom restrictions, not from
+  # owl:FunctionalProperty, and that is why they are a separate type: an
+  # existential says "at least one", a functional says "at most one". Under
+  # the open world assumption a reasoner cannot detect a missing existential
+  # -absence is not falsity- so the check only exists as a closed-world query
+  # over what was actually written. Both are vacuous until the pipeline coins
+  # its first Topic; they exist so that it cannot coin an orphan one.
+  - id: topic-in-ku
+    type: existential_relationship
+    relationship: PART_OF
+    from: Topic
+    to: KnowledgeUnit
+    cardinality: at_least_one
+    enforcement: [pre_write, integrity_query]
+    owl_source: ":Topic rdfs:subClassOf [ owl:onProperty :topicInKnowledgeUnit ; owl:someValuesFrom :KnowledgeUnit ]"
+
+  - id: concept-in-topic
+    type: existential_relationship
+    relationship: PART_OF
+    from: Concept
+    to: Topic
+    cardinality: at_least_one
+    enforcement: [pre_write, integrity_query]
+    owl_source: ":Concept rdfs:subClassOf [ owl:onProperty :conceptInTopic ; owl:someValuesFrom :Topic ]"
 
   - id: part-of-pairs
     type: domain_range

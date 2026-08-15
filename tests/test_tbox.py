@@ -84,6 +84,29 @@ def test_functional_property_has_its_cardinality_rule(box, spec):
         assert expected in covered, f"{name} is functional with no rule covering {expected}"
 
 
+def test_every_existential_restriction_has_a_rule(box, spec):
+    """owl:someValuesFrom survives only as a closed-world query.
+
+    A reasoner cannot detect a missing existential -under the open world
+    assumption, absence is not falsity- so the axiom reaches the graph only if
+    some rule covers it: an existential_relationship, or a functional one,
+    which is stronger and implies it.
+    """
+    covered = {
+        (r["relationship"], r["from"], r["to"])
+        for kind in ("existential_relationship", "functional_relationship")
+        for r in spec.rules_of_type(kind)
+    }
+    for name, axioms in box.classes.items():
+        for prop, filler in axioms.existential:
+            rel_type, _ = tbox.projection_of(prop, spec)
+            expected = (rel_type, name, filler)
+            assert expected in covered, (
+                f"{name} requires at least one {filler} via {prop}, "
+                f"and no rule covers {expected}"
+            )
+
+
 def test_the_emitted_artifact_mentions_every_class(box, spec):
     text = tbox.emit(box, spec)
     for name in box.classes:

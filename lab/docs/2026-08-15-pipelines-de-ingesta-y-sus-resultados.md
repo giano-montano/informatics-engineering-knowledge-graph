@@ -981,9 +981,39 @@ uv run python lab/scripts/check_integrity.py -> Integrity satisfied.
 77 pruebas: 21 de pipeline, 17 de integridad, 13 de scoring, 10 del catálogo de
 modelos, 8 de la anotación, 8 de la T-box.
 
-Siete directorios en `build/runs/`, uno de ellos incompleto a propósito
-(`P3-reasoner_fallback-...-knowledge`, sin `manifest.json`): es la corrida que se
-abortó a mitad por el atasco de cuota, y su `prompts/` conserva la evidencia.
+Siete directorios en `build/runs/`, seis con corrida completa y uno truncado:
+`P3-reasoner_fallback-...-knowledge` no tiene `manifest.json` ni
+`extraction.json`, y su `prompts/` contiene **un solo archivo**,
+`extract_topics.txt`. Es decir: se cayó en la **primera** llamada al modelo, con
+el cupo diario de `gpt-oss-120b` agotado, antes de recibir una sola respuesta. El
+prompt que quedó escrito es toda la evidencia que produjo, y es la razón de que
+la corrida se relanzara cuarenta segundos después contra `reasoner` (Qwen). El
+historial completo de qué modelo corrió cada cosa está en §11.1.
+
+### 11.1 Qué modelo corrió cada intento
+
+Los siete directorios salen de **cuatro invocaciones** del runner, todas sobre el
+mismo sílabo y en la madrugada del 15:
+
+| hora | invocación | modelo pedido | modelo que contestó | resultado |
+|---|---|---|---|---|
+| 00:37–00:54 | `all` | `reasoner_fallback` = `openai/gpt-oss-120b` | el mismo | P0, P1, P2 y P3 completos |
+| 00:54–00:55 | `P1 --tag knowledge` | `reasoner_fallback` | el mismo | completa |
+| 02:06 | `P3 --tag knowledge` | `reasoner_fallback` | **ninguno** | **truncada**: cupo diario agotado |
+| 02:07–02:08 | `P3 --tag knowledge` | `reasoner` = `qwen/qwen3.6-27b` | el mismo | completa |
+
+**Ningún `FallbackModel` intervino en ninguna corrida**, y eso es comprobable sin
+fiarse del registro: en `lab/models.yaml` la única entrada que declara
+`fallback_to` es `workhorse`, y `workhorse` no corrió ninguna de estas. Los
+`answered_by: []` de tres manifiestos son el defecto de §5.5, no un cambio de
+modelo silencioso.
+
+**Un quinto modelo sí participó, y es fácil de olvidar porque no extrae nada:**
+`gemini-embedding-001`, en la etapa `link_retrieval` de las dos corridas de P3.
+Dejó dos índices en `build/embeddings/`, uno por idioma —162 vectores de 3.072
+dimensiones cada uno—. El de español lo construyó P3 a las 00:54, que es por qué
+esa etapa tardó 119 s; P3 `-knowledge` lo leyó de disco a las 02:07 y tardó
+**2,55 s**. El caché es la diferencia entera.
 
 ---
 

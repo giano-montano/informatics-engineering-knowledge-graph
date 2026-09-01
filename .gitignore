@@ -14,3 +14,11 @@ data/interim/
 
 # Volcados de Neo4j
 *.dump
+
+# Caché de embeddings del backbone: 6,6 MB de vectores reproducibles con una
+# llamada a la API. Es caché, no evidencia; build/ versiona lo segundo.
+build/embeddings/
+
+internal-notes/
+.claude
+.agents

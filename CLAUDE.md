@@ -61,6 +61,11 @@ sobre la marcha: no asumas fluidez, pero tampoco expliques de menos.
 | `docs/estandares-de-codigo.md` | Idioma, nomenclatura, pruebas. **No dupliques sus reglas: síguelas.** |
 | `docs/traspaso-del-laboratorio.md` | Lo que el laboratorio **midió** y lo que queda **por re-decidir**. |
 | `docs/decisiones/` | Las decisiones ya rehechas, con sus alternativas descartadas. |
+| `internal-notes/2026-09-01-handoff.md` | **El más reciente.** Por qué existe esta rama y qué toca ahora. Ignorado por git. |
+
+Los handoffs anteriores al `2026-09-01` describen el laboratorio. Siguen siendo
+válidos como **medición** y no como **plan**: sus listas de "lo siguiente"
+apuntan a una rama en la que ya no se trabaja.
 
 ## 5. El proyecto en una pantalla
 

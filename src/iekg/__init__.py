@@ -1,3 +1,4 @@
-"""Grafo de conocimiento del curriculo de Ingenieria Informatica."""
+"""Modulo de grafo de conocimiento del curriculo de Ingenieria Informatica.
 
-__version__ = "0.1.0"
+Vacio a proposito: la implementacion se escribe desde cero en esta rama.
+"""

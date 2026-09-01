@@ -4,6 +4,11 @@ version = "0.1.0"
 description = "Grafo de conocimiento del curriculo de Ingenieria Informatica: proyeccion ontologia->LPG y pipeline de ingesta"
 requires-python = ">=3.11"
 
+# Solo lo que hace falta para el nucleo: leer la ontologia, leer la
+# especificacion declarativa y hablar con Neo4j. Las dependencias de la capa
+# de ingestion -salida estructurada del LLM, lectura de PDF- entran cuando se
+# llegue a esa capa, no antes: una dependencia declarada y no usada es una
+# decision tomada por inercia.
 dependencies = [
     # Driver oficial. Se pinea la linea 5.28 LTS, no la 6.x, para que
     # acompanhe al servidor 5.26 LTS: mismo criterio de estabilidad que
@@ -14,12 +19,8 @@ dependencies = [
     "rdflib>=7.1",
     # Archivo declarativo de reglas de esquema.
     "pyyaml>=6.0",
-    # Salida estructurada del LLM en la fase de extraccion.
-    "pydantic>=2.9",
     # Lectura de .env (credenciales de Neo4j fuera del codigo).
     "python-dotenv>=1.0",
-    "pydantic-ai-slim[google,groq,openai]>=1.0",
-    "docling>=2.120.1",
 ]
 
 [dependency-groups]

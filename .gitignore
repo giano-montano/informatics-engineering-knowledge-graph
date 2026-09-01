@@ -8,15 +8,22 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 
-# Datos crudos (PDFs de sílabos, salidas de Docling)
-data/raw/
-data/interim/
+# Documentos fuente (sílabos en PDF y sus conversiones). Pesan, no son código
+# y se pueden volver a obtener; el repositorio guarda lo que se deriva de ellos,
+# no ellos.
+data/
 
 # Volcados de Neo4j
 *.dump
 
-# Caché de embeddings del backbone: 6,6 MB de vectores reproducibles con una
-# llamada a la API. Es caché, no evidencia; build/ versiona lo segundo.
+# Artefactos generados desde schema/ y ontology/ -constraints, consultas de
+# integridad, diagrama de la T-box-. Se versionan a propósito: son evidencia
+# citable de cómo se validó el grafo. build/ NO va aquí.
+#
+# Lo que sí se ignora es la salida de cada ejecución: es medición, no
+# especificación, y en el laboratorio llegó a ser el 80% de los archivos
+# versionados del proyecto.
+build/runs/
 build/embeddings/
 
 internal-notes/

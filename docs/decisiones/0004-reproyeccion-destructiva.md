@@ -1,6 +1,6 @@
 # ADR-004: Reproyección destructiva en lugar de reconciliación incremental
 
-**Estado:** Aceptada
+**Estado:** Aceptada (enmendada 2026-09-29)
 **Fecha:** 2026-08
 **Atributos:** AC-04 (principal), AC-02
 
@@ -28,3 +28,9 @@ El aislamiento que exige AC-04 no es de estado en la base, sino de **etapas del 
 - El estado del grafo es reproducible en cualquier momento desde los artefactos versionados.
 - Cualquier dato que solo exista en la base se pierde en la siguiente reconstrucción. **Restricción de diseño:** si en el futuro se incorpora curación experta o cualquier estado editado en el grafo, debe persistirse en archivo o esta decisión debe revisarse.
 - El costo de reconstruir es aceptable a la escala del piloto; a escala mayor habría que revisarla.
+
+## Enmienda (2026-09-29)
+
+- **Alcance.** La reconstrucción aplica ante correcciones del backbone que no cambian claves (etiquetas, descripciones), cambios en el código de proyección y constructos que solo existen en el grafo. No aplica ante cambios de clave, fusión o eliminación de unidades ni cambios de la T-Box: esos exigen transformar los hechos guardados con un script escrito para cada cambio.
+- **Documentos reprocesados.** Reingestar un documento no dispara la reconstrucción; es una ingesta más (ADR-006).
+- **Reaplicación.** Copia los hechos que cada corrida escribió, con claves resueltas y procedencia ya fijada, en el orden original de las corridas. No revalida; la auditoría corre al cierre (ADR-005).

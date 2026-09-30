@@ -1,201 +1,271 @@
-// Modelo único del KMS. Cada elemento se declara una sola vez; las vistas
-// de views.c4 son proyecciones de este modelo.
+// Modelo único del sistema. Cada elemento se declara una sola vez; las
+// vistas de views.c4 son proyecciones de este modelo.
 //
-// Transcripción fiel de los diagramas Mermaid del commit b16d25b: las
-// relaciones se conservan en el nivel en que se dibujaron.
+// Regla de prosa: el .c4 dice qué es cada elemento, qué responsabilidad
+// tiene y a qué atributo o decisión responde; el porqué vive en el ADR.
+// `summary` se muestra sobre el diagrama: una línea.
+//
+// El nivel 3 se retiró el 2026-09-29 para rehacerlo; contradecía ADR-005.
+// Su versión anterior está en Mermaid en el commit b16d25b.
 model {
 
   student = person 'Estudiante' {
-    description 'Consulta y navega por el conocimiento curricular y sus recursos'
+    summary 'Consulta y navega el grafo. No escribe.'
+    description '''
+      Busca elementos del currículo, recorre sus relaciones y accede a los
+      recursos asociados. Ve el documento del que procede cada afirmación
+      institucional y distingue la capa a la que pertenece cada elemento.
+
+      Interesado de AC-03 y AC-05.
+    '''
   }
+
   operator = person 'Operador del grafo' {
-    description 'Incorpora material, observa las corridas y verifica la integridad'
+    summary 'Incorpora material y observa el resultado de la ingesta.'
+    description '''
+      Sube documentos académicos declarando su tipo de recurso, sigue el
+      estado de cada corrida, revisa los hechos descartados y consulta el
+      reporte de auditoría.
+
+      No decide sobre el contenido del grafo: no aprueba hechos, no edita
+      elementos y no reingresa descartes. Ante una violación de integridad
+      dispone de la evidencia, no del remedio.
+
+      Interesado de AC-01, AC-02 y AC-04.
+    '''
   }
 
   llm = externalSystem 'Proveedor de modelo de lenguaje' {
-    description 'Recibe texto y devuelve estructura candidata para la extracción de conocimiento'
+    summary 'Extrae hechos candidatos estructurados a partir de texto.'
+    description '''
+      Única dependencia externa del sistema. Recibe el texto de un documento
+      junto con candidatos recuperados del grafo y devuelve hechos candidatos
+      conformes a un esquema.
+
+      Nunca escribe en la base de grafos ni compone sentencias de escritura
+      (ADR-003).
+    '''
   }
 
-  kms = softwareSystem 'KMS de conocimiento curricular' {
-    description 'Hace explícitas y navegables las relaciones entre áreas, unidades, temas, conceptos, cursos y recursos de Ingeniería Informática'
+  kms = softwareSystem 'Sistema de gestión de conocimiento curricular' {
+    summary 'Hace navegables las relaciones del currículo de Ingeniería Informática.'
+    description '''
+      Representa como grafo de propiedades las áreas, unidades, temas,
+      conceptos, cursos y recursos de aprendizaje de la carrera, y expone
+      consultas que derivan prerrequisitos, ubicación estructural y recursos
+      asociados.
+
+      El contenido institucional se incorpora ingestando documentos
+      académicos con asistencia de un modelo de lenguaje. Toda afirmación
+      institucional conserva el documento del que se derivó.
+
+      Responde a PC1–PC7 y a los atributos AC-01 a AC-05.
+    '''
 
     web = container 'Aplicación web' {
       technology 'SPA'
-      description 'Navegación del estudiante y panel del operador'
+      summary 'Única superficie del sistema: navegación del estudiante y panel del operador.'
+      description '''
+        Un solo desplegable con dos zonas. La navegación permite buscar,
+        explorar el grafo y abrir recursos; el panel del operador permite
+        subir un documento con su tipo, seguir el estado de la corrida,
+        revisar descartes y consultar el reporte de auditoría.
+
+        Se descompone en R5. El panel del operador queda fuera de la prueba
+        de aceptación de R6.
+      '''
     }
 
     api = container 'API' {
-      technology 'Python / FastAPI'
-      description 'Expone consultas, recepción de documentos y estado de corridas'
+      technology 'Python, FastAPI'
+      summary 'Consultas de lectura, alta de corridas y entrega de documentos.'
+      description '''
+        Ejecuta las consultas derivadas de DD-07 contra la base de grafos y
+        sirve los documentos de los recursos institucionales en la dirección
+        que registra su localizador.
 
-      queryController = component 'Controlador de consultas' {
-        technology 'FastAPI'
-        description 'Expone los puntos de acceso de consulta y búsqueda al estudiante'
-      }
-      queryCatalog = component 'Catálogo de consultas derivadas' {
-        technology 'Python + Cypher parametrizado'
-        description 'Ejecuta una consulta por patrón de DD-07, devuelve las afirmaciones junto con su procedencia e instrumenta la latencia'
-      }
-      graphAdapter = component 'Adaptador de grafo' {
-        technology 'Driver Neo4j'
-        description 'Gestiona sesiones y transacciones de solo lectura contra Neo4j'
-      }
-      operationController = component 'Controlador de operación' {
-        technology 'FastAPI'
-        description 'Recibe documentos, consulta estados y lista descartes'
-      }
-      runManager = component 'Gestor de corridas' {
-        technology 'Python + SQLite'
-        description 'Gestiona el ciclo de vida de las corridas y deja trabajo pendiente para el trabajador'
-      }
-      invariantVerifier = component 'Verificador de invariantes' {
-        technology 'Python'
-        description 'Ejecuta bajo demanda el conjunto declarado de invariantes y emite el reporte'
-      }
-      accessGuard = component 'Guarda de acceso' {
-        technology 'Python'
-        description 'Protege los puntos de acceso destinados al operador mediante un token fijo'
-      }
+        Al recibir un documento no toca el grafo: escribe el archivo,
+        registra la corrida en el almacén operacional y lanza un worker si no
+        hay uno activo.
+
+        Nunca escribe en la base de grafos.
+      '''
     }
 
-    worker = container 'Trabajador de construcción del grafo' {
+    worker = container 'Worker de ingesta' {
       technology 'Python'
-      description 'Ejecuta la construcción del grafo: ingesta, carga de referencia y reproyección'
+      summary 'Ejecuta el pipeline de ingesta; único escritor del grafo mientras el sistema está en servicio.'
+      description '''
+        Se lanza por corrida, drena las corridas pendientes y termina. Parsea
+        el documento, recupera contexto del grafo, obtiene hechos candidatos
+        del proveedor, los valida antes de escribir, resuelve el enlace de
+        entidades, escribe el lote en una transacción, persiste los hechos en
+        el almacén y ejecuta la auditoría.
 
-      runCoordinator = component 'Coordinador de corridas' {
-        technology 'Python'
-        description 'Reclama corridas pendientes, marca estados, encadena ejecuciones y termina cuando no queda trabajo'
-      }
-      documentConverter = component 'Conversor de documentos' {
-        technology 'Docling'
-        description 'Convierte documentos PDF en texto estructurado'
-      }
-      contextRetriever = component 'Recuperador de contexto' {
-        technology 'Python + Neo4j'
-        description 'Recupera el subgrafo relevante para anclar la extracción al contenido existente'
-      }
-      llmExtractor = component 'Extractor asistido por modelo de lenguaje' {
-        technology 'Python + PydanticAI'
-        description 'Emite hechos candidatos estructurados; único consumidor del proveedor externo'
-      }
-      conformanceValidator = component 'Validador de conformidad' {
-        technology 'Python'
-        description 'Valida cada hecho candidato contra el esquema versionado derivado de la T-Box'
-      }
-      entityLinker = component 'Enlazador de entidades' {
-        technology 'Python + Neo4j'
-        description 'Resuelve cada entidad contra nodos existentes de ambas capas sin modificar la capa de referencia'
-      }
-      transactionWriter = component 'Escritor transaccional' {
-        technology 'Python + Cypher'
-        description 'Genera y ejecuta la escritura con procedencia dentro de una única transacción'
-      }
-      invariantVerifier = component 'Verificador de invariantes' {
-        technology 'Python + Cypher'
-        description 'Ejecuta las invariantes dentro de la transacción antes de confirmar; una violación provoca rollback'
-      }
-      discardRegistry = component 'Registro de descartes' {
-        technology 'Python + SQLite'
-        description 'Registra descartes del validador, enlazador y verificador con motivo y restricción'
-      }
-      artifactManager = component 'Gestor de artefactos' {
-        technology 'Python'
-        description 'Carga la capa de referencia, vuelca hechos institucionales validados y ejecuta la reproyección'
-      }
+        Único escritor del grafo: impedir RI-05 y RI-08 exige leer el grafo
+        entre la validación y la escritura, sin que nadie más escriba en ese
+        intervalo.
+
+        Una auditoría con violaciones detiene el drenaje: las corridas
+        pendientes quedan sin procesar.
+
+        Limitación declarada: si el worker se interrumpe entre confirmar el
+        lote y ejecutar la auditoría, el grafo cambia sin un reporte que
+        describa su estado.
+
+        Lee su configuración de validación de un archivo generado del TTL que
+        se versiona con el código y viaja en el artefacto de despliegue.
+      '''
     }
 
-    neo4j = database 'Base de grafo' {
-      technology 'Neo4j Community'
-      description 'Persistencia del grafo de conocimiento'
+    // Sin flecha entrante a propósito: el desarrollador no se modela como
+    // actor; la invocación se describe en la prosa.
+    buildTools = buildTool 'Procesos de construcción del grafo' {
+      technology 'Python, línea de comandos'
+      summary 'Carga la capa de referencia y reconstruye el grafo. No es funcionalidad en línea.'
+      description '''
+        Tres modos: carga de la capa de referencia desde el TTL versionado,
+        reaplicación de los hechos guardados y reproyección, que ejecuta los
+        dos anteriores sobre una base vacía. Ninguno invoca al modelo de
+        lenguaje (AC-04).
+
+        Se invoca desde la línea de comandos, con el sistema detenido. Esa es
+        la condición que mantiene un único escritor del grafo (ADR-005): nada
+        impide técnicamente que coincida con un worker en curso.
+
+        Comparte con el worker el módulo de escritura de forma fija, de modo
+        que la reaplicación produce lo mismo que produjo la ingesta.
+
+        Lee el TTL del backbone de un archivo versionado que viaja en su
+        artefacto de despliegue.
+
+        Su diseño interno se documenta aparte.
+      '''
     }
-    sqlite = database 'Almacén operacional' {
+
+    neo4j = dataStore 'Base de grafos' {
+      technology 'Neo4j Community, Cypher 5'
+      summary 'Grafo de propiedades con la capa de referencia y la institucional.'
+      description '''
+        Una sola base. Ocho etiquetas de clase, ocho tipos de arista y una
+        única propiedad de clave por nodo: el IRI en la capa de referencia, un
+        uuid en la institucional.
+
+        Su contenido se reconstruye por completo mediante reproyección, así
+        que ningún dato tiene aquí su fuente de verdad.
+      '''
+    }
+
+    sqlite = dataStore 'Almacén operacional' {
       technology 'SQLite'
-      description 'Estado de corridas y registro de descartes'
+      summary 'Estado de corridas, descartes y reportes de auditoría.'
+      description '''
+        Escrito por la API al dar de alta una corrida y por el worker durante
+        su ejecución. Recibe también el reporte de auditoría de los procesos
+        de construcción.
+
+        Su contenido sobrevive a la reproyección. Sostiene las medidas de
+        AC-01 y AC-02.
+
+        Modo WAL y espera ante bloqueo. Requiere que la API y el worker
+        compartan host y sistema de archivos local.
+      '''
     }
-    artifacts = container 'Repositorio de artefactos' {
+
+    documentStore = dataStore 'Almacén de documentos' {
+      technology 'Sistema de archivos'
+      summary 'Documentos ingestados, hospedados por el sistema.'
+      description '''
+        La API escribe al recibir el documento y lee al servirlo; el worker
+        lee para parsearlo.
+
+        Todo recurso de aprendizaje institucional es un documento subido, de
+        modo que sin este almacén el estudiante no puede abrir lo que el grafo
+        cita.
+      '''
+    }
+
+    factStore = dataStore 'Almacén de hechos' {
       technology 'Sistema de archivos versionado'
-      description 'Tabla del backbone y hechos institucionales validados'
+      summary 'Hechos institucionales escritos por cada corrida.'
+      description '''
+        El worker lo escribe después de confirmar la transacción, con las
+        claves ya resueltas y la procedencia fijada. Los procesos de
+        construcción lo leen para reaplicar sin invocar al modelo de
+        lenguaje (AC-04).
+
+        El versionado es manual: el sistema escribe archivos, no hace commits.
+
+        Limitación declarada: entre confirmar la transacción y persistir aquí
+        hay una ventana no atómica. Si el worker se interrumpe en ese
+        intervalo, la corrida queda marcada como escrita sin persistir y una
+        reproyección posterior no la reproduciría.
+      '''
     }
   }
 
-  // Nivel 1: contexto
+  // Nivel 1
   student -> kms 'Consulta y navega'
-  operator -> kms 'Incorpora material y verifica integridad'
-  kms -> llm 'Envía texto y recibe estructura candidata'
+  operator -> kms 'Incorpora material y revisa el resultado'
+  kms -> llm 'Envía texto y recibe hechos candidatos'
 
-  // Nivel 2: contenedores
+  // Nivel 2
   student -> kms.web 'Consulta y navega'
-  operator -> kms.web 'Opera la ingesta y verifica integridad'
-  kms.web -> kms.api 'Realiza consultas y operaciones' {
+  operator -> kms.web 'Sube documentos, sigue corridas, revisa descartes y el reporte'
+  kms.web -> kms.api 'Consultas, alta de corrida, estado, descarga de documentos' {
     technology 'HTTP/JSON'
   }
-  kms.api -> kms.neo4j 'Consulta el grafo' {
+  kms.api -> kms.neo4j 'Consulta' {
     technology 'Cypher'
+    description '''
+      Solo lectura. El tiempo de ejecución de los cinco patrones de DD-07 en
+      esta relación es lo que mide AC-05, sin serialización ni transporte.
+    '''
   }
-  kms.api -> kms.sqlite 'Lee/escribe estado de corridas y descartes' {
+  kms.api -> kms.sqlite 'Escribe el alta de corrida; lee estado, descartes y reporte' {
     technology 'SQL'
   }
-  kms.api -> kms.worker 'Registra y deja corridas pendientes'
-  kms.worker -> kms.sqlite 'Consulta y actualiza corridas' {
+  kms.api -> kms.documentStore 'Escribe al subir, lee al servir'
+  kms.api -> kms.worker 'Lanza una corrida' {
+    technology 'Proceso hijo'
+    description '''
+      Lanza un proceso solo si no hay uno activo. El worker toma de ahí en
+      adelante las corridas pendientes por su cuenta, lo que serializa las
+      escrituras sin cola ni intermediario.
+    '''
+  }
+  kms.worker -> kms.sqlite 'Reclama la corrida pendiente, actualiza estado, escribe descartes y reporte' {
     technology 'SQL'
   }
-  kms.worker -> kms.neo4j 'Escribe y verifica el grafo' {
-    technology 'Cypher'
+  kms.worker -> kms.documentStore 'Lee el documento a parsear'
+  kms.worker -> llm 'Solicita extracción' {
+    description '''
+      Envía el texto del documento y los candidatos recuperados del grafo;
+      recibe hechos candidatos conformes al esquema. Lo recibido se valida
+      antes de escribir y nunca se incorpora al grafo sin pasar esa
+      validación.
+    '''
   }
-  kms.worker -> kms.artifacts 'Lee y escribe artefactos versionados'
-  kms.worker -> llm 'Envía contexto y recibe hechos candidatos estructurados'
+  kms.worker -> kms.neo4j 'Lee y escribe' {
+    technology 'Cypher'
+    description '''
+      Lee para recuperar contexto y resolver el enlace de entidades. Escribe
+      el lote completo en una transacción, con sentencias de forma fija que
+      solo reciben valores. La auditoría corre después de confirmar.
+    '''
+  }
+  kms.worker -> kms.factStore 'Persiste los hechos de la corrida' {
+    description '''
+      Posterior a la confirmación de la transacción. Es la fuente de la
+      reaplicación.
+    '''
+  }
 
-  // Nivel 3: componentes de la API
-  kms.api.queryController -> kms.api.queryCatalog 'Solicita consultas'
-  kms.api.queryCatalog -> kms.api.graphAdapter 'Ejecuta consultas'
-  kms.api.graphAdapter -> kms.neo4j 'Consulta' {
+  kms.buildTools -> kms.neo4j 'Vacía, carga la capa de referencia y reaplica los hechos' {
     technology 'Cypher'
   }
-  kms.api.operationController -> kms.api.accessGuard 'Valida acceso del operador'
-  kms.api.operationController -> kms.api.runManager 'Gestiona corridas y descartes'
-  kms.api.runManager -> kms.sqlite 'Lee y actualiza' {
-    technology 'SQL'
-  }
-  kms.api.invariantVerifier -> kms.api.graphAdapter 'Ejecuta verificación de solo lectura'
-  kms.api.invariantVerifier -> kms.neo4j 'Consulta invariantes' {
-    technology 'Cypher'
-  }
-  kms.api.operationController -> kms.api.runManager 'Consulta estado y descartes'
-
-  // Nivel 3: componentes del trabajador
-  kms.worker.runCoordinator -> kms.sqlite 'Reclama y actualiza corridas' {
-    technology 'SQL'
-  }
-  kms.worker.runCoordinator -> kms.worker.documentConverter 'Orquesta ingesta'
-  kms.worker.documentConverter -> kms.worker.contextRetriever 'Entrega texto estructurado'
-  kms.worker.contextRetriever -> kms.neo4j 'Recupera subgrafo relevante' {
-    technology 'Cypher'
-  }
-  kms.worker.contextRetriever -> kms.worker.llmExtractor 'Entrega contexto'
-  kms.worker.llmExtractor -> llm 'Solicita extracción estructurada'
-  llm -> kms.worker.llmExtractor 'Devuelve hechos candidatos'
-  kms.worker.llmExtractor -> kms.worker.conformanceValidator 'Entrega hechos candidatos'
-  kms.worker.conformanceValidator -> kms.worker.entityLinker 'Entrega hechos conformes'
-  kms.worker.conformanceValidator -> kms.worker.discardRegistry 'Registra descartes'
-  kms.worker.entityLinker -> kms.neo4j 'Consulta entidades existentes' {
-    technology 'Cypher'
-  }
-  kms.worker.entityLinker -> kms.worker.transactionWriter 'Entrega entidades enlazadas'
-  kms.worker.entityLinker -> kms.worker.discardRegistry 'Registra descartes'
-  kms.worker.transactionWriter -> kms.worker.invariantVerifier 'Solicita verificación dentro de la transacción'
-  kms.worker.transactionWriter -> kms.neo4j 'Escribe hechos y procedencia' {
-    technology 'Cypher'
-  }
-  kms.worker.invariantVerifier -> kms.neo4j 'Evalúa invariantes' {
-    technology 'Cypher'
-  }
-  kms.worker.invariantVerifier -> kms.worker.discardRegistry 'Registra violaciones'
-  kms.worker.runCoordinator -> kms.worker.artifactManager 'Orquesta carga y reproyección'
-  kms.worker.artifactManager -> kms.artifacts 'Lee/escribe artefactos versionados'
-  kms.worker.artifactManager -> kms.neo4j 'Carga/reproyecta el grafo' {
-    technology 'Cypher'
-  }
-  kms.worker.discardRegistry -> kms.sqlite 'Persiste descartes' {
+  kms.buildTools -> kms.factStore 'Lee los hechos a reaplicar'
+  kms.buildTools -> kms.sqlite 'Escribe el reporte de auditoría' {
     technology 'SQL'
   }
 }

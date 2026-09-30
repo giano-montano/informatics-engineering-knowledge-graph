@@ -15,12 +15,23 @@ specification {
   element container {
     notation "Contenedor"
   }
-  element database {
-    notation "Contenedor: base de datos"
+  element buildTool {
+    notation "Contenedor: proceso de construcción"
+    style {
+      border dashed
+      color muted
+    }
+  }
+  element dataStore {
+    notation "Contenedor: almacén de datos"
     style { shape storage }
   }
   element component {
     notation "Componente"
     style { color sky }
+  }
+
+  deploymentNode host {
+    notation "Nodo de despliegue"
   }
 }

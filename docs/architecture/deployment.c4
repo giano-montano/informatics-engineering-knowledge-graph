@@ -1,0 +1,22 @@
+// Despliegue del prototipo. Por ahora solo el nodo y sus restricciones;
+// las instancias y la vista de despliegue quedan para después.
+//
+// Pregunta abierta: el mecanismo para llevar al host el resultado de los
+// procesos de construcción ejecutados fuera de él.
+deployment {
+
+  prototypeHost = host 'Host del prototipo' {
+    description '''
+      - La API y el worker se empaquetan en una imagen con dos puntos de
+        entrada, porque la API lanza el worker como proceso hijo.
+      - La base de grafos corre en este host.
+      - Los tres almacenes de archivos viven en el disco local de este host.
+      - Los procesos de construcción pueden ejecutarse fuera del host, por
+        ejemplo en la máquina del desarrollador; su resultado se lleva a este
+        host.
+      - Limitación declarada: el despliegue hornea el host en los
+        localizadores guardados; cambiar de dirección exige migración de
+        datos.
+    '''
+  }
+}

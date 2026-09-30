@@ -1,0 +1,26 @@
+// Vocabulario C4: los tipos de elemento que el modelo puede usar.
+// Identificadores en inglés; texto visible en español.
+specification {
+  element person {
+    notation "Persona"
+    style { shape person }
+  }
+  element softwareSystem {
+    notation "Sistema de software"
+  }
+  element externalSystem {
+    notation "Sistema externo"
+    style { color gray }
+  }
+  element container {
+    notation "Contenedor"
+  }
+  element database {
+    notation "Contenedor: base de datos"
+    style { shape storage }
+  }
+  element component {
+    notation "Componente"
+    style { color sky }
+  }
+}

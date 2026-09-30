@@ -1,0 +1,13 @@
+{
+  "name": "iekg-architecture",
+  "private": true,
+  "description": "Tooling for the C4 architecture model in docs/architecture",
+  "scripts": {
+    "arch:serve": "likec4 start docs/architecture",
+    "arch:validate": "likec4 validate docs/architecture",
+    "arch:export": "likec4 export png --light --flat -o docs/architecture/images docs/architecture"
+  },
+  "devDependencies": {
+    "likec4": "1.59.4"
+  }
+}

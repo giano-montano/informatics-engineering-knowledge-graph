@@ -1,0 +1,24 @@
+// Vistas C4, niveles 1 a 3. Cada vista es una proyección de model.c4:
+// no declara elementos ni relaciones, solo elige qué mostrar.
+views {
+
+  view index {
+    title 'Nivel 1: Contexto'
+    include student, operator, kms, llm
+  }
+
+  view containers of kms {
+    title 'Nivel 2: Contenedores'
+    include *
+  }
+
+  view apiComponents of kms.api {
+    title 'Nivel 3: Componentes de la API'
+    include *
+  }
+
+  view workerComponents of kms.worker {
+    title 'Nivel 3: Trabajador de construcción del grafo'
+    include *
+  }
+}

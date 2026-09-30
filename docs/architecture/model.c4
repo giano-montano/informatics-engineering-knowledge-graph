@@ -1,0 +1,201 @@
+// Modelo único del KMS. Cada elemento se declara una sola vez; las vistas
+// de views.c4 son proyecciones de este modelo.
+//
+// Transcripción fiel de los diagramas Mermaid del commit b16d25b: las
+// relaciones se conservan en el nivel en que se dibujaron.
+model {
+
+  student = person 'Estudiante' {
+    description 'Consulta y navega por el conocimiento curricular y sus recursos'
+  }
+  operator = person 'Operador del grafo' {
+    description 'Incorpora material, observa las corridas y verifica la integridad'
+  }
+
+  llm = externalSystem 'Proveedor de modelo de lenguaje' {
+    description 'Recibe texto y devuelve estructura candidata para la extracción de conocimiento'
+  }
+
+  kms = softwareSystem 'KMS de conocimiento curricular' {
+    description 'Hace explícitas y navegables las relaciones entre áreas, unidades, temas, conceptos, cursos y recursos de Ingeniería Informática'
+
+    web = container 'Aplicación web' {
+      technology 'SPA'
+      description 'Navegación del estudiante y panel del operador'
+    }
+
+    api = container 'API' {
+      technology 'Python / FastAPI'
+      description 'Expone consultas, recepción de documentos y estado de corridas'
+
+      queryController = component 'Controlador de consultas' {
+        technology 'FastAPI'
+        description 'Expone los puntos de acceso de consulta y búsqueda al estudiante'
+      }
+      queryCatalog = component 'Catálogo de consultas derivadas' {
+        technology 'Python + Cypher parametrizado'
+        description 'Ejecuta una consulta por patrón de DD-07, devuelve las afirmaciones junto con su procedencia e instrumenta la latencia'
+      }
+      graphAdapter = component 'Adaptador de grafo' {
+        technology 'Driver Neo4j'
+        description 'Gestiona sesiones y transacciones de solo lectura contra Neo4j'
+      }
+      operationController = component 'Controlador de operación' {
+        technology 'FastAPI'
+        description 'Recibe documentos, consulta estados y lista descartes'
+      }
+      runManager = component 'Gestor de corridas' {
+        technology 'Python + SQLite'
+        description 'Gestiona el ciclo de vida de las corridas y deja trabajo pendiente para el trabajador'
+      }
+      invariantVerifier = component 'Verificador de invariantes' {
+        technology 'Python'
+        description 'Ejecuta bajo demanda el conjunto declarado de invariantes y emite el reporte'
+      }
+      accessGuard = component 'Guarda de acceso' {
+        technology 'Python'
+        description 'Protege los puntos de acceso destinados al operador mediante un token fijo'
+      }
+    }
+
+    worker = container 'Trabajador de construcción del grafo' {
+      technology 'Python'
+      description 'Ejecuta la construcción del grafo: ingesta, carga de referencia y reproyección'
+
+      runCoordinator = component 'Coordinador de corridas' {
+        technology 'Python'
+        description 'Reclama corridas pendientes, marca estados, encadena ejecuciones y termina cuando no queda trabajo'
+      }
+      documentConverter = component 'Conversor de documentos' {
+        technology 'Docling'
+        description 'Convierte documentos PDF en texto estructurado'
+      }
+      contextRetriever = component 'Recuperador de contexto' {
+        technology 'Python + Neo4j'
+        description 'Recupera el subgrafo relevante para anclar la extracción al contenido existente'
+      }
+      llmExtractor = component 'Extractor asistido por modelo de lenguaje' {
+        technology 'Python + PydanticAI'
+        description 'Emite hechos candidatos estructurados; único consumidor del proveedor externo'
+      }
+      conformanceValidator = component 'Validador de conformidad' {
+        technology 'Python'
+        description 'Valida cada hecho candidato contra el esquema versionado derivado de la T-Box'
+      }
+      entityLinker = component 'Enlazador de entidades' {
+        technology 'Python + Neo4j'
+        description 'Resuelve cada entidad contra nodos existentes de ambas capas sin modificar la capa de referencia'
+      }
+      transactionWriter = component 'Escritor transaccional' {
+        technology 'Python + Cypher'
+        description 'Genera y ejecuta la escritura con procedencia dentro de una única transacción'
+      }
+      invariantVerifier = component 'Verificador de invariantes' {
+        technology 'Python + Cypher'
+        description 'Ejecuta las invariantes dentro de la transacción antes de confirmar; una violación provoca rollback'
+      }
+      discardRegistry = component 'Registro de descartes' {
+        technology 'Python + SQLite'
+        description 'Registra descartes del validador, enlazador y verificador con motivo y restricción'
+      }
+      artifactManager = component 'Gestor de artefactos' {
+        technology 'Python'
+        description 'Carga la capa de referencia, vuelca hechos institucionales validados y ejecuta la reproyección'
+      }
+    }
+
+    neo4j = database 'Base de grafo' {
+      technology 'Neo4j Community'
+      description 'Persistencia del grafo de conocimiento'
+    }
+    sqlite = database 'Almacén operacional' {
+      technology 'SQLite'
+      description 'Estado de corridas y registro de descartes'
+    }
+    artifacts = container 'Repositorio de artefactos' {
+      technology 'Sistema de archivos versionado'
+      description 'Tabla del backbone y hechos institucionales validados'
+    }
+  }
+
+  // Nivel 1: contexto
+  student -> kms 'Consulta y navega'
+  operator -> kms 'Incorpora material y verifica integridad'
+  kms -> llm 'Envía texto y recibe estructura candidata'
+
+  // Nivel 2: contenedores
+  student -> kms.web 'Consulta y navega'
+  operator -> kms.web 'Opera la ingesta y verifica integridad'
+  kms.web -> kms.api 'Realiza consultas y operaciones' {
+    technology 'HTTP/JSON'
+  }
+  kms.api -> kms.neo4j 'Consulta el grafo' {
+    technology 'Cypher'
+  }
+  kms.api -> kms.sqlite 'Lee/escribe estado de corridas y descartes' {
+    technology 'SQL'
+  }
+  kms.api -> kms.worker 'Registra y deja corridas pendientes'
+  kms.worker -> kms.sqlite 'Consulta y actualiza corridas' {
+    technology 'SQL'
+  }
+  kms.worker -> kms.neo4j 'Escribe y verifica el grafo' {
+    technology 'Cypher'
+  }
+  kms.worker -> kms.artifacts 'Lee y escribe artefactos versionados'
+  kms.worker -> llm 'Envía contexto y recibe hechos candidatos estructurados'
+
+  // Nivel 3: componentes de la API
+  kms.api.queryController -> kms.api.queryCatalog 'Solicita consultas'
+  kms.api.queryCatalog -> kms.api.graphAdapter 'Ejecuta consultas'
+  kms.api.graphAdapter -> kms.neo4j 'Consulta' {
+    technology 'Cypher'
+  }
+  kms.api.operationController -> kms.api.accessGuard 'Valida acceso del operador'
+  kms.api.operationController -> kms.api.runManager 'Gestiona corridas y descartes'
+  kms.api.runManager -> kms.sqlite 'Lee y actualiza' {
+    technology 'SQL'
+  }
+  kms.api.invariantVerifier -> kms.api.graphAdapter 'Ejecuta verificación de solo lectura'
+  kms.api.invariantVerifier -> kms.neo4j 'Consulta invariantes' {
+    technology 'Cypher'
+  }
+  kms.api.operationController -> kms.api.runManager 'Consulta estado y descartes'
+
+  // Nivel 3: componentes del trabajador
+  kms.worker.runCoordinator -> kms.sqlite 'Reclama y actualiza corridas' {
+    technology 'SQL'
+  }
+  kms.worker.runCoordinator -> kms.worker.documentConverter 'Orquesta ingesta'
+  kms.worker.documentConverter -> kms.worker.contextRetriever 'Entrega texto estructurado'
+  kms.worker.contextRetriever -> kms.neo4j 'Recupera subgrafo relevante' {
+    technology 'Cypher'
+  }
+  kms.worker.contextRetriever -> kms.worker.llmExtractor 'Entrega contexto'
+  kms.worker.llmExtractor -> llm 'Solicita extracción estructurada'
+  llm -> kms.worker.llmExtractor 'Devuelve hechos candidatos'
+  kms.worker.llmExtractor -> kms.worker.conformanceValidator 'Entrega hechos candidatos'
+  kms.worker.conformanceValidator -> kms.worker.entityLinker 'Entrega hechos conformes'
+  kms.worker.conformanceValidator -> kms.worker.discardRegistry 'Registra descartes'
+  kms.worker.entityLinker -> kms.neo4j 'Consulta entidades existentes' {
+    technology 'Cypher'
+  }
+  kms.worker.entityLinker -> kms.worker.transactionWriter 'Entrega entidades enlazadas'
+  kms.worker.entityLinker -> kms.worker.discardRegistry 'Registra descartes'
+  kms.worker.transactionWriter -> kms.worker.invariantVerifier 'Solicita verificación dentro de la transacción'
+  kms.worker.transactionWriter -> kms.neo4j 'Escribe hechos y procedencia' {
+    technology 'Cypher'
+  }
+  kms.worker.invariantVerifier -> kms.neo4j 'Evalúa invariantes' {
+    technology 'Cypher'
+  }
+  kms.worker.invariantVerifier -> kms.worker.discardRegistry 'Registra violaciones'
+  kms.worker.runCoordinator -> kms.worker.artifactManager 'Orquesta carga y reproyección'
+  kms.worker.artifactManager -> kms.artifacts 'Lee/escribe artefactos versionados'
+  kms.worker.artifactManager -> kms.neo4j 'Carga/reproyecta el grafo' {
+    technology 'Cypher'
+  }
+  kms.worker.discardRegistry -> kms.sqlite 'Persiste descartes' {
+    technology 'SQL'
+  }
+}

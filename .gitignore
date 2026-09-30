@@ -29,3 +29,6 @@ build/embeddings/
 internal-notes/
 .claude
 .agents
+
+# Herramientas de Node para el modelo C4 (package.json).
+node_modules/

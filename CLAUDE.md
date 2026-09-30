@@ -86,6 +86,7 @@ docs/tesis.md                  El documento de tesis.
 docs/estandares-de-codigo.md   Convenciones. Vinculantes.
 docs/traspaso-del-laboratorio.md  Hechos medidos + preguntas abiertas.
 docs/decisiones/               Un archivo por decisión rehecha.
+docs/architecture/             Modelo C4 en LikeC4 (*.c4).
 ontology/*.ttl                 R1 (esquema OWL) y R2 (backbone CS2023).
 docker-compose.yml             Neo4j 5.26 LTS.
 src/iekg/__init__.py           Vacío a propósito.
@@ -101,6 +102,11 @@ docker compose up -d
 uv sync
 uv run pytest tests/ -q
 start http://localhost:7474
+
+npm install               # una vez: LikeC4 fijado en package.json
+npm run arch:validate     # sintaxis y referencias del modelo C4
+npm run arch:export       # PNG en docs/architecture/images/, solo en hitos
+npm run arch:serve        # vista previa en el navegador
 ```
 
 La contraseña vive en `.env`, ignorado por git. Si falta: copiar `.env.example`,
@@ -116,6 +122,13 @@ propia especificación.
 - `docs/decisiones/NNNN-*.md`: una decisión por archivo, en español, con las
   **alternativas descartadas** y por qué. Es el producto, no el adorno: sin
   ellas, en tres meses no se sabrá por qué algo es así.
+- Diagramas C4: el fuente es `docs/architecture/*.c4`, un solo modelo con una
+  vista por nivel. Durante el trabajo se ven en la vista previa de la
+  extensión LikeC4, no en imágenes. Tras cada cambio, `arch:validate`. Los PNG
+  se exportan solo en hitos (entregas de tesis, revisiones con el asesor), y
+  cuando se exportan van en el mismo commit que el `.c4` del que salen. Claude
+  edita a partir de una decisión ya escrita; Giano revisa el diff y la vista
+  previa antes de hacer commit. Claude no hace push.
 - **Un documento obsoleto que aparenta estar vigente es peor que ninguno.** Si
   algo cambia, se escribe uno nuevo; no se reescribe el viejo. La excepción es
   este archivo y `docs/estandares-de-codigo.md`, que sí son vivos.

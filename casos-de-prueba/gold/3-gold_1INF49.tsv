@@ -1,0 +1,63 @@
+# silabo=1INF49 | curso=INGENIERÍA DE REQUISITOS | anotador=GPT-5.6 Luna | guia=v2.1 | fecha=2026-10-02
+id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
+1INF49-001	tema	obligatoria	Ingeniería de requisitos	requirements engineering		contenidos	CAPÍTULO 1 FUNDAMENTOS DE LA INGENIERÍA DE REQUISITOS	
+1INF49-002	concepto	obligatoria	construcción del software	software construction	1INF49-001	contenidos	La construcción del software.	
+1INF49-003	concepto	obligatoria	Modelos de ciclo de vida del Desarrollo de Software	software development life cycle models	1INF49-001	contenidos	Modelos de ciclo de vida del Desarrollo de Software	
+1INF49-004	concepto	obligatoria	Términos utilizados en la construcción de software	terms used in software construction	1INF49-001	contenidos	Términos utilizados en la construcción de software	
+1INF49-005	concepto	obligatoria	Ingeniería de requisitos	requirements engineering	1INF49-001	contenidos	La ingeniería de requisitos y tipos de requisitos	
+1INF49-006	concepto	obligatoria	tipos de requisitos	types of requirements	1INF49-001	contenidos	La ingeniería de requisitos y tipos de requisitos	
+1INF49-007	concepto	obligatoria	casos de uso	use cases|use case	1INF49-001	contenidos	Fundamentos de los casos de uso	
+1INF49-008	concepto	obligatoria	Historias de usuario	user stories|user story	1INF49-001	contenidos	Historias de usuario y el catálogo de requisitos	
+1INF49-009	concepto	obligatoria	catálogo de requisitos	requirements catalog	1INF49-001	contenidos	Historias de usuario y el catálogo de requisitos	
+1INF49-010	tema	obligatoria	DISEÑO DE LA EXPERIENCIA USUARIO	UX design|diseño de la experiencia de usuario		contenidos	CAPÍTULO 2 DISEÑO DE LA EXPERIENCIA USUARIO (9 horas)	
+1INF49-011	concepto	obligatoria	Empathy Maps	mapas de empatía|Empathy Map	1INF49-010	contenidos	Empathy Maps	
+1INF49-012	concepto	obligatoria	User Personas	personas de usuario|User Persona	1INF49-010	contenidos	User Personas	
+1INF49-013	concepto	obligatoria	Scenarios Mapping	mapeo de escenarios	1INF49-010	contenidos	Scenarios Mapping	
+1INF49-014	concepto	obligatoria	Journey Maps	mapas de recorrido|Journey Map	1INF49-010	contenidos	Journey Maps	
+1INF49-015	tema	obligatoria	DISEÑO DE INTERFACES DE USUARIO	UI design|diseño de interfaces de usuario		contenidos	CAPÍTULO 3 DISEÑO DE INTERFACES DE USUARIO (6 horas)	
+1INF49-016	concepto	obligatoria	Prototipado (UI Design)	prototyping|prototipado	1INF49-015	contenidos	Prototipado (UI Design)	"Decisión: se conserva la denominación literal del ítem; no se trata ""UI Design"" como alias de ""Prototipado"" porque el propio sílabo vuelve a usar ""UI Design"" como denominación de una enumeración distinta en el ítem siguiente."
+1INF49-017	concepto	obligatoria	Estándares para el diseño de interfaces gráficas de usuario	standards for graphical user interface design	1INF49-015	contenidos	Estándares para el diseño de interfaces gráficas de usuario.	
+1INF49-018	concepto	obligatoria	interfaces gráficas de usuario	graphical user interfaces|GUI|interfaz gráfica de usuario	1INF49-015	contenidos	Estándares para el diseño de interfaces gráficas de usuario.	
+1INF49-019	concepto	obligatoria	Wireframes	wireframe	1INF49-015	contenidos	UI Design: Wireframes, Wireflows, Mockups, Prototypes.	
+1INF49-020	concepto	obligatoria	Wireflows	wireflow	1INF49-015	contenidos	UI Design: Wireframes, Wireflows, Mockups, Prototypes.	
+1INF49-021	concepto	obligatoria	Mockups	mockup	1INF49-015	contenidos	UI Design: Wireframes, Wireflows, Mockups, Prototypes.	
+1INF49-022	concepto	obligatoria	Prototypes	prototipos|Prototype	1INF49-015	contenidos	UI Design: Wireframes, Wireflows, Mockups, Prototypes.	
+1INF49-023	concepto	obligatoria	User Flows Diagrams	diagramas de flujo de usuario|User Flow Diagram	1INF49-015	contenidos	User Flows Diagrams.	
+1INF49-024	tema	obligatoria	CASOS DE USO, ESTÁNDARES Y AGILIDAD	casos de uso|estándares|agilidad		contenidos	CAPÍTULO 4 CASOS DE USO, ESTÁNDARES Y AGILIDAD (6 horas)	
+1INF49-025	concepto	obligatoria	Especificación de requisitos con casos de uso	requirements specification with use cases|especificación de requisitos mediante casos de uso	1INF49-024	contenidos	Especificación de requisitos con casos de uso	
+1INF49-026	concepto	obligatoria	Estándares internacionales para la especificación de requisitos	international standards for requirements specification	1INF49-024	contenidos	Estándares internacionales para la especificación de requisitos	
+1INF49-027	concepto	obligatoria	Los requisitos en entornos ágiles y tradicionales	requirements in agile and traditional environments	1INF49-024	contenidos	Los requisitos en entornos ágiles y tradicionales	
+1INF49-028	tema	obligatoria	MODELOS CONCEPTUALES CON DIAGRAMAS DE CLASES	modelos conceptuales|diagramas de clases		contenidos	CAPÍTULO 5 MODELOS CONCEPTUALES CON DIAGRAMAS DE CLASES (6 horas)	
+1INF49-029	concepto	obligatoria	UML	Unified Modeling Language	1INF49-028	contenidos	Los diagramas de clase de UML	
+1INF49-030	concepto	obligatoria	Los diagramas de clase de UML	UML class diagrams|diagramas de clases UML|diagrama de clase UML	1INF49-028	contenidos	Los diagramas de clase de UML	
+1INF49-031	concepto	obligatoria	Relaciones entre clases	class relationships|relación entre clases	1INF49-028	contenidos	Relaciones entre clases	
+1INF49-032	concepto	obligatoria	Representando conceptos con diagramas de clases	representación de conceptos con diagramas de clases	1INF49-028	contenidos	Representando conceptos con diagramas de clases	Decisión: se mantiene el contenido del ítem como noción de conocimiento, retirando solo la forma verbal en el alias; la guía no define una etiqueta sustitutiva más canónica.
+1INF49-033	concepto	obligatoria	Patrones para la creación de modelos conceptuales con diagramas de clases	patterns for creating conceptual models with class diagrams	1INF49-028	contenidos	Patrones para la creación de modelos conceptuales con diagramas de clases	
+1INF49-034	concepto	obligatoria	Relación del modelo conceptual con los diagramas de clases de diseño	relationship of the conceptual model with design class diagrams	1INF49-028	contenidos	Relación del modelo conceptual con los diagramas de clases de diseño	
+1INF49-035	tema	obligatoria	VALIDACIÓN Y GESTIÓN DE REQUISITOS	validación|gestión de requisitos		contenidos	CAPÍTULO 6 VALIDACIÓN Y GESTIÓN DE REQUISITOS (6 horas)	
+1INF49-036	concepto	obligatoria	Validación y verificación del producto de software	software product validation and verification	1INF49-035	contenidos	Validación y verificación del producto de software	"Decisión: se conserva el ítem como una noción conjunta; la guía separa saberes enumerados, pero aquí ""validación y verificación del producto de software"" funciona como un único tópico contrastado en conjunto."
+1INF49-037	concepto	obligatoria	Heurísticas de usabilidad	usability heuristics	1INF49-035	contenidos	Heurísticas de usabilidad	
+1INF49-038	concepto	obligatoria	Trazabilidad de requisitos	requirements traceability	1INF49-035	contenidos	Trazabilidad de requisitos	
+1INF49-039	concepto	obligatoria	requisitos de software	software requirements	1INF49-001	sumilla	requisitos que un sistema software debe lograr	
+1INF49-040	concepto	obligatoria	necesidades del usuario	user needs	1INF49-001	sumilla	requisitos de software que representan las necesidades del usuario	
+1INF49-041	concepto	obligatoria	restricciones	constraints|restricción	1INF49-001	sumilla	restricciones	
+1INF49-042	concepto	obligatoria	condicionantes asociadas	associated conditions|associated constraints	1INF49-001	sumilla	condicionantes asociadas	
+1INF49-043	concepto	obligatoria	aspectos éticos	ethical aspects	1INF49-001	sumilla	aspectos éticos	
+1INF49-044	concepto	aceptable	técnicas de ingeniería de requisitos	requirements engineering techniques|técnica de ingeniería de requisitos	1INF49-001	sumilla	Asimismo, se aplican técnicas de ingeniería de requisitos para su adecuada formulación	
+1INF49-045	concepto	aceptable	prototipos	prototypes|prototype	1INF49-015	sumilla	se presentan técnicas para la validación o verificación como son prototipos	
+1INF49-046	concepto	aceptable	diseño de interfaz gráfica	graphical interface design|diseño de interfaces gráficas	1INF49-015	sumilla	diseño de interfaz gráfica	
+1INF49-047	concepto	aceptable	casos de pruebas de aceptación del software	software acceptance test cases|caso de prueba de aceptación del software	1INF49-035	sumilla	casos de pruebas de aceptación del software	
+1INF49-048	concepto	aceptable	captura de requisitos	requirements capture	1INF49-001	otra	captura y gestión de requisitos en proyectos de desarrollo de software	
+1INF49-049	concepto	aceptable	necesidades del negocio	business needs	1INF49-001	otra	las necesidades del usuario y del negocio en proyectos de desarrollo de software	
+1INF49-050	concepto	aceptable	usabilidad	usability	1INF49-015	otra	aspectos de usabilidad y accesibilidad	
+1INF49-051	concepto	aceptable	accesibilidad	accessibility	1INF49-015	otra	aspectos de usabilidad y accesibilidad	
+1INF49-052	concepto	aceptable	principios de diseño de interfaces de usuario	user interface design principles	1INF49-015	otra	elementos, principios y patrones de diseño de interfaces de usuario	
+1INF49-053	concepto	aceptable	patrones de diseño de interfaces de usuario	user interface design patterns	1INF49-015	otra	elementos, principios y patrones de diseño de interfaces de usuario	
+1INF49-054	concepto	aceptable	especificación de requisitos	requirements specification	1INF49-001	otra	Elabora la especificación de requisitos funcionales y no funcionales de un producto software	
+1INF49-055	concepto	aceptable	requisitos funcionales	functional requirements|requisito funcional	1INF49-001	otra	Elabora la especificación de requisitos funcionales y no funcionales de un producto software	
+1INF49-056	concepto	aceptable	requisitos no funcionales	non-functional requirements|nonfunctional requirements|requisito no funcional	1INF49-001	otra	Elabora la especificación de requisitos funcionales y no funcionales de un producto software	
+1INF49-057	concepto	aceptable	restricciones de la solución	solution constraints|limitaciones de la solución	1INF49-001	otra	teniendo en cuenta las necesidades del usuario, las restricciones o limitaciones de la solución	
+1INF49-058	concepto	aceptable	casos de prueba funcionales	functional test cases|caso de prueba funcional	1INF49-035	otra	casos de prueba funcionales y no funcionales	
+1INF49-059	concepto	aceptable	casos de prueba no funcionales	non-functional test cases|nonfunctional test cases|caso de prueba no funcional	1INF49-035	otra	casos de prueba funcionales y no funcionales	
+1INF49-060	concepto	aceptable	pruebas de aceptación	acceptance testing|acceptance tests|prueba de aceptación	1INF49-035	otra	incluyendo pruebas de aceptación	
+1INF49-061	concepto	aceptable	estándares reconocidos en el desarrollo de software	recognized software development standards|estándar reconocido en el desarrollo de software	1INF49-024	otra	siguiendo estándares reconocidos en el desarrollo de software	

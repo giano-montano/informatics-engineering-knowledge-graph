@@ -1,0 +1,27 @@
+# silabo=1INF50 | curso=Diseño de Software | anotador=Claude Opus 5.5 | guia=v2.1 | fecha=2026-10-02
+id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
+1INF50-001	tema	obligatoria	Diseño de software	software design			contenidos	UNIDAD 1 DISEÑO DE SOFTWARE	Los capítulos no tienen título (solo "Capítulo N"), así que la unidad es el encabezado con nombre que agrupa los ítems; se anota como tema obligatorio aunque coincida con el nombre del curso, porque aquí nombra un saber.
+1INF50-002	concepto	obligatoria	Diseño de software	software design	1INF50-001	contenidos	Fundamentos del Diseño de Software	"conceptos de diseño de software" (sumilla) se trata como "Fundamentos de X": misma fila, sin alias.
+1INF50-003	concepto	obligatoria	Notación UML	UML|Unified Modeling Language|lenguaje unificado de modelado|lenguaje de modelado UML	1INF50-001	contenidos	Notación UML: Diagramas de Clases de Diseño	
+1INF50-004	concepto	obligatoria	Diagramas de clases de diseño	diagrama de clases de diseño|design class diagrams|design class diagram|DCD	1INF50-001	contenidos	Notación UML: Diagramas de Clases de Diseño	
+1INF50-005	concepto	obligatoria	Principios de diseño	principio de diseño|design principles|principios de diseño de software	1INF50-001	contenidos	Principios de Diseño	
+1INF50-006	concepto	obligatoria	Patrones de diseño	patrón de diseño|design patterns|design pattern|patrones de diseño de software	1INF50-001	contenidos	Patrones de Diseño	
+1INF50-007	concepto	obligatoria	Patrones de persistencia	patrón de persistencia|patrones de persistencia de datos|persistence patterns	1INF50-001	contenidos	Patrones de Persistencia	
+1INF50-008	concepto	obligatoria	Patrones de interacción con base de datos	patrón de interacción con base de datos|patrones de interacción con bases de datos	1INF50-001	contenidos	Patrones de Interacción con Base de Datos	
+1INF50-009	concepto	obligatoria	Antipatrones	antipatrón|anti-patrones|antipatterns|anti-patterns	1INF50-001	contenidos	Antipatrones	
+1INF50-010	concepto	obligatoria	Diagramas de secuencia	diagrama de secuencia|sequence diagrams|sequence diagram	1INF50-001	contenidos	Notación UML: Diagramas de Secuencia	
+1INF50-011	concepto	obligatoria	Diagramas de comunicación	diagrama de comunicación|communication diagrams|communication diagram|diagramas de colaboración|diagrama de colaboración|collaboration diagrams	1INF50-001	contenidos	Notación UML: Diagramas de Comunicación	"Diagramas de colaboración" va como alias: es el nombre UML 1.x del mismo diagrama.
+1INF50-012	concepto	obligatoria	Modelos de diseño	modelo de diseño|design models|design model	1INF50-001	sumilla	modelos de diseño	
+1INF50-013	concepto	aceptable	Diseño detallado	detailed design	1INF50-001	otra	el diseño detallado de cada componente	
+1INF50-014	tema	obligatoria	Pruebas de software	prueba de software|software testing|testing de software			contenidos	UNIDAD 2 PRUEBAS DE SOFTWARE	Mismo criterio que 001: capítulo 5 sin título, la unidad es el tema.
+1INF50-015	concepto	obligatoria	Pruebas de software	prueba de software|software testing|testing de software	1INF50-014	contenidos	Fundamentos de Pruebas de Software	
+1INF50-016	concepto	obligatoria	Tipos de prueba	tipo de prueba|tipos de pruebas|test types|tipos de prueba de software	1INF50-014	contenidos	Tipos de Prueba	
+1INF50-017	concepto	obligatoria	Diseño de pruebas	diseño de prueba|test design	1INF50-014	contenidos	Diseño de Pruebas	
+1INF50-018	concepto	obligatoria	TDD	desarrollo guiado por pruebas|desarrollo dirigido por pruebas|test-driven development|test driven development	1INF50-014	contenidos	TDD y Desarrollo Ágil	
+1INF50-019	concepto	obligatoria	Desarrollo ágil	agile development|desarrollo ágil de software|desarrollo de software ágil	1INF50-014	contenidos	TDD y Desarrollo Ágil	
+1INF50-020	concepto	obligatoria	Pruebas de componentes	prueba de componentes|component testing|pruebas unitarias|prueba unitaria|unit testing	1INF50-014	contenidos	Pruebas de Componentes	"Pruebas unitarias" va como alias: sinónimo de component testing en el glosario ISTQB, que es la referencia obligatoria del curso.
+1INF50-021	concepto	obligatoria	Casos de prueba	caso de prueba|test cases|test case	1INF50-014	sumilla	casos de prueba	
+1INF50-022	tema	aceptable	Requerimientos	requerimiento|requisitos|requisito|requirements		otra	requerimientos funcionales y no funcionales	Agrupador de la enumeración partida 023-024; literal pero no como encabezado, y en otra sección, así que aceptable.
+1INF50-023	concepto	aceptable	Requerimientos funcionales	requerimiento funcional|requisitos funcionales|requisito funcional|functional requirements|RF	1INF50-014	otra	requerimientos funcionales y no funcionales	
+1INF50-024	concepto	aceptable	Requerimientos no funcionales	requerimiento no funcional|requisitos no funcionales|requisito no funcional|non-functional requirements|RNF	1INF50-014	otra	requerimientos funcionales y no funcionales	
+1INF50-025	concepto	aceptable	Proceso de desarrollo de software	procesos de desarrollo de software|software development process	1INF50-014	otra	dentro del proceso de desarrollo de software	

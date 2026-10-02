@@ -1,0 +1,77 @@
+# silabo=1INF33 | curso=BASE DE DATOS | anotador=GPT-5.6 Luna | guia=v2.1 | fecha=2026-10-02
+id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
+1INF33-001	concepto	obligatoria	paradigma relacional para bases de datos	paradigma relacional		sumilla	paradigma relacional para bases de datos	No hay un tema del programa que lo agrupe inequívocamente; se deja vacío.
+1INF33-002	concepto	obligatoria	metodologías de diseño de bases de datos relacionales	metodología de diseño de bases de datos relacionales	1INF33-008	sumilla	metodologías y técnicas de diseño de bases de datos relacionales	El ítem nombra dos saberes; se separan en metodologías y técnicas.
+1INF33-003	concepto	obligatoria	técnicas de diseño de bases de datos relacionales	técnica de diseño de bases de datos relacionales	1INF33-008	sumilla	metodologías y técnicas de diseño de bases de datos relacionales	El ítem nombra dos saberes; se separan en metodologías y técnicas.
+1INF33-004	concepto	obligatoria	normalización	normalización de datos|normalización de bases de datos	1INF33-011	sumilla	normalización y desnormalización	
+1INF33-005	concepto	obligatoria	desnormalización		1INF33-011	sumilla	normalización y desnormalización	
+1INF33-006	concepto	obligatoria	lenguaje estructurado de consultas (SQL)	SQL|Structured Query Language|lenguaje estructurado de consultas		sumilla	lenguaje estructurado de consultas (SQL)	No hay un tema general de SQL en el programa que lo agrupe inequívocamente; se deja vacío.
+1INF33-007	concepto	obligatoria	lenguaje de programación de base de datos (PL/SQL)	PL/SQL|PLSQL|lenguaje de programación de bases de datos	1INF33-013	sumilla	lenguaje de programación de base de datos (PL/SQL)	
+1INF33-008	tema	obligatoria	METODOLOGÍAS DE MODELAMIENTO	metodología de modelamiento		contenidos	CAPÍTULO 2 METODOLOGÍAS DE MODELAMIENTO	
+1INF33-009	tema	obligatoria	SQL DDL	DDL|lenguaje de definición de datos		contenidos	CAPÍTULO 3 SQL DDL (3 horas)	
+1INF33-010	tema	obligatoria	SQL DML	DML|lenguaje de manipulación de datos		contenidos	CAPÍTULO 4 SQL DML (9 horas)	
+1INF33-011	tema	obligatoria	NORMALIZACIÓN	normalización|normalización de datos|normalización de bases de datos		contenidos	CAPÍTULO 5 NORMALIZACIÓN (3 horas)	
+1INF33-012	tema	aceptable	formas normales	forma normal		contenidos	Primera, segunda y tercera forma normal	Agrupador derivado de la enumeración de formas normales.
+1INF33-013	tema	obligatoria	LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL)	PL/SQL|PLSQL|lenguaje de programación de bases de datos		contenidos	CAPÍTULO 6 LENGUAJE DE PROGRAMACIÓN DE BASE DE DATOS (PL/SQL) (9 horas)	
+1INF33-014	tema	obligatoria	TRIGGERS	trigger|triggers|disparadores		contenidos	CAPÍTULO 7 TRIGGERS (6 horas)	
+1INF33-015	tema	obligatoria	TRANSACCIONES	transacción		contenidos	CAPÍTULO 8 TRANSACCIONES (3 horas)	
+1INF33-016	concepto	obligatoria	teoría de conjuntos	teoría de conjunto		contenidos	Teoría de conjuntos y relaciones	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-017	concepto	obligatoria	relaciones	relación		contenidos	Teoría de conjuntos y relaciones	El capítulo 1 tiene un encabezado genérico; aquí 'relaciones' refiere a relaciones matemáticas, distinto de la mención de RA2. Se deja vacío.
+1INF33-018	concepto	obligatoria	Datos	dato		contenidos	Datos, información y bases de datos	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-019	concepto	obligatoria	información			contenidos	Datos, información y bases de datos	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-020	concepto	obligatoria	bases de datos	base de datos		contenidos	Datos, información y bases de datos	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-021	concepto	obligatoria	Sistema de Gestión de Base de Datos (SGBD)	SGBD|DBMS|sistema gestor de bases de datos		contenidos	Concepto de Sistema de Gestión de Base de Datos (SGBD)	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-022	concepto	obligatoria	Modelo	model		contenidos	Definición de Modelo	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-023	concepto	obligatoria	Modelos de Datos	modelo de dato|data models|data model		contenidos	Clasificación de Modelos de Datos	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-024	concepto	obligatoria	Fases del Diseño de una Base de Datos	fases del diseño de base de datos|fase del diseño de una base de datos		contenidos	Fases del Diseño de una Base de Datos	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-025	concepto	obligatoria	Modelo Entidad Relación	modelo entidad-relación|MER|ER model|entity relationship model		contenidos	El Modelo Entidad Relación	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-026	concepto	obligatoria	Modelo Relacional	modelo relacional|relational model		contenidos	El Modelo Relacional	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-027	concepto	obligatoria	Operaciones	operación		contenidos	El Modelo Relacional: Estructura y Operaciones	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-028	concepto	obligatoria	Reglas de Integridad	regla de integridad		contenidos	Reglas de Integridad	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33-029	concepto	obligatoria	Tipos de datos en SQL	tipo de dato en SQL|SQL data types	1INF33-008	contenidos	Tipos de datos en SQL	
+1INF33-030	concepto	obligatoria	Barker	notación Barker|Barker notation	1INF33-008	contenidos	Metodología de modelamiento y convenciones: Barker e IDEF1X	
+1INF33-031	concepto	obligatoria	IDEF1X	notación IDEF1X|IDEF1X notation	1INF33-008	contenidos	Metodología de modelamiento y convenciones: Barker e IDEF1X	
+1INF33-032	concepto	obligatoria	SQL DDL Lenguaje para la definición de datos	SQL DDL|DDL|lenguaje de definición de datos	1INF33-009	contenidos	SQL DDL Lenguaje para la definición de datos	
+1INF33-033	concepto	obligatoria	tablas	tabla	1INF33-009	contenidos	Creación, modificación y borrado de tablas	
+1INF33-034	concepto	obligatoria	columnas	columna	1INF33-009	contenidos	Modificación de columnas y constraints	
+1INF33-035	concepto	obligatoria	constraints	constraint|restricciones	1INF33-009	contenidos	Modificación de columnas y constraints	
+1INF33-036	concepto	obligatoria	índices	índice	1INF33-009	contenidos	Manejo de índices	
+1INF33-037	concepto	obligatoria	Vistas	vista	1INF33-009	contenidos	Uso de Vistas	
+1INF33-038	concepto	obligatoria	SQL DML (queries) Lenguaje para la manipulación de datos	SQL DML|DML|lenguaje de manipulación de datos	1INF33-010	contenidos	SQL DML (queries) Lenguaje para la manipulación de datos	
+1INF33-039	concepto	obligatoria	operadores	operador	1INF33-010	contenidos	Uso de operadores	
+1INF33-040	concepto	obligatoria	fechas	fecha	1INF33-010	contenidos	Manejo de fechas y expresiones aritméticas	
+1INF33-041	concepto	obligatoria	expresiones aritméticas	expresión aritmética	1INF33-010	contenidos	Manejo de fechas y expresiones aritméticas	
+1INF33-042	concepto	obligatoria	agrupaciones	agrupación	1INF33-010	contenidos	Agrupaciones	
+1INF33-043	concepto	obligatoria	subconsultas	subconsulta	1INF33-010	contenidos	Subconsultas: escalares y correlacionadas	
+1INF33-044	concepto	obligatoria	subconsultas escalares	subconsulta escalar|scalar subquery	1INF33-010	contenidos	Subconsultas: escalares y correlacionadas	
+1INF33-045	concepto	obligatoria	subconsultas correlacionadas	subconsulta correlacionada|correlated subquery	1INF33-010	contenidos	Subconsultas: escalares y correlacionadas	
+1INF33-046	concepto	obligatoria	Normalización de datos: Primera, segunda y tercera forma normal	normalización|normalización de datos|normalización de bases de datos	1INF33-011	contenidos	Normalización de datos: Primera, segunda y tercera forma normal	
+1INF33-047	concepto	obligatoria	Primera forma normal	1FN|1NF|first normal form	1INF33-012	contenidos	Primera, segunda y tercera forma normal	
+1INF33-048	concepto	obligatoria	Segunda forma normal	2FN|2NF|second normal form	1INF33-012	contenidos	Primera, segunda y tercera forma normal	
+1INF33-049	concepto	obligatoria	Tercera forma normal	3FN|3NF|third normal form	1INF33-012	contenidos	Primera, segunda y tercera forma normal	
+1INF33-050	concepto	obligatoria	Bloque de programas	bloque de programa|program block	1INF33-013	contenidos	Bloque de programas	
+1INF33-051	concepto	obligatoria	Procedimientos	procedimiento|procedures	1INF33-013	contenidos	Procedimientos y Funciones	
+1INF33-052	concepto	obligatoria	Funciones	función|function	1INF33-013	contenidos	Procedimientos y Funciones	
+1INF33-053	concepto	obligatoria	Parámetros	parámetro|parameter	1INF33-013	contenidos	Parámetros, variables y condiciones	
+1INF33-054	concepto	obligatoria	variables	variable	1INF33-013	contenidos	Parámetros, variables y condiciones	
+1INF33-055	concepto	obligatoria	condiciones	condición	1INF33-013	contenidos	Parámetros, variables y condiciones	
+1INF33-056	concepto	obligatoria	Cursores	cursor	1INF33-013	contenidos	Manejo de Cursores: explícitos e implícitos	
+1INF33-057	concepto	obligatoria	Cursores explícitos	cursor explícito|explicit cursor	1INF33-013	contenidos	Manejo de Cursores: explícitos e implícitos	
+1INF33-058	concepto	obligatoria	Cursores implícitos	cursor implícito|implicit cursor	1INF33-013	contenidos	Manejo de Cursores: explícitos e implícitos	
+1INF33-059	concepto	obligatoria	Secuencias	secuencia|sequence	1INF33-013	contenidos	Secuencias	
+1INF33-060	concepto	obligatoria	Excepciones	excepción|exception	1INF33-013	contenidos	Manejo de excepciones	
+1INF33-061	concepto	obligatoria	Disparadores	trigger|triggers	1INF33-014	contenidos	Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After.	
+1INF33-062	concepto	obligatoria	Disparadores de fila	trigger de fila|row trigger|disparador de fila	1INF33-014	contenidos	Tipos: fila y sentencia	
+1INF33-063	concepto	obligatoria	Disparadores de sentencia	trigger de sentencia|statement trigger|disparador de sentencia	1INF33-014	contenidos	Tipos: fila y sentencia	
+1INF33-064	concepto	obligatoria	Disparadores BEFORE	trigger before|BEFORE trigger|disparador before	1INF33-014	contenidos	Según el evento: Before y After	
+1INF33-065	concepto	obligatoria	Disparadores AFTER	trigger after|AFTER trigger|disparador after	1INF33-014	contenidos	Según el evento: Before y After	
+1INF33-066	concepto	obligatoria	Manejo de errores	gestión de errores|error handling	1INF33-014	contenidos	Manejo de errores	
+1INF33-067	concepto	obligatoria	Transacciones	transacción|transaction	1INF33-015	contenidos	Transacciones	
+1INF33-068	concepto	obligatoria	Serializabilidad	serializability	1INF33-015	contenidos	Serializabilidad	
+1INF33-069	concepto	obligatoria	Concurrencia	concurrency	1INF33-015	contenidos	Concurrencia	
+1INF33-070	concepto	obligatoria	Bloqueos	bloqueo|locks|lock	1INF33-015	contenidos	Bloqueos	
+1INF33-071	concepto	aceptable	datos estructurados	dato estructurado|structured data		otra	gestionar información o datos estructurados	No hay un tema del programa que lo agrupe inequívocamente; se deja vacío.
+1INF33-072	concepto	aceptable	modelos conceptuales	modelo conceptual|conceptual model|conceptual models	1INF33-008	otra	Diseña modelos conceptuales y modelos relacionales de una base de datos	
+1INF33-073	concepto	aceptable	entidades	entidad|entities|entity	1INF33-008	otra	identificar las entidades (conceptual) y tablas (relacional)	
+1INF33-074	concepto	aceptable	relaciones	relación	1INF33-008	otra	visualizar las relaciones entre estos	Se separa de 'relaciones' del capítulo 1: aquí refiere a relaciones del modelo entre entidades; caso para adjudicación.
+1INF33-075	concepto	aceptable	modelo físico	modelo físico de una base de datos|physical data model	1INF33-008	otra	Implementa un modelo físico de una base de datos	

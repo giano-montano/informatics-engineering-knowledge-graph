@@ -1,0 +1,82 @@
+# silabo=1INF30 | curso=Programación 3 | anotador=Claude Opus 5.5 | guia=v2.1 | fecha=2026-10-02
+id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
+1INF30-001	tema	obligatoria	Lenguajes de programación	lenguaje de programación|programming languages		contenidos	Introducción a los lenguajes de programación: Java y C#	Unidad 'INTRODUCCIÓN' es genérica (no entidad); el encabezado en línea del Tema 2 ('Introducción a X: a y b') agrupa ítems: tema X.
+1INF30-002	concepto	obligatoria	Java	lenguaje Java|lenguaje de programación Java|Java programming language	1INF30-001	contenidos	Introducción a los lenguajes de programación: Java y C#	También en Unidad 8; tema_padre de la primera aparición.
+1INF30-003	concepto	obligatoria	C#	C Sharp|lenguaje C#|lenguaje de programación C#	1INF30-001	contenidos	Introducción a los lenguajes de programación: Java y C#	La normalización reduce 'C#' a 'c' (igual que 'C++' en 1INF25): no fusionar por coincidencia normalizada sin revisar evidencia.
+1INF30-004	tema	obligatoria	Programación orientada a objetos	POO|OOP|object-oriented programming		contenidos	PROGRAMACIÓN ORIENTADA A OBJETOS	También en RA1: misma fila.
+1INF30-005	tema	obligatoria	Principios de Programación Orientada a Objetos	principios de la programación orientada a objetos|principios de POO|principios de la POO|pilares de la programación orientada a objetos|pilares de la POO|OOP principles		contenidos	Principios de Programación Orientada a Objetos: Encapsulamiento, Polimorfismo, Herencia y Abstracción	Encabezado en línea ('X: a, b, c y d') tratado como subunidad que agrupa ítems: tema.
+1INF30-006	concepto	obligatoria	Encapsulamiento	encapsulación|encapsulation	1INF30-005	contenidos	Encapsulamiento	
+1INF30-007	concepto	obligatoria	Polimorfismo	polymorphism	1INF30-005	contenidos	Polimorfismo	
+1INF30-008	concepto	obligatoria	Herencia	inheritance	1INF30-005	contenidos	Herencia	
+1INF30-009	concepto	obligatoria	Abstracción	abstraction	1INF30-005	contenidos	Abstracción	
+1INF30-010	concepto	obligatoria	Clases	clase|classes	1INF30-004	contenidos	Clases, objetos e instancias	
+1INF30-011	concepto	obligatoria	Objetos	objeto|objects	1INF30-004	contenidos	Clases, objetos e instancias	
+1INF30-012	concepto	obligatoria	Instancias	instancia|instances	1INF30-004	contenidos	Clases, objetos e instancias	Fila aparte de 'Objetos': el sílabo las enumera como ítems distintos.
+1INF30-013	concepto	obligatoria	Ámbitos de declaración	ámbito de declaración|declaration scope	1INF30-004	contenidos	Ámbitos de declaración y modificadores de acceso	
+1INF30-014	concepto	obligatoria	Modificadores de acceso	modificador de acceso|access modifiers|especificadores de acceso|especificador de acceso|access specifiers	1INF30-004	contenidos	Ámbitos de declaración y modificadores de acceso	
+1INF30-015	concepto	obligatoria	Sobrecarga	overloading|sobrecarga de métodos|method overloading	1INF30-004	contenidos	Sobrecarga, clases de tipo interface	Etiqueta genérica conservada literal; en contexto (POO en Java/C#) es sobrecarga de métodos, que va como alias. Riesgo de colisión en consolidación: no fusionar sin revisar evidencia.
+1INF30-016	concepto	obligatoria	Clases de tipo interface	clase de tipo interface|interfaces|interface|interfaz	1INF30-004	contenidos	clases de tipo interface	Alias 'interfaces' genérico: no fusionar con interfaces gráficas/web sin revisar evidencia.
+1INF30-017	concepto	obligatoria	Clases anidadas	clase anidada|nested classes	1INF30-004	contenidos	clases anidadas	
+1INF30-018	concepto	obligatoria	Enumerados	enumerado|enumeraciones|enumeración|tipos enumerados|tipo enumerado|enum|enums	1INF30-004	contenidos	enumerados	
+1INF30-019	concepto	obligatoria	Listas	lista|lists	1INF30-004	contenidos	enumerados y listas	
+1INF30-020	concepto	obligatoria	Relaciones entre clases	relación entre clases|class relationships	1INF30-004	contenidos	Relaciones entre clases: Programación de la capa de la lógica de negocio	'X: Y' con un solo ítem tras los dos puntos no agrupa ítems: dos conceptos bajo la unidad, no tema en línea.
+1INF30-021	concepto	obligatoria	Capa de la lógica de negocio	capa de lógica de negocio|capa de negocio|business logic layer	1INF30-004	contenidos	Programación de la capa de la lógica de negocio	'Programación de' tratada como fórmula de actividad.
+1INF30-022	tema	obligatoria	Librerías y componentes reutilizables	librerías|librería|bibliotecas|biblioteca|libraries|componentes reutilizables|componente reutilizable|reusable components		contenidos	LIBRERÍAS Y COMPONENTES REUTILIZABLES	
+1INF30-023	concepto	obligatoria	Espacios de nombres	espacio de nombres|namespaces|namespace	1INF30-022	contenidos	Espacios de nombres y paquetes	
+1INF30-024	concepto	obligatoria	Paquetes	paquete|packages|paquetes de Java|Java packages	1INF30-022	contenidos	Espacios de nombres y paquetes	Etiqueta genérica conservada literal; mismo sentido que 1INF25-077. Riesgo de colisión en consolidación: revisar evidencia.
+1INF30-025	concepto	obligatoria	Generación de componentes reutilizables	generación de componentes	1INF30-022	contenidos	Generación y uso de componentes reutilizables	'generación de componentes' de la sumilla es la misma noción: misma fila. 'uso de' es fórmula de actividad y 'componentes reutilizables' ya es alias del tema: sin fila propia.
+1INF30-026	concepto	obligatoria	Marcos de trabajo	marco de trabajo|frameworks|framework	1INF30-022	sumilla	uso de marcos de trabajo (frameworks)	Solo en la sumilla; asignado a la unidad de librerías y componentes reutilizables, la más cercana.
+1INF30-027	concepto	aceptable	.NET	.NET Framework|plataforma .NET|dotnet	1INF30-022	otra	Java Development Kit 24, .NET, Apache Netbeans	Herramienta de Metodología usada como contenido (plataforma de desarrollo en C#). Editores, IDEs, JDK y clientes de BD se trataron como equipo: no entidad.
+1INF30-028	tema	obligatoria	Acceso a base de datos	acceso a bases de datos|acceso a la base de datos|database access		contenidos	ACCESO A BASE DE DATOS	
+1INF30-029	concepto	obligatoria	Persistencia de objetos	persistencia de objeto|object persistence	1INF30-028	contenidos	Persistencia de objetos	También en la sumilla: misma fila.
+1INF30-030	concepto	obligatoria	Drivers de conexión a base de datos	driver de conexión a base de datos|drivers de conexión a bases de datos|controladores de conexión a base de datos|database drivers|database driver	1INF30-028	contenidos	Drivers de conexión a base de datos	
+1INF30-031	concepto	obligatoria	Patrones de diseño de acceso a base de datos	patrón de diseño de acceso a base de datos|patrones de acceso a base de datos|patrones de acceso a datos|data access patterns	1INF30-028	contenidos	Patrones de diseño de acceso a base de datos	
+1INF30-032	concepto	obligatoria	Conexión a base de datos	conexión a bases de datos|conexión a la base de datos|database connection	1INF30-028	sumilla	conexión a base de datos	Fila aparte del tema 'Acceso a base de datos': conexión y acceso no son la misma noción.
+1INF30-033	concepto	obligatoria	Patrones arquitectónicos de aplicaciones empresariales	patrón arquitectónico de aplicaciones empresariales|patrones de arquitectura de aplicaciones empresariales|patrones de aplicaciones empresariales|enterprise application architecture patterns	1INF30-028	sumilla	patrones arquitectónicos de aplicaciones empresariales	Solo en la sumilla; asignado a la Unidad 4 por 'Patrones de diseño de acceso a base de datos' (también podría ir a la capa de negocio de la Unidad 2).
+1INF30-034	concepto	aceptable	Motores de base de datos	motor de base de datos|motores de bases de datos|database engines	1INF30-028	otra	diferentes motores de base de datos	
+1INF30-035	concepto	aceptable	MySQL		1INF30-028	otra	MySQL Workbench	Implícito inequívoco (b): el cliente nombra el motor y RA3 exige conectar a distintos motores. El cliente en sí se trata como equipo.
+1INF30-036	concepto	aceptable	SQL Server	Microsoft SQL Server|MS SQL Server	1INF30-028	otra	SQL Server Management Studio	Implícito inequívoco (b), mismo criterio que MySQL.
+1INF30-037	tema	obligatoria	Programación web	web programming		contenidos	FUNDAMENTOS DE PROGRAMACIÓN WEB	
+1INF30-038	concepto	obligatoria	HTML	HyperText Markup Language|lenguaje HTML|elementos básicos de HTML	1INF30-037	contenidos	Elementos básicos de HTML	'Elementos básicos de X' tratado como 'Fundamentos de X': la entidad es HTML.
+1INF30-039	concepto	obligatoria	CSS	Cascading Style Sheets|hojas de estilo en cascada|hoja de estilo en cascada	1INF30-037	contenidos	Manejo de CSS	
+1INF30-040	concepto	obligatoria	Programación con JavaScript	programación en JavaScript|JavaScript programming	1INF30-037	contenidos	Fundamentos básicos de programación con JavaScript	
+1INF30-041	concepto	obligatoria	JavaScript	JS|lenguaje JavaScript	1INF30-037	contenidos	programación con JavaScript	Núcleo nombrado literal dentro del ítem: concepto aparte (lenguaje).
+1INF30-042	tema	obligatoria	Programación con interfaces gráficas de usuario	programación de interfaces gráficas de usuario|programación con interfaz gráfica de usuario|programación de GUI|GUI programming		contenidos	PROGRAMACIÓN CON INTERFACES GRÁFICAS DE USUARIO	
+1INF30-043	concepto	obligatoria	Interfaces gráficas de usuario	interfaz gráfica de usuario|GUI|GUIs|graphical user interface|graphical user interfaces	1INF30-042	contenidos	Elementos de las interfaces gráficas de usuario	Núcleo nombrado literal en el encabezado y en el Tema 3: concepto aparte.
+1INF30-044	concepto	obligatoria	Formularios web	formulario web|web forms|web form	1INF30-042	contenidos	Creación y manejo de formularios Web	
+1INF30-045	concepto	obligatoria	Manejo de eventos	gestión de eventos|event handling	1INF30-042	contenidos	Manejo de eventos	
+1INF30-046	concepto	obligatoria	Elementos de las interfaces gráficas de usuario	elementos de la interfaz gráfica de usuario|elementos de interfaz gráfica|elementos de GUI|GUI elements	1INF30-042	contenidos	Elementos de las interfaces gráficas de usuario	
+1INF30-047	concepto	obligatoria	Tipos de ventanas	tipo de ventana|tipos de ventana|window types	1INF30-042	contenidos	Tipos de ventanas	
+1INF30-048	concepto	obligatoria	Programación de interfaces web	programación de interfaz web|web interface programming	1INF30-042	sumilla	programación y diseño de interfaces web	Solo en la sumilla; asignado a la Unidad 6 (formularios web, eventos).
+1INF30-049	concepto	obligatoria	Diseño de interfaces web	diseño de interfaz web|web interface design	1INF30-042	sumilla	programación y diseño de interfaces web	Solo en la sumilla; asignado a la Unidad 6, igual que la anterior.
+1INF30-050	concepto	aceptable	Blazor		1INF30-042	otra	GlassFish Server y Blazor	Herramienta de Metodología usada como contenido (framework de interfaces web .NET).
+1INF30-051	tema	obligatoria	Programación distribuida	distributed programming		contenidos	PROGRAMACIÓN DISTRIBUIDA	También en la sumilla y RA2: misma fila.
+1INF30-052	concepto	obligatoria	Arquitectura cliente-servidor	arquitectura cliente/servidor|arquitectura cliente servidor|modelo cliente-servidor|client-server architecture	1INF30-051	contenidos	Arquitectura cliente-servidor	
+1INF30-053	concepto	obligatoria	Tecnologías de programación distribuida	tecnología de programación distribuida|distributed programming technologies	1INF30-051	contenidos	Tecnologías de programación distribuida	
+1INF30-054	tema	obligatoria	Servicios web	servicio web|web services|web service		contenidos	Servicios Web: SOAP y REST	Encabezado en línea tratado como tema; 'servicios web' de la sumilla es la misma fila.
+1INF30-055	concepto	obligatoria	SOAP	Simple Object Access Protocol	1INF30-054	contenidos	SOAP y REST	
+1INF30-056	concepto	obligatoria	REST	Representational State Transfer|transferencia de estado representacional	1INF30-054	contenidos	SOAP y REST	
+1INF30-057	concepto	obligatoria	Conexión entre back-end y front-end	conexión entre backend y frontend|conexión entre front-end y back-end|conexión entre frontend y backend	1INF30-051	contenidos	Conexión entre back-end y front-end	Conexión tratada como un solo saber (como 'Arreglos vs. punteros' en 1INF25): sin filas para back-end y front-end sueltos.
+1INF30-058	tema	aceptable	Despliegue en la nube	despliegue a la nube|cloud deployment		contenidos	Despliegue de componentes y aplicaciones en la nube	Agrupador (a) de la enumeración partida 'componentes y aplicaciones'.
+1INF30-059	concepto	obligatoria	Despliegue de componentes en la nube	despliegue de componentes a la nube	1INF30-058	contenidos	Despliegue de componentes y aplicaciones en la nube	
+1INF30-060	concepto	obligatoria	Despliegue de aplicaciones en la nube	despliegue de aplicaciones a la nube|cloud application deployment	1INF30-058	contenidos	Despliegue de componentes y aplicaciones en la nube	
+1INF30-061	concepto	obligatoria	Despliegue	deployment	1INF30-051	sumilla	servicios web y despliegue	Fila aparte del despliegue en la nube (más general). También en RA3.
+1INF30-062	concepto	aceptable	GlassFish Server	GlassFish|servidor GlassFish|Eclipse GlassFish	1INF30-051	otra	GlassFish Server	Herramienta de Metodología usada como contenido (servidor de aplicaciones para el despliegue).
+1INF30-063	tema	obligatoria	Programación concurrente	concurrent programming		contenidos	PROGRAMACIÓN CONCURRENTE	También en la sumilla: misma fila.
+1INF30-064	concepto	aceptable	Concurrencia	concurrency	1INF30-063	otra	principios de concurrencia	Solo en RA2; 'Principios de X' tratado como 'Fundamentos de X'. Fila aparte de 'Programación concurrente'.
+1INF30-065	concepto	obligatoria	Hilos de ejecución	hilo de ejecución|hilos|hilo|threads|thread	1INF30-063	contenidos	Hilos de ejecución	
+1INF30-066	tema	obligatoria	Mecanismos de sincronización	mecanismo de sincronización|synchronization mechanisms		contenidos	Mecanismos de sincronización: monitores y semáforos	Encabezado en línea tratado como tema.
+1INF30-067	concepto	obligatoria	Monitores	monitor|monitors	1INF30-066	contenidos	monitores y semáforos	
+1INF30-068	concepto	obligatoria	Semáforos	semáforo|semaphores|semaphore	1INF30-066	contenidos	monitores y semáforos	
+1INF30-069	tema	obligatoria	Diseño y generación de reportes	diseño de reportes|diseño de reporte|generación de reportes|generación de reporte|report design|report generation|diseño de informes|generación de informes		contenidos	DISEÑO Y GENERACIÓN DE REPORTES	
+1INF30-070	tema	obligatoria	Diseño de reportes en JasperSoft Studio	diseño de reportes con JasperSoft Studio		contenidos	Diseño de reportes en JasperSoft Studio: bandas, estilos, parámetros	Encabezado en línea tratado como tema; calificador conservado (distinto de 'diseño de reportes', alias de la unidad).
+1INF30-071	concepto	obligatoria	JasperSoft Studio	TIBCO Jaspersoft Studio	1INF30-070	contenidos	Diseño de reportes en JasperSoft Studio	Núcleo nombrado literal; también en Metodología.
+1INF30-072	concepto	obligatoria	Bandas	banda|bandas de reporte|banda de reporte|report bands	1INF30-070	contenidos	bandas, estilos	Etiquetas genéricas de reportes (bandas a consultas): alias contextual 'de reporte'. Riesgo de colisión en consolidación: revisar evidencia.
+1INF30-073	concepto	obligatoria	Estilos	estilo|estilos de reporte|report styles	1INF30-070	contenidos	bandas, estilos, parámetros	
+1INF30-074	concepto	obligatoria	Parámetros	parámetro|parámetros de reporte|report parameters	1INF30-070	contenidos	estilos, parámetros, campos	
+1INF30-075	concepto	obligatoria	Campos	campo|campos de reporte|report fields	1INF30-070	contenidos	parámetros, campos, variables	
+1INF30-076	concepto	obligatoria	Variables	variable|variables de reporte|report variables	1INF30-070	contenidos	campos, variables, consultas	
+1INF30-077	concepto	obligatoria	Consultas	consulta|consultas de reporte|report queries	1INF30-070	contenidos	variables, consultas y consumo de fuentes de datos	
+1INF30-078	concepto	obligatoria	Fuentes de datos	fuente de datos|data sources|data source	1INF30-070	contenidos	consumo de fuentes de datos	'consumo de' tratado como fórmula de actividad.
+1INF30-079	concepto	obligatoria	Integración de reportes en una aplicación web en Java	integración de reportes en aplicaciones web en Java|integración de reportes en aplicaciones web Java	1INF30-069	contenidos	Integración de reportes en una aplicación web en JAVA	
+1INF30-080	concepto	aceptable	JasperReports	Jasper Reports	1INF30-069	contenidos	Integración de reportes en una aplicación web en JAVA	Implícito inequívoco (b): los reportes de JasperSoft Studio se integran en Java mediante la biblioteca JasperReports.

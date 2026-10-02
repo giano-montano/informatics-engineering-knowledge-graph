@@ -1,0 +1,74 @@
+silabo	id	operacion	campo	antes	despues	categoria	motivo
+1INF50	1INF50-001	fixfields		10 campos	9 campos	formato	Tenía una tabulación de más (10 campos): sección y evidencia quedaban corridas.
+1INF50	1INF50-014	fixfields		10 campos	9 campos	formato	Tenía una tabulación de más (10 campos): sección y evidencia quedaban corridas.
+1INF49	1INF49-016	unquote	nota	"Decisión: se conserva la denominación literal del ítem; no se trata ""UI Design"" como alias de ""Prototipado"" porque el propio sílabo vuelve a usar ""UI Design"" como denominación de una enumeración distinta en el ítem siguiente."	Decisión: se conserva la denominación literal del ítem; no se trata "UI Design" como alias de "Prototipado" porque el propio sílabo vuelve a usar "UI Design" como denominación de una enumeración distinta en el ítem siguiente.	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF49	1INF49-036	unquote	nota	"Decisión: se conserva el ítem como una noción conjunta; la guía separa saberes enumerados, pero aquí ""validación y verificación del producto de software"" funciona como un único tópico contrastado en conjunto."	Decisión: se conserva el ítem como una noción conjunta; la guía separa saberes enumerados, pero aquí "validación y verificación del producto de software" funciona como un único tópico contrastado en conjunto.	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-002	unquote	nota	"Se elimina el marco ""Concepto de"" para conservar el saber nombrable ""proceso""."	Se elimina el marco "Concepto de" para conservar el saber nombrable "proceso".	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-005	unquote	nota	"Se elimina el marco ""Concepto de"" para conservar el saber nombrable ""sistema de archivo""."	Se elimina el marco "Concepto de" para conservar el saber nombrable "sistema de archivo".	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-013	unquote	nota	"Se elimina el marco ""Ejemplo de uso de"" y se conserva el saber nombrable ""llamadas al sistema""."	Se elimina el marco "Ejemplo de uso de" y se conserva el saber nombrable "llamadas al sistema".	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-014	unquote	nota	"Se elimina el marco ""Ejemplo de uso de"" y se conserva el saber nombrable ""intérprete de órdenes""."	Se elimina el marco "Ejemplo de uso de" y se conserva el saber nombrable "intérprete de órdenes".	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-040	unquote	nota	"Se elimina el marco ""asuntos de"" para conservar el saber nombrable ""tiempo real""."	Se elimina el marco "asuntos de" para conservar el saber nombrable "tiempo real".	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-050	unquote	nota	"Se elimina el marco ""Perspectiva de"" para conservar el saber ""seguridad de sistema""."	Se elimina el marco "Perspectiva de" para conservar el saber "seguridad de sistema".	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-077	unquote	nota	"Se separa ""Unix"" de ""Linux"" porque son dos sistemas operativos nombrados en el sílabo."	Se separa "Unix" de "Linux" porque son dos sistemas operativos nombrados en el sílabo.	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF29	1INF29-078	unquote	nota	"Se separa ""Linux"" de ""Unix"" porque son dos sistemas operativos nombrados en el sílabo."	Se separa "Linux" de "Unix" porque son dos sistemas operativos nombrados en el sílabo.	formato	Nota con comillado CSV ("") dentro de un TSV; se deja el texto plano.
+1INF31	1INF31-008	set	tema_padre	1INF31-006		formato	Los temas llevan tema_padre vacío.
+1INF33	1INF33-004	drop	fila	normalización	(eliminada)	fila duplicada	Mención de la sumilla que coincide con un tema de los contenidos: la guía dice que es la misma fila. Coincide con el tema 1INF33-011 NORMALIZACIÓN (y duplicaba al concepto 046).
+1INF33	1INF33-007	drop	fila	lenguaje de programación de base de datos (PL/SQL)	(eliminada)	fila duplicada	Mención de la sumilla que coincide con un tema de los contenidos: la guía dice que es la misma fila. Coincide con el tema 1INF33-013 (PL/SQL).
+1INF29	1INF29-004	drop	fila	manejo de memoria	(eliminada)	fila duplicada	Mención de la sumilla que coincide con un tema de los contenidos: la guía dice que es la misma fila. Coincide con el tema 1INF29-041 ADMINISTRACIÓN DE MEMORIA; sus alias pasan al tema.
+1INF29	1INF29-041	alias_add	alias		manejo de memoria	fila duplicada	Alias heredado de la fila 1INF29-004 eliminada (forma literal de la sumilla).
+1INF29	1INF29-041	alias_add	alias		gestión de memoria	fila duplicada	Alias heredado de la fila 1INF29-004 eliminada.
+1INF49	1INF49-045	drop	fila	prototipos	(eliminada)	fila duplicada	Repetía la noción y el tipo de 1INF49-022 Prototypes (que ya tiene 'prototipos' como alias): una sola fila por noción y tipo.
+1INF29	1INF29-006	set	etiqueta	PERSPECTIVA GENERAL DE SISTEMAS OPERATIVOS	Sistemas operativos	regla Fundamentos de X	'Perspectiva general de X' y 'Conceptos fundamentales de X' son la fórmula 'Introducción/Fundamentos de X': la entidad es X (como en 1INF31-001, 1INF50-002, 1INF30-037). Los dos capítulos nombran la misma noción y tipo: una sola fila.
+1INF29	1INF29-006	set	alias	perspectiva general de sistemas operativos|general perspective of operating systems	sistema operativo|operating systems|operating system	regla Fundamentos de X	Alias de la nueva etiqueta; la forma con la fórmula no nombra exactamente lo mismo.
+1INF29	1INF29-006	set	evidencia	CAPÍTULO 2 PERSPECTIVA GENERAL DE SISTEMAS OPERATIVOS	CAPÍTULO 2 PERSPECTIVA GENERAL DE SISTEMAS OPERATIVOS / CAPÍTULO 3 CONCEPTOS FUNDAMENTALES DE SISTEMAS OPERATIVOS	regla Fundamentos de X	Evidencia de ambos encabezados.
+1INF29	1INF29-006	set	nota		Consolidación: caps. 2 y 3 son 'Introducción/Fundamentos de X'; la entidad es X y se fusionan en esta fila (antes 006 y 011).	regla Fundamentos de X	Nota de la decisión.
+1INF29	1INF29-011	drop	fila	CONCEPTOS FUNDAMENTALES DE SISTEMAS OPERATIVOS	(eliminada)	regla Fundamentos de X	Fusionado en 1INF29-006 (misma noción y tipo).
+1INF29	1INF29-002	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-003	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-012	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-013	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-014	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-015	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-016	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-017	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF29	1INF29-075	set	tema_padre	1INF29-011	1INF29-006	regla Fundamentos de X	Los hijos de 1INF29-011 pasan a 1INF29-006.
+1INF33	1INF33-046	set	etiqueta	Normalización de datos: Primera, segunda y tercera forma normal	Normalización de datos	vocabulario	La etiqueta arrastraba la enumeración ya anotada en 047-049; se deja el núcleo, como los demás encabezados en línea 'X: a, b'.
+1INF49	1INF49-035	alias_rep	alias	validación	validación de requisitos	vocabulario	Mitad de encabezado en forma explícita (criterio de 1INF54-015/026/033); 'validación' suelta fusionaba por error con 1INF37-038 Validación de software.
+1INF29	1INF29-074	alias_add	alias		componentes de los sistemas operativos	vocabulario	Forma contextual de RA1 ('los componentes ... de los sistemas operativos'); la etiqueta suelta es genérica.
+1INF31	1INF31-006	alias_add	alias		diseño de la arquitectura	vocabulario	Forma nominal del encabezado en gerundio (criterio que el mismo anotador aplicó en 1INF49-032).
+1INF31	1INF31-013	alias_add	alias		presentación de la arquitectura	vocabulario	Forma nominal del encabezado en gerundio.
+1INF31	1INF31-019	alias_add	alias		documentación de la arquitectura	vocabulario	Forma nominal del ítem en gerundio.
+1INF31	1INF31-020	alias_add	alias		refinamiento de la arquitectura	vocabulario	Forma nominal del encabezado en gerundio.
+1INF31	1INF31-031	alias_add	alias		evaluación de la arquitectura	vocabulario	Forma nominal del encabezado en gerundio.
+1INF30	1INF30-038	alias_del	alias	elementos básicos de HTML		vocabulario	Forma con la fórmula 'Fundamentos de X': no nombra exactamente lo mismo (criterio de 1INF31-001, 1INF24-002).
+1INF24	1INF24-029	alias_del	alias	fundamentos de machine learning y redes neuronales artificiales		vocabulario	Forma con la fórmula 'Fundamentos de X'.
+1INF24	1INF24-001	alias_del	alias	introducción a la IA búsqueda y optimización en IA		vocabulario	Concatenación de dos encabezados con la fórmula 'Introducción a'; no es una variante de uso.
+1INF49	1INF49-044	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF49	1INF49-046	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF49	1INF49-047	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF31	1INF31-034	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF31	1INF31-035	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF31	1INF31-036	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF31	1INF31-037	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF31	1INF31-038	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF31	1INF31-039	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF31	1INF31-040	set	nivel	aceptable	obligatoria	nivel	Nombrada literalmente en la sumilla: obligatoria (no es agrupador, implícito ni de otra sección).
+1INF49	1INF49-017	alias_add	alias		estándar para el diseño de interfaces gráficas de usuario	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF49	1INF49-026	alias_add	alias		estándar internacional para la especificación de requisitos	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF49	1INF49-028	alias_add	alias		modelo conceptual con diagramas de clases	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF49	1INF49-033	alias_add	alias		patrón para la creación de modelos conceptuales con diagramas de clases	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF49	1INF49-040	alias_add	alias		necesidad del usuario	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF49	1INF49-049	alias_add	alias		necesidad del negocio	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF49	1INF49-053	alias_add	alias		patrón de diseño de interfaces de usuario	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF49	1INF49-057	alias_add	alias		restricción de la solución	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF33	1INF33-061	alias_add	alias		disparador	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF29	1INF29-009	alias_add	alias		función de un sistema operativo típico	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF29	1INF29-075	alias_add	alias		abstracción creada por los sistemas operativos	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF31	1INF31-008	alias_add	alias		factor que impacta en la arquitectura	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF31	1INF31-009	alias_add	alias		requerimiento funcional	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF31	1INF31-011	alias_add	alias		restricción	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF31	1INF31-044	alias_add	alias		requisito no funcional	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF31	1INF31-045	alias_add	alias		interfaz	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF24	1INF24-064	alias_add	alias		cuestión ética del ML/IA	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF37	1INF37-065	alias_add	alias		consideración técnica del despliegue	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.
+1INF37	1INF37-066	alias_add	alias		consideración procedimental del despliegue	alias singular (-es)	Plural en -es: la normalización actual no lo iguala con el singular.

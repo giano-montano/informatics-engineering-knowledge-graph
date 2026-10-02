@@ -32,3 +32,6 @@ internal-notes/
 
 # Herramientas de Node para el modelo C4 (package.json).
 node_modules/
+
+# Ante la duda, ocultamos los sílabos oficiales
+casos-de-prueba/silabos-en-orden/

@@ -1,0 +1,50 @@
+# silabo=1INF31 | curso=ARQUITECTURA DE SOFTWARE | anotador=GPT-5.6 Luna | guia=v2.1 | fecha=2026-10-02
+id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
+1INF31-001	tema	obligatoria	ARQUITECTURA DE SOFTWARE	software architecture		contenidos	CAPÍTULO 1 FUNDAMENTOS DE ARQUITECTURA DE SOFTWARE	
+1INF31-002	concepto	obligatoria	arquitectura de software	software architecture	1INF31-001	contenidos	Conceptos de arquitectura de software	
+1INF31-003	concepto	obligatoria	pensamiento arquitectónico	architectural thinking	1INF31-001	contenidos	El pensamiento arquitectónico	
+1INF31-004	concepto	obligatoria	negociación	negotiation	1INF31-001	contenidos	Conceptos de negociación e intercambio	Se separa del término vecino porque ambos pueden nombrarse como saberes independientes.
+1INF31-005	concepto	obligatoria	intercambio	trade-off|tradeoffs	1INF31-001	contenidos	Conceptos de negociación e intercambio	Se interpreta como la noción de intercambio o compromiso entre alternativas arquitectónicas, independiente de negociación.
+1INF31-006	tema	obligatoria	DISEÑANDO LA ARQUITECTURA	designing software architecture		contenidos	CAPÍTULO 2 DISEÑANDO LA ARQUITECTURA	
+1INF31-007	concepto	obligatoria	modularidad	modularity	1INF31-006	contenidos	Conceptos de modularidad.	
+1INF31-008	tema	obligatoria	Factores que impactan en la arquitectura	architecture factors	1INF31-006	contenidos	Factores que impactan en la arquitectura	
+1INF31-009	concepto	obligatoria	requerimientos funcionales	requisitos funcionales|functional requirements	1INF31-008	contenidos	Requerimientos funcionales	
+1INF31-010	concepto	obligatoria	requerimientos de calidad	quality requirements	1INF31-008	contenidos	Requerimientos de calidad	
+1INF31-011	concepto	obligatoria	restricciones	constraints	1INF31-008	contenidos	Restricciones	
+1INF31-012	concepto	obligatoria	componentes	component	1INF31-006	contenidos	Componentes y su identificación	Se conserva el saber técnico principal del ítem; “identificación” se trata como actividad/proceso y no como entidad independiente.
+1INF31-013	tema	obligatoria	PRESENTANDO LA ARQUITECTURA	presenting software architecture		contenidos	CAPÍTULO 3 PRESENTANDO LA ARQUITECTURA	
+1INF31-014	concepto	obligatoria	Notación de bloques	diagramas de bloques|block notation|block diagrams	1INF31-013	contenidos	Notación de bloques	
+1INF31-015	concepto	obligatoria	Notación C4	C4|C4 model	1INF31-013	contenidos	Notación C4	
+1INF31-016	concepto	obligatoria	Notación UML	UML|Unified Modeling Language	1INF31-013	contenidos	Notación UML	
+1INF31-017	concepto	obligatoria	Vistas arquitectónicas	architectural views	1INF31-013	contenidos	Vistas arquitectónicas	
+1INF31-018	concepto	obligatoria	Registros de decisiones arquitectónicas (ADRs)	ADR|Architecture Decision Records	1INF31-013	contenidos	Registros de decisiones arquitectónicas (ADRs)	
+1INF31-019	concepto	obligatoria	Documentando la arquitectura (arc 42)	arc42|architecture documentation	1INF31-013	contenidos	Documentando la arquitectura (arc 42)	Se conserva el ítem como una sola noción de contenido porque el documento presenta la documentación mediante arc42 en conjunto.
+1INF31-020	tema	obligatoria	REFINANDO LA ARQUITECTURA	refining software architecture		contenidos	CAPÍTULO 4 REFINANDO LA ARQUITECTURA	
+1INF31-021	concepto	obligatoria	estilos arquitectónicos	architecture styles	1INF31-020	contenidos	Fundamentos de los estilos arquitectónicos	Se aplica la regla “Fundamentos de X”: la entidad anotada es X.
+1INF31-022	concepto	obligatoria	Estilo arquitectónico por capas	arquitectura por capas|layered architecture|layered style	1INF31-020	contenidos	Estilo arquitectónico por capas	
+1INF31-023	concepto	obligatoria	Estilo arquitectónico monolito modular	monolito modular|modular monolith	1INF31-020	contenidos	Estilo arquitectónico monolito modular	
+1INF31-024	concepto	obligatoria	Estilo arquitectónico de tuberías y filtros	tuberías y filtros|pipes and filters	1INF31-020	contenidos	Estilo arquitectónico de tuberías y filtros	
+1INF31-025	concepto	obligatoria	Estilo arquitectónico microkernel	microkernel architecture|arquitectura microkernel	1INF31-020	contenidos	Estilo arquitectónico microkernel	
+1INF31-026	concepto	obligatoria	Estilo arquitectónico dirigido por eventos	arquitectura dirigida por eventos|event-driven architecture	1INF31-020	contenidos	Estilo arquitectónico dirigido por eventos	
+1INF31-027	concepto	obligatoria	Estilo arquitectónico basado en espacio	arquitectura basada en espacio|space-based architecture	1INF31-020	contenidos	Estilo arquitectónico basado en espacio	
+1INF31-028	concepto	obligatoria	Estilo arquitectónico orientado a servicios	arquitectura orientada a servicios|service-oriented architecture|SOA	1INF31-020	contenidos	Estilo arquitectónico orientado a servicios	
+1INF31-029	concepto	obligatoria	Estilo arquitectónico de microservicios	microservicios|microservices|microservices architecture	1INF31-020	contenidos	Estilo arquitectónico de microservicios	
+1INF31-030	concepto	obligatoria	Estilo arquitectónico basado en servicios	arquitectura basada en servicios|service-based architecture	1INF31-020	contenidos	Estilo arquitectónico basado en servicios	
+1INF31-031	tema	obligatoria	EVALUANDO LA ARQUITECTURA	evaluating software architecture		contenidos	CAPÍTULO 5 EVALUANDO LA ARQUITECTURA	
+1INF31-032	concepto	obligatoria	Evaluación cualitativa	qualitative evaluation	1INF31-031	contenidos	Evaluación cualitativa.	
+1INF31-033	concepto	obligatoria	Evaluación cuantitativa	quantitative evaluation	1INF31-031	contenidos	Evaluación cuantitativa	
+1INF31-034	concepto	aceptable	arquitectura de solución	solution architecture	1INF31-006	sumilla	conceptos de arquitectura de solución	
+1INF31-035	concepto	aceptable	atributos de calidad	quality attributes	1INF31-008	sumilla	atributos de calidad	
+1INF31-036	concepto	aceptable	eficiencia	efficiency	1INF31-008	sumilla	atributos de calidad, como eficiencia, seguridad, usabilidad, interoperabilidad, portabilidad, entre otros.	
+1INF31-037	concepto	aceptable	seguridad	security	1INF31-008	sumilla	atributos de calidad, como eficiencia, seguridad, usabilidad, interoperabilidad, portabilidad, entre otros.	
+1INF31-038	concepto	aceptable	usabilidad	usability	1INF31-008	sumilla	atributos de calidad, como eficiencia, seguridad, usabilidad, interoperabilidad, portabilidad, entre otros.	
+1INF31-039	concepto	aceptable	interoperabilidad	interoperability	1INF31-008	sumilla	atributos de calidad, como eficiencia, seguridad, usabilidad, interoperabilidad, portabilidad, entre otros.	
+1INF31-040	concepto	aceptable	portabilidad	portability	1INF31-008	sumilla	atributos de calidad, como eficiencia, seguridad, usabilidad, interoperabilidad, portabilidad, entre otros.	
+1INF31-041	concepto	aceptable	topología de arquitectura	architecture topology	1INF31-006	otra	Propone de manera colaborativa una topología de arquitectura dentro de los proyectos de desarrollo de software...	
+1INF31-042	concepto	aceptable	modelos arquitectónicos	architectural models|modelo arquitectónico	1INF31-020	otra	...en base a diferentes modelos y patrones arquitectónicos.	
+1INF31-043	concepto	aceptable	patrones arquitectónicos	architectural patterns|patrón arquitectónico	1INF31-020	otra	...en base a diferentes modelos y patrones arquitectónicos.	
+1INF31-044	concepto	aceptable	requisitos no funcionales	non-functional requirements	1INF31-008	otra	Evalúa de manera colaborativa los requisitos no funcionales que debe soportar la arquitectura propuesta...	
+1INF31-045	concepto	aceptable	interfaces	interface	1INF31-006	otra	Evalúa de manera colaborativa los diferentes componentes e interfaces que deben formar de la arquitectura de la solución...	
+1INF31-046	concepto	aceptable	frameworks	framework	1INF31-006	otra	Selecciona de manera colaborativa frameworks, librerías o plataformas existentes más adecuados...	Se separa la enumeración en tres saberes tecnológicos genéricos, conforme a la regla para ítems que nombran más de un saber.
+1INF31-047	concepto	aceptable	librerías	librería|library|libraries	1INF31-006	otra	Selecciona de manera colaborativa frameworks, librerías o plataformas existentes más adecuados...	Se separa la enumeración en tres saberes tecnológicos genéricos, conforme a la regla para ítems que nombran más de un saber.
+1INF31-048	concepto	aceptable	plataformas	plataforma|platform|platforms	1INF31-006	otra	Selecciona de manera colaborativa frameworks, librerías o plataformas existentes más adecuados...	Se separa la enumeración en tres saberes tecnológicos genéricos, conforme a la regla para ítems que nombran más de un saber.

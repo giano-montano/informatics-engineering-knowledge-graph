@@ -1,0 +1,41 @@
+# silabo=1INF27 | curso=Algoritmia y Estructura de Datos | anotador=Claude Opus 5.5 | guia=v2.1 | fecha=2026-10-01
+id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
+1INF27-001	tema	obligatoria	Técnicas algorítmicas básicas para la resolución de problemas	técnicas algorítmicas básicas|estrategias algorítmicas básicas		contenidos	TÉCNICAS ALGORÍTMICAS BÁSICAS PARA LA RESOLUCIÓN DE PROBLEMAS	
+1INF27-002	concepto	obligatoria	Fuerza bruta	brute force	1INF27-001	contenidos	Fuerza Bruta, recursión y divide y vencerás	
+1INF27-003	concepto	obligatoria	Recursión	recursividad|algoritmos recursivos|recursion	1INF27-001	contenidos	Fuerza Bruta, recursión y divide y vencerás	
+1INF27-004	concepto	obligatoria	Divide y vencerás	divide and conquer|divide y conquista|divide y conquistarás	1INF27-001	contenidos	Fuerza Bruta, recursión y divide y vencerás	
+1INF27-005	concepto	obligatoria	Ordenamiento	algoritmos de ordenamiento|ordenación|sorting	1INF27-001	contenidos	Aplicación a diversos casos de ingeniería, ordenamiento y búsqueda	
+1INF27-006	concepto	obligatoria	Búsqueda	algoritmos de búsqueda|searching	1INF27-001	contenidos	Aplicación a diversos casos de ingeniería, ordenamiento y búsqueda	
+1INF27-007	concepto	aceptable	Pseudocódigos	pseudocódigo|pseudocode	1INF27-001	otra	se emplean pseudocódigos para la presentación de los esquemas algorítmicos	
+1INF27-008	concepto	aceptable	Esquemas algorítmicos	esquema algorítmico	1INF27-001	otra	la presentación de los esquemas algorítmicos	
+1INF27-009	tema	obligatoria	Estructuras de datos (TAD) y sus implementaciones	estructuras de datos y sus implementaciones|estructuras de datos|estructura de datos|data structures		contenidos	ESTRUCTURAS DE DATOS (TAD) Y SUS IMPLEMENTACIONES	
+1INF27-010	concepto	obligatoria	Tipos abstractos de datos	TAD|abstract data types|ADT|tipo abstracto de datos	1INF27-009	contenidos	Especificaciones de tipos abstractos de datos	
+1INF27-011	concepto	obligatoria	Especificaciones de tipos abstractos de datos	especificación de tipos abstractos de datos|especificación de TAD	1INF27-009	contenidos	Especificaciones de tipos abstractos de datos	
+1INF27-012	concepto	obligatoria	Listas	lists|lista	1INF27-009	contenidos	listas, pilas, colas, árboles, tablas y grafos	
+1INF27-013	concepto	obligatoria	Pilas	stacks|pila	1INF27-009	contenidos	listas, pilas, colas, árboles, tablas y grafos	
+1INF27-014	concepto	obligatoria	Colas	queues|cola	1INF27-009	contenidos	listas, pilas, colas, árboles, tablas y grafos	
+1INF27-015	concepto	obligatoria	Árboles	árbol|trees	1INF27-009	contenidos	listas, pilas, colas, árboles, tablas y grafos	
+1INF27-016	concepto	obligatoria	Grafos	graphs|grafo	1INF27-009	contenidos	listas, pilas, colas, árboles, tablas y grafos	
+1INF27-017	concepto	obligatoria	Árboles binarios	árbol binario|binary trees	1INF27-009	sumilla	árboles binarios	
+1INF27-018	concepto	obligatoria	Árboles binarios de búsqueda	árbol binario de búsqueda|ABB|binary search trees|BST	1INF27-009	sumilla	árboles binarios de búsqueda	
+1INF27-019	concepto	obligatoria	Implementación de TAD en lenguajes de programación	implementación de TAD|implementación de tipos abstractos de datos	1INF27-009	contenidos	Implementación de TAD en lenguajes de programación	
+1INF27-020	concepto	obligatoria	Estrategias de búsqueda	estrategia de búsqueda	1INF27-009	contenidos	Estrategias de búsqueda y recorrido sobre listas, árboles, tablas y grafos	Fila separada de 006 (búsqueda como aplicación en cap. 1); sin alias genéricos para no arrastrar fusiones con búsqueda en IA.
+1INF27-021	concepto	obligatoria	Estrategias de recorrido	recorrido|traversal|estrategia de recorrido	1INF27-009	contenidos	Estrategias de búsqueda y recorrido sobre listas, árboles, tablas y grafos	Ítem partido en búsqueda y recorrido; las combinaciones con cada estructura van como aceptables (022-028), sin recorrido de tablas.
+1INF27-022	concepto	aceptable	Búsqueda en listas		1INF27-009	contenidos	búsqueda y recorrido sobre listas	
+1INF27-023	concepto	aceptable	Búsqueda en árboles		1INF27-009	contenidos	búsqueda y recorrido sobre listas, árboles	
+1INF27-024	concepto	aceptable	Búsqueda en tablas hash	búsqueda en tablas de dispersión	1INF27-009	contenidos	búsqueda y recorrido sobre listas, árboles, tablas	
+1INF27-025	concepto	aceptable	Búsqueda en grafos	graph search	1INF27-009	contenidos	búsqueda y recorrido sobre listas, árboles, tablas y grafos	
+1INF27-026	concepto	aceptable	Recorrido de listas		1INF27-009	contenidos	búsqueda y recorrido sobre listas	
+1INF27-027	concepto	aceptable	Recorrido de árboles	recorrido en árboles|tree traversal	1INF27-009	contenidos	búsqueda y recorrido sobre listas, árboles	
+1INF27-028	concepto	aceptable	Recorrido de grafos	recorrido en grafos|graph traversal	1INF27-009	contenidos	búsqueda y recorrido sobre listas, árboles, tablas y grafos	
+1INF27-029	tema	obligatoria	Complejidad y eficiencia algorítmica	complejidad y eficiencia de algoritmos|complejidad algorítmica|eficiencia algorítmica|complejidad de algoritmos|eficiencia de algoritmos		contenidos	COMPLEJIDAD Y EFICIENCIA ALGORÍTMICA	
+1INF27-030	concepto	obligatoria	Análisis de la eficiencia de algoritmos	análisis de eficiencia de algoritmos|análisis de la eficiencia algorítmica	1INF27-029	sumilla	fundamentos del análisis de la eficiencia de algoritmos	No coincide con ninguna mitad del encabezado 029 (es el análisis, no la eficiencia); va como concepto aparte.
+1INF27-031	concepto	obligatoria	Soporte matemático		1INF27-029	contenidos	Soporte matemático	
+1INF27-032	concepto	obligatoria	Medidas asintóticas	notación asintótica|asymptotic notation|medida asintótica	1INF27-029	contenidos	Medidas asintóticas	
+1INF27-033	concepto	aceptable	Notación O grande	O grande|notación Big O|Big O	1INF27-029	contenidos	Medidas asintóticas	
+1INF27-034	concepto	obligatoria	Cálculo del tiempo de ejecución	tiempo de ejecución|running time	1INF27-029	contenidos	Cálculo del tiempo de ejecución	
+1INF27-035	tema	obligatoria	Hashing	dispersión|técnicas de dispersión		contenidos	HASHING	
+1INF27-036	concepto	obligatoria	Funciones hash	función hash|funciones de dispersión|función de dispersión|hash functions	1INF27-035	contenidos	Funciones hash	
+1INF27-037	concepto	obligatoria	Transformación de llaves	transformación de claves|key transformation	1INF27-035	contenidos	transformación de llaves	
+1INF27-038	concepto	obligatoria	Tratamiento de colisiones	resolución de colisiones|manejo de colisiones|collision resolution|collision handling	1INF27-035	contenidos	tratamiento de colisiones	
+1INF27-039	concepto	obligatoria	Tablas hash	tablas de dispersión|hash tables|tabla hash|tabla de dispersión	1INF27-035	contenidos	tablas hash	Misma noción que "tablas de dispersión" (sumilla) y "tablas" (cap. 2): una sola fila; "tablas" no va como alias por ser genérico.

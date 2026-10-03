@@ -12,7 +12,7 @@ Cada término conserva en todo el anexo el significado que le da esta tabla.
 | ----- | ----- |
 | Constructo del modelo ontológico | Cada pieza del lenguaje OWL que el TTL usa para describir el dominio. Unas declaran un nombre: una clase, una propiedad o un individuo. Otras, los axiomas, afirman algo sobre esos nombres: que una clase es subclase de otra, que dos clases son disjuntas, que una propiedad es transitiva. |
 | Base de datos de grafos | La instancia de Neo4j Community del sistema: una sola base de datos, consultada con Cypher 5\. |
-| Clave | La única propiedad de identidad de un nodo. Vale el IRI en la capa de referencia y un uuid en la capa institucional, acuñado al crear el nodo o derivado de un identificador estable cuando el elemento lo tiene. |
+| Clave | La única propiedad de identidad de un nodo. Vale el IRI en la capa de referencia y un uuid en la capa institucional, asignado antes de escribir el nodo y guardado con el lote o derivado de un identificador estable cuando el elemento lo tiene. |
 | Carga del backbone | La corrida que lee el TTL del backbone y escribe la capa de referencia sobre una base de datos de grafos vacía. Es destructiva y precede a toda ingesta. |
 | Ingesta | El procesamiento de un documento institucional que termina escribiendo en la base de datos de grafos. |
 | Lote de ingesta | Los hechos candidatos que se validan y se escriben juntos: si uno falla, no se escribe ninguno. |

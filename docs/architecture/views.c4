@@ -1,6 +1,11 @@
 // Vistas C4. Cada vista es una proyección de model.c4: no declara elementos
-// ni relaciones, solo elige qué mostrar. El nivel 3 está pendiente.
+// ni relaciones, solo elige qué mostrar.
 views {
+
+  // El núcleo del grafo se reconoce por color en todas las vistas.
+  style element.tag = #nucleo {
+    color amber
+  }
 
   view index {
     title 'Nivel 1: Contexto'
@@ -10,5 +15,112 @@ views {
   view containers of kms {
     title 'Nivel 2: Contenedores'
     include *
+    // Cada par agrupa varias relaciones de componentes; se les da un título.
+    include kms.web -> kms.api with {
+      title 'Consultas, operación y documentos'
+    }
+    include kms.api -> kms.documentStore with {
+      title 'Guarda al subir, lee al servir'
+    }
+    include kms.worker -> kms.neo4j with {
+      title 'Lee la instantánea; escribe y audita'
+    }
+    include kms.buildTools -> kms.neo4j with {
+      title 'Vacía, carga, reaplica y audita'
+    }
+  }
+
+  view apiComponents of kms.api {
+    title 'Nivel 3: Componentes de la API'
+    include *
+  }
+
+  view workerComponents of kms.worker {
+    title 'Nivel 3: Componentes del worker de ingesta'
+    include *
+    exclude kms.api -> kms.neo4j
+  }
+
+  view buildToolsComponents of kms.buildTools {
+    title 'Nivel 3: Componentes de los procesos de construcción'
+    include *
+  }
+
+  dynamic view ingestion {
+    variant sequence
+    title 'Flujo de la ingesta'
+    description 'Una ejecución del worker, desde que la API lo lanza hasta que termina (ADR-007, ADR-010).'
+
+    kms.api.opsRoutes -> kms.worker.orchestrator 'Lanza un worker si no hay uno activo'
+    loop 'mientras queden corridas pendientes' {
+      kms.worker.orchestrator -> kms.sqlite 'Lee el último reporte de auditoría'
+      break 'el reporte tiene violaciones' {
+        kms.worker.orchestrator -> kms.worker.orchestrator 'Termina; las corridas quedan pendientes'
+      }
+      kms.worker.orchestrator -> kms.sqlite 'Toma la corrida pendiente más antigua'
+      kms.worker.orchestrator -> kms.worker.repository 'Lee la instantánea del grafo'
+      kms.worker.orchestrator -> kms.worker.extractor 'Documento e instantánea'
+      kms.worker.extractor -> kms.documentStore 'Lee el documento'
+      kms.worker.extractor -> llm 'Solicita hechos candidatos' {
+        notes 'Reintentos acotados ante errores transitorios; uno solo, informando el error, ante una salida no conforme.'
+      }
+      alt {
+        when 'el proveedor no responde' {
+          kms.worker.orchestrator -> kms.sqlite 'Fallida'
+        }
+        when 'salida no conforme tras el reintento' {
+          kms.worker.orchestrator -> kms.sqlite 'Rechazada: descarte EX-01'
+        }
+        else 'salida conforme' {
+          kms.worker.orchestrator <- kms.worker.extractor 'Hechos con claves resueltas'
+          kms.worker.orchestrator -> kms.worker.orchestrator 'Agrega los hechos declarados'
+          kms.worker.orchestrator -> kms.worker.validator 'Valida el lote contra la instantánea'
+          alt {
+            when 'hay violaciones' {
+              kms.worker.orchestrator -> kms.sqlite 'Rechazada: una fila por violación y el lote completo'
+            }
+            else 'sin violaciones' {
+              kms.worker.orchestrator -> kms.worker.repository 'Escribe el lote'
+              kms.worker.repository -> kms.neo4j 'Una transacción, forma fija'
+              alt {
+                when 'los contadores no calzan' {
+                  kms.worker.repository -> kms.neo4j 'Revierte la transacción'
+                  kms.worker.orchestrator -> kms.sqlite 'Fallida'
+                }
+                else 'los contadores calzan' {
+                  kms.worker.repository -> kms.neo4j 'Hace commit'
+                  kms.worker.orchestrator -> kms.factStore 'Persiste el lote' {
+                    notes 'Si el worker se interrumpe antes de este paso, la corrida queda escrita sin persistir.'
+                  }
+                  kms.worker.orchestrator -> kms.worker.auditor 'Audita'
+                  kms.worker.auditor -> kms.neo4j 'Una consulta por regla'
+                  kms.worker.orchestrator -> kms.sqlite 'Registra el reporte'
+                  alt {
+                    when 'hay violaciones' {
+                      kms.worker.orchestrator -> kms.sqlite 'Detenida por auditoría' {
+                        notes 'La compuerta queda cerrada: en la siguiente vuelta el worker termina.'
+                      }
+                    }
+                    else 'sin violaciones' {
+                      kms.worker.orchestrator -> kms.sqlite 'Terminada'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  deployment view deployment {
+    title 'Despliegue'
+    include vm, vm.**
+    // Quedan solo los resúmenes de deployment.c4 para estos pares.
+    exclude vm.compose.webc.web -> vm.compose.appc.api where not tag is #resumen
+    exclude vm.compose.appc.api -> vm.folders.documentStore where not tag is #resumen
+    exclude vm.compose.appc.worker -> vm.compose.neo4jc.neo4j where not tag is #resumen
+    exclude vm.compose.buildc.buildTools -> vm.compose.neo4jc.neo4j where not tag is #resumen
   }
 }

@@ -1,6 +1,6 @@
 # ADR-003: El modelo de lenguaje no escribe en la base de datos
 
-**Estado:** Aceptada
+**Estado:** Aceptada, en parte reemplazada por ADR-010 y ADR-011
 **Fecha:** 2026-08
 **Atributos:** AC-01 (principal), AC-02, AC-03
 

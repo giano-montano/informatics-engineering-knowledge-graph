@@ -1,22 +1,75 @@
-// Despliegue del prototipo. Por ahora solo el nodo y sus restricciones;
-// las instancias y la vista de despliegue quedan para después.
+// Despliegue del prototipo. Diagrama suplementario del modelo C4.
 //
-// Pregunta abierta: el mecanismo para llevar al host el resultado de los
-// procesos de construcción ejecutados fuera de él.
+// Restricciones que este archivo expresa:
+// 1. La API, el worker y los procesos de construcción salen de una sola
+//    imagen con tres puntos de entrada. La API lanza el worker como proceso
+//    hijo dentro de su propio contenedor; los procesos de construcción
+//    corren en un contenedor aparte, a demanda y con el sistema detenido
+//    (ADR-007).
+// 2. La aplicación web se sirve aparte, con nginx, que reenvía /api y
+//    /recursos a la API bajo un mismo dominio (ADR-007).
+// 3. Los tres almacenes de archivos son carpetas del host; la base de
+//    grafos usa un volumen administrado por Docker (ADR-013).
+// 4. Los localizadores llevan el host escrito: el almacén de hechos no se
+//    reutiliza en otro host; en un host nuevo se vuelve a ingestar (ADR-009).
 deployment {
 
-  prototypeHost = host 'Host del prototipo' {
-    description '''
-      - La API y el worker se empaquetan en una imagen con dos puntos de
-        entrada, porque la API lanza el worker como proceso hijo.
-      - La base de grafos corre en este host.
-      - Los tres almacenes de archivos viven en el disco local de este host.
-      - Los procesos de construcción pueden ejecutarse fuera del host, por
-        ejemplo en la máquina del desarrollador; su resultado se lleva a este
-        host.
-      - Limitación declarada: el despliegue hornea el host en los
-        localizadores guardados; cambiar de dirección exige migración de
-        datos.
-    '''
+  host vm 'Máquina virtual de la especialidad' {
+    technology 'Ubuntu'
+    description 'Único host del prototipo. La corrida de medición se ejecuta aquí, desde la carga (ADR-013).'
+
+    runtime compose 'Docker Compose' {
+
+      runtime webc 'Contenedor web' {
+        technology 'nginx'
+        description 'Sirve el compilado de la aplicación web y reenvía /api y /recursos a la API.'
+        web = instanceOf kms.web
+      }
+
+      runtime appc 'Contenedor de la aplicación' {
+        technology 'Imagen única'
+        description 'La API, que lanza el worker como proceso hijo.'
+        api = instanceOf kms.api
+        worker = instanceOf kms.worker
+      }
+
+      runtime buildc 'Contenedor de construcción' {
+        technology 'Misma imagen, otro punto de entrada'
+        description 'Se ejecuta a demanda, con el contenedor de la aplicación detenido (ADR-007).'
+        buildTools = instanceOf kms.buildTools
+      }
+
+      runtime neo4jc 'Contenedor de Neo4j' {
+        technology 'Neo4j Community, volumen administrado'
+        neo4j = instanceOf kms.neo4j
+      }
+    }
+
+    runtime folders 'Carpetas del host' {
+      technology 'Montadas en los contenedores de la aplicación y de construcción'
+      description 'Persisten fuera de los contenedores; se abren, respaldan y copian como carpetas (ADR-013).'
+      sqlite = instanceOf kms.sqlite
+      documentStore = instanceOf kms.documentStore
+      factStore = instanceOf kms.factStore
+    }
+  }
+
+  // Cada par agrupa varias relaciones del modelo, y la vista de despliegue
+  // ignora `with { title }`: sin estos resúmenes, la arista saldría como
+  // «[...]». La vista excluye las relaciones derivadas de esos pares.
+  vm.compose.webc.web -> vm.compose.appc.api 'Reenvía /api y /recursos' {
+    #resumen
+    technology 'HTTP'
+  }
+  vm.compose.appc.api -> vm.folders.documentStore 'Guarda al subir, lee al servir' {
+    #resumen
+  }
+  vm.compose.appc.worker -> vm.compose.neo4jc.neo4j 'Lee la instantánea; escribe y audita' {
+    #resumen
+    technology 'Cypher'
+  }
+  vm.compose.buildc.buildTools -> vm.compose.neo4jc.neo4j 'Vacía, carga, reaplica y audita' {
+    #resumen
+    technology 'Cypher'
   }
 }

@@ -1,6 +1,6 @@
 # ADR-002: Proyección OWL → grafo de propiedades por código propio
 
-**Estado:** Aceptada
+**Estado:** Aceptada, en parte reemplazada por ADR-005 y ADR-011 (enmendada 2026-10)
 **Fecha:** 2026-08
 **Atributos:** AC-01 (principal), AC-02
 
@@ -35,3 +35,7 @@ Todo axioma de la T-Box cae en uno de los cuatro. Ninguno queda sin asignar.
 - Las pérdidas aceptadas quedan declaradas y son defendibles; las no declaradas son defectos.
 - Los mecanismos de tipo 3 producen la lista de invariantes que da denominador a la medida de AC-02. **Pendiente:** numerarlos al cerrar la tabla.
 - Mayor esfuerzo de implementación que usar el plugin, asumido a cambio del control sobre el régimen de validación.
+
+## Enmienda (2026-10)
+
+- **Tabla de mapeo.** Es el anexo «Transición del modelo ontológico al grafo de propiedades». Los invariantes quedaron numerados como RI-01 a RI-10 y, para las decisiones del módulo, RM-01 a RM-05. Lo que el grafo admite se declara una sola vez en el esquema del grafo (ADR-008).

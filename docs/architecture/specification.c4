@@ -34,4 +34,14 @@ specification {
   deploymentNode host {
     notation "Nodo de despliegue"
   }
+  deploymentNode runtime {
+    notation "Entorno de ejecución"
+  }
+
+  // Componente del núcleo del grafo: el mismo código en cada contenedor
+  // que lo ejecuta.
+  tag nucleo
+  // Relación del despliegue que resume varias del modelo, porque la vista
+  // de despliegue no permite renombrar una arista agrupada.
+  tag resumen
 }

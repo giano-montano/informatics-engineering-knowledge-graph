@@ -118,7 +118,8 @@ propia especificación.
   **alternativas descartadas** y por qué. Es el producto, no el adorno: sin
   ellas, en tres meses no se sabrá por qué algo es así.
 - Diagramas C4: el fuente es `docs/architecture/*.c4`, un solo modelo con una
-  vista por nivel. Durante el trabajo se ven en la vista previa de la
+  vista por nivel, más el flujo de la ingesta (vista dinámica) y el
+  despliegue. No se agrega otra herramienta de diagramas. Durante el trabajo se ven en la vista previa de la
   extensión LikeC4, no en imágenes. Tras cada cambio, `arch:validate`. Los PNG
   se exportan solo en hitos (entregas de tesis, revisiones con el asesor), y
   cuando se exportan van en el mismo commit que el `.c4` del que salen. Claude
@@ -126,4 +127,7 @@ propia especificación.
   previa antes de hacer commit. Claude no hace push.
 - **Un documento obsoleto que aparenta estar vigente es peor que ninguno.** Si
   algo cambia, se escribe uno nuevo; no se reescribe el viejo. La excepción es
-  este archivo y `docs/estandares-de-codigo.md`, que sí son vivos.
+  este archivo y `docs/estandares-de-codigo.md`, que sí son vivos. Los ADR
+  admiten enmiendas solo para cambios menores; lo que invalida una decisión,
+  aunque sea en parte, va en un ADR nuevo. El criterio está en
+  `docs/decisiones/README.md`.

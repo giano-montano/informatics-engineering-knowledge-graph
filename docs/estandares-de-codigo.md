@@ -1,6 +1,7 @@
 # Estándares de código
 
-Documento vivo. Decidido el 2026-07-31; si cambia una regla, se cambia aquí.
+Documento vivo. Decidido el 2026-07-31 y revisado el 2026-10-03; si cambia una
+regla, se cambia aquí.
 
 ## 1. Idioma
 
@@ -9,15 +10,14 @@ spanglish: la frontera es explícita y no admite zona gris.
 
 | Artefacto | Idioma |
 |---|---|
-| Directorios y nombres de archivo | Inglés |
+| Directorios y nombres de archivo, salvo en `docs/` | Inglés |
 | Módulos, clases, funciones, variables | Inglés |
-| Claves e identificadores del YAML de reglas | Inglés |
+| Constantes del esquema del grafo | Inglés |
 | Etiquetas y tipos de relación del grafo | Inglés |
+| Identificadores del modelo C4 (`.c4`) | Inglés; el texto visible, en español |
 | Comentarios y docstrings dentro de `.py` | Inglés, breves |
 | Salida por consola de los scripts | Inglés |
-| `lab/findings/` | **Español** |
-| `lab/docs/` | **Español** |
-| Este documento y todo `docs/` | **Español** |
+| Este documento, todo `docs/` y sus nombres de archivo | **Español** |
 
 ### Por qué el código va en inglés
 
@@ -33,8 +33,8 @@ spanglish: la frontera es explícita y no admite zona gris.
 
 ### Por qué la prosa va en español
 
-Los findings alimentan la tesis, que es en español, y varios ya contienen
-párrafos redactados para la defensa. Escribirlos en inglés obligaría a
+La documentación alimenta la tesis, que es en español, y varios documentos ya
+contienen párrafos redactados para ella. Escribirlos en inglés obligaría a
 traducirlos de vuelta: pérdida pura.
 
 ### Presentación al usuario final
@@ -58,9 +58,9 @@ ya están en inglés, y las convenciones de git son anglófonas de origen (modo
 imperativo, *Conventional Commits*).
 
 ```
-add integrity query compiler for schema rules
+add snapshot read to the graph repository
 fix stale constraint names after language migration
-docs: record Neo4j and Cypher walkthrough for 2026-07-31
+docs: record ADR for the fact store
 ```
 
 Convención: asunto en **imperativo**, minúscula inicial, sin punto final, hasta
@@ -86,17 +86,21 @@ anexos. Renombrarlos tiene un costo fuera del repositorio que no compensa. El
 | Privados de módulo | prefijo `_` | `_safe_ident` |
 | Etiquetas de nodo | `PascalCase` | `KnowledgeUnit` |
 | Tipos de relación | `UPPER_SNAKE` | `PART_OF`, `WAS_DERIVED_FROM` |
-| Propiedades de nodo | `camelCase` | `prefLabel`, `iri` |
-| Identificadores de regla | `kebab-case` | `ku-in-single-ka` |
-| Claves del YAML | `snake_case` | `allowed_pairs` |
+| Propiedades de nodo | `camelCase` | `prefLabel`, `resourceLocator` |
+| Códigos de regla | prefijo y número | `RI-05`, `RM-02`, `EX-01` |
 
 Las propiedades de nodo van en `camelCase` porque replican los nombres de las
 propiedades OWL (`prefLabel`, `resourceLocator`), no por preferencia estética.
 
+Los códigos de regla vienen de la documentación y el código los usa tal cual:
+`RI` del anexo de transición al grafo de propiedades, `RM` del capítulo de
+arquitectura de la tesis y `EX` de ADR-010. Cada consulta de auditoría lleva el
+código de la regla que comprueba.
+
 ## 3. Comentarios
 
-Cortos y sobre **intención**, no sobre mecánica. El razonamiento largo va a
-`lab/findings/`, con su fecha y su evidencia; el comentario solo apunta allí.
+Cortos y sobre **intención**, no sobre mecánica. El razonamiento largo va a un
+ADR en `docs/decisiones/`; el comentario solo apunta allí.
 
 ```python
 # Group by label set so each MERGE is typed: an unlabeled MERGE
@@ -114,31 +118,24 @@ lo que parece arbitrario y no lo es.
   restricción de unicidad, para que vaya por índice y no escanee.
 - Las etiquetas y los tipos de relación se interpolan en el Cypher porque
   Cypher no admite parámetros ahí; todo lo demás va **parametrizado**. Cualquier
-  identificador interpolado se valida antes contra la especificación.
-- El LLM nunca escribe en la base. Genera datos; el Cypher lo construye código
-  determinista.
+  identificador interpolado se valida antes contra el esquema del grafo
+  (ADR-008).
+- El LLM nunca escribe en la base. Genera datos; las escrituras son plantillas
+  de forma fija que solo reciben valores (ADR-003, ADR-005).
 
 ## 5. Estructura del repositorio
 
 ```
-docs/            Documentos de tesis y de proyecto. Español.
-ontology/        Entregables R1 y R2 en Turtle.
-schema/          Especificación declarativa de reglas de esquema.
-src/iekg/        Código del paquete.
-lab/scripts/     Scripts ejecutables del laboratorio.
-lab/findings/    Hallazgos numerados y fechados. Español. No se actualizan.
-lab/docs/        Registros de aprendizaje, fechados. Español. No se actualizan.
-tests/           Pruebas, incluida la prueba negativa de integridad.
-build/           Artefactos .cypher generados desde schema/. Versionados.
-internal-notes/  Notas privadas. Ignorado por git.
+docs/               Tesis, anexo de transición, atributos de calidad. Español.
+docs/decisiones/    Un ADR por archivo.
+docs/architecture/  Modelo C4 en LikeC4.
+ontology/           Entregables R1 y R2 en Turtle.
+src/iekg/           Código del paquete.
+tests/              Pruebas, incluidas las negativas de integridad.
 ```
 
-`lab/findings/` y `lab/docs/` son **registros congelados**: llevan fecha y no se
-mantienen al día. Si algo cambia, se escribe un documento nuevo. Un documento
-obsoleto que aparenta estar vigente es peor que ninguno.
-
-`build/` se versiona a propósito: los `.cypher` generados son evidencia citable
-de cómo se validó el grafo, no un artefacto derivado desechable.
+El laboratorio sigue congelado en el tag `lab-2026-09-01`; sus rutas (`lab/`,
+`schema/`, `build/`) no existen en esta rama.
 
 ## 6. Pruebas
 

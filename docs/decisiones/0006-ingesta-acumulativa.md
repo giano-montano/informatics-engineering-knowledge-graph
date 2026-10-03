@@ -1,6 +1,6 @@
 # ADR-006: Ingesta acumulativa con procedencia fijada al crear
 
-**Estado:** Aceptada
+**Estado:** Aceptada (enmendada 2026-10)
 **Fecha:** 2026-09
 **Atributos:** AC-03 (principal), AC-01
 
@@ -28,3 +28,7 @@ Un documento institucional puede ingestarse más de una vez, y documentos distin
 - Si un documento cambia y se vuelve a ingestar, lo que la versión nueva ya no afirma permanece con su procedencia anterior. Es una limitación del MVP; retirarlo queda como trabajo futuro.
 - Un nodo ya anclado no pierde su arista de partonomía, así que la regla de anclaje solo se valida sobre los nodos nuevos.
 - El tamaño del lote de ingesta queda para el diseño del pipeline.
+
+## Enmienda (2026-10)
+
+- **Tamaño del lote.** El lote es el documento completo (ADR-010).

@@ -1,6 +1,6 @@
 # ADR-004: Reproyección destructiva en lugar de reconciliación incremental
 
-**Estado:** Aceptada (enmendada 2026-09-29)
+**Estado:** Aceptada, en parte reemplazada por ADR-012 (enmendada 2026-09-29 y 2026-10)
 **Fecha:** 2026-08
 **Atributos:** AC-04 (principal), AC-02
 
@@ -34,3 +34,7 @@ El aislamiento que exige AC-04 no es de estado en la base, sino de **etapas del 
 - **Alcance.** La reconstrucción aplica ante correcciones del backbone que no cambian claves (etiquetas, descripciones), cambios en el código de proyección y constructos que solo existen en el grafo. No aplica ante cambios de clave, fusión o eliminación de unidades ni cambios de la T-Box: esos exigen transformar los hechos guardados con un script escrito para cada cambio.
 - **Documentos reprocesados.** Reingestar un documento no dispara la reconstrucción; es una ingesta más (ADR-006).
 - **Reaplicación.** Copia los hechos que cada corrida escribió, con claves resueltas y procedencia ya fijada, en el orden original de las corridas. No revalida; la auditoría corre al cierre (ADR-005).
+
+## Enmienda (2026-10)
+
+- **Dos modos, no tres.** La **carga** vacía la base, la inicializa y escribe la capa de referencia. La **reaplicación** se activa por separado, solo después de una carga. «Reproyección» es el nombre del procedimiento de ejecutar ambas, no un modo propio.

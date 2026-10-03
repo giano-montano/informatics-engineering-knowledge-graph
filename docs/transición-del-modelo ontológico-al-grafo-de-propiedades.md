@@ -12,15 +12,16 @@ Cada término conserva en todo el anexo el significado que le da esta tabla.
 | ----- | ----- |
 | Constructo del modelo ontológico | Cada pieza del lenguaje OWL que el TTL usa para describir el dominio. Unas declaran un nombre: una clase, una propiedad o un individuo. Otras, los axiomas, afirman algo sobre esos nombres: que una clase es subclase de otra, que dos clases son disjuntas, que una propiedad es transitiva. |
 | Base de datos de grafos | La instancia de Neo4j Community del sistema: una sola base de datos, consultada con Cypher 5\. |
-| Clave | La única propiedad de identidad de un nodo. Vale el IRI en la capa de referencia y un uuid, acuñado al crear el nodo, en la capa institucional. |
+| Clave | La única propiedad de identidad de un nodo. Vale el IRI en la capa de referencia y un uuid en la capa institucional, acuñado al crear el nodo o derivado de un identificador estable cuando el elemento lo tiene. |
 | Carga del backbone | La corrida que lee el TTL del backbone y escribe la capa de referencia sobre una base de datos de grafos vacía. Es destructiva y precede a toda ingesta. |
 | Ingesta | El procesamiento de un documento institucional que termina escribiendo en la base de datos de grafos. |
 | Lote de ingesta | Los hechos candidatos que se validan y se escriben juntos: si uno falla, no se escribe ninguno. |
 | Validación previa a la escritura | Las comprobaciones sobre lo que se va a escribir, antes de escribirlo. Puede leer la base de datos de grafos; no escribe en ella. |
 | Hacer commit | Dejar firme la transacción de escritura. |
 | Auditoría | La corrida de las consultas Cypher de integridad sobre el grafo completo. Cada consulta lleva el código de la regla que comprueba. |
-| Reproyección | Vaciar la base de datos de grafos, repetir la carga del backbone desde el TTL versionado y reaplicar los hechos institucionales del almacén versionado, sin invocar al modelo de lenguaje. |
-| Reaplicación | El paso de la reproyección que copia a la base de datos de grafos los hechos institucionales guardados. |
+| Reproyección | El procedimiento de reconstruir el grafo: una carga del backbone seguida de una reaplicación, que se activa por separado. Ninguno de los dos pasos invoca al modelo de lenguaje. |
+| Reaplicación | La corrida que copia a la base de datos de grafos los hechos institucionales del almacén de hechos. Se activa por separado, solo después de una carga del backbone. |
+| Almacén de hechos | Los archivos, fuera de la base de datos de grafos, en los que cada corrida de ingesta guarda los hechos que escribió. Es la fuente de la reaplicación. |
 | Tipo de arista | Uno de los ocho tipos de relación del grafo, listados en la Tabla 2\. |
 
 Las etiquetas de Neo4j conservan el nombre en inglés de cada clase: elemento de conocimiento (KnowledgeElement), área de conocimiento (KnowledgeArea), unidad de conocimiento (KnowledgeUnit), tema (Topic), concepto (Concept), curso (Course), recurso de aprendizaje (LearningResource) y tipo de recurso (ResourceType).
@@ -59,7 +60,7 @@ Todo constructo que aparece en el TTL de la T-Box o en el del backbone tiene una
 * El grafo es más estricto que la ontología en tres puntos. La clave única vuelve redundante la declaración de individuos distintos. La partonomía solo admite los tres pares de etiquetas de la Tabla 2, mientras que OWL acepta afirmar isPartOf entre dos elementos de conocimiento cualesquiera, incluso en sentido inverso. Y el localizador exige una forma que su rango no exige.  
 * Un constructo del TTL sin fila en la Tabla 1 no se proyecta en silencio: la carga del backbone lo rechaza.  
 * Lo que el TTL no contiene se fija como decisión de proyección: la propiedad afirmada de cada par inverso y el nombre de su tipo de arista (Tabla 2), el colapso de la partonomía, una propiedad por idioma y las anotaciones de otros vocabularios.  
-* El grafo añade una propiedad de arista sin constructo de origen: la procedencia por arista, que R1 (DD-09) ubica fuera de OWL.  
+* El grafo puede llevar propiedades de nodo o de arista sin constructo de origen en la ontología, cuando las exige el funcionamiento del módulo. Cada una se declara en el capítulo de arquitectura, con su nombre, el elemento que la lleva y su motivo; RI-09 las cubre igual que a las de esta tabla. La procedencia por arista, que R1 (DD-09) ubica fuera de OWL, es una de ellas.  
 * Fuera de alcance: los constructos de OWL 2 que la ontología no usa, como cadenas de propiedades, nominales, negación, cardinalidades distintas de la existencial y equivalencia declarada con owl:equivalentClass.
 
   ## **Tipos de arista**
@@ -76,7 +77,7 @@ Las once propiedades afirmadas se proyectan en ocho tipos de arista, porque las 
 | TEACHES\_CONCEPT | teachesConcept | conceptTaughtBy | Course → Concept | La ingesta |
 | REQUIRES\_CONCEPT | requiresConcept | conceptRequiredBy | Course → Concept | La ingesta |
 | IS\_ABOUT | isAbout | hasResource | LearningResource → KnowledgeArea, KnowledgeUnit, Topic, Concept o Course | La ingesta |
-| HAS\_RESOURCE\_TYPE | hasResourceType | — | LearningResource → ResourceType | La ingesta |
+| HAS\_RESOURCE\_TYPE | hasResourceType | — | LearningResource → ResourceType | La ingesta. En el piloto hay un solo tipo de recurso, Sílabo, y la ingesta crea su nodo la primera vez que lo usa. |
 | WAS\_DERIVED\_FROM | wasDerivedFrom | — | KnowledgeArea, KnowledgeUnit, Topic, Concept o Course → LearningResource | La carga del backbone, hacia CS2023; la ingesta |
 
 Toda arista que escribe la ingesta sale de un nodo institucional, y ninguna dirección afirmada obliga a salir de un nodo de referencia. Por eso la condición de frontera de capas no necesita excepciones.
@@ -99,15 +100,15 @@ Valores de las columnas «Carga del backbone» e «Ingesta»: se impide al escri
 | RI-06 | Entre dos nodos hay como máximo una arista de cada tipo en cada dirección | Propiedad afirmada: en RDF un triple está afirmado o no, y el grafo de propiedades admite aristas paralelas | Se impide al escribir | Se impide al escribir |
 | RI-07 | Ninguna unidad tiene aristas de partonomía hacia más de un área | Propiedad funcional | Validado en R2 | No aplica: la condición de frontera de capas impide a la ingesta escribir aristas de unidad a área |
 | RI-08 | Todo concepto tiene al menos una arista de partonomía hacia un tema; todo tema, hacia una unidad; toda unidad, hacia un área | Restricción existencial | Se detecta en la auditoría: HermiT no detecta ausencias bajo mundo abierto | Se impide al escribir |
-| RI-09 | Todo nodo y toda arista tiene solo propiedades declaradas en la Tabla 1 o en sus notas | Propiedad de datos; propiedad de anotación; etiqueta de idioma | Se impide al escribir | Se impide al escribir |
+| RI-09 | Todo nodo y toda arista tiene solo propiedades declaradas en la Tabla 1, en sus notas o en el capítulo de arquitectura. | Propiedad de datos; propiedad de anotación; etiqueta de idioma | Se impide al escribir | Se impide al escribir |
 | RI-10 | Si un recurso de aprendizaje tiene localizador, su valor es un URI absoluto con esquema http o https | Propiedad de datos | Se impide al escribir | Se impide al escribir |
 
 **Notas de la Tabla 3**
 
-* La partonomía no necesita regla de ciclos. Sus únicos pares admitidos son concepto → tema, tema → unidad y unidad → área, así que todo camino de partonomía avanza hacia el área y nunca vuelve a un nodo por el que ya pasó.  
+* La partonomía no necesita regla de ciclos. Sus únicos pares admitidos son concepto a tema, tema a unidad y unidad a área, así que todo camino de partonomía avanza hacia el área y nunca vuelve a un nodo por el que ya pasó.  
 * Impedir RI-05 y RI-08 en la ingesta exige consultar nodos que ya están en el grafo, y eso solo es fiable con un único escritor (condición 1).  
 * RI-08 descansa en la escritura acumulativa: un nodo ya anclado no pierde su arista de partonomía, así que solo los nodos nuevos necesitan traer la suya.  
-* La reaplicación no tiene columna propia: copia hechos que ya cumplieron las reglas al escribirse, y la auditoría corre al cierre de la reproyección.
+* La reaplicación no tiene columna propia: copia hechos que ya cumplieron las reglas al escribirse, y la auditoría corre al cierre de la reaplicación.
 
   ## **Condiciones del proceso de escritura**
 
@@ -120,10 +121,10 @@ Las condiciones de esta sección no describen el contenido del grafo y no tienen
 5. **Procedencia única.** La procedencia de un nodo y la de una arista se fijan al crearlos. Si un documento posterior afirma algo que ya existe, se conserva la procedencia existente.  
 6. **Frontera de capas.** La ingesta no crea ni modifica nodos ni aristas de la capa de referencia, y toda arista que escribe sale de un nodo institucional. RI-07 depende de esta condición.  
 7. **Todo o nada por lote de ingesta.** Si una regla falla en la validación previa a la escritura, no se escribe nada del lote de ingesta.  
-8. **Carga destructiva.** La carga del backbone parte de una base de datos de grafos vacía. Lo que no proviene del TTL y debe persistir se reaplica desde el almacén versionado, en un paso posterior y separado.  
+8. **Carga destructiva.** La carga del backbone parte de una base de datos de grafos vacía. Lo que no proviene del TTL y debe persistir se reaplica desde el almacén de hechos, en un paso posterior y separado.  
 9. **Alcance de la reproyección.** Cubre correcciones del backbone que no cambian claves, como etiquetas o descripciones, cambios en el código de proyección y constructos que solo existen en el grafo. No cubre cambios de clave, fusiones o eliminaciones de unidades ni cambios de la T-Box: después de ellos los hechos guardados ya no encajan en el modelo y deben transformarse con un script escrito para ese cambio. Criterio: si todo hecho guardado apunta a claves que existen y cumple las reglas de integridad, basta la reproyección.  
-10. **Reaplicación.** El almacén versionado guarda los hechos que cada corrida escribió, con sus claves resueltas y su procedencia ya fijada. La reaplicación los copia sin recalcular nada, en el orden original de las corridas, porque cada corrida solo referencia nodos que existían antes de ella.  
-11. **Auditoría y recuperación.** La auditoría corre al cierre de la carga del backbone, de cada corrida de ingesta y de la reproyección. En la ingesta todas las reglas se impiden al escribir, así que una violación que la auditoría encuentra tras una ingesta revela un error de código y no un dato malo. En la ingesta se hace commit, se persisten los hechos en el almacén versionado y luego corre la auditoría; si encuentra violaciones, emite su reporte, detiene la ingesta y deja la decisión al operador. La reproyección es el remedio disponible, no una reacción automática.
+10. **Reaplicación.** El almacén de hechos guarda los hechos que cada corrida escribió, con sus claves resueltas y su procedencia ya fijada. La reaplicación los copia sin recalcular nada, en el orden original de las corridas, porque cada corrida solo referencia nodos que existían antes de ella.  
+11. **Auditoría y recuperación.** La auditoría corre al cierre de la carga del backbone, de cada corrida de ingesta y de la reaplicación. En la ingesta todas las reglas se impiden al escribir, así que una violación que la auditoría encuentra tras una ingesta revela un error de código y no un dato malo. En la ingesta se hace commit, se persisten los hechos en el almacén de hechos y luego corre la auditoría. Si encuentra violaciones, emite su reporte y suspende las ingestas pendientes. El operador dispone del reporte como evidencia, no del remedio: el remedio es un procedimiento de construcción que se ejecuta con el sistema detenido, no una reacción automática.
 
     ## **Alternativas descartadas**
 
@@ -137,7 +138,7 @@ Cada ausencia de un mecanismo o de un constructo en las tablas anteriores es una
 | Graph types de GQL | No disponibles en Neo4j Community con Cypher 5 |
 | Disparadores de APOC | Vienen desactivados, se instalan desde la base de datos system, se propagan con un refresco de 60 s por defecto y Neo4j los excluye del subconjunto de APOC que ofrece en Aura. Su única ventaja propia, frenar escrituras hechas fuera del código, cubre un escritor que la condición de escritores ya excluye |
 | Comprobación dentro de la transacción antes de hacer commit | Redundante: las reglas ya se impiden al escribir y la auditoría cubre los errores de implementación |
-| Etiqueta común inventada para todos los nodos, con unicidad global | Ruido: con IRI en la capa de referencia y uuid acuñado al crear en la institucional, la colisión de clave entre etiquetas es imposible por construcción |
+| Etiqueta común inventada para todos los nodos, con unicidad global | Ruido: con IRI en la capa de referencia y uuid en la institucional, la colisión de clave entre etiquetas es imposible por construcción |
 | Uuid también en la capa de referencia | Cada carga destructiva cambiaría esos uuid, y todo lo guardado fuera de la base de datos de grafos tendría que usar el IRI: dos formas de referirse a un mismo nodo |
 | Materializar las aristas inversas o el cierre transitivo | Duplica información y se desactualiza al cambiar la estructura; R1 (DD-07) fija derivarlos en consulta |
 | Deducir del TTL la dirección afirmada de cada par inverso | OWL no distingue una dirección afirmada, porque la inversa es simétrica, y el editor escribe el axioma bajo el nombre que va primero en orden alfabético. La Tabla 2 fija la dirección |
@@ -146,7 +147,7 @@ Cada ausencia de un mecanismo o de un constructo en las tablas anteriores es una
 
 ## **Reglas que van al capítulo de arquitectura**
 
-Cinco condiciones sobre el contenido del grafo no nacen de traducir OWL al grafo de propiedades, sino de decisiones del módulo. Se enuncian en el capítulo de arquitectura con su propio código. El reporte de integridad de RF-09 es uno solo y cubre las diez reglas de este anexo y las cinco condiciones de esta sección.
+Cinco condiciones sobre el contenido del grafo no nacen de traducir OWL al grafo de propiedades, sino de decisiones del módulo. Se enuncian en el capítulo de arquitectura con su propio código, RM-01 a RM-05. El reporte de integridad de RF-09 es uno solo y cubre las diez reglas de este anexo y las cinco condiciones de esta sección.
 
 * Todo nodo tiene marca de capa, con valor reference o institutional (R1, DD-02).  
 * Ninguna arista sale de un nodo de la capa de referencia hacia uno de la capa institucional (R1, DD-02). Es la forma consultable de la condición de frontera de capas.  
@@ -154,4 +155,5 @@ Cinco condiciones sobre el contenido del grafo no nacen de traducir OWL al grafo
 * No existen ciclos de prerrequisito ni de especialización. La transitividad no los prohíbe; los exige el orden topológico de la navegación (R5 y R6).  
 * Todo recurso de aprendizaje tiene localizador (R1, DD-10).
 
-AC-03 comprueba la procedencia y AC-04 la frontera de capas.
+Además, el capítulo de arquitectura declara las propiedades sin constructo de origen que el módulo necesita, y esa declaración cierra la lista que RI-09 comprueba.
+

@@ -1,6 +1,6 @@
 # Decisiones
 
-Una decisión por archivo, numerada y fechada: `NNNN-titulo-en-kebab-case.md`.
+Una decisión por archivo, numerada: `NNNN-titulo-en-kebab-case.md`.
 
 En el laboratorio no había registros de decisión, y era correcto: ahí se
 experimenta y casi todo se descarta. Aquí es al revés. **El registro es el
@@ -14,39 +14,62 @@ el código viejo del laboratorio decida por uno.
 ## Forma
 
 ```markdown
-# NNNN — Título en una línea
+# ADR-NNN: Título en una línea
 
-**Fecha:** AAAA-MM-DD · **Estado:** propuesta | vigente | reemplazada por NNNN
+**Estado:** Aceptada
+**Fecha:** AAAA-MM
+**Atributos:** AC-0X (principal), AC-0Y
 
-## Pregunta
+## Contexto
 
-Qué había que decidir, en una o dos frases. Si viene de
-`docs/traspaso-del-laboratorio.md`, citar el número de pregunta.
-
-## Alternativas
-
-Cada una con su consecuencia. Como mínimo dos, y de verdad: una alternativa de
-paja no cuenta como haber elegido.
+Qué hay que decidir y por qué, en uno o dos párrafos. Si la decisión
+reemplaza parte de otra, se dice aquí.
 
 ## Decisión
 
-Qué se hace y por qué. Si contradice algo escrito en `docs/tesis.md`, decirlo
-aquí de forma explícita.
+Qué se hace. Si contradice algo escrito en `docs/tesis.md`, se dice de forma
+explícita.
 
-## Qué la falsaría
+## Alternativas consideradas
 
-Qué habría que observar para tener que revisarla. Si no se puede contestar,
-probablemente no era una decisión de ingeniería sino una preferencia.
+| Alternativa | Motivo del descarte |
+|---|---|
 
-## Evidencia
+Como mínimo dos, y de verdad: una alternativa de paja no cuenta como haber
+elegido.
 
-Medición propia, documentación oficial, o `git show lab-2026-09-01:<ruta>`.
-Marcar lo que sea **fuente gris** (repos, foros, blogs, preprints): sirve para
-decidir qué probar, no para sustentar la tesis.
+## Consecuencias
+
+Lo que se gana, lo que se pierde y las limitaciones que se declaran.
 ```
+
+Si la decisión se apoya en una medición o en una fuente, se cita. Lo que sea
+**fuente gris** (repositorios, foros, blogs, preprints) se marca como tal:
+sirve para decidir qué probar, no para sustentar la tesis.
 
 ## Estado
 
-`vigente` es lo normal. `reemplazada por NNNN` mantiene el archivo viejo en su
-sitio: **no se reescribe una decisión**, se escribe la que la sustituye. Un
+| Estado | Cuándo |
+|---|---|
+| `Aceptada` | Lo normal. |
+| `Aceptada (enmendada AAAA-MM)` | Tiene una o más enmiendas al final. |
+| `Aceptada, en parte reemplazada por ADR-NNN` | Otro ADR invalida una parte; lo que dice ese ADR prevalece. |
+| `Reemplazada por ADR-NNN` | Otro ADR la invalida por completo. |
+
+Un ADR que todavía no se ha subido al repositorio es un borrador y se edita
+libremente.
+
+## Enmiendas
+
+Una decisión aceptada no se reescribe. Cuando cambia algo, se elige entre dos
+caminos:
+
+- **Enmienda**, si el cambio es menor: una aclaración, una precisión o un
+  ajuste que deja en pie lo decidido. Se agrega al final una sección
+  `## Enmienda (AAAA-MM)` y el estado lo indica.
+- **ADR nuevo**, si el cambio no es menor o invalida la decisión original,
+  aunque sea en parte. El ADR nuevo dice en su contexto qué reemplaza, y el
+  viejo se queda en su sitio con el estado que lo apunta.
+
+Una enmienda nunca dice «donde dice X, debe leerse Y»: eso es reescribir. Un
 documento obsoleto que aparenta estar vigente es peor que ninguno.

@@ -5,8 +5,14 @@
 // tiene y a qué atributo o decisión responde; el porqué vive en el ADR.
 // `summary` se muestra sobre el diagrama: una línea.
 //
-// El nivel 3 se retiró el 2026-09-29 para rehacerlo; contradecía ADR-005.
-// Su versión anterior está en Mermaid en el commit b16d25b.
+// Las relaciones se declaran en el nivel más bajo en que existen; LikeC4
+// deriva las de los niveles superiores.
+//
+// Excepción a «una sola vez»: el validador, el repositorio y el auditor son
+// un mismo código, el núcleo del grafo, que corre en el worker y en los
+// procesos de construcción. C4 ubica cada componente en el proceso que lo
+// ejecuta, así que se declaran en ambos con la etiqueta #nucleo. La
+// descripción completa vive en el worker.
 model {
 
   student = person 'Estudiante' {
@@ -23,9 +29,9 @@ model {
   operator = person 'Operador del grafo' {
     summary 'Incorpora material y observa el resultado de la ingesta.'
     description '''
-      Sube documentos académicos declarando su tipo de recurso, sigue el
-      estado de cada corrida, revisa los hechos descartados y consulta el
-      reporte de auditoría.
+      Sube documentos académicos declarando su tipo de recurso y el código
+      del curso al que pertenecen, sigue el estado de cada corrida, revisa
+      los hechos descartados y consulta el reporte de auditoría.
 
       No decide sobre el contenido del grafo: no aprueba hechos, no edita
       elementos y no reingresa descartes. Ante una violación de integridad
@@ -39,7 +45,7 @@ model {
     summary 'Extrae hechos candidatos estructurados a partir de texto.'
     description '''
       Única dependencia externa del sistema. Recibe el texto de un documento
-      junto con candidatos recuperados del grafo y devuelve hechos candidatos
+      junto con el vocabulario del grafo y devuelve hechos candidatos
       conformes a un esquema.
 
       Nunca escribe en la base de grafos ni compone sentencias de escritura
@@ -59,8 +65,11 @@ model {
       académicos con asistencia de un modelo de lenguaje. Toda afirmación
       institucional conserva el documento del que se derivó.
 
-      Responde a PC1–PC7 y a los atributos AC-01 a AC-05.
+      Responde a las preguntas de competencia de R1 y a los atributos AC-01
+      a AC-05.
     '''
+
+    // ── Contenedores que ejecutan código ──────────────────────────────
 
     web = container 'Aplicación web' {
       technology 'SPA'
@@ -68,11 +77,12 @@ model {
       description '''
         Un solo desplegable con dos zonas. La navegación permite buscar,
         explorar el grafo y abrir recursos; el panel del operador permite
-        subir un documento con su tipo, seguir el estado de la corrida,
-        revisar descartes y consultar el reporte de auditoría.
+        subir un documento con su tipo y el código de su curso, seguir el
+        estado de la corrida, revisar descartes y consultar el reporte de
+        auditoría.
 
-        Se descompone en R5. El panel del operador queda fuera de la prueba
-        de aceptación de R6.
+        Se despliega aparte de la API (ADR-007). Se descompone en R5. El
+        panel del operador queda fuera de la prueba de aceptación de R6.
       '''
     }
 
@@ -80,79 +90,189 @@ model {
       technology 'Python, FastAPI'
       summary 'Consultas de lectura, alta de corridas y entrega de documentos.'
       description '''
-        Ejecuta las consultas derivadas de DD-07 contra la base de grafos y
-        sirve los documentos de los recursos institucionales en la dirección
-        que registra su localizador.
-
-        Al recibir un documento no toca el grafo: escribe el archivo,
-        registra la corrida en el almacén operacional y lanza un worker si no
-        hay uno activo.
+        Atiende las consultas de la navegación, registra cada corrida que
+        solicita el operador y sirve los documentos de los recursos
+        institucionales en la dirección que registra su localizador.
 
         Nunca escribe en la base de grafos.
       '''
+
+      navRoutes = component 'Rutas de navegación' {
+        technology 'FastAPI'
+        summary 'Consultas derivadas y entrega de documentos.'
+        description '''
+          Ejecuta los cinco patrones de consulta de DD-07, la búsqueda por
+          nombre y el detalle de un nodo, y sirve el documento de cada
+          recurso institucional.
+
+          Responde a AC-05 y AC-03.
+        '''
+      }
+
+      opsRoutes = component 'Rutas de operación' {
+        technology 'FastAPI'
+        summary 'Alta de corrida, estado, descartes y reporte.'
+        description '''
+          Recibe el documento con su tipo y el código de su curso, acuña la
+          clave y el localizador del recurso de aprendizaje, guarda el
+          archivo, registra la corrida como pendiente y lanza un worker si
+          no hay uno activo (ADR-007, ADR-009). Expone el estado de cada corrida, sus
+          descartes y su reporte de auditoría.
+
+          Protegidas por un token fijo de operador (ADR-013). Responden a
+          AC-02.
+        '''
+      }
     }
 
     worker = container 'Worker de ingesta' {
       technology 'Python'
       summary 'Ejecuta el pipeline de ingesta; único escritor del grafo mientras el sistema está en servicio.'
       description '''
-        Se lanza por corrida, drena las corridas pendientes y termina. Parsea
-        el documento, recupera contexto del grafo, obtiene hechos candidatos
-        del proveedor, los valida antes de escribir, resuelve el enlace de
-        entidades, escribe el lote en una transacción, persiste los hechos en
-        el almacén y ejecuta la auditoría.
+        Se lanza como proceso hijo de la API si no hay uno activo, procesa
+        una tras otra las corridas pendientes y termina. No toma corridas
+        mientras el último reporte de auditoría tenga violaciones (ADR-007).
 
-        Único escritor del grafo: impedir RI-05 y RI-08 exige leer el grafo
-        entre la validación y la escritura, sin que nadie más escriba en ese
-        intervalo.
-
-        Una auditoría con violaciones detiene el drenaje: las corridas
-        pendientes quedan sin procesar.
-
-        Limitación declarada: si el worker se interrumpe entre confirmar el
-        lote y ejecutar la auditoría, el grafo cambia sin un reporte que
-        describa su estado.
-
-        Lee su configuración de validación de un archivo generado del TTL que
-        se versiona con el código y viaja en el artefacto de despliegue.
+        Único escritor del grafo mientras el sistema está en servicio
+        (ADR-005). El extractor y los componentes del núcleo leen el esquema
+        del grafo, la declaración única de lo que el grafo admite (ADR-008).
       '''
+
+      orchestrator = component 'Orquestador de corridas' {
+        technology 'Python'
+        summary 'Conduce cada corrida de principio a fin y registra su resultado.'
+        description '''
+          Mientras la compuerta de auditoría esté abierta, toma la corrida
+          pendiente más antigua (ADR-007). La conduce:
+          lee la instantánea, obtiene los hechos extraídos, les agrega los
+          hechos declarados, valida el lote, lo escribe, persiste los hechos
+          en el almacén y audita. Registra estados, descartes y reporte.
+
+          Estados: pendiente, en curso, terminada, rechazada, fallida,
+          escrita sin persistir y detenida por auditoría (ADR-010).
+
+          Limitación declarada: si el worker se interrumpe entre confirmar
+          el lote y persistirlo, la corrida queda escrita sin persistir y
+          una reaplicación posterior no la reproduce.
+        '''
+      }
+
+      extractor = component 'Extractor' {
+        technology 'Python, Docling, PydanticAI'
+        summary 'Documento e instantánea → hechos candidatos con claves resueltas.'
+        description '''
+          Parsea el documento, obtiene del proveedor hechos candidatos en
+          salida tipada contra el esquema del grafo y enlaza cada mención:
+          con la clave de un nodo existente o con una clave acuñada si es
+          nueva (ADR-003, ADR-011).
+
+          Reintenta de forma acotada ante errores transitorios del
+          proveedor y una sola vez, informando el error, ante una salida no
+          conforme (ADR-010).
+        '''
+      }
+
+      validator = component 'Validador' {
+        #nucleo
+        technology 'Python'
+        summary 'Esquema, instantánea y lote → lista de violaciones.'
+        description '''
+          Comprueba en memoria, sin consultar la base, las reglas que
+          dependen del contenido del lote o de lo que ya existe en el grafo:
+          RI-05, RI-08, RI-10, RM-02, RM-04 y RM-05. Acumula todas las
+          violaciones del lote (ADR-005, ADR-011).
+        '''
+      }
+
+      repository = component 'Repositorio del grafo' {
+        #nucleo
+        technology 'Python, Neo4j driver'
+        summary 'Lee la instantánea, escribe lotes con forma fija e inicializa la base.'
+        description '''
+          Lee la instantánea al empezar cada corrida. Escribe cada lote en
+          una sola transacción, con plantillas de forma fija que solo
+          reciben valores, fija la procedencia al crear y compara los
+          contadores con lo esperado. Vacía la base y crea las restricciones
+          de unicidad para la carga.
+
+          Garantiza por la forma de la escritura RI-02, RI-03, RI-04, RI-06,
+          RI-09, RM-01 y RM-03, y con la restricción de unicidad, RI-01
+          (ADR-003, ADR-005, ADR-006).
+        '''
+      }
+
+      auditor = component 'Auditor' {
+        #nucleo
+        technology 'Python, Cypher'
+        summary 'Una consulta por regla sobre el grafo completo y su reporte.'
+        description '''
+          Ejecuta, al cierre de la carga, de cada ingesta y de la
+          reaplicación, una consulta por regla de integridad y del módulo, y
+          devuelve un reporte identificado con el código de cada regla
+          (AC-02, RF-09, ADR-005).
+        '''
+      }
     }
 
     // Sin flecha entrante a propósito: el desarrollador no se modela como
     // actor; la invocación se describe en la prosa.
     buildTools = buildTool 'Procesos de construcción del grafo' {
       technology 'Python, línea de comandos'
-      summary 'Carga la capa de referencia y reconstruye el grafo. No es funcionalidad en línea.'
+      summary 'Carga la capa de referencia y reaplica los hechos guardados. No es funcionalidad en línea.'
       description '''
-        Tres modos: carga de la capa de referencia desde el TTL versionado,
-        reaplicación de los hechos guardados y reproyección, que ejecuta los
-        dos anteriores sobre una base vacía. Ninguno invoca al modelo de
-        lenguaje (AC-04).
+        Se ejecutan con el sistema detenido (ADR-007). Ninguno invoca al
+        modelo de lenguaje (AC-04, ADR-004).
 
-        Se invoca desde la línea de comandos, con el sistema detenido. Esa es
-        la condición que mantiene un único escritor del grafo (ADR-005): nada
-        impide técnicamente que coincida con un worker en curso.
-
-        Comparte con el worker el módulo de escritura de forma fija, de modo
-        que la reaplicación produce lo mismo que produjo la ingesta.
-
-        Lee el TTL del backbone de un archivo versionado que viaja en su
-        artefacto de despliegue.
-
-        Su diseño interno se documenta aparte.
+        Comparten con el worker el núcleo del grafo: por ser el mismo
+        código, la reaplicación reproduce lo que hizo la ingesta y las
+        reglas se comprueban igual en todos los caminos de escritura.
       '''
+
+      commands = component 'Comandos de construcción' {
+        technology 'Python, línea de comandos'
+        summary 'Carga y reaplicación, cada una cerrada con su auditoría.'
+        description '''
+          La carga vacía la base, la inicializa y escribe la capa de
+          referencia desde el TTL del backbone. La reaplicación se activa
+          por separado, solo después de una carga, y escribe los lotes del
+          almacén de hechos en el orden de las corridas, saltando las
+          detenidas por auditoría. La reproyección es el procedimiento de
+          ejecutar ambas (ADR-004, ADR-012).
+        '''
+      }
+
+      validator = component 'Validador' {
+        #nucleo
+        technology 'Python'
+        summary 'El mismo código que el validador del worker.'
+      }
+
+      repository = component 'Repositorio del grafo' {
+        #nucleo
+        technology 'Python, Neo4j driver'
+        summary 'El mismo código que el repositorio del worker.'
+      }
+
+      auditor = component 'Auditor' {
+        #nucleo
+        technology 'Python, Cypher'
+        summary 'El mismo código que el auditor del worker.'
+      }
     }
+
+    // ── Contenedores que almacenan datos ──────────────────────────────
 
     neo4j = dataStore 'Base de grafos' {
       technology 'Neo4j Community, Cypher 5'
       summary 'Grafo de propiedades con la capa de referencia y la institucional.'
       description '''
         Una sola base. Ocho etiquetas de clase, ocho tipos de arista y una
-        única propiedad de clave por nodo: el IRI en la capa de referencia, un
-        uuid en la institucional.
+        única propiedad de clave por nodo: el IRI en la capa de referencia;
+        en la institucional, un uuid que se fija antes de escribir y viaja
+        en el lote, acuñado al azar o derivado de un identificador estable.
 
-        Su contenido se reconstruye por completo mediante reproyección, así
-        que ningún dato tiene aquí su fuente de verdad.
+        Se reconstruye por completo con una carga seguida de una
+        reaplicación; ningún dato tiene aquí su fuente de verdad (ADR-004).
       '''
     }
 
@@ -160,15 +280,17 @@ model {
       technology 'SQLite'
       summary 'Estado de corridas, descartes y reportes de auditoría.'
       description '''
-        Escrito por la API al dar de alta una corrida y por el worker durante
-        su ejecución. Recibe también el reporte de auditoría de los procesos
-        de construcción.
+        Escrito por la API al dar de alta una corrida, por el worker durante
+        su ejecución y por los procesos de construcción, que registran su
+        reporte de auditoría y leen el estado de las corridas para
+        reaplicar.
 
-        Su contenido sobrevive a la reproyección. Sostiene las medidas de
-        AC-01 y AC-02.
+        Su contenido sobrevive a la carga. Sostiene las medidas de AC-01 y
+        AC-02 y la compuerta de auditoría del worker (ADR-007). Por cada
+        corrida rechazada guarda una fila por violación y el lote candidato
+        completo (ADR-010).
 
-        Modo WAL y espera ante bloqueo. Requiere que la API y el worker
-        compartan host y sistema de archivos local.
+        Modo WAL y espera ante bloqueo.
       '''
     }
 
@@ -176,96 +298,100 @@ model {
       technology 'Sistema de archivos'
       summary 'Documentos ingestados, hospedados por el sistema.'
       description '''
-        La API escribe al recibir el documento y lee al servirlo; el worker
-        lee para parsearlo.
-
-        Todo recurso de aprendizaje institucional es un documento subido, de
-        modo que sin este almacén el estudiante no puede abrir lo que el grafo
-        cita.
+        Cada archivo se nombra con la clave del recurso de aprendizaje que
+        acuña la API (ADR-009). La API escribe al recibirlo y lee al
+        servirlo; el worker lee para parsearlo.
       '''
     }
 
     factStore = dataStore 'Almacén de hechos' {
-      technology 'Sistema de archivos versionado'
-      summary 'Hechos institucionales escritos por cada corrida.'
+      technology 'Sistema de archivos'
+      summary 'Lote escrito por cada corrida, fuente de la reaplicación.'
       description '''
-        El worker lo escribe después de confirmar la transacción, con las
-        claves ya resueltas y la procedencia fijada. Los procesos de
-        construcción lo leen para reaplicar sin invocar al modelo de
-        lenguaje (AC-04).
+        Un archivo por corrida que escribió, nombrado con su identificador y
+        escrito una sola vez, después de confirmar la transacción. Contiene
+        exactamente el lote que recibió el escritor, con las claves ya
+        resueltas (ADR-012).
 
-        El versionado es manual: el sistema escribe archivos, no hace commits.
-
-        Limitación declarada: entre confirmar la transacción y persistir aquí
-        hay una ventana no atómica. Si el worker se interrumpe en ese
-        intervalo, la corrida queda marcada como escrita sin persistir y una
-        reproyección posterior no la reproduciría.
+        Sus archivos llevan el host en los localizadores, así que no se
+        reutilizan en otro host (ADR-009).
       '''
     }
   }
 
-  // Nivel 1
-  student -> kms 'Consulta y navega'
-  operator -> kms 'Incorpora material y revisa el resultado'
-  kms -> llm 'Envía texto y recibe hechos candidatos'
+  // ── Relaciones ──────────────────────────────────────────────────────
 
-  // Nivel 2
+  // Actores y sistema externo
   student -> kms.web 'Consulta y navega'
   operator -> kms.web 'Sube documentos, sigue corridas, revisa descartes y el reporte'
-  kms.web -> kms.api 'Consultas, alta de corrida, estado, descarga de documentos' {
+
+  // Aplicación web → API
+  kms.web -> kms.api.navRoutes 'Consultas y documentos' {
     technology 'HTTP/JSON'
   }
-  kms.api -> kms.neo4j 'Consulta' {
+  kms.web -> kms.api.opsRoutes 'Alta de corrida, estado, descartes y reporte' {
+    technology 'HTTP/JSON'
+  }
+
+  // API
+  kms.api.navRoutes -> kms.neo4j 'Consulta' {
     technology 'Cypher'
     description '''
       Solo lectura. El tiempo de ejecución de los cinco patrones de DD-07 en
       esta relación es lo que mide AC-05, sin serialización ni transporte.
     '''
   }
-  kms.api -> kms.sqlite 'Escribe el alta de corrida; lee estado, descartes y reporte' {
+  kms.api.navRoutes -> kms.documentStore 'Lee el documento a servir'
+  kms.api.opsRoutes -> kms.documentStore 'Guarda el documento subido'
+  kms.api.opsRoutes -> kms.sqlite 'Registra la corrida; lee estado, descartes y reporte' {
     technology 'SQL'
   }
-  kms.api -> kms.documentStore 'Escribe al subir, lee al servir'
-  kms.api -> kms.worker 'Lanza una corrida' {
+  kms.api.opsRoutes -> kms.worker.orchestrator 'Lanza un worker si no hay uno activo' {
     technology 'Proceso hijo'
-    description '''
-      Lanza un proceso solo si no hay uno activo. El worker toma de ahí en
-      adelante las corridas pendientes por su cuenta, lo que serializa las
-      escrituras sin cola ni intermediario.
-    '''
   }
-  kms.worker -> kms.sqlite 'Reclama la corrida pendiente, actualiza estado, escribe descartes y reporte' {
+
+  // Worker
+  kms.worker.orchestrator -> kms.sqlite 'Comprueba la compuerta y toma la corrida pendiente; registra estado, descartes y reporte' {
     technology 'SQL'
   }
-  kms.worker -> kms.documentStore 'Lee el documento a parsear'
-  kms.worker -> llm 'Solicita extracción' {
+  kms.worker.orchestrator -> kms.worker.extractor 'Documento e instantánea'
+  kms.worker.orchestrator -> kms.worker.repository 'Lee la instantánea; escribe el lote'
+  kms.worker.orchestrator -> kms.worker.validator 'Valida el lote'
+  kms.worker.orchestrator -> kms.worker.auditor 'Audita al cierre'
+  kms.worker.orchestrator -> kms.factStore 'Persiste el lote escrito'
+  kms.worker.extractor -> kms.documentStore 'Lee el documento a parsear'
+  kms.worker.extractor -> llm 'Solicita extracción' {
+    technology 'HTTPS'
     description '''
-      Envía el texto del documento y los candidatos recuperados del grafo;
-      recibe hechos candidatos conformes al esquema. Lo recibido se valida
-      antes de escribir y nunca se incorpora al grafo sin pasar esa
-      validación.
-    '''
-  }
-  kms.worker -> kms.neo4j 'Lee y escribe' {
-    technology 'Cypher'
-    description '''
-      Lee para recuperar contexto y resolver el enlace de entidades. Escribe
-      el lote completo en una transacción, con sentencias de forma fija que
-      solo reciben valores. La auditoría corre después de confirmar.
-    '''
-  }
-  kms.worker -> kms.factStore 'Persiste los hechos de la corrida' {
-    description '''
-      Posterior a la confirmación de la transacción. Es la fuente de la
-      reaplicación.
+      Envía el texto del documento y el vocabulario del grafo; recibe
+      hechos candidatos en salida tipada. Lo recibido nunca se incorpora al
+      grafo sin pasar la validación.
     '''
   }
 
-  kms.buildTools -> kms.neo4j 'Vacía, carga la capa de referencia y reaplica los hechos' {
+  kms.worker.repository -> kms.neo4j 'Lee y escribe' {
+    technology 'Cypher'
+    description '''
+      Una lectura al empezar cada corrida y una transacción por lote, con
+      sentencias de forma fija que solo reciben valores.
+    '''
+  }
+  kms.worker.auditor -> kms.neo4j 'Consultas de integridad' {
     technology 'Cypher'
   }
-  kms.buildTools -> kms.factStore 'Lee los hechos a reaplicar'
-  kms.buildTools -> kms.sqlite 'Escribe el reporte de auditoría' {
+
+  // Procesos de construcción
+  kms.buildTools.commands -> kms.buildTools.repository 'Vacía, inicializa y escribe'
+  kms.buildTools.commands -> kms.buildTools.validator 'Valida la capa de referencia'
+  kms.buildTools.commands -> kms.buildTools.auditor 'Audita al cierre'
+  kms.buildTools.commands -> kms.factStore 'Lee los lotes a reaplicar'
+  kms.buildTools.commands -> kms.sqlite 'Lee el estado de las corridas; registra el reporte' {
     technology 'SQL'
+  }
+  kms.buildTools.repository -> kms.neo4j 'Vacía, carga y reaplica' {
+    technology 'Cypher'
+  }
+  kms.buildTools.auditor -> kms.neo4j 'Consultas de integridad' {
+    technology 'Cypher'
   }
 }

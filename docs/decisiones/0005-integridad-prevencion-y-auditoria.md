@@ -1,6 +1,6 @@
 # ADR-005: Integridad del grafo por prevención al escribir y auditoría posterior
 
-**Estado:** Aceptada
+**Estado:** Aceptada (enmendada 2026-10)
 **Fecha:** 2026-09
 **Atributos:** AC-01 (principal), AC-02
 
@@ -33,3 +33,11 @@ Una violación que la auditoría encuentra tras una ingesta se trata como error 
 - El diseño del pipeline documenta, regla por regla, qué mecanismo la impide.
 - El reporte de integridad (RF-09) es uno solo y cubre todas las reglas.
 - Nada protege frente a escrituras hechas por fuera del sistema.
+
+## Enmienda (2026-10)
+
+- **Cuándo corre la auditoría.** Al cierre de la carga, de cada ingesta y de la reaplicación (ADR-004).
+- **Ante una violación tras una ingesta.** Se emite el reporte, la corrida queda *detenida por auditoría* y la compuerta de ADR-007 suspende las ingestas pendientes hasta que una reconstrucción la reabra. El operador dispone del reporte como evidencia, no del remedio: el remedio es un procedimiento de construcción que ejecuta el desarrollador, con el sistema detenido (ADR-004).
+- **Escritor único.** El intervalo que protege va desde la lectura de la instantánea hasta el commit (ADR-007, ADR-011).
+- **Mecanismo por regla.** El validador impide RI-05, RI-08, RI-10, RM-02, RM-04 y RM-05; la forma de la escritura, RI-02, RI-03, RI-04, RI-06, RI-09, RM-01 y RM-03; la restricción de unicidad, junto con el MERGE por clave, RI-01. RI-07 no aplica en la ingesta.
+- **Relación con ADR-002.** Este régimen reemplaza los cuatro mecanismos de ADR-002. La existencia de propiedad queda descartada por ser exclusiva de Enterprise (ver Alternativas).

@@ -86,11 +86,11 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 [2.1 Introducción	37](#introducción)
 
-[2.2 Desarrollo del marco conceptual	37](#desarrollo-del-marco-conceptual)
+[2.2 Desarrollo del marco conceptual	38](#desarrollo-del-marco-conceptual)
 
-[2.2.1 Dominio de la educación en informática	37](#dominio-de-la-educación-en-informática)
+[2.2.1 Dominio de la educación en informática	38](#dominio-de-la-educación-en-informática)
 
-[2.2.1.1 Currículo universitario y fragmentación	37](#currículo-universitario-y-fragmentación)
+[2.2.1.1 Currículo universitario y fragmentación	38](#currículo-universitario-y-fragmentación)
 
 [2.2.1.2 Dependencias conceptuales y relaciones de prerrequisito	38](#dependencias-conceptuales-y-relaciones-de-prerrequisito)
 
@@ -106,7 +106,7 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 [2.2.4.1 Aprendizaje autodirigido (self-directed learning)	41](#aprendizaje-autodirigido-\(self-directed-learning\))
 
-[2.2.4.2 Navegación y descubrimiento de recursos educativos	41](#navegación-y-descubrimiento-de-recursos-educativos)
+[2.2.4.2 Navegación y descubrimiento de recursos educativos	42](#navegación-y-descubrimiento-de-recursos-educativos)
 
 [**Capítulo 3\. Estado del Arte	43**](#estado-del-arte)
 
@@ -158,87 +158,127 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 [**Capítulo 5\. Módulo de gestión del grafo de conocimiento	76**](#módulo-de-gestión-del-grafo-de-conocimiento)
 
-[5.1 Documentación de calidad, arquitectura y diseño	76](#documentación-de-calidad,-arquitectura-y-diseño)
+[5.1 Introducción	76](#introducción-3)
 
-[5.1.1 Atributos de calidad del módulo del grafo de conocimiento	76](#atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
+[5.2 Documentación de calidad, arquitectura y diseño	76](#documentación-de-calidad,-arquitectura-y-diseño)
 
-[5.1.2 Modelo de datos del grafo	79](#modelo-de-datos-del-grafo)
+[5.2.1 Atributos de calidad del módulo del grafo de conocimiento	76](#atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
 
-[5.1.3 Reglas de integridad del grafo	81](#reglas-de-integridad-del-grafo)
+[5.2.2 Modelo de datos del grafo	79](#modelo-de-datos-del-grafo)
 
-[5.1.4 Arquitectura del módulo	84](#arquitectura-del-módulo)
+[5.2.3 Reglas de integridad del grafo	82](#reglas-de-integridad-del-grafo)
 
-[5.1.4.1 Contexto del sistema	84](#contexto-del-sistema)
+[5.2.4 Arquitectura del módulo	84](#arquitectura-del-módulo)
 
-[5.1.4.2 Contenedores	84](#contenedores)
+[5.2.4.1 Contexto del sistema	84](#contexto-del-sistema)
 
-[5.1.4.3 Componentes	86](#componentes)
+[5.2.4.2 Contenedores	85](#contenedores)
 
-[5.1.4.4 Despliegue	86](#despliegue)
+[5.2.4.3 Componentes	87](#componentes)
 
-[**Capítulo 6\. Conclusiones y trabajos futuros	87**](#conclusiones-y-trabajos-futuros)
+[5.2.4.4 Flujo de la ingesta	89](#flujo-de-la-ingesta)
 
-[6.1 Conclusiones	87](#conclusiones-1)
+[5.2.4.5 Despliegue	90](#despliegue)
 
-[6.2 Trabajos futuros	87](#trabajos-futuros)
+[5.2.5 Casos de prueba de la ingesta automatizada	90](#casos-de-prueba-de-la-ingesta-automatizada)
 
-[**Referencias	88**](#referencias)
+[5.2.5.1 Objeto y alcance	91](#objeto-y-alcance)
+
+[5.2.5.2 Anotación de referencia	92](#anotación-de-referencia)
+
+[5.2.5.3 Casos de prueba	93](#casos-de-prueba)
+
+[5.2.5.4 Reglas de emparejamiento	94](#reglas-de-emparejamiento)
+
+[5.2.5.5 Medidas de fusión	95](#medidas-de-fusión)
+
+[5.2.6 Verificación de R3	96](#verificación-de-r3)
+
+[5.2.6.1 Verificación y mediciones	96](#verificación-y-mediciones-1)
+
+[5.2.6.2 Validación de experto	96](#validación-de-experto)
+
+[5.2.6.3 Indicador	97](#indicador)
+
+[**Capítulo 6\. Conclusiones y trabajos futuros	97**](#conclusiones-y-trabajos-futuros)
+
+[6.1 Conclusiones	97](#conclusiones-1)
+
+[6.2 Trabajos futuros	97](#trabajos-futuros)
+
+[**Referencias	98**](#referencias)
 
 # **Índice de figuras**
 
-[Figura 1\. Distribución de respondentes por ciclo (N=154). Fuente: elaboración propia a partir de la encuesta (Anexo D).	10](#figura-1.-distribución-de-respondentes-por-ciclo-\(n=154\).-fuente:-elaboración-propia-a-partir-de-la-encuesta-\(anexo-d\).)
+[Figura 1\. Distribución de respondentes por ciclo (N=154). Fuente: elaboración propia a partir de la encuesta (Anexo D).	11](#figura-1.-distribución-de-respondentes-por-ciclo-\(n=154\).-fuente:-elaboración-propia-a-partir-de-la-encuesta-\(anexo-d\).)
 
-[Figura 2\. Árbol de problemas	11](#figura-2.-árbol-de-problemas)
+[Figura 2\. Árbol de problemas	12](#figura-2.-árbol-de-problemas)
 
-[Figura 3\. Facilidad percibida para identificar conocimientos previos antes de abordar un tema nuevo (1 \= nada fácil, 5 \= muy fácil; N=154). Fuente: elaboración propia (Anexo D).	14](#figura-3.-facilidad-percibida-para-identificar-conocimientos-previos-antes-de-abordar-un-tema-nuevo-\(1-=-nada-fácil,-5-=-muy-fácil;-n=154\).-fuente:-elaboración-propia-\(anexo-d\).)
+[Figura 3\. Facilidad percibida para identificar conocimientos previos antes de abordar un tema nuevo (1 \= nada fácil, 5 \= muy fácil; N=154). Fuente: elaboración propia (Anexo D).	15](#figura-3.-facilidad-percibida-para-identificar-conocimientos-previos-antes-de-abordar-un-tema-nuevo-\(1-=-nada-fácil,-5-=-muy-fácil;-n=154\).-fuente:-elaboración-propia-\(anexo-d\).)
 
-[Figura 4\. Criterios usados para planificar cursos electivos (opción múltiple; N=154). Fuente: elaboración propia (Anexo D)	17](#figura-4.-criterios-usados-para-planificar-cursos-electivos-\(opción-múltiple;-n=154\).-fuente:-elaboración-propia-\(anexo-d\))
+[Figura 4\. Criterios usados para planificar cursos electivos (opción múltiple; N=154). Fuente: elaboración propia (Anexo D)	18](#figura-4.-criterios-usados-para-planificar-cursos-electivos-\(opción-múltiple;-n=154\).-fuente:-elaboración-propia-\(anexo-d\))
 
-[Figura 5\. Jerarquía de clases de la ontología visualizada en Protégé (OntoGraf). Fuente: elaboración propia.	65](#figura-5.-jerarquía-de-clases-de-la-ontología-visualizada-en-protégé-\(ontograf\).-fuente:-elaboración-propia.)
+[Figura 5\. Jerarquía de clases de la ontología visualizada en Protégé (OntoGraf). Fuente: elaboración propia.	66](#figura-5.-jerarquía-de-clases-de-la-ontología-visualizada-en-protégé-\(ontograf\).-fuente:-elaboración-propia.)
 
-[Figura 6\. Diagrama de contexto del sistema (nivel 1 del modelo C4). Fuente: elaboración propia.	84](#figura-6.-diagrama-de-contexto-del-sistema-\(nivel-1-del-modelo-c4\).-fuente:-elaboración-propia.)
+[Figura 6\. Diagrama de contexto del sistema (nivel 1 del modelo C4). Fuente: elaboración propia.	86](#figura-6.-diagrama-de-contexto-del-sistema-\(nivel-1-del-modelo-c4\).-fuente:-elaboración-propia.)
 
-[Figura 7\. Diagrama de contenedores del sistema (nivel 2 del modelo C4). Fuente: elaboración propia.	85](#figura-7.-diagrama-de-contenedores-del-sistema-\(nivel-2-del-modelo-c4\).-fuente:-elaboración-propia.)
+[Figura 7\. Diagrama de contenedores del sistema (nivel 2 del modelo C4). Fuente: elaboración propia.	86](#figura-7.-diagrama-de-contenedores-del-sistema-\(nivel-2-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 8\. Componentes de la API (nivel 3 del modelo C4). Fuente: elaboración propia.	88](#figura-8.-componentes-de-la-api-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 9\. Componentes del worker de ingesta (nivel 3 del modelo C4). Fuente: elaboración propia.	89](#figura-9.-componentes-del-worker-de-ingesta-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 10\. Componentes de los procesos de construcción (nivel 3 del modelo C4). Fuente: elaboración propia.	90](#figura-10.-componentes-de-los-procesos-de-construcción-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 11\. Flujo de la ingesta de un documento. Fuente: elaboración propia.	90](#figura-11.-flujo-de-la-ingesta-de-un-documento.-fuente:-elaboración-propia.)
+
+[Figura 12\. Diagrama de despliegue del prototipo. Fuente: elaboración propia.	91](#figura-12.-diagrama-de-despliegue-del-prototipo.-fuente:-elaboración-propia.)
+
+# 
 
 # **Índice de tablas**
 
-[Tabla 1\. Ficha técnica de la encuesta de orientación del aprendizaje	8](#tabla-1.-ficha-técnica-de-la-encuesta-de-orientación-del-aprendizaje)
+[Tabla 1\. Ficha técnica de la encuesta de orientación del aprendizaje	9](#tabla-1.-ficha-técnica-de-la-encuesta-de-orientación-del-aprendizaje)
 
-[Tabla 2\. Mapeo de resultados, medios de verificación e indicadores del objetivo O 1	20](#tabla-2.-mapeo-de-resultados,-medios-de-verificación-e-indicadores-del-objetivo-o-1)
+[Tabla 2\. Mapeo de resultados, medios de verificación e indicadores del objetivo O 1	21](#tabla-2.-mapeo-de-resultados,-medios-de-verificación-e-indicadores-del-objetivo-o-1)
 
-[Tabla 3\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 2	21](#tabla-3.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-2)
+[Tabla 3\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 2	22](#tabla-3.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-2)
 
-[Tabla 4\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 3	23](#tabla-4.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-3)
+[Tabla 4\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 3	24](#tabla-4.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-3)
 
-[Tabla 5\. Herramientas, métodos y procedimientos por resultado	24](#tabla-5.-herramientas,-métodos-y-procedimientos-por-resultado)
+[Tabla 5\. Herramientas, métodos y procedimientos por resultado	25](#tabla-5.-herramientas,-métodos-y-procedimientos-por-resultado)
 
-[Tabla 6\. Uso de la técnica PICOC	43](#tabla-6.-uso-de-la-técnica-picoc)
+[Tabla 6\. Uso de la técnica PICOC	44](#tabla-6.-uso-de-la-técnica-picoc)
 
-[Tabla 7\. Palabras clave organizadas con técnica PICOC por pregunta	45](#tabla-7.-palabras-clave-organizadas-con-técnica-picoc-por-pregunta)
+[Tabla 7\. Palabras clave organizadas con técnica PICOC por pregunta	46](#tabla-7.-palabras-clave-organizadas-con-técnica-picoc-por-pregunta)
 
-[Tabla 8\. Resultados de documentos en búsquedas y filtración	47](#tabla-8.-resultados-de-documentos-en-búsquedas-y-filtración)
+[Tabla 8\. Resultados de documentos en búsquedas y filtración	48](#tabla-8.-resultados-de-documentos-en-búsquedas-y-filtración)
 
-[Tabla 9\. Documentos seleccionados finales	47](#tabla-9.-documentos-seleccionados-finales)
+[Tabla 9\. Documentos seleccionados finales	48](#tabla-9.-documentos-seleccionados-finales)
 
-[Tabla 10\. Formulario de extracción de datos para la pregunta P1	51](#tabla-10.-formulario-de-extracción-de-datos-para-la-pregunta-p1)
+[Tabla 10\. Formulario de extracción de datos para la pregunta P1	52](#tabla-10.-formulario-de-extracción-de-datos-para-la-pregunta-p1)
 
-[Tabla 11\. Formulario de extracción de datos para la pregunta P2	52](#tabla-11.-formulario-de-extracción-de-datos-para-la-pregunta-p2)
+[Tabla 11\. Formulario de extracción de datos para la pregunta P2	53](#tabla-11.-formulario-de-extracción-de-datos-para-la-pregunta-p2)
 
-[Tabla 12\. Formulario de extracción de datos para la pregunta P3	52](#tabla-12.-formulario-de-extracción-de-datos-para-la-pregunta-p3)
+[Tabla 12\. Formulario de extracción de datos para la pregunta P3	53](#tabla-12.-formulario-de-extracción-de-datos-para-la-pregunta-p3)
 
-[Tabla 13\. Propiedades de objeto de la ontología.	66](#tabla-13.-propiedades-de-objeto-de-la-ontología.)
+[Tabla 13\. Propiedades de objeto de la ontología.	67](#tabla-13.-propiedades-de-objeto-de-la-ontología.)
 
-[Tabla 14\. Atributos de calidad del módulo del grafo de conocimiento	76](#tabla-14.-atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
+[Tabla 14\. Atributos de calidad del módulo del grafo de conocimiento	78](#tabla-14.-atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
 
-[Tabla 15\. Escenarios de calidad de los atributos definidos	77](#tabla-15.-escenarios-de-calidad-de-los-atributos-definidos)
+[Tabla 15\. Escenarios de calidad de los atributos definidos	79](#tabla-15.-escenarios-de-calidad-de-los-atributos-definidos)
 
-[Tabla 16\. Tipos de arista del grafo y pares de etiquetas admitidos	79](#tabla-16.-tipos-de-arista-del-grafo-y-pares-de-etiquetas-admitidos)
+[Tabla 16\. Tipos de arista del grafo y pares de etiquetas admitidos	81](#tabla-16.-tipos-de-arista-del-grafo-y-pares-de-etiquetas-admitidos)
 
-[Tabla 17\. Propiedades de nodo y de arista	80](#tabla-17.-propiedades-de-nodo-y-de-arista)
+[Tabla 17\. Propiedades de nodo y de arista	82](#tabla-17.-propiedades-de-nodo-y-de-arista)
 
-[Tabla 18\. Reglas de integridad del grafo	81](#tabla-18.-reglas-de-integridad-del-grafo)
+[Tabla 18\. Reglas de integridad del grafo	83](#tabla-18.-reglas-de-integridad-del-grafo)
 
-[Tabla 19\. Reglas del módulo	83](#tabla-19.-reglas-del-módulo)
+[Tabla 19\. Reglas del módulo	84](#tabla-19.-reglas-del-módulo)
+
+[Tabla 20\. Mecanismo que impide cada regla en la ingesta	89](#tabla-20.-mecanismo-que-impide-cada-regla-en-la-ingesta)
+
+[Tabla 21\. Casos de prueba de extracción y resumen de la anotación de referencia	94](#tabla-21.-casos-de-prueba-de-extracción-y-resumen-de-la-anotación-de-referencia)
 
 1. # **Generalidades** {#generalidades}
 
@@ -336,7 +376,7 @@ Diseñar e implementar un sistema de gestión de conocimiento basado en grafos d
 | :---- | :---- | :---- |
 | **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
 | R3. Documentación del módulo del grafo de conocimiento que especifica el modelo de datos del grafo, los componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Documentos de arquitectura con diagramas C4, modelo de datos y ADRs. Documento de casos de prueba para validación de la ingesta automatizada del pipeline.  | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
-| R4. Módulo de gestión del grafo de conocimiento implementado que incluye el pipeline de ingesta automatizada de documentos académicos (sílabos PDF) y una API documentada para consulta y gestión del grafo. | Código fuente del módulo Documentación técnica de la API (endpoints, esquema de datos, ejemplos de uso) Reporte de extracción sobre el conjunto de pruebas. | Verificación manual de la precisión de entidades extraídas mayor o igual a un 75% (nodos o conceptos del grafo de conocimiento).[^3] |
+| R4. Módulo de gestión del grafo de conocimiento implementado que incluye el pipeline de ingesta automatizada de documentos académicos (sílabos PDF) y una API documentada para consulta y gestión del grafo. | Código fuente del módulo Documentación técnica de la API (endpoints, esquema de datos, ejemplos de uso) Reporte de extracción sobre el conjunto de pruebas. | Verificación de la precisión de entidades extraídas mayor o igual a un 75% (nodos o conceptos del grafo de conocimiento) mediante anotación de referencia adjudicada por el autor.[^3] |
 
 ###### **Tabla 4\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 3** {#tabla-4.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-3}
 
@@ -521,7 +561,7 @@ Para la exposición de la interfaz programática del módulo, se utilizará Fast
 
 6. #### **Orquestación y LLMs**  {#orquestación-y-llms}
 
-Para automatizar la extracción de información desde sílabos y otros documentos extensos, se emplearán modelos de lenguaje de gran escala (LLMs como Gemini, GPT, etc.). Sin embargo, dado que el objetivo del módulo no es generar texto libre sino producir instancias, relaciones y restricciones compatibles con un esquema formal, la orquestación se implementará con PydanticAI. Este framework está concebido como un agente en Python orientado a aplicaciones de producción, con salidas tipadas, uso de herramientas y orquestación multiagente; posee ventajas como que cuando una salida no cumple el esquema, activa un mecanismo de reintento sobre la validación en lugar de aceptar silenciosamente un resultado inválido. A esto se suma que Pydantic genera y personaliza esquemas JSON directamente desde modelos, lo que permite representar cada entidad, relación y restricción como un contrato verificable alineado con la ontología del grafo [(Pydantic, 2024/2026)](https://www.zotero.org/google-docs/?ECK3fa).
+Para automatizar la extracción de información desde sílabos y otros documentos extensos, se emplearán modelos de lenguaje de gran escala (LLMs como Gemini, GPT, etc.). Sin embargo, dado que el objetivo del módulo no es generar texto libre sino producir instancias, relaciones y restricciones compatibles con un esquema formal, la orquestación se implementará con PydanticAI. Este framework está concebido como un agente en Python orientado a aplicaciones de producción, con salidas tipadas, uso de herramientas y orquestación multiagente; posee ventajas como que cuando una salida no cumple el esquema, activa un mecanismo de reintento sobre la validación en lugar de aceptar silenciosamente un resultado inválido. A esto se suma que Pydantic genera y personaliza esquemas JSON directamente desde modelos, lo que permite fijar la forma de la salida del modelo de lenguaje: cada entidad y relación que propone llega tipada, y el pipeline la valida después contra las reglas del grafo [(Pydantic, 2024/2026)](https://www.zotero.org/google-docs/?ECK3fa).
 
 Esta elección resulta más adecuada que una aproximación más generalista con LangChain para el núcleo de poblamiento ontológico. LangChain ofrece una arquitectura de agente preconstruida e integraciones amplias; sin embargo, allí la salida estructurada es una capacidad dentro de un ecosistema más amplio, mientras que en PydanticAI la validación tipada y el control del esquema constituyen el centro del diseño (LangChain, s. f.; Pydantic, 2024/2026). Para un pipeline cuyo foco es la consistencia semántica, la normalización y la trazabilidad, esa diferencia es metodológicamente relevante.
 
@@ -840,16 +880,16 @@ Sobre esa base, el modelo define las propiedades de objeto bajo un principio de 
 | Propiedad | Dominio | Rango | Características | Inversa |
 | :---- | :---- | :---- | :---- | :---- |
 | isPartOf | KnowledgeElement | KnowledgeElement | Transitiva; superpropiedad de las tres siguientes | hasPart (transitiva) |
-| conceptInTopic | Concept | Topic | Simple; subpropiedad de isPartOf | — |
-| topicInKnowledgeUnit | Topic | KnowledgeUnit | Simple; subpropiedad de isPartOf | — |
-| knowledgeUnitInKnowledgeArea | KnowledgeUnit | KnowledgeArea | Simple; subpropiedad de isPartOf; funcional | — |
+| conceptInTopic | Concept | Topic | Simple; subpropiedad de isPartOf | \- |
+| topicInKnowledgeUnit | Topic | KnowledgeUnit | Simple; subpropiedad de isPartOf | \- |
+| knowledgeUnitInKnowledgeArea | KnowledgeUnit | KnowledgeArea | Simple; subpropiedad de isPartOf; funcional | \- |
 | hasPrerequisite | Concept | Concept | Transitiva | isPrerequisiteFor (transitiva) |
 | specializes | Concept | Concept | Simple | hasSpecialization |
 | teachesConcept | Course | Concept | Simple | conceptTaughtBy |
 | requiresConcept | Course | Concept | Simple | conceptRequiredBy |
 | isAbout | LearningResource | KnowledgeElement o Course | Simple | hasResource |
-| hasResourceType | LearningResource | ResourceType | Simple | — |
-| wasDerivedFrom | KnowledgeElement o Course | LearningResource | Simple | — |
+| hasResourceType | LearningResource | ResourceType | Simple | \- |
+| wasDerivedFrom | KnowledgeElement o Course | LearningResource | Simple | \- |
 
 Las restricciones lógicas son las que sostienen la integridad del esquema. Dos de ellas impiden que las categorías se confundan entre sí. La primera declara Elemento de Conocimiento como la unión disjunta de sus cuatro subclases: todo elemento pertenece entonces a exactamente uno de los cuatro niveles, y ningún individuo puede ser a la vez tema y concepto. Es también el mecanismo con el que la superclase opera como abstracta, pues OWL no ofrece clases abstractas sino particiones exhaustivas. La segunda declara disjuntas entre sí las cuatro clases de nivel superior, lo que impide clasificar un individuo simultáneamente como curso y como recurso. Las dos restricciones restantes gobiernan la composición: la pertenencia de una unidad de conocimiento a su área es funcional, de modo que una unidad pertenece a exactamente un área; y un invariante de cuatro niveles obliga a que todo concepto pertenezca a un tema, todo tema a una unidad y toda unidad a un área. El comportamiento de estas restricciones bajo razonamiento automático se detalla en la validación; la especificación completa de clases, propiedades y axiomas figura en el Anexo G y su justificación razonada en el Anexo I (decisiones de diseño).
 
@@ -943,9 +983,13 @@ Quinto, la curación se detiene en el nivel de unidad de conocimiento. Las clase
 
 5. # **Módulo de gestión del grafo de conocimiento** {#módulo-de-gestión-del-grafo-de-conocimiento}
 
-   1. ## **Documentación de calidad, arquitectura y diseño** {#documentación-de-calidad,-arquitectura-y-diseño}
+   1. ## **Introducción** {#introducción-3}
 
-      1. ### **Atributos de calidad del módulo del grafo de conocimiento** {#atributos-de-calidad-del-módulo-del-grafo-de-conocimiento}
+Este capítulo presenta los resultados del objetivo específico O2: diseñar e implementar un módulo de gestión del grafo de conocimiento que, bajo la ontología definida, integre recursos académicos heterogéneos mediante un pipeline de ingesta automatizada y exponga una interfaz programática para su consulta y gestión. Comprende dos resultados: la documentación del módulo (R3), que especifica sus atributos de calidad, el modelo de datos del grafo, sus reglas de integridad, su arquitectura y los casos de prueba de la ingesta, y el módulo implementado con su pipeline de ingesta y su API (R4). Con ellos, la estructura definida en el capítulo anterior se puebla con el contenido de los sílabos y queda disponible para su consulta. La navegación del estudiante sobre el grafo corresponde al objetivo O3 y queda fuera de este capítulo.
+
+2. ## **Documentación de calidad, arquitectura y diseño** {#documentación-de-calidad,-arquitectura-y-diseño}
+
+   1. ### **Atributos de calidad del módulo del grafo de conocimiento** {#atributos-de-calidad-del-módulo-del-grafo-de-conocimiento}
 
 El diseño del módulo se guía por cinco atributos de calidad, derivados de las necesidades de los interesados, de las restricciones del entorno en que el módulo opera y de las condiciones del proceso de desarrollo. Cada uno se especifica como escenario de calidad en la forma de seis partes propuesta por Bass et al. (2021): fuente, estímulo, artefacto, entorno, respuesta y medida de respuesta. La medida es la parte decisiva, ya que un atributo sin medida verificable no puede sostener ninguna decisión de diseño. El vocabulario de caracterización proviene de la norma ISO/IEC 25010\. Se presentan los atributos seleccionados en la Tabla 14 y los escenarios de calidad en la Tabla 15\.
 
@@ -974,9 +1018,9 @@ La auditoría posterior a la carga es una medida necesaria pero insuficiente: el
 
 2. ### **Modelo de datos del grafo** {#modelo-de-datos-del-grafo}
 
-El grafo se almacena en Neo4j Community, una base de datos de grafos de propiedades que no ejecuta un razonador. Por eso el modelo ontológico del capítulo anterior no se carga tal cual: cada constructo llega al grafo como una estructura (una etiqueta de nodo, un tipo de arista o una propiedad) o como una regla de integridad que el módulo impide violar al escribir y comprueba después. Esta sección resume esa transición; la correspondencia constructo por constructo figura en el **Anexo \[X\]**.
+El grafo se almacena en Neo4j Community, una base de datos de grafos de propiedades que no ejecuta un razonador. Por eso el modelo ontológico del capítulo anterior no se carga tal cual: cada constructo llega al grafo como una estructura (una etiqueta de nodo, un tipo de arista o una propiedad) o como una regla de integridad que el módulo impide violar al escribir y comprueba después. Esta sección resume esa transición; la correspondencia constructo por constructo figura en el **Anexo K**.
 
-Cada clase se convierte en una etiqueta de nodo con su nombre en inglés, y los nodos de los cuatro niveles del dominio llevan además la etiqueta de la superclase, Elemento de Conocimiento, que en la ontología infería el razonador. Cada nodo tiene una única propiedad de identidad, su clave: el IRI del individuo en la capa de referencia y, en la institucional, un identificador acuñado al crear el nodo o derivado de uno estable, como el código de un curso. Las propiedades de objeto afirmadas se convierten en tipos de arista con dirección fija. Las inversas y los cierres transitivos no se almacenan, sino que se obtienen por consulta, conforme a la decisión de afirmar solo hechos atómicos y derivar los agregados (DD-07). Las cuatro propiedades de partonomía se reúnen en un solo tipo de arista, porque el par de etiquetas de sus extremos basta para saber de qué nivel se trata. El resultado son los ocho tipos de arista que presenta la Tabla 16\.
+Cada clase se convierte en una etiqueta de nodo con su nombre en inglés, y los nodos de los cuatro niveles del dominio llevan además la etiqueta de la superclase, Elemento de Conocimiento, que en la ontología infería el razonador. Cada nodo tiene una única propiedad de identidad, su clave: el IRI del individuo en la capa de referencia y, en la institucional, un identificador que se asigna antes de escribir el nodo y se guarda con el lote, o que se deriva de uno estable, como el código de un curso. Las propiedades de objeto afirmadas se convierten en tipos de arista con dirección fija. Las inversas y los cierres transitivos no se almacenan, sino que se obtienen por consulta, conforme a la decisión de afirmar solo hechos atómicos y derivar los agregados (DD-07). Las cuatro propiedades de partonomía se reúnen en un solo tipo de arista, porque el par de etiquetas de sus extremos basta para saber de qué nivel se trata. El resultado son los ocho tipos de arista que presenta la Tabla 16\.
 
 ###### **Tabla 16\. Tipos de arista del grafo y pares de etiquetas admitidos** {#tabla-16.-tipos-de-arista-del-grafo-y-pares-de-etiquetas-admitidos}
 
@@ -999,7 +1043,7 @@ El grafo no admite otras propiedades que las de la Tabla 17\. Todas, salvo dos, 
 
 | Propiedad | Elemento que la lleva | Origen |
 | :---- | :---- | :---- |
-| Clave | Todo nodo | El IRI del individuo, en la capa de referencia; en la institucional, se acuña al crear el nodo o se deriva de un identificador estable |
+| Clave | Todo nodo | El IRI del individuo, en la capa de referencia; en la institucional, se asigna antes de escribir el nodo o se deriva de un identificador estable |
 | Marca de capa | Todo nodo | Propiedad de anotación de la T-Box |
 | Etiqueta preferida, una por idioma | Todo nodo | Vocabulario SKOS |
 | Descripción | Nodos que la tienen | Vocabulario Dublin Core |
@@ -1020,15 +1064,15 @@ Los axiomas que HermiT comprobaba sobre la ontología no tienen representación 
 | RI-01 | Todo nodo tiene clave no nula, y no hay dos nodos con la misma clave | Individuo nombrado; individuos distintos |
 | RI-02 | Todo nodo lleva la etiqueta de su clase; los nodos KnowledgeArea, KnowledgeUnit, Topic y Concept llevan además la etiqueta KnowledgeElement | Clase; subsunción |
 | RI-03 | Todo nodo lleva exactamente una de las etiquetas KnowledgeElement, Course, LearningResource y ResourceType, y todo nodo KnowledgeElement exactamente una de KnowledgeArea, KnowledgeUnit, Topic y Concept | Unión disjunta y disyunción |
-| RI-04 | Toda arista es de uno de los ocho tipos de la Tabla 15 | Propiedad afirmada; propiedad inversa |
-| RI-05 | Cada arista une un par de etiquetas admitido para su tipo en la Tabla 15, en la dirección de la propiedad afirmada | Dominio y rango; subpropiedad de partonomía; unión de clases |
+| RI-04 | Toda arista es de uno de los ocho tipos de la Tabla 16 | Propiedad afirmada; propiedad inversa |
+| RI-05 | Cada arista une un par de etiquetas admitido para su tipo en la Tabla 16, en la dirección de la propiedad afirmada | Dominio y rango; subpropiedad de partonomía; unión de clases |
 | RI-06 | Entre dos nodos hay como máximo una arista de cada tipo en cada dirección | Propiedad afirmada |
 | RI-07 | Ninguna unidad tiene aristas de partonomía hacia más de un área | Propiedad funcional |
 | RI-08 | Todo concepto tiene al menos una arista de partonomía hacia un tema; todo tema, hacia una unidad; toda unidad, hacia un área | Restricción existencial |
-| RI-09 | Todo nodo y toda arista tiene solo propiedades declaradas en la Tabla 16 | Propiedad de datos; propiedad de anotación; etiqueta de idioma |
+| RI-09 | Todo nodo y toda arista tiene solo propiedades declaradas en la Tabla 17 | Propiedad de datos; propiedad de anotación; etiqueta de idioma |
 | RI-10 | Si un recurso de aprendizaje tiene localizador, su valor es un URI absoluto con esquema http o https | Propiedad de datos |
 
-Cada regla se garantiza de dos maneras. Primero, se impide al escribir: la violación nunca llega a confirmarse, porque se rechaza antes de escribir o porque la propia forma de la escritura la impide. Después, se detecta: una auditoría ejecuta sobre el grafo completo una consulta por regla y emite un reporte. En la ingesta, las diez reglas se impiden al escribir, salvo RI-07, que no aplica porque la ingesta no escribe aristas de unidad a área. En la carga de la capa de referencia, RI-07 descansa en la verificación con HermiT de R2, y RI-08 solo se detecta en la auditoría, porque el razonador no señala ausencias bajo el supuesto de mundo abierto. El detalle por regla y por camino de escritura figura en el Anexo \[X\].
+Cada regla se garantiza de dos maneras. Primero, se impide al escribir: la violación nunca llega a confirmarse, porque se rechaza antes de escribir o porque la propia forma de la escritura la impide. Después, se detecta: una auditoría ejecuta sobre el grafo completo una consulta por regla y emite un reporte. En la ingesta, las diez reglas se impiden al escribir, salvo RI-07, que no aplica porque la ingesta no escribe aristas de unidad a área. En la carga de la capa de referencia, RI-07 descansa en la verificación con HermiT de R2, y RI-08 solo se detecta en la auditoría, porque el razonador no señala ausencias bajo el supuesto de mundo abierto. El detalle por regla y por camino de escritura figura en el Anexo K.
 
 Las diez reglas resultan de traducir la ontología. Otras cinco resultan de decisiones del propio módulo y se presentan en la Tabla 19; la auditoría las comprueba en el mismo reporte.
 
@@ -1086,25 +1130,25 @@ La cuarta es que toda fuente puede abrirse. Todo recurso de aprendizaje instituc
 
 3. #### **Componentes** {#componentes}
 
-El nivel de componentes se documenta para la API y para el worker. La aplicación web se descompone en R5, y los almacenes no se descomponen.
+El nivel de componentes se documenta para la API, el worker y los procesos de construcción. La aplicación web se descompone en R5, y los almacenes no se descomponen.
 
 La API tiene dos componentes (Figura 8). Las rutas de navegación ejecutan las consultas derivadas y sirven los documentos; las rutas de operación reciben cada documento con su tipo y el código de su curso, acuñan la clave y el localizador de su recurso de aprendizaje, registran la corrida y lanzan el worker.
 
 **\[Imagen: vista «Nivel 3: Componentes de la API» exportada de LikeC4\]** 
 
-##### **Figura 8\. Componentes de la API (nivel 3 del modelo C4). Fuente: elaboración propia.**
+##### **Figura 8\. Componentes de la API (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-8.-componentes-de-la-api-(nivel-3-del-modelo-c4).-fuente:-elaboración-propia.}
 
-La Figura 9 muestra el worker. Sus componentes propios son dos: el orquestador, que conduce cada corrida y registra su resultado, y el extractor, que convierte el documento en hechos candidatos y los enlaza a los nodos existentes. Los otros tres —el validador, el repositorio del grafo y el auditor— forman un núcleo compartido con los procesos de construcción. El núcleo no es un contenedor: es el mismo código, que cada contenedor ejecuta en su propio proceso. De que sea el mismo dependen dos garantías: que la reaplicación reproduzca lo que hizo la ingesta (AC-04) y que las reglas se comprueben igual en los tres caminos de escritura (AC-01).
+La Figura 9 muestra el worker. Sus componentes propios son dos: el orquestador, que conduce cada corrida y registra su resultado, y el extractor, que convierte el documento en hechos candidatos y los enlaza a los nodos existentes. Los otros tres (el validador, el repositorio del grafo y el auditor) forman un núcleo compartido con los procesos de construcción. El núcleo no es un contenedor: es el mismo código, que cada contenedor ejecuta en su propio proceso. De que sea el mismo dependen dos garantías: que la reaplicación reproduzca lo que hizo la ingesta (AC-04) y que las reglas se comprueben igual en los tres caminos de escritura (AC-01).
 
 **\[Imagen: vista «Nivel 3: Componentes del worker de ingesta» exportada de LikeC4\]**
 
-##### **Figura 9\. Componentes del worker de ingesta (nivel 3 del modelo C4). Fuente: elaboración propia.**
+##### **Figura 9\. Componentes del worker de ingesta (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-9.-componentes-del-worker-de-ingesta-(nivel-3-del-modelo-c4).-fuente:-elaboración-propia.}
 
 Al empezar cada corrida, el repositorio lee una instantánea del grafo: todos sus nodos, con la información que necesitan el extractor y el validador. El extractor recibe ese vocabulario completo, de modo que el modelo de lenguaje propone hechos sobre nodos que existen y el enlace puede reconocer lo que ya está en el grafo (ADR-011). El validador trabaja sobre la instantánea y el lote, sin consultar la base. Las tres partes leen una misma declaración de lo que el grafo admite, el esquema del grafo, de modo que no pueden contradecirse (ADR-008).
 
 Con estos componentes, el mecanismo que impide cada regla en la ingesta queda repartido como muestra la Tabla 20\.
 
-###### **Tabla 20\. Mecanismo que impide cada regla en la ingesta**
+###### **Tabla 20\. Mecanismo que impide cada regla en la ingesta** {#tabla-20.-mecanismo-que-impide-cada-regla-en-la-ingesta}
 
 | Mecanismo | Reglas |
 | :---- | :---- |
@@ -1113,15 +1157,21 @@ Con estos componentes, el mecanismo que impide cada regla en la ingesta queda re
 | La restricción de unicidad de la base | RI-01 |
 | No aplica | RI-07 |
 
-#### La primera fila reúne las reglas que dependen del contenido del lote o de lo que ya existe en el grafo. La segunda, las que dependen solo de cómo se escribe: una escritura de forma fija no puede poner una etiqueta ajena, una propiedad no declarada ni una arista duplicada, y es ella la que fija la capa y la procedencia.
+La primera fila reúne las reglas que dependen del contenido del lote o de lo que ya existe en el grafo. La segunda, las que dependen solo de cómo se escribe: una escritura de forma fija no puede poner una etiqueta ajena, una propiedad no declarada ni una arista duplicada, y es ella la que fija la capa y la procedencia.
 
-4. #### **Flujo de la ingesta**
+La Figura 10 muestra los procesos de construcción. Tienen un solo componente propio, los comandos de construcción, que ejecutan la carga y la reaplicación y cierran cada una con una auditoría; el resto es el núcleo. En las Figuras 9 y 10, los componentes del núcleo se distinguen por color.
 
-La Figura 10 describe la ingesta de un documento como diagrama de actividad, con una calle por componente.
+**\[Imagen: vista «Nivel 3: Componentes de los procesos de construcción» exportada de LikeC4\]**
 
-**\[Imagen: diagrama de actividad de la ingesta\]**
+##### **Figura 10\. Componentes de los procesos de construcción (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-10.-componentes-de-los-procesos-de-construcción-(nivel-3-del-modelo-c4).-fuente:-elaboración-propia.}
 
-##### **Figura 10\. Flujo de la ingesta de un documento. Fuente: elaboración propia.**
+4. #### **Flujo de la ingesta** {#flujo-de-la-ingesta}
+
+La Figura 11 describe la ingesta de un documento como vista de secuencia, con una línea de vida por componente.
+
+**\[Imagen: vista «Flujo de la ingesta» exportada de LikeC4\]**
+
+##### **Figura 11\. Flujo de la ingesta de un documento. Fuente: elaboración propia.** {#figura-11.-flujo-de-la-ingesta-de-un-documento.-fuente:-elaboración-propia.}
 
 La corrida termina en uno de cinco estados. Queda terminada si todo se escribe y la auditoría no encuentra violaciones. Queda rechazada si la salida del modelo no se ajusta al esquema del grafo, aun después de un reintento que le devuelve el error, o si el validador encuentra violaciones; en ambos casos no se escribe nada del documento y se registra cada violación junto con el lote candidato completo (ADR-010). Queda fallida si el proveedor no responde o si la escritura no produce lo esperado; no hay juicio sobre el contenido y no se registra descarte. Queda escrita sin persistir si el worker se interrumpe después de confirmar la escritura y antes de guardar el lote en el almacén de hechos, y queda detenida por auditoría si la auditoría encuentra una violación después de escribir. En este último caso se suspenden las ingestas pendientes.
 
@@ -1129,15 +1179,140 @@ La carga de la capa de referencia y la reaplicación usan el mismo núcleo y no 
 
 5. #### **Despliegue** {#despliegue}
 
-La Figura 11 muestra el despliegue del prototipo en una máquina virtual de la especialidad.
+La Figura 12 muestra el despliegue del prototipo en una máquina virtual de la especialidad.
 
 **\[Imagen: vista «Despliegue» exportada de LikeC4\]**
 
-##### **Figura 11\. Diagrama de despliegue del prototipo. Fuente: elaboración propia.**
+##### **Figura 12\. Diagrama de despliegue del prototipo. Fuente: elaboración propia.** {#figura-12.-diagrama-de-despliegue-del-prototipo.-fuente:-elaboración-propia.}
 
-La API, el worker y los procesos de construcción salen de una sola imagen. La API lanza el worker como proceso hijo dentro de su contenedor, y los procesos de construcción usan la misma imagen con el sistema detenido; así, la ingesta y la reaplicación ejecutan siempre la misma versión del núcleo. La aplicación web se sirve en un contenedor aparte, de modo que modificarla no reinicia la API ni interrumpe una ingesta en curso (ADR-007). Los tres almacenes de archivos son carpetas del host, y la base de grafos usa un volumen propio, porque se reconstruye con una carga seguida de una reaplicación.
+La API, el worker y los procesos de construcción salen de una sola imagen. La API lanza el worker como proceso hijo dentro de su contenedor, y los procesos de construcción usan la misma imagen con el sistema detenido; así, la ingesta y la reaplicación ejecutan siempre la misma versión del núcleo. La aplicación web se sirve en un contenedor aparte, de modo que modificarla no reinicia la API ni interrumpe una ingesta en curso (ADR-007). Los tres almacenes de archivos son carpetas del host, y la base de grafos usa un volumen propio, porque se reconstruye con una carga seguida de una reaplicación (ADR-013).
 
 Los localizadores llevan escrita la dirección del host. Por eso el almacén de hechos no se reutiliza en otro host: en uno nuevo, los documentos se vuelven a ingestar (ADR-009).
+
+5. ### **Casos de prueba de la ingesta automatizada** {#casos-de-prueba-de-la-ingesta-automatizada}
+
+Esta sección especifica los casos de prueba con los que se valida la ingesta automatizada del pipeline: qué se mide, contra qué referencia y con qué reglas de conteo. La ejecución de los casos y los valores obtenidos se reportan en la sección de R4, donde se mide el indicador de precisión de extracción de entidades.
+
+1. #### **Objeto y alcance** {#objeto-y-alcance}
+
+Se evalúa la precisión con que el pipeline extrae temas y conceptos de los sílabos. El corpus son los sílabos del semestre 2026-2 de 13 cursos de la especialidad. Se seleccionaron por su relación directa con las ciencias de la computación y la ingeniería de software, que es el ámbito que cubre CS2023 y, con él, la capa de referencia del grafo.
+
+Cada sílabo se mide sobre una sola ingesta aceptada, de modo que cada ingesta parte del grafo que dejaron las anteriores. El orden sigue la secuencia curricular, con un ajuste: el curso de algoritmos avanzados (1INF32), de sexto ciclo, se ingesta después del de diseño de software (1INF50), de séptimo, para que preceda inmediatamente al de inteligencia artificial (1INF24). Su contenido (backtracking, programación dinámica, heurísticas y metaheurísticas) funciona como antesala de los métodos de búsqueda de ese curso.
+
+El código del *pipeline* se congela antes del primer caso de prueba. Dentro de cada corrida, una salida que no se ajusta al esquema se reintenta una sola vez, devolviendo el error al modelo (ADR-010). Si la corrida termina rechazada o fallida, el sílabo se vuelve a ingestar con el mismo código antes de pasar al siguiente, hasta obtener un lote aceptado; cada caso reporta cuántas corridas necesitó. Si una corrida queda detenida por auditoría, el error es de código: se corrige, se vuelve a cargar la capa de referencia y la medición se reinicia desde el primer caso de prueba.
+
+La unidad de evaluación es cada tema o concepto del lote de ingesta aceptado de un sílabo. El lote aceptado comprende los nodos que la ingesta crea y los nodos existentes que enlaza, una vez superada la validación previa a la escritura.
+
+El lote aceptado de cada ingesta se guarda tal cual y la evaluación se hace sobre él, no sobre el grafo. El motivo es que el grafo conserva una sola procedencia por nodo: si un sílabo posterior vuelve a afirmar un nodo existente, el grafo no lo registra.
+
+Quedan fuera de la prueba las relaciones entre nodos y el enlace con las unidades de conocimiento de CS2023.
+
+2. #### **Anotación de referencia** {#anotación-de-referencia}
+
+La referencia contra la que se compara la extracción es una anotación de los 13 sílabos. Por cada sílabo registra todos los temas y conceptos que contiene, aunque otro sílabo ya los contenga.
+
+La anotó un modelo de lenguaje (Claude, de Anthropic), un sílabo por sesión, siguiendo la guía de anotación del Anexo L y sin acceso a las salidas del pipeline. Las decisiones que la guía no resolvía se escalaron al autor, que las adjudicó.
+
+Cada entrada de la anotación registra:
+
+* El tipo, asignado por la estructura del sílabo. Es tema el título de una unidad o capítulo que agrupa ítems; es concepto cada ítem dentro de un tema.  
+* El nivel. Una entrada es obligatoria si el sílabo la nombra literalmente en la sumilla o en los contenidos. Es aceptable si se infiere sin ambigüedad o si aparece solo en otras secciones, como los resultados de aprendizaje.  
+* La etiqueta tal como figura en el sílabo, junto con sus nombres alternativos: siglas, traducción, singular y variantes de uso común.  
+* El fragmento del sílabo que sustenta la entrada.
+
+Terminada la anotación de los 13 sílabos, una pasada de consolidación hizo dos cosas:
+
+* Revisó que las reglas de la guía se hubieran aplicado igual en todos los sílabos y registró cada corrección.  
+* Asignó un identificador global a cada noción. Las entradas de distintos sílabos que nombran lo mismo comparten identificador, aunque una sea tema y otra concepto.
+
+  3. #### **Casos de prueba** {#casos-de-prueba}
+
+Cada sílabo constituye un caso de prueba (identificadores “CP-01” a “CP-13”), con la misma estructura:
+
+* Entrada: el PDF del sílabo.
+
+* Precondición: el grafo contiene la capa de referencia y lo escrito por los casos anteriores.
+
+* Resultado esperado: las entradas de la anotación de referencia para ese sílabo.
+
+* Medida: los aciertos y falsos positivos del lote aceptado, según las reglas de emparejamiento, y la concordancia de tipo de los aciertos.
+
+La precisión que reporta el indicador de R4 es la suma de aciertos de CP-01 a CP-13 dividida entre la suma de ítems de sus lotes aceptados.
+
+Un caso adicional, CP-14, se evalúa sobre el grafo final, una vez ejecutado CP-13, y mide la fusión entre sílabos.
+
+La Tabla 21 lista los trece primeros casos en el orden de ingesta, con el resultado esperado de cada uno.
+
+###### **Tabla 21\. Casos de prueba de extracción y resumen de la anotación de referencia** {#tabla-21.-casos-de-prueba-de-extracción-y-resumen-de-la-anotación-de-referencia}
+
+| Caso | Sílabo | Entradas | Temas | Conceptos | Obligatorias | Aceptables |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| CP-01 | 1INF27 | 39 | 4 | 35 | 29 | 10 |
+| CP-02 | 1INF25 | 80 | 11 | 69 | 78 | 2 |
+| CP-03 | 1INF49 | 60 | 6 | 54 | 46 | 14 |
+| CP-04 | 1INF33 | 73 | 8 | 65 | 67 | 6 |
+| CP-05 | 1INF29 | 76 | 6 | 70 | 71 | 5 |
+| CP-06 | 1INF31 | 48 | 6 | 42 | 40 | 8 |
+| CP-07 | 1INF30 | 80 | 14 | 66 | 71 | 9 |
+| CP-08 | 1INF50 | 25 | 3 | 22 | 20 | 5 |
+| CP-09 | 1INF32 | 24 | 6 | 18 | 18 | 6 |
+| CP-10 | 1INF24 | 84 | 17 | 67 | 73 | 11 |
+| CP-11 | 1INF37 | 89 | 15 | 74 | 84 | 5 |
+| CP-12 | 1INF54 | 35 | 7 | 28 | 28 | 7 |
+| CP-13 | 1INF47 | 32 | 3 | 29 | 17 | 15 |
+| **Total** |  | **745** | **106** | **639** | **642** | **103** |
+
+La anotación suma 745 entradas: 642 obligatorias y 103 aceptables, 106 temas y 639 conceptos. Esas entradas corresponden a 664 nociones distintas.
+
+Solo 47 de esas nociones aparecen en más de un sílabo. Es el único conjunto sobre el que la ingesta puede enlazar correctamente nodos creados por sílabos anteriores, y por tanto la base de la medición de CP-14.
+
+Hay 28 nociones anotadas como tema en una entrada y como concepto en otra.
+
+El caso con mayor proporción de aceptables es CP-13: 15 de sus 32 entradas. Su sílabo describe sobre todo el proyecto del curso y nombra pocos saberes de forma literal en los contenidos.
+
+4. #### **Reglas de emparejamiento** {#reglas-de-emparejamiento}
+
+* Normalización: Antes de comparar, cada nombre se lleva a una forma común que reduce las diferencias de forma: mayúsculas, tildes, signos de puntuación, espacios y número gramatical.  
+* Nombres de una noción: Son las etiquetas y los nombres alternativos de todas sus entradas, en cualquier sílabo.  
+* Acierto: Un ítem del lote es acierto si su nombre normalizado está entre los nombres de una noción que tiene al menos una entrada en el sílabo del caso. Como se usan los nombres de todos los sílabos, el resultado no depende de qué sílabo creó un nodo que la ingesta enlaza.  
+* Correspondencia uno a uno: Cada acierto consume una entrada del sílabo. Si no quedan entradas libres de esa noción, el ítem es falso positivo; así, un nodo repetido dentro de una misma ingesta cuenta como error.  
+* Desempate: Si un ítem puede consumir más de una entrada, se prefiere la entrada cuya etiqueta coincide con el nombre del ítem. Si ninguna coincide por etiqueta, se prefiere la del mismo tipo, y si el empate persiste, la de menor identificador.  
+* Aceptables: Una entrada aceptable extraída cuenta como acierto.  
+* Tipo: El tipo no interviene en el emparejamiento. La concordancia de tipo, es decir, el porcentaje de aciertos cuyo tipo coincide con el de la entrada consumida, se reporta aparte.
+
+Como el emparejamiento exige coincidencia de nombres, una extracción correcta con una redacción que la anotación no registra cuenta como falso positivo. La precisión obtenida es, por tanto, una cota inferior.
+
+5. #### **Medidas de fusión** {#medidas-de-fusión}
+
+Cada nodo del grafo final recibe los identificadores globales de las entradas que consumió en los casos donde apareció. Con ellos se cuentan tres situaciones:
+
+* Duplicado: dos nodos del mismo tipo con el mismo identificador global.  
+* Noción partida: dos nodos de distinto tipo con el mismo identificador global. No se cuenta como error, porque la ontología define tema y concepto como clases disjuntas.  
+* Fusión errónea: un nodo con dos o más identificadores globales distintos. Hay una excepción: no se cuenta como fusión errónea si, descontados los identificadores de encabezados que nombran más de un saber, queda uno solo. Las partes de esos encabezados figuran a la vez como nombres alternativos del encabezado y como nociones propias, así que un mismo nodo puede emparejar con ambos sin que la ingesta haya fusionado mal. Los casos exceptuados se reportan aparte.
+
+Estas medidas son descriptivas y no tienen umbral.
+
+6. ### **Verificación de R3** {#verificación-de-r3}
+
+   1. #### **Verificación y mediciones** {#verificación-y-mediciones-1}
+
+R3 se comprometió a especificar el modelo de datos del grafo, los componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. Su medio de verificación son los documentos de arquitectura y el documento de casos de prueba de la ingesta (Tabla 3). Cada parte se encuentra en:
+
+* El modelo de datos del grafo: Tablas 16 a 19 y Anexo K.
+
+* Los componentes internos: los diagramas C4 de las Figuras 6 a 12, vistas de un único modelo escrito en LikeC4 y publicado en el repositorio del proyecto.
+
+* Las decisiones de diseño y arquitectura: ADR-001 a ADR-013, en el repositorio, junto con el catálogo de requisitos funcionales que citan.
+
+* Los casos de prueba de la ingesta: la sección anterior y la guía de anotación del Anexo L.
+
+  2. #### **Validación de experto** {#validación-de-experto}
+
+La documentación fue revisada y aprobada por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión cubrió los atributos de calidad, el modelo de datos, las reglas de integridad, la arquitectura con sus decisiones y los casos de prueba. El registro de esa validación se adjunta como evidencia **en el Anexo M**.
+
+3. #### **Indicador** {#indicador}
+
+El indicador comprometido para R3, la validación con respuesta positiva del experto en Ingeniería de Conocimiento, se cumple.
 
 6. # **Conclusiones y trabajos futuros** {#conclusiones-y-trabajos-futuros}
 
@@ -1511,6 +1686,14 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 
 [https\://docs.google.com/document/d/1tJMaYRH0KESKDBWxAtMJbKGH\_xSokobwWWj8\_CnNe7w/edit?tab=t.0](https://docs.google.com/document/d/1tJMaYRH0KESKDBWxAtMJbKGH_xSokobwWWj8_CnNe7w/edit?tab=t.0) 
 
+# **Anexo L: Guía de anotación**
+
+[https\://docs.google.com/document/d/1fV5rCKMafLwNL-Cq4IpAwGLgIGMxtfHaAKVXZv-Qyt4/edit?tab=t.0](https://docs.google.com/document/d/1fV5rCKMafLwNL-Cq4IpAwGLgIGMxtfHaAKVXZv-Qyt4/edit?tab=t.0) 
+
+# **Anexo M: Constancia de validación experta del Resultado 3**
+
+[https\://docs.google.com/document/d/193MHBTOlNBeFatEnz5Z-\_LPeSHaMczmdDygtr5KEmsA/edit?tab=t.0\#heading=h.fa5bf78t35tm](https://docs.google.com/document/d/193MHBTOlNBeFatEnz5Z-_LPeSHaMczmdDygtr5KEmsA/edit?tab=t.0#heading=h.fa5bf78t35tm) 
+
 [^1]:  Recuperado el 18 de junio del 2026 a las 20:40 h (UTC-5) de [https\://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee\_INFORMATICA-2026-1.pdf](https://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee_INFORMATICA-2026-1.pdf)y visible en el anexo F.
 
 [^2]:  El umbral de al menos 5 clases y al menos 3 tipos de relación va de acuerdo a la aplicación de la metodología Ontology Development 101 de Noy y McGuinness
@@ -1521,14 +1704,8 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 
 [^5]: Las seis propiedades de la columna Inversa se declaran explícitamente en la ontología; con ellas el total asciende a diecisiete propiedades de objeto. «Simple» indica una propiedad no transitiva, condición que OWL exige para admitir restricciones de cardinalidad. hasPart hereda dominio y rango de isPartOf por inversión.
 
-[image1]: 
 
-[image2]: 
 
-[image3]: 
 
-[image4]: 
 
-[image5]: 
 
-[image6]: 

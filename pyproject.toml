@@ -4,8 +4,9 @@ version = "0.1.0"
 description = "Grafo de conocimiento del curriculo de Ingenieria Informatica: proyeccion ontologia->LPG y pipeline de ingesta"
 requires-python = ">=3.11"
 
-# Solo lo que hace falta para el nucleo: leer la ontologia, leer la
-# especificacion declarativa y hablar con Neo4j. Las dependencias de la capa
+# Solo lo que hace falta para el nucleo: leer la ontologia y hablar con
+# Neo4j. El esquema del grafo es un modulo de Python (ADR-008), asi que no
+# hace falta leer ningun archivo de especificacion. Las dependencias de la capa
 # de ingestion -salida estructurada del LLM, lectura de PDF- entran cuando se
 # llegue a esa capa, no antes: una dependencia declarada y no usada es una
 # decision tomada por inercia.
@@ -17,8 +18,6 @@ dependencies = [
     # Parseo de Turtle. rdflib es la libreria estandar de RDF en Python;
     # parsear el TTL a mano seria fragil y no sustentable.
     "rdflib>=7.1",
-    # Archivo declarativo de reglas de esquema.
-    "pyyaml>=6.0",
     # Lectura de .env (credenciales de Neo4j fuera del codigo).
     "python-dotenv>=1.0",
 ]
@@ -28,9 +27,19 @@ dev = [
     "pytest>=8.3",
 ]
 
+[project.scripts]
+# Punto de entrada de los procesos de construccion (ADR-007).
+iekg-build = "iekg.build_tools.commands:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/iekg"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "neo4j: needs a running Neo4j; writes only inside a transaction that is rolled back",
+]

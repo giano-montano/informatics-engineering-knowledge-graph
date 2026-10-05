@@ -145,4 +145,6 @@ violación a propósito y se exige que la consulta la detecte.
 
 Las pruebas que escriben en la base corren dentro de una transacción que se
 revierte al terminar, de modo que la violación nunca persiste y el backbone
-queda intacto.
+queda intacto. Las que necesitan Neo4j llevan la marca `neo4j` y se saltan si
+la base no responde. Ninguna prueba ejecuta la carga, porque vacía la base: la
+carga se verifica corriéndola.

@@ -84,18 +84,32 @@ docs/decisiones/               Un archivo por decisión rehecha.
 docs/architecture/             Modelo C4 en LikeC4 (*.c4).
 ontology/*.ttl                 R1 (esquema OWL) y R2 (backbone CS2023).
 docker-compose.yml             Neo4j 5.26 LTS.
-src/iekg/__init__.py           Vacío a propósito.
+src/iekg/graph_schema.py       Esquema del grafo: la declaración única (ADR-008).
+src/iekg/core/                 Núcleo (#nucleo del C4): validador, repositorio,
+                               auditor, lote e instantánea, códigos de regla.
+src/iekg/build_tools/          Procesos de construcción: proyección TTL → lote
+                               y el comando `iekg-build load`.
+src/iekg/operational_store.py  Almacén operacional (SQLite): por ahora, solo
+                               los reportes de auditoría.
+src/iekg/settings.py           Configuración desde el entorno y `.env`.
+tests/                         Pruebas; una negativa por cada forma de violar
+                               cada regla.
+var/                           Almacenes locales del sistema. Ignorado por git.
 ```
 
-Lo que **no** hay, y es deliberado: `schema/`, intérprete, validadores,
-proyector, pruebas, `build/`, capa de LLM, ingesta. Nada de eso es un olvido.
+Lo que **no** hay, y es deliberado: API, worker, extractor, capa de LLM,
+ingesta, reaplicación, lectura de la instantánea desde la base, tablas de
+corridas y descartes, imagen de Docker propia. Nada de eso es un olvido: llega
+con la ingesta.
 
 ## 7. Comandos
 
 ```powershell
 docker compose up -d
 uv sync
-uv run pytest tests/ -q
+uv run pytest tests/ -q                  # las marcadas neo4j se saltan si la base no responde
+uv run pytest tests/ -q -m "not neo4j"   # solo las que no necesitan Neo4j
+uv run iekg-build load                   # vacía la base y carga el backbone
 start http://localhost:7474
 
 npm install               # una vez: LikeC4 fijado en package.json
@@ -107,10 +121,31 @@ npm run arch:serve        # vista previa en el navegador
 La contraseña vive en `.env`, ignorado por git. Si falta: copiar `.env.example`,
 poner una, `docker compose down -v` y volver a levantar.
 
-**La base ya está cargada** con el backbone del laboratorio (17 `KnowledgeArea`
-+ 162 `KnowledgeUnit` + 1 `LearningResource`). No hace falta recargarla para
-trabajar; se recargará cuando exista un proyector propio que valide contra su
-propia especificación.
+**La carga del backbone** (`iekg-build load`) revisa los dos TTL contra la
+Tabla 1 del anexo, proyecta el backbone y lo valida en memoria; recién entonces
+vacía la base, crea las 8 restricciones de unicidad, escribe 180 nodos y 341
+aristas en una transacción y audita las 15 reglas. El reporte queda en
+`var/operational.sqlite`. Códigos de salida: 0 limpio; 1 cargado, con
+violaciones en la auditoría; 2 rechazado sin tocar la base; 3 fallido.
+
+Para verificarla desde cero:
+
+1. Vaciar. En el Browser, `MATCH (n) DETACH DELETE n`: la carga borra y crea
+   las restricciones por su cuenta. Para una base nueva del todo,
+   `docker compose down -v` y `docker compose up -d`, que borra también
+   restricciones, logs y plugins del contenedor. `var/` no se toca.
+2. Comprobar que quedó vacía: `MATCH (n) RETURN count(n)`.
+3. `uv run iekg-build load`.
+4. Ver el resultado en el Browser:
+   - `MATCH (n) UNWIND labels(n) AS label RETURN label, count(*)`: 17, 179,
+     162 y 1.
+   - `MATCH ()-[r]->() RETURN type(r), count(*)`: 162 `PART_OF` y 179
+     `WAS_DERIVED_FROM`.
+   - `MATCH p = (:KnowledgeUnit)-[:PART_OF]->(a:KnowledgeArea) WHERE a.key ENDS WITH '#KA-AI' RETURN p`
+   - `SHOW CONSTRAINTS`: 8, con nombre `<Etiqueta>_key_unique`.
+
+La consola de Windows puede mostrar mal las tildes de la salida; los datos
+están bien guardados y el Browser los muestra correctamente.
 
 ## 8. Al escribir documentación
 

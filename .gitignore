@@ -35,3 +35,6 @@ node_modules/
 
 # Ante la duda, ocultamos los sílabos oficiales
 casos-de-prueba/silabos-en-orden/
+
+# Almacenes de archivos locales del sistema (operacional, documentos, hechos).
+var/

@@ -3,6 +3,8 @@
 **Fecha:** 2026-10-05 · **Commit revisado:** `1100451` · **Método:** solo
 lectura del código y de la documentación; no se ejecutaron pruebas ni la carga.
 
+**Estado:** atendida el 2026-10-07. Cada punto lleva su respuesta.
+
 Es una foto de ese commit, no un documento vivo. Las contradicciones directas
 están en `DEUDA_PRIMERA_IMPL_CARGA_BACKBONE.md` (D-01 a D-08) y aquí no se
 repiten. Lo que sigue son observaciones de diseño, olores de código y una
@@ -38,6 +40,8 @@ Para no repetirlo en cada punto:
 - **C4.** Los componentes del núcleo y los comandos de construcción
   corresponden a los módulos.
 
+**Respuesta:** sin cambios.
+
 ## 2. Olores y cosas que se verían raras en una sustentación
 
 En orden de gravedad.
@@ -68,10 +72,16 @@ Hay dos consecuencias concretas.
    Esa desigualdad es lo que hace que «no todas están unificadas». Los nombres
    salen del esquema, pero la estructura de esas reglas no se declara en
    ningún sitio.
+
+   **Respuesta:** la lista de RM-03 pasó a `rules.py`
+   (`DERIVED_FROM_RESOURCE`). RI-07 y RM-02 siguen igual.
 2. **El reparto de mecanismos (Tabla 3 del anexo y Tabla 20 de la tesis) no
    existe en el código salvo por las dos tuplas del validador.** Ninguna prueba
    puede comprobar que cada regla tenga, en cada camino, exactamente un
    mecanismo. Por eso D-02 y D-03 pasaron sin que nada fallara.
+
+   **Respuesta:** ADR-014 lo declara como limitación. D-02 y D-03 están
+   cerradas.
 
 **Alternativa.** Un registro de reglas: un objeto inmutable por regla, con
 código, enunciado, origen, el mecanismo por camino (carga, ingesta) y,
@@ -83,6 +93,8 @@ Tablas 3 y 20:
 - las que dicen «no aplica» llevan su motivo.
 
 Ver §3.
+
+**Respuesta:** el registro no se decidió; queda abierto.
 
 ### 2.2 `write_batch` toma la capa de referencia por omisión
 
@@ -97,6 +109,8 @@ detectaría:
 
 `write_batch_in` ya exige `layer`. Que el método público no lo exija es una
 asimetría sin motivo. Lo natural es quitar el valor por omisión.
+
+**Respuesta:** hecho: `write_batch` exige `layer`.
 
 ### 2.3 El patrón del localizador no significa lo mismo en Python que en Cypher
 
@@ -113,6 +127,8 @@ negativo en la carga. Pero la afirmación del comentario es falsa, y cuando la
 auditoría y el validador discrepan, AC-02 pierde fuerza. Basta con una clase
 explícita, `[^ \t\n\r\f\v]` o similar, que valga igual en ambos motores.
 
+**Respuesta:** pospuesto: los localizadores los acuña el sistema.
+
 ### 2.4 La consulta de ciclos de RM-04 enumera caminos
 
 `MATCH (n) WHERE EXISTS { (n)-[:T*1..]->(n) }` termina, porque un camino no
@@ -127,6 +143,8 @@ ingesta, con un DAG sintético del tamaño esperado. Si duele, hay una forma
 polinómica: para cada arista `a→b`, buscar con `shortestPath` un camino
 `b→a` (búsqueda en anchura), y tratar los bucles aparte. Es una hipótesis sin
 medir, no un hecho.
+
+**Respuesta:** para la ingesta: se mide antes de ingestar.
 
 ### 2.5 Un conflicto de contenido termina como «fallida» en lugar de «rechazada»
 
@@ -146,6 +164,9 @@ como excepción.
 Ninguno de los dos afecta a la carga. Se vuelven relevantes con el extractor:
 ¿qué código de regla llevan esas violaciones?
 
+**Respuesta:** el primer caso lo cubre el requisito anotado en la descripción del
+extractor (`model.c4`). El segundo queda para el diseño de la ingesta.
+
 ### 2.6 RI-01 descansa en algo más que «la restricción de unicidad»
 
 La Tabla 20 asigna RI-01 a la restricción de unicidad. En Community, esa
@@ -164,6 +185,8 @@ recurso de su código y de su nombre. Si la derivación no distingue la clase
 colisión deja de ser «imposible por construcción». Es una pregunta para cuando
 se diseñe la derivación de claves.
 
+**Respuesta:** para el diseño de la derivación de claves, con la ingesta.
+
 ### 2.7 La carga escribe primero y audita después lo que podría rechazar antes
 
 `LOAD_RULES` excluye RI-08 porque así lo dice la Tabla 3 del anexo. Pero el
@@ -176,11 +199,16 @@ la base (código 2). Sin ella, se escribe y cierra la compuerta (código 1). Lo
 mismo vale para RI-07 si se agrega su comprobación (D-01). Cambiarlo toca la
 Tabla 3 del anexo, así que va en un ADR nuevo.
 
+**Respuesta:** no se atiende, con el mismo criterio que D-01. La Tabla 3 queda como
+está.
+
 ### 2.8 Errores sin capturar al final de la carga
 
 `repository.count_elements()` (línea 113) y `OperationalStore(...)` (línea
 124) están fuera de todo `try`. Un fallo ahí deja una traza de Python en lugar
 de un mensaje y un código de salida. Esto se relaciona con D-04.
+
+**Respuesta:** resuelto con D-04.
 
 ### 2.9 `reset()` borra todos los índices
 
@@ -189,6 +217,8 @@ navegación (rutas de navegación del C4) probablemente necesite un índice de
 texto completo. `reset()` lo borraría en cada carga. Cuando exista, debe
 declararse en el esquema del grafo y crearse en la carga, junto con las
 restricciones.
+
+**Respuesta:** para la navegación, cuando exista el índice.
 
 ### 2.10 `docker-compose.yml` sigue siendo el del laboratorio
 
@@ -208,21 +238,28 @@ restricciones de unicidad, y ninguna es exclusiva de Enterprise según la
 documentación. Aun así, conviene una corrida contra la imagen Community antes
 del despliegue.
 
+**Respuesta:** hecho: el proyecto se llama `iekg`, sin plugins ni permisos, y con el
+comentario corregido. La corrida contra Community queda para el despliegue.
+
 ### 2.11 Menores
 
 - **`REQUIRED_PARENT` repite los tres pares de `ADMITTED_PAIRS[PART_OF]`.**
   Que sea explícito es correcto: viene de otro axioma, la restricción
   existencial, no del dominio y el rango. Pero ninguna prueba exige que cada
-  padre requerido sea un par admitido.
+  padre requerido sea un par admitido. **Respuesta:** sin atender.
 - **Los enunciados de `STATEMENTS` parafrasean en inglés las tablas en
   español.** Es aceptable por los estándares, porque la consola va en inglés,
   pero pueden desalinearse. Conviene citar la tabla de origen.
+  **Respuesta:** sin atender.
 - **`Tx = Transaction | ManagedTransaction` está definido en dos módulos.**
+  **Respuesta:** sin atender.
 - **ADR-011 pide en la instantánea «clave, etiqueta, clase, área y capa».**
   `SnapshotNode` tiene clase y capa, que es lo que necesita el validador. Lo
   que necesita el extractor llegará con la lectura desde la base.
+  **Respuesta:** para la ingesta.
 - **La prueba de la declaración contra el TTL (ADR-008) sigue pendiente.**
   `check_tbox` comprueba qué tipos de constructo aparecen, no su contenido.
+  **Respuesta:** sigue pendiente, como prevé ADR-008.
 
 ## 3. Opinión: ¿YAML, SHACL o código?
 
@@ -289,15 +326,24 @@ Mantener las reglas como código en Python y Cypher, pero:
    qué parte es intérprete (las plantillas, las comprobaciones y las
    consultas), y registrar YAML para las reglas y SHACL como alternativas
    descartadas, con sus motivos reales.
+
+   **Respuesta:** hecho en ADR-014. No usa la compatibilidad de n10s como
+   motivo, porque n10s publicó la 5.26.0. El motivo sobre la aciclicidad lo
+   apoya en la Recomendación W3C de 2017.
 2. **Unificar las reglas en un registro (§2.1).** El catálogo de reglas pasa
    a ser dato declarativo: qué regla, de dónde viene, qué mecanismo la impide
    en cada camino. Las Tablas 3 y 20 se vuelven comprobables. Así se responde
    al asesor sin un lenguaje nuevo: lo declarativo es *qué se cumple y quién
    lo garantiza*. El *cómo se comprueba*, para 15 reglas, es más corto y más
    fácil de defender como código que como un intérprete genérico.
+
+   **Respuesta:** no se decidió; queda abierto.
 3. **Dejar SHACL sobre el TTL como trabajo futuro o como extensión de R2.**
    Sirve como respuesta a la pregunta previsible del jurado: «¿por qué no
    SHACL?».
+
+   **Respuesta:** hecho: ADR-014 lo registra como alternativa descartada y
+   como trabajo futuro.
 
 ## 4. Fuentes
 

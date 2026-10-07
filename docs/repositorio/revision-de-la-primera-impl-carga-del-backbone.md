@@ -75,7 +75,7 @@ Hay dos consecuencias concretas.
 
    **Respuesta:** la lista de RM-03 pasó a `rules.py`
    (`DERIVED_FROM_RESOURCE`). RI-07 y RM-02 siguen igual.
-2. **El reparto de mecanismos (Tabla 3 del anexo y Tabla 20 de la tesis) no
+2. **El reparto de mecanismos (Tabla 3 del anexo y Tabla 21 de la tesis) no
    existe en el código salvo por las dos tuplas del validador.** Ninguna prueba
    puede comprobar que cada regla tenga, en cada camino, exactamente un
    mecanismo. Por eso D-02 y D-03 pasaron sin que nada fallara.
@@ -169,7 +169,7 @@ extractor (`model.c4`). El segundo queda para el diseño de la ingesta.
 
 ### 2.6 RI-01 descansa en algo más que «la restricción de unicidad»
 
-La Tabla 20 asigna RI-01 a la restricción de unicidad. En Community, esa
+La Tabla 21 asigna RI-01 a la restricción de unicidad. En Community, esa
 restricción es por etiqueta (8 restricciones), así que no impide que un
 `Course` y un `ResourceType` compartan clave. La unicidad global descansa en
 tres cosas:

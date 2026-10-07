@@ -47,6 +47,21 @@ Si la decisión se apoya en una medición o en una fuente, se cita. Lo que sea
 **fuente gris** (repositorios, foros, blogs, preprints) se marca como tal:
 sirve para decidir qué probar, no para sustentar la tesis.
 
+## En la tesis
+
+R3 y R4 evolucionan juntos, así que todo ADR, también el que nace al
+implementar, entra en la tesis. Al aceptarlo se actualizan en ella:
+
+- su fila en la Tabla 20 (decisión, alternativa principal descartada,
+  justificación y atributo principal);
+- el párrafo que sigue a esa tabla, que cuenta los ADR por atributo
+  principal;
+- la Tabla 23, en la fila de cada atributo que el ADR atiende;
+- el rango «ADR-001 a ADR-NNN» de la verificación de R3 y el número de ADR del
+  resumen de la discusión.
+
+Una enmienda solo toca la tesis si cambia algo de lo que la Tabla 20 resume.
+
 ## Estado
 
 | Estado | Cuándo |

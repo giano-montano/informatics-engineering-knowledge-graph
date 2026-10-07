@@ -47,7 +47,7 @@ carga · **Gravedad:** baja
 - **Qué hay que decidir.** Hay dos salidas:
   - Corregir el anexo y la tesis para que digan «se detecta en la auditoría».
   - Agregar una comprobación de RI-07 al validador para la carga. Cambia la
-    Tabla 3 del anexo y la Tabla 20 de la tesis, así que va en un ADR.
+    Tabla 3 del anexo y la Tabla 21 de la tesis, así que va en un ADR.
 
 ## D-02 · La condición de frontera de capas no tiene mecanismo
 
@@ -65,7 +65,7 @@ descripción en `docs/architecture/model.c4` ·
     de capas impide a la ingesta escribir aristas de unidad a área».
   - Anexo, Tabla 2: el par KnowledgeUnit → KnowledgeArea de `PART_OF` lo
     escribe solo la carga.
-- **Lo que pasa.** La Tabla 20 de la tesis y la enmienda de ADR-005 reparten
+- **Lo que pasa.** La Tabla 21 de la tesis y la enmienda de ADR-005 reparten
   los mecanismos entre las reglas, pero la condición 6 no es una regla y
   ningún mecanismo la recibe. RM-02, la «forma consultable» de la frontera,
   solo prohíbe aristas de referencia a institucional
@@ -96,7 +96,7 @@ crea un tema, concepto o curso institucional crea también su arista hacia el
 recurso de la corrida, solo si el nodo es nuevo (`write_batch_in`) ·
 **Gravedad:** media
 
-- **Lo que dicen los documentos.** La Tabla 20 de la tesis, la enmienda de
+- **Lo que dicen los documentos.** La Tabla 21 de la tesis, la enmienda de
   ADR-005, la descripción del repositorio en `model.c4` (líneas 245-247) y el
   docstring de `src/iekg/core/repository.py` atribuyen RM-03 completa a la
   forma de la escritura.
@@ -112,7 +112,7 @@ recurso de la corrida, solo si el nodo es nuevo (`write_batch_in`) ·
   tiene.
 - **Qué hay que decidir.** Dónde vive esa parte de RM-03. Puede ir en el
   validador, como regla de la ingesta, o en el orquestador, al «agregar los
-  hechos declarados» (vista dinámica). En el segundo caso, la Tabla 20 y el C4
+  hechos declarados» (vista dinámica). En el segundo caso, la Tabla 21 y el C4
   deben nombrar ese mecanismo y no la forma de la escritura.
 
 ## D-04 · El último reporte no siempre describe el estado vigente del grafo

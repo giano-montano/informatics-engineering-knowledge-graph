@@ -1,12 +1,8 @@
-import sys
+# Valida el formato de los 13 TSV de los casos de prueba.
 from load import *
-src = sys.argv[1] if len(sys.argv)>1 else "raw"
 tot=0
 for code in ORDER:
-    if src=="raw":
-        txt=load_raw(code)
-    else:
-        txt=open(f"{src}/gold_{code}.tsv",encoding="utf-8").read()
+    txt=load_gold(code)
     lines=txt.rstrip("\n").split("\n")
     meta,hdr,rows=lines[0],lines[1],lines[2:]
     probs=[]

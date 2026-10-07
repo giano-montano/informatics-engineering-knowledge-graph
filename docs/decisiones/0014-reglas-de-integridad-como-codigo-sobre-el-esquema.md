@@ -29,7 +29,7 @@ Se registra después de implementar la carga del backbone, y no cambia su códig
 
 - Regla por regla, lo que se defiende es una función o una consulta corta, no un intérprete genérico.
 - Las reglas viven en dos lenguajes, y su catálogo es dato. Llevarlas a otro motor exige reescribir sus consultas.
-- Ninguna prueba comprueba el reparto de mecanismos de la Tabla 3 del anexo y la Tabla 20 de la tesis. Ese reparto está en las tuplas de reglas del validador y en el docstring del repositorio.
+- Ninguna prueba comprueba el reparto de mecanismos de la Tabla 3 del anexo y la Tabla 21 de la tesis. Ese reparto está en las tuplas de reglas del validador y en el docstring del repositorio.
 
 ## Fuentes
 

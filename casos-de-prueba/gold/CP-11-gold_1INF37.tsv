@@ -64,8 +64,8 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF37-062	concepto	obligatoria	Evaluación de la calidad de producto software	evaluación de calidad de producto software|evaluación de la calidad del producto software|evaluación de la calidad de producto de software|software product quality evaluation	1INF37-055	contenidos	Evaluación de la calidad de producto software	
 1INF37-063	tema	obligatoria	Despliegue del software	despliegue de software|software deployment|despliegue|deployment		contenidos	DESPLIEGUE DEL SOFTWARE	
 1INF37-064	concepto	obligatoria	Planificación del despliegue	planificación de despliegue|deployment planning	1INF37-063	contenidos	Planificación del despliegue	
-1INF37-065	concepto	obligatoria	Consideraciones técnicas del despliegue	consideraciones técnicas|consideraciones técnicas de despliegue	1INF37-063	contenidos	Consideraciones técnicas	El literal no se nombra solo; etiqueta contextualizada con su tema y el literal como alias.
-1INF37-066	concepto	obligatoria	Consideraciones procedimentales del despliegue	consideraciones procedimentales|consideraciones procedimentales de despliegue	1INF37-063	contenidos	Consideraciones procedimentales	Mismo criterio que la fila anterior.
+1INF37-065	concepto	obligatoria	Consideraciones técnicas del despliegue	consideraciones técnicas|consideraciones técnicas de despliegue|consideración técnica del despliegue	1INF37-063	contenidos	Consideraciones técnicas	El literal no se nombra solo; etiqueta contextualizada con su tema y el literal como alias.
+1INF37-066	concepto	obligatoria	Consideraciones procedimentales del despliegue	consideraciones procedimentales|consideraciones procedimentales de despliegue|consideración procedimental del despliegue	1INF37-063	contenidos	Consideraciones procedimentales	Mismo criterio que la fila anterior.
 1INF37-067	concepto	obligatoria	Gestión del cambio	gestión de cambios|gestión de cambio|change management	1INF37-063	contenidos	Gestión del cambio	
 1INF37-068	concepto	obligatoria	Despliegue continuo	continuous deployment	1INF37-063	contenidos	Despliegue continuo	
 1INF37-069	concepto	obligatoria	DevOps	Dev Ops	1INF37-063	contenidos	DevOps	

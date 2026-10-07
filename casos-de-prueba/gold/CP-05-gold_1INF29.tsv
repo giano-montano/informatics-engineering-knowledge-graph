@@ -1,22 +1,20 @@
 # silabo=1INF29 | curso=SISTEMAS OPERATIVOS | anotador=GPT-5.6 Luna | guia=v2.1 | fecha=2026-10-02
 id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF29-001	concepto	obligatoria	funcionamiento de los sistemas operativos	funcionamiento de sistemas operativos	1INF29-006	sumilla	funcionamiento de los sistemas operativos	
-1INF29-002	concepto	obligatoria	procesos	proceso	1INF29-011	contenidos	procesos / Concepto de proceso y sus recursos / Procesos e hilos	"Se elimina el marco ""Concepto de"" para conservar el saber nombrable ""proceso""."
-1INF29-003	concepto	obligatoria	administración de entrada/salida de datos	administración de entrada y salida de datos	1INF29-011	sumilla	administración de entrada/salida de datos	
-1INF29-004	concepto	obligatoria	manejo de memoria	administración de memoria|gestión de memoria	1INF29-041	sumilla	manejo de memoria	
-1INF29-005	concepto	obligatoria	sistema de archivos	sistema de archivo|file system|file systems	1INF29-058	contenidos	sistema de archivos / Concepto de sistema de archivo / Sistemas de archivos:	"Se elimina el marco ""Concepto de"" para conservar el saber nombrable ""sistema de archivo""."
-1INF29-006	tema	obligatoria	PERSPECTIVA GENERAL DE SISTEMAS OPERATIVOS	perspectiva general de sistemas operativos|general perspective of operating systems		contenidos	CAPÍTULO 2 PERSPECTIVA GENERAL DE SISTEMAS OPERATIVOS	
+1INF29-002	concepto	obligatoria	procesos	proceso	1INF29-006	contenidos	procesos / Concepto de proceso y sus recursos / Procesos e hilos	Se elimina el marco "Concepto de" para conservar el saber nombrable "proceso".
+1INF29-003	concepto	obligatoria	administración de entrada/salida de datos	administración de entrada y salida de datos	1INF29-006	sumilla	administración de entrada/salida de datos	
+1INF29-005	concepto	obligatoria	sistema de archivos	sistema de archivo|file system|file systems	1INF29-058	contenidos	sistema de archivos / Concepto de sistema de archivo / Sistemas de archivos:	Se elimina el marco "Concepto de" para conservar el saber nombrable "sistema de archivo".
+1INF29-006	tema	obligatoria	Sistemas operativos	sistema operativo|operating systems|operating system		contenidos	CAPÍTULO 2 PERSPECTIVA GENERAL DE SISTEMAS OPERATIVOS / CAPÍTULO 3 CONCEPTOS FUNDAMENTALES DE SISTEMAS OPERATIVOS	Consolidación: caps. 2 y 3 son 'Introducción/Fundamentos de X'; la entidad es X y se fusionan en esta fila (antes 006 y 011).
 1INF29-007	concepto	obligatoria	Papel y propósito de sistemas operativos	role and purpose of operating systems|papel y propósito de los sistemas operativos	1INF29-006	contenidos	Papel y propósito de sistemas operativos	
 1INF29-008	concepto	obligatoria	Historia de desarrollo de sistemas operativos	historia del desarrollo de sistemas operativos|history of operating systems development	1INF29-006	contenidos	Historia de desarrollo de sistemas operativos	
-1INF29-009	concepto	obligatoria	Funciones de un sistema operativo típico	funciones principales de los sistemas operativos|funciones de los sistemas operativos|operating system functions	1INF29-006	contenidos	Funciones de un sistema operativo típico / funciones principales de los sistemas operativos	
+1INF29-009	concepto	obligatoria	Funciones de un sistema operativo típico	funciones principales de los sistemas operativos|funciones de los sistemas operativos|operating system functions|función de un sistema operativo típico	1INF29-006	contenidos	Funciones de un sistema operativo típico / funciones principales de los sistemas operativos	
 1INF29-010	concepto	obligatoria	Tipos de sistemas operativos	tipos de sistema operativo|operating system types	1INF29-006	contenidos	Tipos de sistemas operativos	
-1INF29-011	tema	obligatoria	CONCEPTOS FUNDAMENTALES DE SISTEMAS OPERATIVOS	conceptos fundamentales de sistemas operativos		contenidos	CAPÍTULO 3 CONCEPTOS FUNDAMENTALES DE SISTEMAS OPERATIVOS	
-1INF29-012	concepto	obligatoria	recursos de proceso	recursos de procesos|process resources	1INF29-011	contenidos	Concepto de proceso y sus recursos	
-1INF29-013	concepto	obligatoria	llamadas al sistema	system calls|llamada al sistema	1INF29-011	contenidos	llamadas al sistema / Ejemplo de uso de llamadas al sistema por el intérprete de órdenes (shell)	"Se elimina el marco ""Ejemplo de uso de"" y se conserva el saber nombrable ""llamadas al sistema""."
-1INF29-014	concepto	obligatoria	intérprete de órdenes (shell)	intérprete de órdenes|shell|command interpreter	1INF29-011	contenidos	intérprete de órdenes (shell) / Ejemplo de uso de llamadas al sistema por el intérprete de órdenes (shell)	"Se elimina el marco ""Ejemplo de uso de"" y se conserva el saber nombrable ""intérprete de órdenes""."
-1INF29-015	concepto	obligatoria	Llamadas al sistema para manejo de procesos	system calls for process management	1INF29-011	contenidos	Llamadas al sistema para manejo de procesos	
-1INF29-016	concepto	obligatoria	Llamadas al sistema para manejo de archivos y directorios	system calls for file and directory management	1INF29-011	contenidos	Llamadas al sistema para manejo de archivos y directorios	
-1INF29-017	concepto	obligatoria	Estructuras de sistemas operativos	estructuras de sistemas operativo|operating system structures	1INF29-011	contenidos	Estructuras de sistemas operativos	
+1INF29-012	concepto	obligatoria	recursos de proceso	recursos de procesos|process resources	1INF29-006	contenidos	Concepto de proceso y sus recursos	
+1INF29-013	concepto	obligatoria	llamadas al sistema	system calls|llamada al sistema	1INF29-006	contenidos	llamadas al sistema / Ejemplo de uso de llamadas al sistema por el intérprete de órdenes (shell)	Se elimina el marco "Ejemplo de uso de" y se conserva el saber nombrable "llamadas al sistema".
+1INF29-014	concepto	obligatoria	intérprete de órdenes (shell)	intérprete de órdenes|shell|command interpreter	1INF29-006	contenidos	intérprete de órdenes (shell) / Ejemplo de uso de llamadas al sistema por el intérprete de órdenes (shell)	Se elimina el marco "Ejemplo de uso de" y se conserva el saber nombrable "intérprete de órdenes".
+1INF29-015	concepto	obligatoria	Llamadas al sistema para manejo de procesos	system calls for process management	1INF29-006	contenidos	Llamadas al sistema para manejo de procesos	
+1INF29-016	concepto	obligatoria	Llamadas al sistema para manejo de archivos y directorios	system calls for file and directory management	1INF29-006	contenidos	Llamadas al sistema para manejo de archivos y directorios	
+1INF29-017	concepto	obligatoria	Estructuras de sistemas operativos	estructuras de sistemas operativo|operating system structures	1INF29-006	contenidos	Estructuras de sistemas operativos	
 1INF29-018	tema	obligatoria	PROCESOS Y COMUNICACIÓN ENTRE PROCESOS	procesos|proceso|comunicación entre procesos|interprocess communication		contenidos	CAPÍTULO 4 PROCESOS Y COMUNICACIÓN ENTRE PROCESOS	
 1INF29-019	concepto	obligatoria	Modelo de proceso	modelo de procesos|process model	1INF29-018	contenidos	Modelo de proceso	
 1INF29-020	concepto	obligatoria	Creación de proceso	creación de procesos|process creation	1INF29-018	contenidos	Creación y terminación de proceso	
@@ -39,8 +37,8 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF29-037	concepto	obligatoria	Planificadores	planificador|scheduler|schedulers	1INF29-034	contenidos	Planificadores y políticas	
 1INF29-038	concepto	obligatoria	políticas	políticas de planificación|scheduling policies|policy	1INF29-034	contenidos	Planificadores y políticas	
 1INF29-039	concepto	obligatoria	plazos (deadlines)	plazo|deadline|deadlines	1INF29-034	contenidos	Plazos (deadlines)	
-1INF29-040	concepto	obligatoria	tiempo real	real-time|real time	1INF29-034	contenidos	asuntos de tiempo real	"Se elimina el marco ""asuntos de"" para conservar el saber nombrable ""tiempo real""."
-1INF29-041	tema	obligatoria	ADMINISTRACIÓN DE MEMORIA	administración de la memoria|memory management		contenidos	CAPÍTULO 6 ADMINISTRACIÓN DE MEMORIA	
+1INF29-040	concepto	obligatoria	tiempo real	real-time|real time	1INF29-034	contenidos	asuntos de tiempo real	Se elimina el marco "asuntos de" para conservar el saber nombrable "tiempo real".
+1INF29-041	tema	obligatoria	ADMINISTRACIÓN DE MEMORIA	administración de la memoria|memory management|manejo de memoria|gestión de memoria		contenidos	CAPÍTULO 6 ADMINISTRACIÓN DE MEMORIA	
 1INF29-042	concepto	obligatoria	Memoria física	physical memory	1INF29-041	contenidos	Memoria física	
 1INF29-043	concepto	obligatoria	hardware de manejo de memoria	memory management hardware	1INF29-041	contenidos	hardware de manejo de memoria	
 1INF29-044	concepto	obligatoria	Paginación	paging	1INF29-041	contenidos	Paginación	
@@ -49,7 +47,7 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF29-047	concepto	obligatoria	hiperpaginación (thrashing)	hiperpaginación|thrashing	1INF29-041	contenidos	hiperpaginación (thrashing)	
 1INF29-048	concepto	obligatoria	Caching	cacheo|caching	1INF29-041	contenidos	Caching	
 1INF29-049	tema	obligatoria	SEGURIDAD Y PROTECCIÓN	seguridad|protección|security|protection		contenidos	CAPÍTULO 7 SEGURIDAD Y PROTECCIÓN	
-1INF29-050	concepto	obligatoria	seguridad de sistema	seguridad del sistema|system security	1INF29-049	contenidos	Perspectiva de seguridad de sistema	"Se elimina el marco ""Perspectiva de"" para conservar el saber ""seguridad de sistema""."
+1INF29-050	concepto	obligatoria	seguridad de sistema	seguridad del sistema|system security	1INF29-049	contenidos	Perspectiva de seguridad de sistema	Se elimina el marco "Perspectiva de" para conservar el saber "seguridad de sistema".
 1INF29-051	concepto	obligatoria	Separación de política y mecanismo	separación entre política y mecanismo|policy mechanism separation	1INF29-049	contenidos	Separación de política y mecanismo	
 1INF29-052	concepto	obligatoria	Métodos de seguridad	security methods	1INF29-049	contenidos	Métodos y dispositivos de seguridad	
 1INF29-053	concepto	obligatoria	dispositivos de seguridad	security devices	1INF29-049	contenidos	Métodos y dispositivos de seguridad	
@@ -73,8 +71,8 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF29-071	concepto	obligatoria	sistemas de archivo virtuales	sistema de archivo virtual|sistemas de archivos virtuales|virtual file system|virtual file systems	1INF29-058	contenidos	sistemas de archivo virtuales	
 1INF29-072	concepto	obligatoria	Técnicas de implementación estándar	standard implementation techniques	1INF29-058	contenidos	Técnicas de implementación estándar	
 1INF29-073	concepto	obligatoria	Archivos mapeados a memoria	archivo mapeado a memoria|memory-mapped files|memory mapped files	1INF29-058	contenidos	Archivos mapeados a memoria.	
-1INF29-074	concepto	aceptable	componentes	componente	1INF29-006	otra	los componentes	
-1INF29-075	concepto	aceptable	abstracciones creadas por los sistemas operativos	abstracciones de los sistemas operativos|operating system abstractions	1INF29-011	otra	las abstracciones creadas por los sistemas operativos	
+1INF29-074	concepto	aceptable	componentes	componente|componentes de los sistemas operativos	1INF29-006	otra	los componentes	
+1INF29-075	concepto	aceptable	abstracciones creadas por los sistemas operativos	abstracciones de los sistemas operativos|operating system abstractions|abstracción creada por los sistemas operativos	1INF29-006	otra	las abstracciones creadas por los sistemas operativos	
 1INF29-076	concepto	aceptable	sistemas operativos	sistema operativo|operating systems|operating system	1INF29-006	otra	diferentes sistemas operativos	
-1INF29-077	concepto	aceptable	Unix	UNIX	1INF29-006	otra	sistema operativo Unix (Linux)	"Se separa ""Unix"" de ""Linux"" porque son dos sistemas operativos nombrados en el sílabo."
-1INF29-078	concepto	aceptable	Linux	LINUX	1INF29-006	otra	sistema operativo Unix (Linux)	"Se separa ""Linux"" de ""Unix"" porque son dos sistemas operativos nombrados en el sílabo."
+1INF29-077	concepto	aceptable	Unix	UNIX	1INF29-006	otra	sistema operativo Unix (Linux)	Se separa "Unix" de "Linux" porque son dos sistemas operativos nombrados en el sílabo.
+1INF29-078	concepto	aceptable	Linux	LINUX	1INF29-006	otra	sistema operativo Unix (Linux)	Se separa "Linux" de "Unix" porque son dos sistemas operativos nombrados en el sílabo.

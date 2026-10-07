@@ -37,7 +37,7 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF30-035	concepto	aceptable	MySQL		1INF30-028	otra	MySQL Workbench	Implícito inequívoco (b): el cliente nombra el motor y RA3 exige conectar a distintos motores. El cliente en sí se trata como equipo.
 1INF30-036	concepto	aceptable	SQL Server	Microsoft SQL Server|MS SQL Server	1INF30-028	otra	SQL Server Management Studio	Implícito inequívoco (b), mismo criterio que MySQL.
 1INF30-037	tema	obligatoria	Programación web	web programming		contenidos	FUNDAMENTOS DE PROGRAMACIÓN WEB	
-1INF30-038	concepto	obligatoria	HTML	HyperText Markup Language|lenguaje HTML|elementos básicos de HTML	1INF30-037	contenidos	Elementos básicos de HTML	'Elementos básicos de X' tratado como 'Fundamentos de X': la entidad es HTML.
+1INF30-038	concepto	obligatoria	HTML	HyperText Markup Language|lenguaje HTML	1INF30-037	contenidos	Elementos básicos de HTML	'Elementos básicos de X' tratado como 'Fundamentos de X': la entidad es HTML.
 1INF30-039	concepto	obligatoria	CSS	Cascading Style Sheets|hojas de estilo en cascada|hoja de estilo en cascada	1INF30-037	contenidos	Manejo de CSS	
 1INF30-040	concepto	obligatoria	Programación con JavaScript	programación en JavaScript|JavaScript programming	1INF30-037	contenidos	Fundamentos básicos de programación con JavaScript	
 1INF30-041	concepto	obligatoria	JavaScript	JS|lenguaje JavaScript	1INF30-037	contenidos	programación con JavaScript	Núcleo nombrado literal dentro del ítem: concepto aparte (lenguaje).

@@ -1,6 +1,6 @@
 # silabo=1INF50 | curso=Diseño de Software | anotador=Claude Opus 5.5 | guia=v2.1 | fecha=2026-10-02
 id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
-1INF50-001	tema	obligatoria	Diseño de software	software design			contenidos	UNIDAD 1 DISEÑO DE SOFTWARE	Los capítulos no tienen título (solo "Capítulo N"), así que la unidad es el encabezado con nombre que agrupa los ítems; se anota como tema obligatorio aunque coincida con el nombre del curso, porque aquí nombra un saber.
+1INF50-001	tema	obligatoria	Diseño de software	software design		contenidos	UNIDAD 1 DISEÑO DE SOFTWARE	Los capítulos no tienen título (solo "Capítulo N"), así que la unidad es el encabezado con nombre que agrupa los ítems; se anota como tema obligatorio aunque coincida con el nombre del curso, porque aquí nombra un saber.
 1INF50-002	concepto	obligatoria	Diseño de software	software design	1INF50-001	contenidos	Fundamentos del Diseño de Software	"conceptos de diseño de software" (sumilla) se trata como "Fundamentos de X": misma fila, sin alias.
 1INF50-003	concepto	obligatoria	Notación UML	UML|Unified Modeling Language|lenguaje unificado de modelado|lenguaje de modelado UML	1INF50-001	contenidos	Notación UML: Diagramas de Clases de Diseño	
 1INF50-004	concepto	obligatoria	Diagramas de clases de diseño	diagrama de clases de diseño|design class diagrams|design class diagram|DCD	1INF50-001	contenidos	Notación UML: Diagramas de Clases de Diseño	
@@ -13,7 +13,7 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF50-011	concepto	obligatoria	Diagramas de comunicación	diagrama de comunicación|communication diagrams|communication diagram|diagramas de colaboración|diagrama de colaboración|collaboration diagrams	1INF50-001	contenidos	Notación UML: Diagramas de Comunicación	"Diagramas de colaboración" va como alias: es el nombre UML 1.x del mismo diagrama.
 1INF50-012	concepto	obligatoria	Modelos de diseño	modelo de diseño|design models|design model	1INF50-001	sumilla	modelos de diseño	
 1INF50-013	concepto	aceptable	Diseño detallado	detailed design	1INF50-001	otra	el diseño detallado de cada componente	
-1INF50-014	tema	obligatoria	Pruebas de software	prueba de software|software testing|testing de software			contenidos	UNIDAD 2 PRUEBAS DE SOFTWARE	Mismo criterio que 001: capítulo 5 sin título, la unidad es el tema.
+1INF50-014	tema	obligatoria	Pruebas de software	prueba de software|software testing|testing de software		contenidos	UNIDAD 2 PRUEBAS DE SOFTWARE	Mismo criterio que 001: capítulo 5 sin título, la unidad es el tema.
 1INF50-015	concepto	obligatoria	Pruebas de software	prueba de software|software testing|testing de software	1INF50-014	contenidos	Fundamentos de Pruebas de Software	
 1INF50-016	concepto	obligatoria	Tipos de prueba	tipo de prueba|tipos de pruebas|test types|tipos de prueba de software	1INF50-014	contenidos	Tipos de Prueba	
 1INF50-017	concepto	obligatoria	Diseño de pruebas	diseño de prueba|test design	1INF50-014	contenidos	Diseño de Pruebas	

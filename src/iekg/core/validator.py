@@ -33,7 +33,7 @@ from iekg.graph_schema import (
 )
 
 # Rules the validator prevents on each write path (annex, Table 3; thesis,
-# Table 20). In the load, RI-08 is only detected by the audit.
+# Table 21). In the load, RI-08 is only detected by the audit.
 LOAD_RULES = (RI_05, RI_10, RM_02, RM_04, RM_05)
 INGESTION_RULES = (RI_05, RI_08, RI_10, RM_02, RM_04, RM_05)
 

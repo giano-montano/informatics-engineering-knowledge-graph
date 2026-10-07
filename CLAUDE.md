@@ -61,8 +61,11 @@ sobre la marcha: no asumas fluidez, pero tampoco expliques de menos.
 |---|---|
 | `docs/tesis.md` | Las decisiones de diseño ya tomadas y argumentadas. |
 | `docs/estandares-de-codigo.md` | Idioma, nomenclatura, pruebas. **No dupliques sus reglas: síguelas.** |
-| `docs/traspaso-del-laboratorio.md` | Lo que el laboratorio **midió** y lo que queda **por re-decidir**. |
 | `docs/decisiones/` | Las decisiones ya rehechas, con sus alternativas descartadas. |
+
+Al diseñar la ingesta, leer además §3 (proveedores de LLM) y las preguntas 17 y
+18 de §4.4 de `docs/repositorio/traspaso-del-laboratorio.md`. El resto de ese
+documento está archivado.
 
 ## 5. El proyecto en una pantalla
 
@@ -82,8 +85,9 @@ Lo que hay:
 README.md                      Cómo levantar el sistema y qué se puede probar.
 docs/tesis.md                  El documento de tesis.
 docs/estandares-de-codigo.md   Convenciones. Vinculantes.
-docs/traspaso-del-laboratorio.md  Hechos medidos + preguntas abiertas.
 docs/decisiones/               Un archivo por decisión rehecha.
+docs/repositorio/              Auditorías con su deuda, y el traspaso del
+                               laboratorio, archivado.
 docs/architecture/             Modelo C4 en LikeC4 (*.c4).
 ontology/*.ttl                 R1 (esquema OWL) y R2 (backbone CS2023).
 docker-compose.yml             Neo4j 5.26 LTS.
@@ -154,13 +158,19 @@ están bien guardados y el Browser los muestra correctamente.
 
 ### Documentos que son entregables
 
-Seis grupos de documentos no son documentación interna del repositorio:
+Cuatro grupos de documentos no son documentación interna del repositorio:
 `docs/tesis.md`, el anexo de transición al grafo de propiedades,
-`docs/requisitos-funcionales-de-referencia.md`, `docs/atributos-de-calidad.md`,
 `docs/decisiones/` y `docs/architecture/`. Salen del razonamiento de la tesis y
 se plasman como entregables o anexos en los documentos oficiales, que viven
 fuera del repositorio (Google Docs). Cambiar uno de ellos obliga a replicar el
-cambio allá y a mantener alineados todos los que dicen lo mismo.
+cambio allá y a mantener alineados todos los que dicen lo mismo. 
+`docs/atributos-de-calidad.md` es solo para tener a mano lo que ya se dice en el
+documento oficial de tesis respecto a atributos de calidad, mantenerlo actualizado 
+considerando que tesis prima.
+`docs/requisitos-funcionales-de-referencia.md` ahora es documentación interna
+del repo, para guiar mejor los requerimientos del módulo de grafo de
+conocimiento; su única fuente de verdad es el repositorio. Ahí se anota también
+lo que el protocolo de medición de la tesis exige al sistema.
 
 Por eso, ante una discrepancia entre el código y estos documentos, las salidas
 se prefieren en este orden:

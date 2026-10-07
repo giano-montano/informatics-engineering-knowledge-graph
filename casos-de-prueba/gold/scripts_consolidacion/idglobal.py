@@ -44,7 +44,7 @@ def asignar(rows):
     for k,ids in k2r.items():
         for i in ids[1:]: u(ids[0],i)
     for a,b,_ in FUSIONAR: u(a,b)
-    # numeración por orden de primera aparición (orden de sílabos del handoff, luego orden de filas)
+    # numeración por orden de primera aparición (orden de los casos de prueba, luego orden de filas)
     gid={}; n=0; out={}
     for r in rows:
         root=f(r["id"])

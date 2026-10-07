@@ -1,6 +1,8 @@
 # **Catálogo de requisitos funcionales**
 
-**Sistema:** KMS basado en grafo de conocimiento para Ingeniería Informática (PUCP) **Alcance:** R3–R6 · **Versión:** 1.2 · **Fecha:** octubre 2026
+**Sistema:** KMS basado en grafo de conocimiento para Ingeniería Informática (PUCP) **Alcance:** R3–R6 · **Versión:** 1.3 · **Fecha:** octubre 2026
+
+Documento interno: guía los requisitos del módulo y su única fuente de verdad es este repositorio. No se replica en los documentos oficiales.
 
 ---
 
@@ -10,7 +12,7 @@ Este catálogo delimita qué funcionalidad ofrece el sistema. No procede de una 
 
 El catálogo se produce **junto al diseño arquitectónico, no antes de él**. Para que esa concurrencia no se confunda con circularidad, cada requisito se registra bajo tres relaciones distintas:
 
-* **Origen** — qué hace que el requisito exista. Solo preguntas de competencia, escenarios de calidad o el ítem 16 de la encuesta.  
+* **Origen** — qué hace que el requisito exista. Solo preguntas de competencia, escenarios de calidad, el ítem 16 de la encuesta o el protocolo de los casos de prueba de la ingesta.  
 * **Restricción** — qué decisión de diseño previa acota su solución sin originarlo.  
 * **Derivado (D)** — requisito que existe únicamente como consecuencia de una decisión arquitectónica. Se marca como tal; no se presenta como elicitado.
 
@@ -23,6 +25,7 @@ Un requisito sin origen no pertenece a este catálogo. Los pasos internos de un 
 | **PC1–PC7** | Preguntas de competencia de la ontología | R1, Paso 1 de Ontology Development 101 |
 | **AC-01–AC-05** | Escenarios de calidad (Bass et al., ISO/IEC 25010\) | R3, Fase 1 |
 | **E16** | Ítem 16 de la encuesta de orientación del aprendizaje (N=154) | Anexo D |
+| **CP-01–CP-16** | Protocolo de los casos de prueba de la ingesta | Tesis, §5.2.5 |
 | **DD-xx / ADR-xxx** | Decisiones de diseño validadas y decisiones arquitectónicas | R1 y R3 |
 
 ### **Frecuencias del ítem E16 (N=154, opción múltiple)**
@@ -64,6 +67,7 @@ El desarrollador tampoco es actor: ejecuta los procesos de construcción (secci�
 | RF-06 | Enlazar las entidades extraídas a los nodos ya existentes en el grafo —de cualquiera de las dos capas— cuando exista correspondencia, evitando duplicados. La escritura no crea ni modifica nodos de la capa de referencia. | AC-01 | DD-02, ADR-011 |
 | RF-07 | Registrar la procedencia de cada instancia y de cada arista institucional escrita. | AC-03 | DD-09 |
 | RF-08 | Persistir en el almacén de hechos los hechos institucionales escritos en el grafo, de modo que puedan reaplicarse sin volver a invocar el modelo de lenguaje. | AC-04 | ADR-004, ADR-012 |
+| RF-25 | Fijar en la configuración el modelo de lenguaje por su versión exacta, no por un alias que el proveedor pueda mover, junto con sus parámetros de generación, y registrar con cada ejecución esos valores y la versión del prompt. | CP-01–CP-13 | — |
 | RF-09 | Ejecutar el conjunto de consultas de integridad declaradas al cierre de la carga, de cada ingesta y de la reaplicación, y emitir un reporte por regla de integridad y del módulo en una sola ejecución. | AC-02 | DD-10, ADR-005 |
 
 ### **Consultas expuestas por la API**
@@ -147,6 +151,20 @@ Lo siguiente se excluye de forma explícita. La exclusión es parte del requisit
 | AC-04 | RF-01, RF-08, RF-10 |
 | AC-05 | RF-12 a RF-16 (patrones medidos) |
 | E16 | RF-11, RF-13, RF-14, RF-19, RF-20, RF-24 |
+| CP-01–CP-13 | RF-25 |
 
 AC-05 no genera requisitos propios: califica el desempeño de los ya declarados. Los requisitos marcados **(D)** —RF-02, RF-03, RF-10, RF-23— existen por decisión arquitectónica y no por elicitación.
 
+---
+
+## **8\. Pendientes que el protocolo de medición deja a la ingesta**
+
+No son requisitos todavía: son lo que el protocolo de la tesis (§5.2.5 y Tabla 15) da por supuesto y nadie ha decidido cómo se cumple. Cada uno se cierra en el ADR o en el requisito que lo resuelva.
+
+| Pendiente | Lo que exige el protocolo | Qué falta decidir |
+| ----- | ----- | ----- |
+| Medición de las relaciones | CP-15 juzga todas las aristas de partonomía de tema a unidad; CP-16, una muestra aleatoria con semilla fija de 30 aristas de prerrequisito, de especialización y de concepto requerido, o todas si hay menos. Ambos, sobre el grafo final. | Cómo se obtienen esas aristas de forma reproducible y dónde vive ese procedimiento. |
+| Medición de AC-05 | Los cinco patrones desde cada uno de sus nodos de partida, diez ejecuciones tras una pasada de calentamiento, la ejecución en frío aparte, y el tamaño del grafo y el entorno junto a la medición. | Lo mismo: cómo se ejecuta de forma reproducible y dónde vive. |
+| Concepto requerido sin tema | CP-16 juzga `REQUIRES_CONCEPT`: un concepto que el curso necesita y no enseña. RI-08 exige que todo concepto tenga un tema padre. | De dónde sale ese tema cuando el sílabo no enseña el concepto. Es una pregunta para el ADR del extractor. |
+
+Un tercero no queda pendiente: la precisión de los intentos rechazados sale del lote candidato que guarda RF-05. Ante una salida no conforme (EX-01) puede no haber lote legible, y la tesis lo acepta («cuando ese lote es legible»).

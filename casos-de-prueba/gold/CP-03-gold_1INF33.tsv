@@ -3,10 +3,8 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF33-001	concepto	obligatoria	paradigma relacional para bases de datos	paradigma relacional		sumilla	paradigma relacional para bases de datos	No hay un tema del programa que lo agrupe inequívocamente; se deja vacío.
 1INF33-002	concepto	obligatoria	metodologías de diseño de bases de datos relacionales	metodología de diseño de bases de datos relacionales	1INF33-008	sumilla	metodologías y técnicas de diseño de bases de datos relacionales	El ítem nombra dos saberes; se separan en metodologías y técnicas.
 1INF33-003	concepto	obligatoria	técnicas de diseño de bases de datos relacionales	técnica de diseño de bases de datos relacionales	1INF33-008	sumilla	metodologías y técnicas de diseño de bases de datos relacionales	El ítem nombra dos saberes; se separan en metodologías y técnicas.
-1INF33-004	concepto	obligatoria	normalización	normalización de datos|normalización de bases de datos	1INF33-011	sumilla	normalización y desnormalización	
 1INF33-005	concepto	obligatoria	desnormalización		1INF33-011	sumilla	normalización y desnormalización	
 1INF33-006	concepto	obligatoria	lenguaje estructurado de consultas (SQL)	SQL|Structured Query Language|lenguaje estructurado de consultas		sumilla	lenguaje estructurado de consultas (SQL)	No hay un tema general de SQL en el programa que lo agrupe inequívocamente; se deja vacío.
-1INF33-007	concepto	obligatoria	lenguaje de programación de base de datos (PL/SQL)	PL/SQL|PLSQL|lenguaje de programación de bases de datos	1INF33-013	sumilla	lenguaje de programación de base de datos (PL/SQL)	
 1INF33-008	tema	obligatoria	METODOLOGÍAS DE MODELAMIENTO	metodología de modelamiento		contenidos	CAPÍTULO 2 METODOLOGÍAS DE MODELAMIENTO	
 1INF33-009	tema	obligatoria	SQL DDL	DDL|lenguaje de definición de datos		contenidos	CAPÍTULO 3 SQL DDL (3 horas)	
 1INF33-010	tema	obligatoria	SQL DML	DML|lenguaje de manipulación de datos		contenidos	CAPÍTULO 4 SQL DML (9 horas)	
@@ -45,7 +43,7 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF33-043	concepto	obligatoria	subconsultas	subconsulta	1INF33-010	contenidos	Subconsultas: escalares y correlacionadas	
 1INF33-044	concepto	obligatoria	subconsultas escalares	subconsulta escalar|scalar subquery	1INF33-010	contenidos	Subconsultas: escalares y correlacionadas	
 1INF33-045	concepto	obligatoria	subconsultas correlacionadas	subconsulta correlacionada|correlated subquery	1INF33-010	contenidos	Subconsultas: escalares y correlacionadas	
-1INF33-046	concepto	obligatoria	Normalización de datos: Primera, segunda y tercera forma normal	normalización|normalización de datos|normalización de bases de datos	1INF33-011	contenidos	Normalización de datos: Primera, segunda y tercera forma normal	
+1INF33-046	concepto	obligatoria	Normalización de datos	normalización|normalización de datos|normalización de bases de datos	1INF33-011	contenidos	Normalización de datos: Primera, segunda y tercera forma normal	
 1INF33-047	concepto	obligatoria	Primera forma normal	1FN|1NF|first normal form	1INF33-012	contenidos	Primera, segunda y tercera forma normal	
 1INF33-048	concepto	obligatoria	Segunda forma normal	2FN|2NF|second normal form	1INF33-012	contenidos	Primera, segunda y tercera forma normal	
 1INF33-049	concepto	obligatoria	Tercera forma normal	3FN|3NF|third normal form	1INF33-012	contenidos	Primera, segunda y tercera forma normal	
@@ -60,7 +58,7 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF33-058	concepto	obligatoria	Cursores implícitos	cursor implícito|implicit cursor	1INF33-013	contenidos	Manejo de Cursores: explícitos e implícitos	
 1INF33-059	concepto	obligatoria	Secuencias	secuencia|sequence	1INF33-013	contenidos	Secuencias	
 1INF33-060	concepto	obligatoria	Excepciones	excepción|exception	1INF33-013	contenidos	Manejo de excepciones	
-1INF33-061	concepto	obligatoria	Disparadores	trigger|triggers	1INF33-014	contenidos	Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After.	
+1INF33-061	concepto	obligatoria	Disparadores	trigger|triggers|disparador	1INF33-014	contenidos	Disparadores. Estructura. Tipos: fila y sentencia. Según el evento: Before y After.	
 1INF33-062	concepto	obligatoria	Disparadores de fila	trigger de fila|row trigger|disparador de fila	1INF33-014	contenidos	Tipos: fila y sentencia	
 1INF33-063	concepto	obligatoria	Disparadores de sentencia	trigger de sentencia|statement trigger|disparador de sentencia	1INF33-014	contenidos	Tipos: fila y sentencia	
 1INF33-064	concepto	obligatoria	Disparadores BEFORE	trigger before|BEFORE trigger|disparador before	1INF33-014	contenidos	Según el evento: Before y After	

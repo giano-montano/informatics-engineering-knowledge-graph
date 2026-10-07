@@ -2,6 +2,22 @@
 
 **Fecha:** 2026-09-01 · **Origen:** tag `lab-2026-09-01`
 
+**Archivado el 2026-10-07.** Es una foto del 2026-09-01 y no se actualiza.
+Desde entonces:
+
+- Las preguntas de §4.1 a §4.3, y la 14 a 16 de §4.4, las responden los ADR de
+  `docs/decisiones/`.
+- El motivo que da §1 para descartar SHACL es inexacto: ADR-014 da los reales.
+- La pregunta 19 de §4.4 y la 20 de §4.5 las responde el protocolo de los
+  casos de prueba de la tesis (§5.2.5). Lo que §6 dice de 1INF33 queda
+  resuelto: la anotación la hizo un modelo sin acceso a las salidas del
+  pipeline.
+- El resto de §6 ya no describe el repositorio: la capa de referencia está en
+  un solo archivo y la carga la hace `iekg-build load`.
+
+Siguen sirviendo como insumo para diseñar la ingesta: §3, los proveedores de
+LLM (sus cifras caducan: se vuelven a medir), y las preguntas 17 y 18 de §4.4.
+
 ---
 
 ## 0. Qué es y qué no es este documento

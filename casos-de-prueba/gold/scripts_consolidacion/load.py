@@ -1,8 +1,16 @@
-import json, glob, os, collections
-ORDER=["1INF27","1INF25","1INF49","1INF33","1INF29","1INF31","1INF30","1INF50","1INF32","1INF24","1INF37","1INF54","1INF47"]
+import glob, os, collections
+# Orden de ingesta de los casos de prueba CP-01 a CP-13 (tesis, 5.2.5): nivel del curso en el plan y, dentro del nivel, código.
+ORDER=["1INF25","1INF27","1INF33","1INF49","1INF29","1INF30","1INF31","1INF32","1INF24","1INF50","1INF37","1INF54","1INF47"]
+GOLD=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # casos-de-prueba/gold
 COLS="id tipo nivel etiqueta alias tema_padre seccion evidencia nota".split()
-def load_raw(code):
-    return json.load(open(f"raw/{code}.json",encoding="utf-8"))
+def gold_path(code):
+    paths=glob.glob(os.path.join(GOLD,f"CP-*-gold_{code}.tsv"))
+    assert len(paths)==1,(code,paths)
+    cp=f"CP-{ORDER.index(code)+1:02d}-"
+    assert os.path.basename(paths[0]).startswith(cp),(code,paths[0],"no coincide con ORDER")
+    return paths[0]
+def load_gold(code):
+    return open(gold_path(code),encoding="utf-8").read()
 import unicodedata, re
 def norm(s):
     s=s.lower()

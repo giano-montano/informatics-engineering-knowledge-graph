@@ -52,6 +52,8 @@ sobre la marcha: no asumas fluidez, pero tampoco expliques de menos.
 - Cuando algo **contradiga una decisión previa**, decirlo de frente.
 - **Verificar versiones y estado del arte antes de recomendar.** No de memoria.
 - **Leer `docs/tesis.md` antes de señalar algo como hueco de diseño.**
+- **Cada propuesta técnica lleva su costo documental** (ver §8, «Documentos que
+  son entregables»).
 
 ## 4. Antes de opinar, leer
 
@@ -77,6 +79,7 @@ pequeño; nada hardcodeado, nada de ORM.**
 Lo que hay:
 
 ```
+README.md                      Cómo levantar el sistema y qué se puede probar.
 docs/tesis.md                  El documento de tesis.
 docs/estandares-de-codigo.md   Convenciones. Vinculantes.
 docs/traspaso-del-laboratorio.md  Hechos medidos + preguntas abiertas.
@@ -133,7 +136,7 @@ Para verificarla desde cero:
 1. Vaciar. En el Browser, `MATCH (n) DETACH DELETE n`: la carga borra y crea
    las restricciones por su cuenta. Para una base nueva del todo,
    `docker compose down -v` y `docker compose up -d`, que borra también
-   restricciones, logs y plugins del contenedor. `var/` no se toca.
+   restricciones y logs del contenedor. `var/` no se toca.
 2. Comprobar que quedó vacía: `MATCH (n) RETURN count(n)`.
 3. `uv run iekg-build load`.
 4. Ver el resultado en el Browser:
@@ -148,6 +151,29 @@ La consola de Windows puede mostrar mal las tildes de la salida; los datos
 están bien guardados y el Browser los muestra correctamente.
 
 ## 8. Al escribir documentación
+
+### Documentos que son entregables
+
+Seis grupos de documentos no son documentación interna del repositorio:
+`docs/tesis.md`, el anexo de transición al grafo de propiedades,
+`docs/requisitos-funcionales-de-referencia.md`, `docs/atributos-de-calidad.md`,
+`docs/decisiones/` y `docs/architecture/`. Salen del razonamiento de la tesis y
+se plasman como entregables o anexos en los documentos oficiales, que viven
+fuera del repositorio (Google Docs). Cambiar uno de ellos obliga a replicar el
+cambio allá y a mantener alineados todos los que dicen lo mismo.
+
+Por eso, ante una discrepancia entre el código y estos documentos, las salidas
+se prefieren en este orden:
+
+1. **Que el código cumpla lo escrito.** No cuesta ninguna edición.
+2. **Declararlo en el repositorio** (`docs/repositorio/`, un archivo de deuda
+   por auditoría), como limitación o como matiz conocido, cuando el riesgo
+   real es bajo.
+3. **Editar los entregables** solo si lo escrito es falso y la falsedad
+   importa para la sustentación. En ese caso, la propuesta nombra cada
+   documento afectado.
+
+Toda propuesta técnica dice cuál de las tres implica y qué documentos toca.
 
 - `docs/decisiones/NNNN-*.md`: una decisión por archivo, en español, con las
   **alternativas descartadas** y por qué. Es el producto, no el adorno: sin

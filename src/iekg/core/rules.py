@@ -9,6 +9,7 @@ from types import MappingProxyType
 
 from iekg.graph_schema import (
     CONCEPT,
+    COURSE,
     HAS_PREREQUISITE,
     KNOWLEDGE_AREA,
     KNOWLEDGE_UNIT,
@@ -59,6 +60,9 @@ REQUIRED_PARENT = MappingProxyType({
     TOPIC: KNOWLEDGE_UNIT,
     KNOWLEDGE_UNIT: KNOWLEDGE_AREA,
 })
+
+# Institutional classes that must derive from a learning resource (RM-03).
+DERIVED_FROM_RESOURCE = (TOPIC, CONCEPT, COURSE)
 
 # Edge types that must not form cycles (RM-04). Partonomy needs no such rule:
 # its pairs only climb towards the area (annex, notes to Table 3).

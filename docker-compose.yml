@@ -1,4 +1,4 @@
-# Neo4j del laboratorio: version pineada, plugins declarativos.
+# Neo4j del sistema: version pineada y sin plugins; el codigo no usa ninguno.
 #
 # Por que 5.26 LTS y no la 2026.06 actual:
 #   - 5.26 es la ultima LTS, con soporte oficial hasta junio 2028, o sea que
@@ -7,14 +7,14 @@
 #     soporte cortas: pinear uno significa defender sobre una version sin soporte.
 #   - Practicamente toda la documentacion, tutoriales y literatura que vas a
 #     citar asume 5.x. Menos friccion al sustentar.
-#   - Costo aceptado: Cypher 5 (sin Cypher 25) y GDS congelado en la linea 2.x.
-#     Registrable como limitacion; ninguna de las dos cosas bloquea el pipeline.
+#   - Costo aceptado: Cypher 5, sin Cypher 25. Registrable como limitacion; no
+#     bloquea el pipeline.
 #
 # Edicion Enterprise bajo licencia de evaluacion (desarrollo y pruebas).
 # El despliegue final va a Community, asi que NADA del diseno puede depender
-# de multi-base: el backbone y el slice viven en la base `neo4j`.
+# de multi-base: todo el grafo vive en la base `neo4j`.
 
-name: iekg-lab
+name: iekg
 
 services:
   neo4j:
@@ -28,13 +28,6 @@ services:
       NEO4J_ACCEPT_LICENSE_AGREEMENT: "eval"
       NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD}"
 
-      # El entrypoint resuelve la version de cada plugin compatible con la
-      # imagen y la descarga al arrancar. Queda registrado en los logs.
-      NEO4J_PLUGINS: '["apoc","graph-data-science"]'
-
-      NEO4J_dbms_security_procedures_unrestricted: "gds.*,apoc.*"
-      NEO4J_dbms_security_procedures_allowlist: "gds.*,apoc.*"
-
       # 32 GB fisicos: heap holgado y pagecache suficiente para un grafo que
       # hoy son 180 nodos y no va a pasar de unos pocos miles.
       NEO4J_server_memory_heap_initial__size: "2G"
@@ -47,7 +40,6 @@ services:
     volumes:
       - neo4j_data:/data
       - neo4j_logs:/logs
-      - neo4j_plugins:/plugins
       - ./ontology:/import/ontology:ro
     healthcheck:
       test: ["CMD-SHELL", "cypher-shell -u neo4j -p \"$${HEALTHCHECK_PASSWORD}\" 'RETURN 1' >/dev/null 2>&1 || exit 1"]
@@ -59,4 +51,3 @@ services:
 volumes:
   neo4j_data:
   neo4j_logs:
-  neo4j_plugins:

@@ -100,9 +100,13 @@ NODE_PROPERTIES = MappingProxyType({
     COURSE: _EVERY_NODE + (COURSE_CODE,),
 })
 
-# Properties each edge type admits (RI-09). Only the edges the ingestion
-# writes carry provenance (RM-03).
-EDGE_PROPERTIES = MappingProxyType({edge_type: (PROVENANCE,) for edge_type in EDGE_TYPES})
+# Properties an edge admits, by the layer of its source node (RI-09). Only the
+# edges the ingestion writes carry provenance (thesis, Table 17), and those are
+# exactly the edges that leave an institutional node (annex, write condition 6).
+EDGE_PROPERTIES_BY_SOURCE_LAYER = MappingProxyType({
+    REFERENCE: (),
+    INSTITUTIONAL: (PROVENANCE,),
+})
 
 # Locator form (RI-10): an absolute URI with scheme http or https. The same
 # pattern serves Python's re.fullmatch and Cypher's =~, which both match the

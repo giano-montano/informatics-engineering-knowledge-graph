@@ -93,8 +93,8 @@ Para comprobar que la carga reconstruye todo desde cero:
 1. Vaciar la base. Hay dos opciones:
    - En el Browser: `MATCH (n) DETACH DELETE n`.
    - Para una base nueva del todo: `docker compose down -v` y luego
-     `docker compose up -d`. Esto borra también las restricciones, los logs y
-     los plugins del contenedor; `var/` no se toca.
+     `docker compose up -d`. Esto borra también las restricciones y los logs del
+     contenedor; `var/` no se toca.
 2. Comprobar que quedó vacía: `MATCH (n) RETURN count(n)`.
 3. Cargar de nuevo: `uv run iekg-build load`.
 
@@ -106,6 +106,9 @@ cualquier visor de SQLite, o listar los últimos así:
 ```powershell
 uv run python -c "import sqlite3; print(sqlite3.connect('var/operational.sqlite').execute('SELECT id, created_at, origin, violations FROM audit_reports ORDER BY id DESC LIMIT 5').fetchall())"
 ```
+
+Un reporte con `violations` en `None` quedó abierto: la carga tocó la base y
+no terminó. Mientras sea el último, la compuerta de auditoría sigue cerrada.
 
 ## Pruebas
 
@@ -166,3 +169,6 @@ var/                 Datos locales del sistema (no se versiona)
 - **Edición de Neo4j:** el `docker-compose.yml` usa Neo4j Enterprise con
   licencia de evaluación, para desarrollo. El sistema solo usa funciones de la
   edición Community, que es la del despliegue.
+- **`NOT NULL constraint failed: audit_reports.violations`:** el
+  `var/operational.sqlite` es anterior a los reportes abiertos. Muévelo o
+  bórralo, y la siguiente carga crea uno nuevo. La base no se toca.

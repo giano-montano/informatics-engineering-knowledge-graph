@@ -7,9 +7,10 @@ from iekg.core.rules import ALL_RULES, STATEMENTS
 from iekg.graph_schema import (
     ADMITTED_PAIRS,
     ALL_LABELS,
-    EDGE_PROPERTIES,
+    EDGE_PROPERTIES_BY_SOURCE_LAYER,
     EDGE_TYPES,
     KNOWLEDGE_ELEMENT,
+    LAYERS,
     LOCATOR_PATTERN,
     NODE_CLASSES,
     NODE_PROPERTIES,
@@ -39,11 +40,11 @@ def test_knowledge_element_is_abstract():
     assert KNOWLEDGE_ELEMENT not in NODE_CLASSES
 
 
-def test_every_label_and_edge_type_declares_its_properties():
+def test_every_label_and_source_layer_declares_its_properties():
     assert set(NODE_PROPERTIES) == set(ALL_LABELS)
-    assert set(EDGE_PROPERTIES) == set(EDGE_TYPES)
+    assert set(EDGE_PROPERTIES_BY_SOURCE_LAYER) == set(LAYERS)
     names = {name for names in NODE_PROPERTIES.values() for name in names}
-    names |= {name for names in EDGE_PROPERTIES.values() for name in names}
+    names |= {name for names in EDGE_PROPERTIES_BY_SOURCE_LAYER.values() for name in names}
     assert all(re.fullmatch(r"[a-z][A-Za-z]*", name) for name in names)
 
 

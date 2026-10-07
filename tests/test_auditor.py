@@ -95,6 +95,11 @@ INJECTIONS = {
         "CREATE (:Course {key: $a, layer: 'institutional'})-[:TEACHES_CONCEPT {provenance: $c, weight: 1}]->"
         "(:Concept:KnowledgeElement {key: $b, layer: 'institutional'})",
     ),
+    "RI-09 provenance on an edge from a reference node": (
+        "RI-09",
+        "CREATE (:KnowledgeUnit:KnowledgeElement {key: $a, layer: 'reference'})-[:PART_OF {provenance: $c}]->"
+        "(:KnowledgeArea:KnowledgeElement {key: $b, layer: 'reference'})",
+    ),
     "RI-10 other scheme": (
         "RI-10",
         "CREATE (:LearningResource {key: $a, layer: 'institutional', resourceLocator: 'ftp://example.org/a'})",
@@ -189,7 +194,8 @@ def test_what_the_repository_writes_raises_no_violation(tx, new_key):
             EdgeFact(TEACHES_CONCEPT, course, concept),
             EdgeFact(REQUIRES_CONCEPT, course, other),
             EdgeFact(IS_ABOUT, doc, course),
-            *(EdgeFact(WAS_DERIVED_FROM, key, doc) for key in (course, topic, concept, other)),
+            # The course brings its derivation; the write derives the others.
+            EdgeFact(WAS_DERIVED_FROM, course, doc),
         ),
     )
     snapshot = Snapshot(nodes={unit: SnapshotNode(KNOWLEDGE_UNIT, REFERENCE)})

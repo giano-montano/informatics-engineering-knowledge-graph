@@ -2,8 +2,9 @@
 
 Every write is a fixed-form template built from the graph schema that only
 receives values (ADR-003, ADR-005). The form of the write is what prevents
-RI-02, RI-03, RI-04, RI-06, RI-09, RM-01 and RM-03; the uniqueness constraints,
-together with MERGE by key, prevent RI-01.
+RI-02, RI-03, RI-04, RI-06, RI-09, RM-01 and RM-03, and the layer boundary
+(annex, write condition 6); the uniqueness constraints, together with MERGE by
+key, prevent RI-01.
 """
 
 from collections import Counter, defaultdict
@@ -12,7 +13,8 @@ from dataclasses import dataclass
 
 from neo4j import Driver, ManagedTransaction, Transaction
 
-from iekg.core.batch import Batch, Snapshot, label_of
+from iekg.core.batch import Batch, EdgeFact, Snapshot, label_of
+from iekg.core.rules import DERIVED_FROM_RESOURCE
 from iekg.graph_schema import (
     ADMITTED_PAIRS,
     ALL_LABELS,
@@ -23,10 +25,11 @@ from iekg.graph_schema import (
     KNOWLEDGE_ELEMENT_SUBCLASSES,
     LAYER,
     LAYERS,
+    LEARNING_RESOURCE,
     NODE_CLASSES,
     NODE_PROPERTIES,
     PROVENANCE,
-    REFERENCE,
+    WAS_DERIVED_FROM,
 )
 
 Tx = Transaction | ManagedTransaction
@@ -82,9 +85,12 @@ def _node_template(label: str) -> str:
 def _edge_template(edge_type: str, source: str, target: str) -> str:
     # Endpoints are matched by a label with a uniqueness constraint, so the
     # lookup goes through the index; an endpoint with another class is not found.
+    # The source must also have the layer of the write: the load's edges leave
+    # reference nodes, and the ingestion's leave institutional ones (annex,
+    # write condition 6), so neither can write an edge the other owns.
     return (
         "UNWIND $rows AS row "
-        f"MATCH (a:{_identifier(source, NODE_CLASSES)} {{{KEY}: row.source}}) "
+        f"MATCH (a:{_identifier(source, NODE_CLASSES)} {{{KEY}: row.source, {LAYER}: $layer}}) "
         f"MATCH (b:{_identifier(target, NODE_CLASSES)} {{{KEY}: row.target}}) "
         f"MERGE (a)-[r:{_identifier(edge_type, EDGE_TYPES)}]->(b) "
         f"ON CREATE SET r.{PROVENANCE} = $provenance "
@@ -113,8 +119,10 @@ def write_batch_in(
     The write path fixes the layer of the new nodes and the provenance of the
     new edges: the load writes the reference layer without provenance, and the
     ingestion the institutional layer with the document it read (RM-01, RM-03).
-    Raises ``WriteMismatch`` if the counters do not match; the caller's
-    transaction must then be rolled back.
+    ``provenance`` is the key of that document's learning resource: every new
+    topic, concept and course gets its ``WAS_DERIVED_FROM`` edge to it in this
+    same write. Raises ``WriteMismatch`` if the counters do not match; the
+    caller's transaction must then be rolled back.
     """
     if layer not in LAYERS:
         raise ValueError(f"unknown layer {layer!r}")
@@ -136,6 +144,17 @@ def write_batch_in(
         if group not in _EDGE_TEMPLATES:
             raise ValueError(f"{edge.describe()}: {group[1]} -> {group[2]} is not admitted for {edge.type}")
         edge_rows[group].append({"source": edge.source, "target": edge.target})
+
+    # RM-03 for nodes. Only new ones: an existing node keeps the provenance it
+    # was created with (ADR-006). The reapplication repeats this same write on
+    # the same graph state, so it derives the same edges (ADR-012).
+    if layer == INSTITUTIONAL:
+        edges = set(batch.edges)
+        for node in batch.nodes:
+            derivation = EdgeFact(WAS_DERIVED_FROM, node.key, provenance)
+            if node.label in DERIVED_FROM_RESOURCE and node.key not in snapshot.nodes and derivation not in edges:
+                group = (WAS_DERIVED_FROM, node.label, LEARNING_RESOURCE)
+                edge_rows[group].append({"source": node.key, "target": provenance})
 
     counters: Counter[str] = Counter()
 
@@ -160,9 +179,12 @@ def write_batch_in(
 
     for group in sorted(edge_rows):
         rows = edge_rows[group]
-        written = run(_EDGE_TEMPLATES[group], rows, provenance=provenance)
+        written = run(_EDGE_TEMPLATES[group], rows, provenance=provenance, layer=layer)
         if written != len(rows):
-            raise WriteMismatch(f"{group[0]} {group[1]} -> {group[2]}: {len(rows)} edges sent, {written} written")
+            raise WriteMismatch(
+                f"{group[0]} {group[1]} -> {group[2]}: {len(rows)} edges sent, {written} written"
+                f" (an endpoint is missing, or a source is not in the {layer} layer)"
+            )
 
     return WriteResult(
         nodes_created=counters["nodes_created"],
@@ -204,10 +226,14 @@ class GraphRepository:
         batch: Batch,
         snapshot: Snapshot,
         *,
-        layer: str = REFERENCE,
+        layer: str,
         provenance: str | None = None,
     ) -> WriteResult:
-        """Write ``batch`` in a single transaction: commit, or roll back and raise."""
+        """Write ``batch`` in a single transaction: commit, or roll back and raise.
+
+        ``layer`` has no default: a path that forgot it would write its nodes as
+        reference ones, and no rule tells a reference topic from a backbone node.
+        """
         with self._driver.session(database=self._database) as session:
             return session.execute_write(
                 write_batch_in, batch, snapshot, layer=layer, provenance=provenance

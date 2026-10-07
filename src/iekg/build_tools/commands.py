@@ -7,19 +7,21 @@ before the base is touched: a broken TTL leaves the graph as it was.
 
 Exit codes: 0 loaded with a clean audit; 1 loaded, but the audit found
 violations; 2 rejected before touching the base; 3 failed (see the message for
-the state of the base).
+the state of the base). A load that fails after touching the base leaves its
+audit report open, which keeps the worker's audit gate closed (ADR-007).
 """
 
 import argparse
+import sqlite3
 import sys
 from collections.abc import Callable, Sequence
 
-from neo4j import GraphDatabase
-from neo4j.exceptions import Neo4jError, ServiceUnavailable
+from neo4j import Driver, GraphDatabase
+from neo4j.exceptions import DriverError, Neo4jError
 
 from iekg.build_tools.projection import ProjectionError, check_tbox, project_backbone, read_turtle
 from iekg.core.auditor import AuditReport, audit_database
-from iekg.core.batch import Snapshot
+from iekg.core.batch import Batch, Snapshot
 from iekg.core.repository import GraphRepository, WriteMismatch
 from iekg.core.rules import STATEMENTS
 from iekg.core.validator import LOAD_RULES, validate
@@ -88,43 +90,62 @@ def load(settings: Settings, out: Output = print) -> int:
     with GraphDatabase.driver(settings.neo4j_uri, auth=(settings.neo4j_user, settings.neo4j_password)) as driver:
         try:
             driver.verify_connectivity()
-        except (ServiceUnavailable, Neo4jError) as error:
+        except (DriverError, Neo4jError) as error:
             out(f"Failed: cannot reach {target}: {error}. The graph database was not touched.")
             return EXIT_FAILED
-        repository = GraphRepository(driver, settings.neo4j_database)
-
-        out(f"Emptying and initializing {target}")
+        # Opened before the base is touched: if the load stops halfway, the
+        # open report keeps the audit gate closed (ADR-007).
         try:
-            constraints = repository.reset()
-        except Neo4jError as error:
-            out(f"Failed while emptying the base: {error}. Its state is unknown; run the load again.")
+            with OperationalStore(settings.operational_db) as store:
+                report_id = store.open_audit_report(origin=LOAD)
+        except sqlite3.Error as error:
+            out(f"Failed: cannot record in {settings.operational_db}: {error}. The graph database was not touched.")
             return EXIT_FAILED
-        out(f"  {constraints} uniqueness constraints")
-
-        out("Writing the reference layer in one transaction")
-        try:
-            result = repository.write_batch(batch, snapshot, layer=REFERENCE)
-        except (WriteMismatch, Neo4jError) as error:
-            out(f"Failed: {error}. The write was rolled back and the base is left empty.")
-            return EXIT_FAILED
-        out(f"  committed: {result.nodes_created} nodes, {result.relationships_created} edges")
-        nodes, edges = repository.count_elements()
-        out("  " + ", ".join(f"{label} {n}" for label, n in nodes.items()))
-        out("  " + ", ".join(f"{edge_type} {n}" for edge_type, n in edges.items()))
-
-        out("Auditing")
-        try:
-            report = audit_database(driver, settings.neo4j_database)
-        except Neo4jError as error:
-            out(f"Failed while auditing: {error}. The reference layer is written; no report was recorded.")
+        report = _write_and_audit(driver, settings.neo4j_database, batch, target, out)
+        if report is None:
+            out(f"Audit report {report_id} is left open, so the audit gate stays closed.")
             return EXIT_FAILED
 
-    with OperationalStore(settings.operational_db) as store:
-        report_id = store.record_audit_report(report, origin=LOAD)
     _print_report(report, out)
+    try:
+        with OperationalStore(settings.operational_db) as store:
+            store.complete_audit_report(report_id, report)
+    except sqlite3.Error as error:
+        out(f"Failed to complete audit report {report_id}: {error}. It is left open, so the audit gate stays closed.")
+        return EXIT_FAILED
     verdict = "clean" if report.clean else f"{report.violations} violation(s)"
     out(f"Audit report {report_id} recorded in {settings.operational_db}: {verdict}")
     return EXIT_CLEAN if report.clean else EXIT_VIOLATIONS
+
+
+def _write_and_audit(driver: Driver, database: str, batch: Batch, target: str, out: Output) -> AuditReport | None:
+    """Empty the base, write ``batch`` and audit the result; None if a step fails."""
+    repository = GraphRepository(driver, database)
+    out(f"Emptying and initializing {target}")
+    try:
+        constraints = repository.reset()
+    except (DriverError, Neo4jError) as error:
+        out(f"Failed while emptying the base: {error}. Its state is unknown; run the load again.")
+        return None
+    out(f"  {constraints} uniqueness constraints")
+
+    out("Writing the reference layer in one transaction")
+    try:
+        result = repository.write_batch(batch, Snapshot(), layer=REFERENCE)
+    except (WriteMismatch, DriverError, Neo4jError) as error:
+        out(f"Failed: {error}. The write was rolled back and the base is left empty.")
+        return None
+    out(f"  committed: {result.nodes_created} nodes, {result.relationships_created} edges")
+
+    try:
+        nodes, edges = repository.count_elements()
+        out("  " + ", ".join(f"{label} {n}" for label, n in nodes.items()))
+        out("  " + ", ".join(f"{edge_type} {n}" for edge_type, n in edges.items()))
+        out("Auditing")
+        return audit_database(driver, database)
+    except (DriverError, Neo4jError) as error:
+        out(f"Failed after the write: {error}. The reference layer is written, but not audited.")
+        return None
 
 
 def _print_report(report: AuditReport, out: Output) -> None:

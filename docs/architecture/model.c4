@@ -169,6 +169,12 @@ model {
           Reintenta de forma acotada ante errores transitorios del
           proveedor y una sola vez, informando el error, ante una salida no
           conforme (ADR-010).
+
+          Pendiente: toda clave existente que devuelva el modelo
+          debe ser, en la instantánea, de la clase que exige su lugar en la
+          salida; si no, la salida no es conforme (EX-01). Sin esa
+          comprobación, un error de clase lo frena la escritura y la corrida
+          queda fallida en lugar de rechazada.
         '''
       }
 

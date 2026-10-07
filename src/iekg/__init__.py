@@ -1,1 +1,1 @@
-"""Modulo de grafo de conocimiento del curriculo de Ingenieria Informatica."""
+"""Knowledge graph module of the Informatics Engineering curriculum."""

@@ -14,6 +14,7 @@ from neo4j import Driver, ManagedTransaction, NotificationDisabledCategory, Tran
 from iekg.core.rules import (
     ACYCLIC_EDGE_TYPES,
     ALL_RULES,
+    DERIVED_FROM_RESOURCE,
     REQUIRED_PARENT,
     RI_01,
     RI_02,
@@ -34,9 +35,7 @@ from iekg.core.rules import (
 from iekg.graph_schema import (
     ADMITTED_PAIRS,
     ALL_LABELS,
-    CONCEPT,
-    COURSE,
-    EDGE_PROPERTIES,
+    EDGE_PROPERTIES_BY_SOURCE_LAYER,
     EDGE_TYPES,
     INSTITUTIONAL,
     KEY,
@@ -54,7 +53,6 @@ from iekg.graph_schema import (
     REFERENCE,
     RESOURCE_LOCATOR,
     TOP_LEVEL_LABELS,
-    TOPIC,
     WAS_DERIVED_FROM,
 )
 
@@ -163,8 +161,8 @@ _QUERIES: Mapping[str, str] = MappingProxyType({
         RETURN {_node('n')} + ' has undeclared properties' + {_join('undeclared')} AS element
         UNION ALL
         MATCH (a)-[r]->(b)
-        WITH a, r, b, [name IN keys(r)
-                       WHERE NOT name IN coalesce($edge_properties[type(r)], [])] AS undeclared
+        WITH a, r, b, CASE WHEN a.{LAYER} IS :: STRING THEN $edge_properties[a.{LAYER}] END AS declared
+        WITH a, r, b, [name IN keys(r) WHERE NOT name IN coalesce(declared, [])] AS undeclared
         WHERE size(undeclared) > 0
         RETURN {_edge('a', 'type(r)', 'b')} + ' has undeclared properties'
                + {_join('undeclared')} AS element
@@ -187,7 +185,8 @@ _QUERIES: Mapping[str, str] = MappingProxyType({
         RETURN {_edge('a', 'type(r)', 'b')} AS element
     """,
     RM_03: f"""
-        MATCH (n) WHERE n.{LAYER} = '{INSTITUTIONAL}' AND (n:{TOPIC} OR n:{CONCEPT} OR n:{COURSE})
+        MATCH (n) WHERE n.{LAYER} = '{INSTITUTIONAL}'
+          AND any(label IN labels(n) WHERE label IN $derived_from_resource)
           AND NOT EXISTS {{ (n)-[:{WAS_DERIVED_FROM}]->(:{LEARNING_RESOURCE}) }}
         RETURN {_node('n')} + ' does not derive from any {LEARNING_RESOURCE}' AS element
         UNION ALL
@@ -217,7 +216,8 @@ _PARAMETERS = MappingProxyType({
                              for edge_type, pairs in ADMITTED_PAIRS.items()
                              for source, target in pairs),
     "node_properties": {label: list(names) for label, names in NODE_PROPERTIES.items()},
-    "edge_properties": {edge_type: list(names) for edge_type, names in EDGE_PROPERTIES.items()},
+    "edge_properties": {layer: list(names) for layer, names in EDGE_PROPERTIES_BY_SOURCE_LAYER.items()},
+    "derived_from_resource": list(DERIVED_FROM_RESOURCE),
     "locator_pattern": LOCATOR_PATTERN,
     "layers": list(LAYERS),
     "sample_size": SAMPLE_SIZE,

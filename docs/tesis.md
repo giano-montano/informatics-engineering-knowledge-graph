@@ -1252,7 +1252,7 @@ Las relaciones se evalúan aparte, en los casos CP-15 y CP-16.
 
 La referencia contra la que se compara la extracción es una anotación de los 13 sílabos. Por cada sílabo registra todos los temas y conceptos que contiene, aunque otro sílabo ya los contenga.
 
-La anotó un modelo de lenguaje (Claude, de Anthropic), un sílabo por sesión, siguiendo la guía de anotación del Anexo L y sin acceso a las salidas del pipeline. Las decisiones que la guía no resolvía se escalaron al autor, que las adjudicó.
+La anotó un modelo de lenguaje, un sílabo por sesión, siguiendo la guía de anotación del Anexo L y sin acceso a las salidas del pipeline. Las decisiones que la guía no resolvía se escalaron al autor, que las adjudicó.
 
 Cada entrada de la anotación registra:
 

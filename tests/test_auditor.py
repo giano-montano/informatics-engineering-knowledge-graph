@@ -139,8 +139,35 @@ INJECTIONS = {
         "CREATE (a:Concept:KnowledgeElement {key: $a, layer: 'institutional'}),"
         " (a)-[:SPECIALIZES {provenance: $c}]->(a)",
     ),
+    "RM-04 longer specialization cycle": (
+        "RM-04",
+        "CREATE (a:Concept:KnowledgeElement {key: $a, layer: 'institutional'}),"
+        " (b:Concept:KnowledgeElement {key: $b, layer: 'institutional'}),"
+        " (c:Concept:KnowledgeElement {key: $c, layer: 'institutional'}),"
+        " (a)-[:SPECIALIZES {provenance: $c}]->(b), (b)-[:SPECIALIZES {provenance: $c}]->(c),"
+        " (c)-[:SPECIALIZES {provenance: $c}]->(a)",
+    ),
     "RM-05 resource without locator": ("RM-05", "CREATE (:LearningResource {key: $a, layer: 'reference'})"),
 }
+
+
+def test_the_cycle_audit_names_each_node_on_a_cycle_once_and_nothing_else(tx, new_key):
+    a, b, c, d = (new_key() for _ in range(4))
+    before = audit_rule(tx, "RM-04").violations
+    # a -> b -> c -> a is a cycle, and a also has a self-loop; d hangs off it
+    # through a diamond, which is not a cycle.
+    tx.run(
+        "UNWIND $keys AS key CREATE (:Concept:KnowledgeElement {key: key, layer: 'institutional'})",
+        keys=[a, b, c, d],
+    ).consume()
+    tx.run(
+        "UNWIND $edges AS e MATCH (x:Concept {key: e[0]}), (y:Concept {key: e[1]})"
+        " CREATE (x)-[:HAS_PREREQUISITE {provenance: 'p'}]->(y)",
+        edges=[[a, b], [b, c], [c, a], [a, a], [d, a], [d, b]],
+    ).consume()
+    result = audit_rule(tx, "RM-04")
+    assert result.violations - before == 3
+    assert not any(d in element for element in result.sample)
 
 
 def test_every_rule_has_a_negative_test():

@@ -193,10 +193,19 @@ _QUERIES: Mapping[str, str] = MappingProxyType({
         MATCH (a)-[r]->(b) WHERE a.{LAYER} = '{INSTITUTIONAL}' AND r.{PROVENANCE} IS NULL
         RETURN {_edge('a', 'type(r)', 'b')} + ' has no provenance' AS element
     """,
-    # A path does not repeat edges, so the expansion ends even on a cycle.
+    # A node is on a cycle if it has a self-loop, or an edge to a node with a
+    # path back to it. One shortest path per edge keeps this polynomial: a
+    # variable-length match from every node enumerates paths, and on a dense
+    # acyclic graph of 600 concepts it took 80 s against 0.1 s.
     RM_04: "\nUNION ALL\n".join(
         f"""
-        MATCH (n) WHERE EXISTS {{ (n)-[:{edge_type}*1..]->(n) }}
+        CALL () {{
+            MATCH (n)-[:{edge_type}]->(n) RETURN n
+            UNION
+            MATCH (n)-[:{edge_type}]->(next) WHERE n <> next
+            MATCH shortestPath((next)-[:{edge_type}*1..]->(n))
+            RETURN n
+        }}
         RETURN {_node('n')} + ' is on a {edge_type} cycle' AS element
         """
         for edge_type in ACYCLIC_EDGE_TYPES

@@ -1,4 +1,4 @@
-"""Build commands: ``iekg-build load``.
+"""Build commands: ``iekg-build load`` and ``iekg-build reapply``.
 
 The load empties the graph database, initializes it and writes the reference
 layer from the backbone TTL, and closes with an audit whose report goes to the
@@ -22,11 +22,12 @@ from neo4j.exceptions import DriverError, Neo4jError
 from iekg.build_tools.projection import ProjectionError, check_tbox, project_backbone, read_turtle
 from iekg.core.auditor import AuditReport, audit_database
 from iekg.core.batch import Batch, Snapshot
-from iekg.core.repository import GraphRepository, WriteMismatch
+from iekg.core.repository import GraphRepository, SnapshotError, WriteMismatch
 from iekg.core.rules import STATEMENTS
 from iekg.core.validator import LOAD_RULES, validate
-from iekg.graph_schema import REFERENCE
-from iekg.operational_store import LOAD, OperationalStore
+from iekg.fact_store import FactStore
+from iekg.graph_schema import INSTITUTIONAL, REFERENCE
+from iekg.operational_store import LOAD, REAPPLICATION, STOPPED_BY_AUDIT, OperationalStore
 from iekg.settings import Settings, SettingsError
 
 EXIT_CLEAN = 0
@@ -35,6 +36,13 @@ EXIT_REJECTED = 2
 EXIT_FAILED = 3
 
 Output = Callable[[str], None]
+
+REAPPLY_DESCRIPTION = """Rebuild the institutional layer from the fact store, after a load (ADR-012).
+
+Writes the batch of every run that has a fact file, in the order of the runs,
+with the same layer and provenance and without validating, and skips the runs
+stopped by the audit. Closes with one audit. Same exit codes as the load.
+"""
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -49,13 +57,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.parse_args(argv)
+    commands.add_parser(
+        "reapply",
+        help="rebuild the institutional layer from the fact store, after a load",
+        description=REAPPLY_DESCRIPTION,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    command = parser.parse_args(argv).command
     try:
         settings = Settings.from_environment()
     except SettingsError as error:
         print(f"error: {error}", file=sys.stderr)
         return EXIT_FAILED
-    return load(settings)
+    return load(settings) if command == "load" else reapply(settings)
 
 
 def load(settings: Settings, out: Output = print) -> int:
@@ -146,6 +160,83 @@ def _write_and_audit(driver: Driver, database: str, batch: Batch, target: str, o
     except (DriverError, Neo4jError) as error:
         out(f"Failed after the write: {error}. The reference layer is written, but not audited.")
         return None
+
+
+def reapply(settings: Settings, out: Output = print) -> int:
+    facts = FactStore(settings.facts_dir)
+    try:
+        with OperationalStore(settings.operational_db) as store:
+            runs = {run.id: run for run in store.list_runs()}
+    except sqlite3.Error as error:
+        out(f"Failed: cannot read {settings.operational_db}: {error}. The graph database was not touched.")
+        return EXIT_FAILED
+    plan = []
+    for run_id in facts.run_ids():
+        run = runs.get(run_id)
+        if run is None:
+            # Without its run, nothing says whether the audit stopped it.
+            out(f"Rejected: {facts.path_of(run_id)} belongs to no run in {settings.operational_db}."
+                " The graph database was not touched.")
+            return EXIT_REJECTED
+        if run.status == STOPPED_BY_AUDIT:
+            out(f"Skipping run {run_id}: stopped by the audit")
+            continue
+        plan.append(run_id)
+    if not plan:
+        out(f"No facts to reapply in {settings.facts_dir}. The graph database was not touched.")
+        return EXIT_CLEAN
+
+    target = f"{settings.neo4j_uri}, database {settings.neo4j_database}"
+    with GraphDatabase.driver(settings.neo4j_uri, auth=(settings.neo4j_user, settings.neo4j_password)) as driver:
+        repository = GraphRepository(driver, settings.neo4j_database)
+        try:
+            driver.verify_connectivity()
+            institutional = sum(1 for node in repository.read_snapshot().nodes.values() if node.layer == INSTITUTIONAL)
+        except (DriverError, Neo4jError, SnapshotError) as error:
+            out(f"Failed: cannot read {target}: {error}. The graph database was not touched.")
+            return EXIT_FAILED
+        if institutional:
+            out(f"Rejected: {target} already holds {institutional} institutional node(s); reapply right after"
+                " a load. The graph database was not touched.")
+            return EXIT_REJECTED
+        try:
+            with OperationalStore(settings.operational_db) as store:
+                report_id = store.open_audit_report(origin=REAPPLICATION)
+        except sqlite3.Error as error:
+            out(f"Failed: cannot record in {settings.operational_db}: {error}. The graph database was not touched.")
+            return EXIT_FAILED
+        try:
+            reapply_runs(repository, facts, plan, out)
+            out("Auditing")
+            report = audit_database(driver, settings.neo4j_database)
+        except (WriteMismatch, DriverError, Neo4jError, SnapshotError, ValueError, OSError) as error:
+            out(f"Failed: {error}. Earlier runs stay written; audit report {report_id} is left open,"
+                " so the audit gate stays closed. Load and reapply again.")
+            return EXIT_FAILED
+
+    _print_report(report, out)
+    try:
+        with OperationalStore(settings.operational_db) as store:
+            store.complete_audit_report(report_id, report)
+    except sqlite3.Error as error:
+        out(f"Failed to complete audit report {report_id}: {error}. It is left open, so the audit gate stays closed.")
+        return EXIT_FAILED
+    verdict = "clean" if report.clean else f"{report.violations} violation(s)"
+    out(f"Audit report {report_id} recorded in {settings.operational_db}: {verdict}")
+    return EXIT_CLEAN if report.clean else EXIT_VIOLATIONS
+
+
+def reapply_runs(repository, facts: FactStore, run_ids: Sequence[int], out: Output) -> None:
+    """Write each run's batch on the snapshot it finds, as the ingestion did (ADR-012).
+
+    ``repository`` reads snapshots and writes batches; on the same graph state
+    the write derives the same provenance edges, so its counters match.
+    """
+    for run_id in run_ids:
+        stored = facts.load(run_id)
+        snapshot = repository.read_snapshot()
+        result = repository.write_batch(stored.batch, snapshot, layer=stored.layer, provenance=stored.provenance)
+        out(f"Run {run_id}: {result.nodes_created} nodes, {result.relationships_created} edges")
 
 
 def _print_report(report: AuditReport, out: Output) -> None:

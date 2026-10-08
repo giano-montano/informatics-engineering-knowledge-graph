@@ -8,9 +8,11 @@ y, más adelante, el contenido extraído de los sílabos de la carrera.
 
 | Funciona | Todavía no existe |
 |---|---|
-| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | Ingesta de sílabos con modelo de lenguaje |
-| Auditoría de integridad del grafo (15 reglas) al cerrar la carga | API, worker y aplicación web |
-| Registro de cada reporte de auditoría en SQLite | Reaplicación de hechos guardados |
+| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | API y aplicación web |
+| Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | Imagen de Docker del sistema |
+| Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | |
+| Reaplicación de los hechos guardados después de una carga | |
+| Registro de corridas, descartes y reportes de auditoría en SQLite | |
 
 ## Requisitos
 
@@ -110,6 +112,53 @@ uv run python -c "import sqlite3; print(sqlite3.connect('var/operational.sqlite'
 Un reporte con `violations` en `None` quedó abierto: la carga tocó la base y
 no terminó. Mientras sea el último, la compuerta de auditoría sigue cerrada.
 
+## Ingestar un sílabo (desarrollo)
+
+Mientras no exista la API, un script hace lo mismo que hará ella: registra la
+corrida como pendiente, guarda el PDF en `var/documents/` y lanza el worker.
+
+```powershell
+uv run python scripts/submit_document.py RUTA\AL\SILABO.pdf --course 1INF33 --name "Bases de Datos"
+```
+
+Hace falta configurar antes el proveedor del modelo de lenguaje en `.env`
+(ver `.env.example`) y que la última auditoría esté limpia: el worker no toma
+corridas si el último reporte tiene violaciones o quedó abierto. Con
+`--no-worker` solo registra la corrida; `uv run iekg-worker` procesa después
+las pendientes.
+
+Cada corrida termina en uno de estos estados:
+
+| Estado | Qué pasó | Qué queda |
+|---|---|---|
+| `completed` | Escrita y auditada sin violaciones | Archivo de hechos en `var/facts/` |
+| `rejected` | Salida no conforme (EX-01 a EX-03) o lote con violaciones | Descartes y lote o salida cruda, en SQLite |
+| `failed` | Falló el proveedor o la escritura, que se revirtió | El error, en SQLite |
+| `stopped_by_audit` | Escrita, pero la auditoría encontró violaciones: la compuerta se cierra | Archivo de hechos y reporte |
+| `written_not_persisted` | Escrita, sin archivo de hechos o sin auditar | El error, en SQLite |
+
+Para ver las corridas:
+
+```powershell
+uv run python -c "import sqlite3; print(*sqlite3.connect('var/operational.sqlite').execute('SELECT id, status, course_code, model, content_retries, error FROM runs ORDER BY id').fetchall(), sep=chr(10))"
+```
+
+La ingesta escribe en la base de desarrollo. `uv run iekg-build load` la deja
+otra vez solo con el backbone; `var/` no se toca.
+
+## Reaplicar los hechos
+
+```powershell
+uv run iekg-build load      # vacía la base y carga el backbone
+uv run iekg-build reapply   # reescribe la capa institucional desde var/facts/
+```
+
+La reaplicación repite, en el orden de las corridas, el lote de cada corrida
+que tiene archivo de hechos, sin volver a llamar al modelo de lenguaje. Salta
+las corridas detenidas por la auditoría y cierra con una sola auditoría. Se
+rechaza si la base ya tiene nodos institucionales: va justo después de una
+carga. Los códigos de salida son los de la carga.
+
 ## Pruebas
 
 ```powershell
@@ -119,7 +168,11 @@ uv run pytest tests/ -q -m "not neo4j"   # solo las que no necesitan Neo4j
 
 Las pruebas marcadas `neo4j` se saltan si la base no responde. Escriben solo
 dentro de transacciones que se revierten, así que no alteran lo cargado.
-Ninguna prueba ejecuta la carga.
+Ninguna prueba ejecuta la carga ni llama al proveedor del modelo de lenguaje.
+
+La primera ingesta descarga los modelos de Docling (unos minutos). En Windows
+sin compilador de C++, Docling necesita `TORCHDYNAMO_DISABLE=1`; el extractor
+la fija por su cuenta.
 
 ## Configuración
 
@@ -133,7 +186,17 @@ Todo se lee del entorno o de `.env`.
 | `NEO4J_DATABASE` | `neo4j` | Base de datos |
 | `IEKG_TBOX` | `ontology/ontologia_informatica.ttl` | Ontología (esquema) |
 | `IEKG_BACKBONE` | `ontology/backbone_cs2023.ttl` | Backbone CS2023 |
-| `IEKG_OPERATIONAL_DB` | `var/operational.sqlite` | Reportes de auditoría |
+| `IEKG_OPERATIONAL_DB` | `var/operational.sqlite` | Corridas, descartes y reportes de auditoría |
+| `IEKG_FACTS_DIR` | `var/facts` | Un archivo de hechos por corrida escrita |
+| `IEKG_DOCUMENTS_DIR` | `var/documents` | Los PDF subidos, nombrados con su clave |
+| `IEKG_PUBLIC_BASE_URL` | `http://localhost:8000` | Base del localizador de cada documento subido |
+| `IEKG_LLM_MODEL` | — (obligatoria para ingestar) | Modelo, tal como lo nombra el proveedor |
+| `IEKG_LLM_API_KEY` | — (obligatoria para ingestar) | Clave del proveedor |
+| `IEKG_LLM_BASE_URL` | la de OpenAI | Cualquier servidor con la API Chat Completions |
+| `IEKG_LLM_REASONING_EFFORT` | — | Esfuerzo de razonamiento, si el modelo lo admite |
+| `IEKG_LLM_TEMPERATURE` | — | Temperatura, si el modelo la admite |
+| `IEKG_LLM_MAX_RETRIES` | `3` | Reintentos ante errores transitorios del proveedor |
+| `IEKG_LLM_TIMEOUT_SECONDS` | `900` | Tiempo máximo por llamada |
 
 Las rutas relativas se resuelven desde el directorio actual: corre los
 comandos desde la raíz del repositorio.
@@ -150,7 +213,8 @@ npm run arch:validate     # comprueba el modelo
 
 ```
 ontology/            Ontología (esquema) y backbone CS2023, en Turtle
-src/iekg/            Código: esquema del grafo, núcleo, carga, SQLite
+src/iekg/            Código: esquema del grafo, núcleo, carga, ingesta, SQLite
+scripts/             Ayudas de desarrollo (no son puntos de entrada del sistema)
 tests/               Pruebas
 docs/                Tesis, decisiones de arquitectura (ADR) y modelo C4
 docker-compose.yml   Neo4j para desarrollo

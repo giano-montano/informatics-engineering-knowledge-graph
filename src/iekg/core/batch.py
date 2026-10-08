@@ -50,8 +50,15 @@ class Batch:
 
 @dataclass(frozen=True)
 class SnapshotNode:
+    """A node as the graph has it. The validator and the writer read only
+    ``label`` and ``layer``; the labels and the area are for the extractor."""
+
     label: str
     layer: str
+    pref_label_es: str | None = None
+    pref_label_en: str | None = None
+    # The key of the knowledge area a knowledge unit is part of.
+    area: str | None = None
 
 
 @dataclass(frozen=True)
@@ -59,7 +66,9 @@ class Snapshot:
     """The graph as a run reads it before writing (ADR-011).
 
     Holds what the validator and the writer need: every node with its class and
-    layer, and the edges that must not form cycles. A load starts from an empty
+    layer, and the edges that must not form cycles. For the extractor it also
+    holds the labels of every node, the area of every knowledge unit and the
+    partonomy edges of topics and concepts. A load starts from an empty
     snapshot, because it starts from an empty base.
     """
 
@@ -73,3 +82,18 @@ def label_of(key: str, batch: Batch, snapshot: Snapshot) -> str | None:
         return snapshot.nodes[key].label
     node = batch.nodes_by_key.get(key)
     return node.label if node else None
+
+
+def batch_to_data(batch: Batch) -> dict:
+    """The batch as plain data, for the fact store and the discards."""
+    return {
+        "nodes": [{"key": n.key, "label": n.label, "properties": dict(n.properties)} for n in batch.nodes],
+        "edges": [{"type": e.type, "source": e.source, "target": e.target} for e in batch.edges],
+    }
+
+
+def batch_from_data(data: Mapping) -> Batch:
+    return Batch(
+        nodes=tuple(NodeFact(n["key"], n["label"], dict(n["properties"])) for n in data["nodes"]),
+        edges=tuple(EdgeFact(e["type"], e["source"], e["target"]) for e in data["edges"]),
+    )

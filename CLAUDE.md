@@ -95,19 +95,23 @@ src/iekg/graph_schema.py       Esquema del grafo: la declaración única (ADR-00
 src/iekg/core/                 Núcleo (#nucleo del C4): validador, repositorio,
                                auditor, lote e instantánea, códigos de regla.
 src/iekg/build_tools/          Procesos de construcción: proyección TTL → lote
-                               y el comando `iekg-build load`.
-src/iekg/operational_store.py  Almacén operacional (SQLite): por ahora, solo
-                               los reportes de auditoría.
+                               y los comandos `iekg-build load` y `reapply`.
+src/iekg/ingestion/            Ingesta (#worker del C4): envío, orquestador,
+                               extractor (Docling + PydanticAI), hechos
+                               declarados y el punto de entrada `iekg-worker`.
+src/iekg/operational_store.py  Almacén operacional (SQLite): corridas,
+                               descartes y reportes de auditoría.
+src/iekg/fact_store.py         Almacén de hechos: un archivo por corrida escrita.
 src/iekg/settings.py           Configuración desde el entorno y `.env`.
+scripts/submit_document.py     Ayuda de desarrollo: envía un PDF y corre el
+                               worker, como hará la API. No es punto de entrada.
 tests/                         Pruebas; una negativa por cada forma de violar
-                               cada regla.
+                               cada regla o código EX.
 var/                           Almacenes locales del sistema. Ignorado por git.
 ```
 
-Lo que **no** hay, y es deliberado: API, worker, extractor, capa de LLM,
-ingesta, reaplicación, lectura de la instantánea desde la base, tablas de
-corridas y descartes, imagen de Docker propia. Nada de eso es un olvido: llega
-con la ingesta.
+Lo que **no** hay todavía: la API (su diseño está pendiente) y la imagen de
+Docker propia.
 
 ## 7. Comandos
 
@@ -117,6 +121,9 @@ uv sync
 uv run pytest tests/ -q                  # las marcadas neo4j se saltan si la base no responde
 uv run pytest tests/ -q -m "not neo4j"   # solo las que no necesitan Neo4j
 uv run iekg-build load                   # vacía la base y carga el backbone
+uv run python scripts/submit_document.py SILABO.pdf --course 1INF33 --name "Bases de Datos"
+uv run iekg-worker                       # procesa las corridas pendientes
+uv run iekg-build reapply                # tras una carga, reescribe la capa institucional
 start http://localhost:7474
 
 npm install               # una vez: LikeC4 fijado en package.json
@@ -160,7 +167,8 @@ están bien guardados y el Browser los muestra correctamente.
 
 Cuatro grupos de documentos no son documentación interna del repositorio:
 `docs/tesis.md`, el anexo de transición al grafo de propiedades,
-`docs/decisiones/` y `docs/architecture/`. Salen del razonamiento de la tesis y
+`docs/decisiones/` (solo materialziados en la tabla resumen de la sección de "Arquitectura del módulo...") 
+y `docs/architecture/`. Salen del razonamiento de la tesis y
 se plasman como entregables o anexos en los documentos oficiales, que viven
 fuera del repositorio (Google Docs). Cambiar uno de ellos obliga a replicar el
 cambio allá y a mantener alineados todos los que dicen lo mismo. 

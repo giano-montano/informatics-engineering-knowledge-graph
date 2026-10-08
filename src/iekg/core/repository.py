@@ -1,4 +1,5 @@
-"""Graph repository: empties and initializes the base, and writes batches.
+"""Graph repository: empties and initializes the base, reads the snapshot and
+writes batches.
 
 Every write is a fixed-form template built from the graph schema that only
 receives values (ADR-003, ADR-005). The form of the write is what prevents
@@ -11,24 +12,31 @@ from collections import Counter, defaultdict
 from collections.abc import Mapping
 from dataclasses import dataclass
 
-from neo4j import Driver, ManagedTransaction, Transaction
+from neo4j import Driver, ManagedTransaction, NotificationDisabledCategory, Transaction
 
-from iekg.core.batch import Batch, EdgeFact, Snapshot, label_of
-from iekg.core.rules import DERIVED_FROM_RESOURCE
+from iekg.core.batch import Batch, EdgeFact, Snapshot, SnapshotNode, label_of
+from iekg.core.rules import ACYCLIC_EDGE_TYPES, DERIVED_FROM_RESOURCE
 from iekg.graph_schema import (
     ADMITTED_PAIRS,
     ALL_LABELS,
+    CONCEPT,
     EDGE_TYPES,
     INSTITUTIONAL,
     KEY,
+    KNOWLEDGE_AREA,
     KNOWLEDGE_ELEMENT,
     KNOWLEDGE_ELEMENT_SUBCLASSES,
+    KNOWLEDGE_UNIT,
     LAYER,
     LAYERS,
     LEARNING_RESOURCE,
     NODE_CLASSES,
     NODE_PROPERTIES,
+    PART_OF,
+    PREF_LABEL_EN,
+    PREF_LABEL_ES,
     PROVENANCE,
+    TOPIC,
     WAS_DERIVED_FROM,
 )
 
@@ -37,6 +45,14 @@ Tx = Transaction | ManagedTransaction
 
 class WriteMismatch(Exception):
     """A write did not produce what was expected; its transaction is rolled back."""
+
+
+class SnapshotError(Exception):
+    """The graph holds something the snapshot cannot represent.
+
+    The audit gate only lets a run start on a clean graph, so this means the
+    graph changed outside the write paths.
+    """
 
 
 @dataclass(frozen=True)
@@ -194,6 +210,41 @@ def write_batch_in(
     )
 
 
+_SNAPSHOT_NODES = f"""
+    MATCH (n)
+    RETURN n.{KEY} AS key, [label IN labels(n) WHERE label IN $classes] AS classes,
+           n.{LAYER} AS layer, n.{PREF_LABEL_ES} AS es, n.{PREF_LABEL_EN} AS en,
+           COLLECT {{ MATCH (n:{KNOWLEDGE_UNIT})-[:{PART_OF}]->(a:{KNOWLEDGE_AREA}) RETURN a.{KEY} }} AS areas
+"""
+
+# The acyclic edges are for the validator; where existing topics and concepts
+# hang is for the extractor.
+_SNAPSHOT_EDGES = f"""
+    MATCH (a)-[r]->(b) WHERE type(r) IN $acyclic
+    RETURN type(r) AS type, a.{KEY} AS source, b.{KEY} AS target
+    UNION ALL
+    MATCH (a:{TOPIC}|{CONCEPT})-[r:{PART_OF}]->(b)
+    RETURN type(r) AS type, a.{KEY} AS source, b.{KEY} AS target
+"""
+
+
+def read_snapshot_in(tx: Tx) -> Snapshot:
+    """Read the snapshot a run starts from (ADR-011)."""
+    nodes: dict[str, SnapshotNode] = {}
+    for row in tx.run(_SNAPSHOT_NODES, classes=list(NODE_CLASSES)):
+        key, classes, layer, areas = row["key"], row["classes"], row["layer"], row["areas"]
+        if not isinstance(key, str):
+            raise SnapshotError(f"a node has key {key!r}")
+        if len(classes) != 1 or layer not in LAYERS or len(areas) > 1:
+            raise SnapshotError(f"{key}: classes {classes}, layer {layer!r}, areas {areas}")
+        nodes[key] = SnapshotNode(classes[0], layer, row["es"], row["en"], areas[0] if areas else None)
+    edges = tuple(
+        EdgeFact(row["type"], row["source"], row["target"])
+        for row in tx.run(_SNAPSHOT_EDGES, acyclic=list(ACYCLIC_EDGE_TYPES))
+    )
+    return Snapshot(nodes=nodes, edges=edges)
+
+
 class GraphRepository:
     def __init__(self, driver: Driver, database: str) -> None:
         self._driver = driver
@@ -220,6 +271,15 @@ class GraphRepository:
                     f"FOR (n:{label}) REQUIRE n.{KEY} IS UNIQUE"
                 ).consume()
         return len(ALL_LABELS)
+
+    def read_snapshot(self) -> Snapshot:
+        """Read the snapshot in one read transaction, so it is one state."""
+        # An empty base does not know the labels and properties yet.
+        with self._driver.session(
+            database=self._database,
+            notifications_disabled_categories=[NotificationDisabledCategory.UNRECOGNIZED],
+        ) as session:
+            return session.execute_read(read_snapshot_in)
 
     def write_batch(
         self,

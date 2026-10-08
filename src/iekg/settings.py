@@ -24,6 +24,11 @@ class Settings:
     tbox_path: Path
     backbone_path: Path
     operational_db: Path
+    facts_dir: Path
+    documents_dir: Path
+    # The base of the locators of uploaded documents (ADR-009). It is written
+    # into the graph and the fact store, so it must be the one students reach.
+    public_base_url: str
 
     @classmethod
     def from_environment(cls) -> "Settings":
@@ -40,4 +45,40 @@ class Settings:
             tbox_path=Path(os.environ.get("IEKG_TBOX", "ontology/ontologia_informatica.ttl")),
             backbone_path=Path(os.environ.get("IEKG_BACKBONE", "ontology/backbone_cs2023.ttl")),
             operational_db=Path(os.environ.get("IEKG_OPERATIONAL_DB", "var/operational.sqlite")),
+            facts_dir=Path(os.environ.get("IEKG_FACTS_DIR", "var/facts")),
+            documents_dir=Path(os.environ.get("IEKG_DOCUMENTS_DIR", "var/documents")),
+            public_base_url=os.environ.get("IEKG_PUBLIC_BASE_URL", "http://localhost:8000"),
+        )
+
+
+@dataclass(frozen=True)
+class ProviderSettings:
+    """The language model provider: any server with the OpenAI Chat Completions API.
+
+    Read only by the worker, so the build processes run without it.
+    """
+
+    model: str
+    api_key: str
+    base_url: str | None
+    reasoning_effort: str | None
+    temperature: float | None
+    max_retries: int
+    timeout_seconds: float
+
+    @classmethod
+    def from_environment(cls) -> "ProviderSettings":
+        load_dotenv(find_dotenv(usecwd=True))
+        missing = [name for name in ("IEKG_LLM_MODEL", "IEKG_LLM_API_KEY") if not os.environ.get(name)]
+        if missing:
+            raise SettingsError(f"{', '.join(missing)} not set; see .env.example")
+        temperature = os.environ.get("IEKG_LLM_TEMPERATURE")
+        return cls(
+            model=os.environ["IEKG_LLM_MODEL"],
+            api_key=os.environ["IEKG_LLM_API_KEY"],
+            base_url=os.environ.get("IEKG_LLM_BASE_URL") or None,
+            reasoning_effort=os.environ.get("IEKG_LLM_REASONING_EFFORT") or None,
+            temperature=float(temperature) if temperature else None,
+            max_retries=int(os.environ.get("IEKG_LLM_MAX_RETRIES", "3")),
+            timeout_seconds=float(os.environ.get("IEKG_LLM_TIMEOUT_SECONDS", "900")),
         )

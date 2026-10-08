@@ -27,6 +27,9 @@ UNREACHABLE = Settings(
     tbox_path=TBOX,
     backbone_path=BACKBONE,
     operational_db=Path("unused.sqlite"),
+    facts_dir=Path("unused-facts"),
+    documents_dir=Path("unused-documents"),
+    public_base_url="http://localhost:8000",
 )
 
 

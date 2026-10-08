@@ -4,12 +4,11 @@ version = "0.1.0"
 description = "Grafo de conocimiento del curriculo de Ingenieria Informatica: proyeccion ontologia->LPG y pipeline de ingesta"
 requires-python = ">=3.11"
 
-# Solo lo que hace falta para el nucleo: leer la ontologia y hablar con
-# Neo4j. El esquema del grafo es un modulo de Python (ADR-008), asi que no
-# hace falta leer ningun archivo de especificacion. Las dependencias de la capa
-# de ingestion -salida estructurada del LLM, lectura de PDF- entran cuando se
-# llegue a esa capa, no antes: una dependencia declarada y no usada es una
-# decision tomada por inercia.
+# Lo que hace falta para el nucleo -leer la ontologia y hablar con Neo4j- y
+# para la ingesta. El esquema del grafo es un modulo de Python (ADR-008), asi
+# que no hace falta leer ningun archivo de especificacion. Las dependencias de
+# la ingesta entraron con ella, no antes: una dependencia declarada y no usada
+# es una decision tomada por inercia.
 dependencies = [
     # Driver oficial. Se pinea la linea 5.28 LTS, no la 6.x, para que
     # acompanhe al servidor 5.26 LTS: mismo criterio de estabilidad que
@@ -20,6 +19,11 @@ dependencies = [
     "rdflib>=7.1",
     # Lectura de .env (credenciales de Neo4j fuera del codigo).
     "python-dotenv>=1.0",
+    # Salida tipada del modelo de lenguaje, con el cliente de OpenAI: sirve
+    # cualquier proveedor con la API Chat Completions (ADR-003, ADR-010).
+    "pydantic-ai-slim[openai]>=2.54,<3",
+    # Lectura de los PDF subidos (ADR-009).
+    "docling>=2.135,<3",
 ]
 
 [dependency-groups]
@@ -30,6 +34,8 @@ dev = [
 [project.scripts]
 # Punto de entrada de los procesos de construccion (ADR-007).
 iekg-build = "iekg.build_tools.commands:main"
+# El worker de ingesta, que la API lanza como proceso hijo (ADR-007).
+iekg-worker = "iekg.ingestion.worker:main"
 
 [build-system]
 requires = ["hatchling"]

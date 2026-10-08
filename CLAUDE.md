@@ -165,8 +165,8 @@ están bien guardados y el Browser los muestra correctamente.
 
 ### Documentos que son entregables
 
-Cuatro grupos de documentos no son documentación interna del repositorio:
-`docs/tesis.md`, el anexo de transición al grafo de propiedades,
+Cinco grupos de documentos no son documentación interna del repositorio:
+`docs/tesis.md`, `anexo-guía-de-anotación-de-referencia`, el anexo de transición al grafo de propiedades,
 `docs/decisiones/` (solo materialziados en la tabla resumen de la sección de "Arquitectura del módulo...") 
 y `docs/architecture/`. Salen del razonamiento de la tesis y
 se plasman como entregables o anexos en los documentos oficiales, que viven

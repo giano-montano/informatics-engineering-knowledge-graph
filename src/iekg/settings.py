@@ -82,3 +82,25 @@ class ProviderSettings:
             max_retries=int(os.environ.get("IEKG_LLM_MAX_RETRIES", "3")),
             timeout_seconds=float(os.environ.get("IEKG_LLM_TIMEOUT_SECONDS", "900")),
         )
+
+
+@dataclass(frozen=True)
+class ApiSettings:
+    """What only the API reads: the operator token (ADR-013) and where it listens."""
+
+    operator_token: str
+    host: str
+    port: int
+
+    @classmethod
+    def from_environment(cls) -> "ApiSettings":
+        load_dotenv(find_dotenv(usecwd=True))
+        token = os.environ.get("IEKG_OPERATOR_TOKEN", "").strip()
+        if not token:
+            # Without it the operation routes would be open to anyone (ADR-013).
+            raise SettingsError("IEKG_OPERATOR_TOKEN is not set; see .env.example")
+        return cls(
+            operator_token=token,
+            host=os.environ.get("IEKG_API_HOST", "127.0.0.1"),
+            port=int(os.environ.get("IEKG_API_PORT", "8000")),
+        )

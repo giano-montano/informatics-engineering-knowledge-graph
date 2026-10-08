@@ -8,11 +8,12 @@ y, más adelante, el contenido extraído de los sílabos de la carrera.
 
 | Funciona | Todavía no existe |
 |---|---|
-| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | API y aplicación web |
-| Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | Imagen de Docker del sistema |
-| Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | |
+| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | Rutas de navegación de la API |
+| Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | Aplicación web |
+| Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | Imagen de Docker del sistema |
 | Reaplicación de los hechos guardados después de una carga | |
 | Registro de corridas, descartes y reportes de auditoría en SQLite | |
+| API de operación (subir, corridas, descartes, auditoría) y entrega de documentos | |
 
 ## Requisitos
 
@@ -112,10 +113,61 @@ uv run python -c "import sqlite3; print(sqlite3.connect('var/operational.sqlite'
 Un reporte con `violations` en `None` quedó abierto: la carga tocó la base y
 no terminó. Mientras sea el último, la compuerta de auditoría sigue cerrada.
 
-## Ingestar un sílabo (desarrollo)
+## La API
 
-Mientras no exista la API, un script hace lo mismo que hará ella: registra la
-corrida como pendiente, guarda el PDF en `var/documents/` y lanza el worker.
+```powershell
+uv run iekg-api             # http://localhost:8000, un solo proceso
+```
+
+Necesita `IEKG_OPERATOR_TOKEN` en `.env` (ver `.env.example`): sin él no
+arranca. La documentación de cada ruta y del esquema de sus respuestas, con
+ejemplos, la genera la propia API en <http://localhost:8000/docs> (OpenAPI en
+`/openapi.json`).
+
+| Ruta | Token | Qué hace |
+|---|---|---|
+| `POST /api/runs` | sí | Sube un PDF: registra la corrida como pendiente y lanza el worker si no hay uno activo. 202 con el id |
+| `GET /api/runs` | sí | Lista las corridas |
+| `GET /api/runs/{id}` | sí | Una corrida completa, con el reporte de auditoría que la cerró |
+| `GET /api/runs/{id}/discards` | sí | Descartes de una corrida rechazada, con su lote o su salida cruda |
+| `GET /api/audit-reports/latest` | sí | Último reporte de auditoría y estado de la compuerta |
+| `GET /resources/{clave}` | no | El PDF de un recurso, solo si el grafo lo tiene |
+
+Ejemplos, con el token de `.env` (en PowerShell, `curl.exe`; en Linux, `curl`):
+
+```powershell
+$H = "Authorization: Bearer $env:IEKG_OPERATOR_TOKEN"
+
+# Subir un sílabo
+curl.exe -H $H -F "file=@SILABO.pdf" -F "resource_type=Sílabo" -F "course_code=1INF33" -F "course_name=Bases de Datos" http://localhost:8000/api/runs
+# {"run_id":2,"worker_launched":true}
+
+# Seguir la corrida y ver sus descartes
+curl.exe -H $H http://localhost:8000/api/runs/2
+curl.exe -H $H http://localhost:8000/api/runs/2/discards
+
+# ¿Está abierta la compuerta?
+curl.exe -H $H http://localhost:8000/api/audit-reports/latest
+# {"gate":{"state":"open","reason":null},"report":{...}}
+
+# El documento, en la dirección de su localizador (pública)
+curl.exe -O http://localhost:8000/resources/fadc83a6-a59e-47c9-a82d-8471fecb6178
+```
+
+Sin token, o con otro, las rutas de `/api` responden 401. Un archivo que no
+es PDF (por extensión o por contenido), un tipo de recurso desconocido o un
+sílabo sin código o nombre de curso responden 422 y no registran nada.
+
+`/resources/{clave}` responde 404 mientras el grafo no tenga el recurso: antes
+de que la corrida escriba, y después de una carga hasta reaplicar.
+
+El worker corre como proceso hijo de la API y su salida aparece en la consola
+de la API. Detener la API lo interrumpe (ADR-007).
+
+## Ingestar un sílabo
+
+Por la API (arriba), o sin ella con un script de desarrollo que llama a la
+misma función de registro y corre el worker en su propio proceso:
 
 ```powershell
 uv run python scripts/submit_document.py RUTA\AL\SILABO.pdf --course 1INF33 --name "Bases de Datos"
@@ -137,7 +189,7 @@ Cada corrida termina en uno de estos estados:
 | `stopped_by_audit` | Escrita, pero la auditoría encontró violaciones: la compuerta se cierra | Archivo de hechos y reporte |
 | `written_not_persisted` | Escrita, sin archivo de hechos o sin auditar | El error, en SQLite |
 
-Para ver las corridas:
+Para ver las corridas sin la API:
 
 ```powershell
 uv run python -c "import sqlite3; print(*sqlite3.connect('var/operational.sqlite').execute('SELECT id, status, course_code, model, content_retries, error FROM runs ORDER BY id').fetchall(), sep=chr(10))"
@@ -168,7 +220,8 @@ uv run pytest tests/ -q -m "not neo4j"   # solo las que no necesitan Neo4j
 
 Las pruebas marcadas `neo4j` se saltan si la base no responde. Escriben solo
 dentro de transacciones que se revierten, así que no alteran lo cargado.
-Ninguna prueba ejecuta la carga ni llama al proveedor del modelo de lenguaje.
+Ninguna prueba ejecuta la carga, llama al proveedor del modelo de lenguaje ni
+lanza el worker.
 
 La primera ingesta descarga los modelos de Docling (unos minutos). En Windows
 sin compilador de C++, Docling necesita `TORCHDYNAMO_DISABLE=1`; el extractor
@@ -190,6 +243,9 @@ Todo se lee del entorno o de `.env`.
 | `IEKG_FACTS_DIR` | `var/facts` | Un archivo de hechos por corrida escrita |
 | `IEKG_DOCUMENTS_DIR` | `var/documents` | Los PDF subidos, nombrados con su clave |
 | `IEKG_PUBLIC_BASE_URL` | `http://localhost:8000` | Base del localizador de cada documento subido |
+| `IEKG_OPERATOR_TOKEN` | — (obligatoria para la API) | Token de las rutas de operación |
+| `IEKG_API_HOST` | `127.0.0.1` | Dirección en la que escucha la API |
+| `IEKG_API_PORT` | `8000` | Puerto de la API |
 | `IEKG_LLM_MODEL` | — (obligatoria para ingestar) | Modelo, tal como lo nombra el proveedor |
 | `IEKG_LLM_API_KEY` | — (obligatoria para ingestar) | Clave del proveedor |
 | `IEKG_LLM_BASE_URL` | la de OpenAI | Cualquier servidor con la API Chat Completions |
@@ -224,7 +280,7 @@ npm run arch:validate     # comprueba el modelo
 
 ```
 ontology/            Ontología (esquema) y backbone CS2023, en Turtle
-src/iekg/            Código: esquema del grafo, núcleo, carga, ingesta, SQLite
+src/iekg/            Código: esquema del grafo, núcleo, carga, ingesta, API, SQLite
 scripts/             Ayudas de desarrollo (no son puntos de entrada del sistema)
 tests/               Pruebas
 docs/                Tesis, decisiones de arquitectura (ADR) y modelo C4

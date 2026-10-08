@@ -22,7 +22,7 @@ from iekg.fact_store import FactStore, StoredFacts
 from iekg.graph_schema import INSTITUTIONAL
 from iekg.ingestion.declared import Declaration, assemble_batch
 from iekg.ingestion.extraction import Extractor, NonConformingOutput, ProviderFailure
-from iekg.operational_store import INGESTION, Discard, OperationalStore, Run
+from iekg.operational_store import INGESTION, Discard, OperationalStore, Run, StoredAuditReport
 
 Output = Callable[[str], None]
 
@@ -57,6 +57,21 @@ def document_path(documents: Path, resource_key: str) -> Path:
     return documents / f"{resource_key}.pdf"
 
 
+# Why the audit gate is closed (ADR-007). The API reports the same reasons.
+NO_REPORT = "no report recorded"
+REPORT_OPEN = "latest report still open"
+REPORT_WITH_VIOLATIONS = "latest report with violations"
+
+
+def gate_closed_by(latest: StoredAuditReport | None) -> str | None:
+    """Why the gate is closed given the latest report; None if it is open."""
+    if latest is None:
+        return NO_REPORT
+    if latest.report is None:
+        return REPORT_OPEN
+    return None if latest.clean else REPORT_WITH_VIOLATIONS
+
+
 @dataclass
 class Orchestrator:
     store: OperationalStore
@@ -70,10 +85,9 @@ class Orchestrator:
     def run_pending(self) -> None:
         """Process pending runs while the audit gate is open and there are any."""
         while True:
-            latest = self.store.latest_audit_report()
-            if latest is None or not latest.clean:
-                state = "none recorded" if latest is None else ("open" if latest.report is None else "with violations")
-                self.out(f"Audit gate closed (latest report: {state}). Pending runs stay pending.")
+            reason = gate_closed_by(self.store.latest_audit_report())
+            if reason is not None:
+                self.out(f"Audit gate closed ({reason}). Pending runs stay pending.")
                 return
             run = self.store.take_pending_run()
             if run is None:

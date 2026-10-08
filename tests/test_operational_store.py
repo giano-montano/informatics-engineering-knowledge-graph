@@ -59,6 +59,17 @@ def test_a_clean_report_completed_after_an_open_one_is_clean(tmp_path):
         assert store.latest_audit_report().clean
 
 
+def test_any_report_reads_back_by_its_id(tmp_path):
+    with OperationalStore(tmp_path / "operational.sqlite") as store:
+        first = record(store, REPORT)
+        open_one = store.open_audit_report(origin=LOAD)
+        record(store, CLEAN)
+        assert store.audit_report(first).report == REPORT
+        assert store.audit_report(open_one).report is None
+        with pytest.raises(KeyError):
+            store.audit_report(open_one + 2)
+
+
 def test_a_report_is_completed_only_once(tmp_path):
     with OperationalStore(tmp_path / "operational.sqlite") as store:
         report_id = record(store, CLEAN)

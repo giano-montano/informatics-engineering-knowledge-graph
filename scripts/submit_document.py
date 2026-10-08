@@ -1,7 +1,7 @@
-"""Development aid: submit a document and run the worker, as the API will.
+"""Development aid: submit a document and run the worker, without the API.
 
 Not an entry point of the system (ADR-007): it calls the same submission
-function the API will call, then runs the worker in this process.
+function the API calls, then runs the worker in this process.
 
     uv run python scripts/submit_document.py SYLLABUS.pdf --course 1INF33 --name "Bases de Datos"
 """
@@ -28,9 +28,10 @@ def main() -> int:
     settings = Settings.from_environment()
     with OperationalStore(settings.operational_db) as store:
         try:
-            run_id = submit_document(store, settings.documents_dir, args.document, resource_type=args.type,
-                                     course_code=args.course, course_name=args.name)
-        except SubmissionError as error:
+            with args.document.open("rb") as content:
+                run_id = submit_document(store, settings.documents_dir, content, file_name=args.document.name,
+                                         resource_type=args.type, course_code=args.course, course_name=args.name)
+        except (SubmissionError, OSError) as error:
             print(f"error: {error}", file=sys.stderr)
             return 2
     print(f"Run {run_id} recorded as pending")

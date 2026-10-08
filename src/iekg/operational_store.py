@@ -208,11 +208,15 @@ class OperationalStore:
             )
 
     def latest_audit_report(self) -> StoredAuditReport | None:
+        row = self._connection.execute("SELECT max(id) FROM audit_reports").fetchone()
+        return self.audit_report(row[0]) if row[0] is not None else None
+
+    def audit_report(self, report_id: int) -> StoredAuditReport:
         row = self._connection.execute(
-            "SELECT id, created_at, origin, run_id, completed_at FROM audit_reports ORDER BY id DESC LIMIT 1"
+            "SELECT id, created_at, origin, run_id, completed_at FROM audit_reports WHERE id = ?", (report_id,)
         ).fetchone()
         if row is None:
-            return None
+            raise KeyError(f"audit report {report_id} does not exist")
         report_id, created_at, origin, run_id, completed_at = row
         if completed_at is None:
             return StoredAuditReport(report_id, created_at, origin, run_id, None)

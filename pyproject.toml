@@ -24,10 +24,20 @@ dependencies = [
     "pydantic-ai-slim[openai]>=2.54,<3",
     # Lectura de los PDF subidos (ADR-009).
     "docling>=2.135,<3",
+    # La API (ADR-007). Se fija la linea menor: FastAPI sigue en 0.x y rompe
+    # compatibilidad entre menores. 0.142 y no 0.143, que salio el mismo dia
+    # en que se agrego.
+    "fastapi>=0.142.4,<0.143",
+    # FastAPI la necesita para recibir el documento como multipart.
+    "python-multipart>=0.0.32,<0.1",
+    # Servidor de la API, con un solo proceso (ADR-007).
+    "uvicorn>=0.54,<0.55",
 ]
 
 [dependency-groups]
 dev = [
+    # Lo usa el TestClient de FastAPI en las pruebas de la API.
+    "httpx>=0.28,<0.29",
     "pytest>=8.3",
 ]
 
@@ -36,6 +46,8 @@ dev = [
 iekg-build = "iekg.build_tools.commands:main"
 # El worker de ingesta, que la API lanza como proceso hijo (ADR-007).
 iekg-worker = "iekg.ingestion.worker:main"
+# La API, en un solo proceso (ADR-007).
+iekg-api = "iekg.api.server:main"
 
 [build-system]
 requires = ["hatchling"]

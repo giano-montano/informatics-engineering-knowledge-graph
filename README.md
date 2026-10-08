@@ -209,6 +209,17 @@ npm run arch:serve        # vista previa en el navegador
 npm run arch:validate     # comprueba el modelo
 ```
 
+## Commits
+
+- **Un commit, una razón para cambiar.** Van juntos el código, sus pruebas y
+  la documentación que pasa a ser cierta con él (README, `CLAUDE.md`).
+- **La decisión va antes que el código**, en su propio commit `docs:` (ADR y
+  `.c4`), porque se escribe antes de implementar.
+- **Cada commit deja las pruebas en verde.** No se separa «código» de
+  «documentación»: el commit intermedio dejaría documentos que mienten.
+- **Mensaje en inglés**, en imperativo y minúscula, de hasta 72 caracteres; el
+  porqué va en el cuerpo (`docs/estandares-de-codigo.md` §1).
+
 ## Estructura
 
 ```

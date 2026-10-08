@@ -1,6 +1,6 @@
 # ADR-009: Documentos subidos, localizador y datos declarados por el operador
 
-**Estado:** Aceptada
+**Estado:** Aceptada (enmendada 2026-10)
 **Fecha:** 2026-10
 **Atributos:** AC-03 (principal), AC-01
 
@@ -31,3 +31,7 @@ Todo recurso de aprendizaje necesita un localizador que el estudiante pueda abri
 - **Los localizadores llevan el host escrito.** Cambiar de host exige migrar datos. El almacén de hechos no se reutiliza en otro host: en un host nuevo se vuelve a ingestar.
 - El inventario de recursos que ve el estudiante es exactamente lo ingestado: en el piloto, 13 sílabos. Se declara como limitación.
 - Un error de tipeo del operador en el código del curso crea otro curso. El error es visible en la corrida, pero no hay forma de retirar una corrida ya escrita —tampoco la de un documento subido por error—, y la reaplicación la reproduce. Se declara como limitación.
+
+## Enmienda (2026-10)
+
+- **Nombre del curso.** Junto con el código, el operador declara el nombre del curso, que se guarda como su etiqueta preferida en español. Tampoco pasa por el modelo de lenguaje: así la extracción se limita al contenido del documento. El nombre no interviene en la clave, de modo que un error de tipeo en él no crea otro curso. Como la ingesta no modifica nodos existentes (ADR-006), el curso conserva el nombre declarado en su primer documento.

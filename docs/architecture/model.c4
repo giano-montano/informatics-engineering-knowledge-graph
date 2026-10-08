@@ -30,8 +30,9 @@ model {
     summary 'Incorpora material y observa el resultado de la ingesta.'
     description '''
       Sube documentos académicos declarando su tipo de recurso y el código
-      del curso al que pertenecen, sigue el estado de cada corrida, revisa
-      los hechos descartados y consulta el reporte de auditoría.
+      y el nombre del curso al que pertenecen, sigue el estado de cada
+      corrida, revisa los hechos descartados y consulta el reporte de
+      auditoría.
 
       No decide sobre el contenido del grafo: no aprueba hechos, no edita
       elementos y no reingresa descartes. Ante una violación de integridad
@@ -113,11 +114,11 @@ model {
         technology 'FastAPI'
         summary 'Alta de corrida, estado, descartes y reporte.'
         description '''
-          Recibe el documento con su tipo y el código de su curso, acuña la
-          clave y el localizador del recurso de aprendizaje, guarda el
-          archivo, registra la corrida como pendiente y lanza un worker si
-          no hay uno activo (ADR-007, ADR-009). Expone el estado de cada corrida, sus
-          descartes y su reporte de auditoría.
+          Recibe el documento con su tipo y el código y el nombre de su
+          curso, acuña la clave y el localizador del recurso de aprendizaje,
+          guarda el archivo, registra la corrida como pendiente y lanza un
+          worker si no hay uno activo (ADR-007, ADR-009). Expone el estado
+          de cada corrida, sus descartes y su reporte de auditoría.
 
           Protegidas por un token fijo de operador (ADR-013). Responden a
           AC-02.
@@ -168,13 +169,10 @@ model {
 
           Reintenta de forma acotada ante errores transitorios del
           proveedor y una sola vez, informando el error, ante una salida no
-          conforme (ADR-010).
-
-          Pendiente: toda clave existente que devuelva el modelo
-          debe ser, en la instantánea, de la clase que exige su lugar en la
-          salida; si no, la salida no es conforme (EX-01). Sin esa
-          comprobación, un error de clase lo frena la escritura y la corrida
-          queda fallida en lugar de rechazada.
+          conforme (ADR-010): EX-01 si no se ajusta al esquema de salida,
+          EX-02 si trae una clave que no está en la instantánea y EX-03 si
+          una clave existente es de otra clase que la que exige su lugar en
+          la salida.
         '''
       }
 

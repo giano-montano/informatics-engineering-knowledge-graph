@@ -1,6 +1,6 @@
 # ADR-010: Rechazo por documento, reintentos y registro de descartes
 
-**Estado:** Aceptada
+**Estado:** Aceptada (enmendada 2026-10)
 **Fecha:** 2026-10
 **Atributos:** AC-01 (principal), AC-02
 
@@ -33,3 +33,12 @@ ADR-003 enviaba los fallos a una cola de revisión y descartaba todo reintento. 
 - El todo o nada por documento castiga más a los sílabos largos. Se declara como limitación.
 - Cada corrida reporta cuántos reintentos de contenido usó. Las medidas se declaran tomadas después de ese reintento.
 - La distinción entre *rechazada* y *fallida* separa el descarte por contenido de las fallas de ejecución, del proveedor o de la escritura.
+
+## Enmienda (2026-10)
+
+- **Qué es una salida no conforme.** Son tres casos, con un código cada uno, que comparten el único reintento de contenido:
+  - **EX-01:** la salida no se ajusta al esquema de salida.
+  - **EX-02:** una mención enlazada trae una clave que no está en la instantánea.
+  - **EX-03:** una clave existente es, en la instantánea, de otra clase que la que exige su lugar en la salida.
+
+  EX-01 lo detecta la validación tipada; EX-02 y EX-03, el extractor al enlazar, antes de armar el lote. Sin EX-03, un error de clase lo frenaría la escritura y la corrida quedaría *fallida* en lugar de *rechazada*. Ninguno es regla de integridad ni tiene consulta de auditoría. Las menciones repetidas y las aristas duplicadas no son salida no conforme: el código las fusiona antes de armar el lote.

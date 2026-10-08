@@ -1108,7 +1108,7 @@ Las diez reglas resultan de traducir la ontología. Otras cinco resultan de deci
 
 RM-02 es la forma comprobable de la frontera entre capas, de la que depende AC-04, y RM-03 la de la procedencia que exige AC-03. RM-04 no la impone la ontología, donde la transitividad admite ciclos, sino la navegación, que ordena los conceptos según sus prerrequisitos. Las cinco se impiden al escribir, igual que las reglas de integridad.
 
-El grafo solo cambia por tres caminos: la carga de la capa de referencia, la ingesta de un documento y la reaplicación de los hechos guardados (sección siguiente). Cada uno termina en una auditoría, así que el último reporte describe siempre el estado vigente del grafo. Eso es lo que permite establecer AC-01 sin inspeccionar el código (AC-02). Como en la ingesta todas las reglas se impiden al escribir, una violación que la auditoría encuentre después de una ingesta revela un error del código y no un dato incorrecto. En ese caso se emite el reporte y las ingestas pendientes quedan suspendidas hasta corregir el error.
+El grafo solo cambia por tres caminos: la carga de la capa de referencia, la ingesta de un documento y la reaplicación de los hechos guardados (sección siguiente). Cada uno abre su reporte antes de tocar el grafo y lo completa con una auditoría al terminar; así, el último reporte describe el estado vigente del grafo o, si quedó abierto, avisa que ese estado no se auditó, y en ambos casos decide si la ingesta continúa. Eso es lo que permite establecer AC-01 sin inspeccionar el código (AC-02). Como en la ingesta todas las reglas se impiden al escribir, una violación que la auditoría encuentre después de una ingesta revela un error del código y no un dato incorrecto. En ese caso se emite el reporte y las ingestas pendientes quedan suspendidas hasta corregir el error.
 
 4. ### **Arquitectura del módulo** {#arquitectura-del-módulo}
 
@@ -1173,7 +1173,7 @@ La cuarta es que toda fuente puede abrirse. Todo recurso de aprendizaje instituc
 
 El nivel de componentes se documenta para la API, el worker y los procesos de construcción. La aplicación web se descompone en R5, y los almacenes no se descomponen.
 
-La API tiene dos componentes (Figura 8). Las rutas de navegación ejecutan las consultas derivadas y sirven los documentos; las rutas de operación reciben cada documento con su tipo y el código de su curso, acuñan la clave y el localizador de su recurso de aprendizaje, registran la corrida y lanzan el worker.
+La API tiene dos componentes (Figura 8). Las rutas de navegación ejecutan las consultas derivadas y sirven los documentos; las rutas de operación reciben cada documento con su tipo y el código y el nombre de su curso, acuñan la clave de su recurso de aprendizaje, de la que se deriva su localizador, registran la corrida y lanzan el worker.
 
 **![][image8]**
 
@@ -1252,7 +1252,7 @@ Las relaciones se evalúan aparte, en los casos CP-15 y CP-16.
 
 La referencia contra la que se compara la extracción es una anotación de los 13 sílabos. Por cada sílabo registra todos los temas y conceptos que contiene, aunque otro sílabo ya los contenga.
 
-La anotó un modelo de lenguaje, un sílabo por sesión, siguiendo la guía de anotación del Anexo L y sin acceso a las salidas del pipeline. Las decisiones que la guía no resolvía se escalaron al autor, que las adjudicó.
+La anotó un modelo de lenguaje (Claude, de Anthropic), un sílabo por sesión, siguiendo la guía de anotación del Anexo L y sin acceso a las salidas del pipeline. Las decisiones que la guía no resolvía se escalaron al autor, que las adjudicó.
 
 Cada entrada de la anotación registra:
 

@@ -115,8 +115,9 @@ model {
         summary 'Alta de corrida, estado, descartes y reporte.'
         description '''
           Recibe el documento con su tipo y el código y el nombre de su
-          curso, acuña la clave y el localizador del recurso de aprendizaje,
-          guarda el archivo, registra la corrida como pendiente y lanza un
+          curso, acuña la clave de su recurso de aprendizaje, de la que se
+          deriva su localizador, guarda el archivo, registra la corrida
+          como pendiente y lanza un
           worker si no hay uno activo (ADR-007, ADR-009). Expone el estado
           de cada corrida, sus descartes y su reporte de auditoría.
 

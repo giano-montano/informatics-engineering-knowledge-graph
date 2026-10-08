@@ -60,7 +60,7 @@ El desarrollador tampoco es actor: ejecuta los procesos de construcción (secci�
 
 | ID | Requisito | Origen | Restricción |
 | ----- | ----- | ----- | ----- |
-| RF-02 **(D)** | Aceptar un documento académico con su tipo de recurso y, cuando el tipo lo implique, el código de su curso, y ejecutar la ingesta como trabajo asíncrono, devolviendo un identificador de ejecución. | PC2, PC5 | ADR-007, ADR-009 |
+| RF-02 **(D)** | Aceptar un documento académico con su tipo de recurso y, cuando el tipo lo implique, el código y nombre de su curso, y ejecutar la ingesta como trabajo asíncrono, devolviendo un identificador de ejecución. | PC2, PC5 | ADR-007, ADR-009 |
 | RF-03 **(D)** | Consultar el estado y el resultado de una ejecución de ingesta por su identificador. | AC-02 | ADR-007, ADR-010 |
 | RF-04 | Validar todo hecho candidato contra el modelo ontológico antes de escribir. Ningún hecho inválido se persiste. | AC-01 | ADR-003, ADR-005 |
 | RF-05 | Registrar, por cada ejecución rechazada, cada violación con la regla que infringe y el lote candidato completo. Los descartes no reingresan al grafo. | AC-01 (medida), AC-02 | ADR-010 |

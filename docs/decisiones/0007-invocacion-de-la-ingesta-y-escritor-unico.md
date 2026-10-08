@@ -1,6 +1,6 @@
 # ADR-007: Invocación de la ingesta y escritor único del grafo
 
-**Estado:** Aceptada
+**Estado:** Aceptada (enmendada 2026-10)
 **Fecha:** 2026-10
 **Atributos:** AC-01 (principal), AC-02, AC-04
 
@@ -35,3 +35,11 @@ Impedir al escribir las reglas que dependen de nodos existentes exige que nadie 
 - Una carga limpia también reabre la compuerta. Reaplicar antes de volver a ingestar es parte del procedimiento, no algo que el sistema imponga: una ingesta sobre una carga sin reaplicar no vería la capa institucional y podría duplicar sus nodos.
 - Con una sola imagen, la ingesta y la reaplicación ejecutan por construcción la misma versión del núcleo, lo que sostiene AC-04.
 - El desarrollador no es actor del sistema: los procesos de construcción no tienen flecha entrante en el diagrama de contenedores.
+
+## Enmienda (2026-10)
+
+Al implementar la API se vio que una corrida podía quedar pendiente sin que nada la tomara, salvo una subida posterior.
+
+- **El alta de una corrida es todo o nada.** Si la API no logra lanzar el worker, retira la corrida que acaba de registrar y su documento, y responde que no se registró nada: el operador lo vuelve a subir. Si en ese intervalo otro worker ya tomó la corrida, el alta se acepta. Se descartaron dos salidas. Reintentar el lanzamiento no sirve, porque no poder iniciar un proceso es un fallo del entorno, no uno pasajero como los del proveedor (ADR-010). Marcar la corrida como fallida mezclaría una corrida que nunca empezó con las que fallaron al procesarse, que se cuentan en la medición.
+- **La API vuelve a lanzar el worker sin esperar otra subida**, siempre que queden corridas pendientes y la compuerta esté abierta. Lo hace cuando el worker termina sin error, lo que recoge la corrida que llega mientras el worker termina, y al arrancar, lo que recoge las que quedaron pendientes con la compuerta cerrada: tras una reconstrucción la API vuelve a arrancar, porque los procesos de construcción corren con el sistema detenido. Un worker que termina con error no se relanza, para no repetir el fallo en bucle.
+- La corrida que llega mientras el worker termina ya no espera a la siguiente subida. La API sigue suponiendo un solo proceso: el relanzamiento vive en ella, junto al proceso hijo que vigila.

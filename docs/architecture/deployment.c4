@@ -7,7 +7,7 @@
 //    corren en un contenedor aparte, a demanda y con el sistema detenido
 //    (ADR-007).
 // 2. La aplicación web se sirve aparte, con nginx, que reenvía /api y
-//    /recursos a la API bajo un mismo dominio (ADR-007).
+//    /resources a la API bajo un mismo dominio (ADR-007).
 // 3. Los tres almacenes de archivos son carpetas del host; la base de
 //    grafos usa un volumen administrado por Docker (ADR-013).
 // 4. Los localizadores llevan el host escrito: el almacén de hechos no se
@@ -22,7 +22,7 @@ deployment {
 
       runtime webc 'Contenedor web' {
         technology 'nginx'
-        description 'Sirve el compilado de la aplicación web y reenvía /api y /recursos a la API.'
+        description 'Sirve el compilado de la aplicación web y reenvía /api y /resources a la API.'
         web = instanceOf kms.web
       }
 
@@ -57,7 +57,7 @@ deployment {
   // Cada par agrupa varias relaciones del modelo, y la vista de despliegue
   // ignora `with { title }`: sin estos resúmenes, la arista saldría como
   // «[...]». La vista excluye las relaciones derivadas de esos pares.
-  vm.compose.webc.web -> vm.compose.appc.api 'Reenvía /api y /recursos' {
+  vm.compose.webc.web -> vm.compose.appc.api 'Reenvía /api y /resources' {
     #resumen
     technology 'HTTP'
   }

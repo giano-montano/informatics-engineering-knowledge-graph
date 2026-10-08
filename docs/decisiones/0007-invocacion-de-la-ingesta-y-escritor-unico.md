@@ -14,7 +14,7 @@ Impedir al escribir las reglas que dependen de nodos existentes exige que nadie 
 - **Compuerta de auditoría.** Antes de tomar cada corrida, el worker lee el último reporte de auditoría registrado. Si tiene violaciones, termina y deja las corridas pendientes. La compuerta se reabre con el siguiente reporte limpio, que solo pueden producir los procesos de construcción: una carga o una reaplicación.
 - Los **procesos de construcción son un contenedor dentro de la frontera del sistema**: son código propio, bajo control propio. Se ejecutan desde la línea de comandos, **con el sistema detenido**.
 - API, worker y procesos de construcción salen de **una sola imagen con tres puntos de entrada**.
-- La aplicación web se sirve **aparte**, con nginx, que reenvía `/api` y `/recursos` a la API bajo un mismo dominio.
+- La aplicación web se sirve **aparte**, con nginx, que reenvía `/api` y `/resources` a la API bajo un mismo dominio.
 
 ## Alternativas consideradas
 

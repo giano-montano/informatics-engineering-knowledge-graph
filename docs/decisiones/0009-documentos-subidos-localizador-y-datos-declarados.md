@@ -10,7 +10,7 @@ Todo recurso de aprendizaje necesita un localizador que el estudiante pueda abri
 
 ## Decisión
 
-- **Todo recurso de aprendizaje institucional es un documento subido.** La API acuña su clave al recibirlo, guarda el archivo con esa clave en el almacén de documentos y lo sirve en `/recursos/{clave}`. Esa URL es su localizador. CS2023 conserva su URL pública.
+- **Todo recurso de aprendizaje institucional es un documento subido.** La API acuña su clave al recibirlo, guarda el archivo con esa clave en el almacén de documentos y lo sirve en `/resources/{clave}`. Esa URL es su localizador. CS2023 conserva su URL pública.
 - **El operador declara al subir el tipo de recurso y, si el tipo lo implica, el código del curso.** Ninguno de los dos pasa por el modelo de lenguaje.
 - La clave del tipo de recurso y la del curso se **derivan de forma determinista** de su nombre y de su código, de modo que el MERGE es idempotente. El código de curso se guarda como propiedad del nodo curso.
 - Cada sílabo afirma solo su propio curso: lo crea si no existe y, si existe, se fusiona como cualquier hecho (ADR-006). Los prerrequisitos formales entre cursos no se extraen.

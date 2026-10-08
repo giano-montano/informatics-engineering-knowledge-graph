@@ -69,7 +69,7 @@ def resource_type_key(name: str) -> str:
 
 
 def locator(public_base_url: str, resource_key: str) -> str:
-    return f"{public_base_url.rstrip('/')}/recursos/{resource_key}"
+    return f"{public_base_url.rstrip('/')}/resources/{resource_key}"
 
 
 def assemble_batch(

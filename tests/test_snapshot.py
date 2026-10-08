@@ -33,7 +33,7 @@ def written(tx, new_key):
     ), read_snapshot_in(tx), layer=REFERENCE)
     batch = Batch(
         nodes=(
-            NodeFact(doc, LEARNING_RESOURCE, {RESOURCE_LOCATOR: f"http://localhost/recursos/{doc}"}),
+            NodeFact(doc, LEARNING_RESOURCE, {RESOURCE_LOCATOR: f"http://localhost/resources/{doc}"}),
             NodeFact(topic, TOPIC, {PREF_LABEL_ES: "Búsqueda"}),
             NodeFact(first, CONCEPT),
             NodeFact(second, CONCEPT),

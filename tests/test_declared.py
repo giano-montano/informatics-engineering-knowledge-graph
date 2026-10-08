@@ -43,7 +43,7 @@ def test_the_batch_brings_the_declared_nodes_and_edges():
     course, kind = course_key("1INF33"), resource_type_key(SYLLABUS)
     nodes = batch.nodes_by_key
     assert nodes["doc"] == NodeFact("doc", LEARNING_RESOURCE, {
-        PREF_LABEL_ES: "Sílabo 1INF33", RESOURCE_LOCATOR: "https://kms.example/recursos/doc",
+        PREF_LABEL_ES: "Sílabo 1INF33", RESOURCE_LOCATOR: "https://kms.example/resources/doc",
     })
     assert nodes[course] == NodeFact(course, COURSE, {PREF_LABEL_ES: "Bases de Datos", COURSE_CODE: "1INF33"})
     assert nodes[kind] == NodeFact(kind, RESOURCE_TYPE, {PREF_LABEL_ES: SYLLABUS})

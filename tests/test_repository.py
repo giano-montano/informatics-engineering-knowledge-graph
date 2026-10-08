@@ -59,7 +59,7 @@ def test_institutional_edges_get_the_provenance_of_the_write(tx, new_key):
     doc, course, concept, topic = new_key(), new_key(), new_key(), new_key()
     batch = Batch(
         nodes=(
-            NodeFact(doc, LEARNING_RESOURCE, {RESOURCE_LOCATOR: "http://localhost/recursos/x"}),
+            NodeFact(doc, LEARNING_RESOURCE, {RESOURCE_LOCATOR: "http://localhost/resources/x"}),
             NodeFact(course, COURSE),
             NodeFact(topic, TOPIC),
             NodeFact(concept, CONCEPT),
@@ -75,7 +75,7 @@ def test_institutional_edges_get_the_provenance_of_the_write(tx, new_key):
 
 
 def resource(key):
-    return NodeFact(key, LEARNING_RESOURCE, {RESOURCE_LOCATOR: f"http://localhost/recursos/{key}"})
+    return NodeFact(key, LEARNING_RESOURCE, {RESOURCE_LOCATOR: f"http://localhost/resources/{key}"})
 
 
 def derivations(tx, key):

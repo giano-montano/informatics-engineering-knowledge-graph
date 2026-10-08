@@ -50,7 +50,7 @@ def test_every_label_and_source_layer_declares_its_properties():
 
 @pytest.mark.parametrize("locator", [
     "https://dl.acm.org/doi/book/10.1145/3664191",
-    "http://localhost:8000/recursos/abc",
+    "http://localhost:8000/resources/abc",
     "HTTPS://example.org",
 ])
 def test_locator_pattern_accepts_absolute_http_uris(locator):
@@ -59,7 +59,7 @@ def test_locator_pattern_accepts_absolute_http_uris(locator):
 
 @pytest.mark.parametrize("locator", [
     "ftp://example.org/file",
-    "/recursos/abc",
+    "/resources/abc",
     "https://",
     "https://example.org/with space",
     "urn:isbn:123",

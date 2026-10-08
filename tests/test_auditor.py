@@ -204,7 +204,7 @@ def test_what_the_repository_writes_raises_no_violation(tx, new_key):
 
     institutional = Batch(
         nodes=(
-            NodeFact(doc, LEARNING_RESOURCE, {RESOURCE_LOCATOR: "http://localhost:8000/recursos/x"}),
+            NodeFact(doc, LEARNING_RESOURCE, {RESOURCE_LOCATOR: "http://localhost:8000/resources/x"}),
             NodeFact(kind, RESOURCE_TYPE, {PREF_LABEL_ES: "Sílabo"}),
             NodeFact(course, COURSE, {COURSE_CODE: "1INF27"}),
             NodeFact(topic, TOPIC),

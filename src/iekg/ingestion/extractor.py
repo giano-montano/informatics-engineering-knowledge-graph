@@ -61,12 +61,10 @@ class TopicMention(BaseModel):
 
 
 class RequiredConcept(BaseModel):
+    # Only existing concepts: the course prerequisite is derived from what one
+    # course teaches and another requires, and a new concept no course teaches.
     name: str = Field(description="A concept the course needs and does not teach.")
-    existing: str | None = Field(None, description=_EXISTING.format(kind="concept (C-…)"))
-    topic: str | None = Field(
-        None,
-        description="For a new concept, the topic it belongs to: an existing topic (T-…) or a topic of this output.",
-    )
+    existing: str = Field(description="Reference of the existing concept (C-…) it is.")
 
 
 class Prerequisite(BaseModel):
@@ -93,13 +91,6 @@ class SyllabusOutput(BaseModel):
         for topic in self.topics:
             if topic.existing is None and topic.knowledge_unit is None:
                 problems.append(f"new topic {topic.name!r} has no knowledge_unit")
-        topics = {normalize_label(topic.name) for topic in self.topics}
-        for required in self.required_concepts:
-            if required.existing is None:
-                if required.topic is None:
-                    problems.append(f"new required concept {required.name!r} has no topic")
-                elif not _is_ref(required.topic) and normalize_label(required.topic) not in topics:
-                    problems.append(f"required concept {required.name!r}: topic {required.topic!r} is not in the output")
         concepts = {normalize_label(c.name) for topic in self.topics for c in topic.concepts}
         concepts |= {normalize_label(c.name) for c in self.required_concepts}
         for relation in [*self.prerequisites, *self.specializations]:
@@ -129,21 +120,68 @@ def _ends(relation: Prerequisite | Specialization) -> tuple[str, str]:
 INSTRUCTIONS = """\
 You extract the knowledge structure of a university course syllabus for a curriculum knowledge graph.
 
-- A topic is the title of a unit or chapter of the syllabus program that groups items. Name it as the \
-syllabus does, but without numbering, the word "chapter" or "unit", weeks or hours: "CAPÍTULO 3 SQL DDL \
-(3 horas)" is the topic "SQL DDL".
-- A concept is each item inside a topic: one piece of knowledge, named as the syllabus names it. An item \
-that names two pieces of knowledge gives two concepts. Concepts from the summary or the objectives that no \
-topic groups go under the closest topic of this syllabus.
-- Keep the language of the syllabus. Do not translate, summarize or invent knowledge the syllabus does not state.
-- Every new topic belongs to exactly one knowledge unit of the vocabulary: the one whose subject it is, \
-judged by the unit and its area. A topic that already exists keeps its unit.
-- Reuse what exists: when a topic or concept is the same knowledge as one in the vocabulary, give its \
-reference in "existing". Otherwise leave "existing" null.
-- Required concepts are what the course needs and does not teach, as its requirements or prerequisites \
-state. Prefer an existing concept; if there is none, add it as new and give the topic it belongs to.
-- Prerequisites and specializations join concepts only when the syllabus supports them.
+## Where to look
+- The topics and concepts the course teaches come only from the summary ("sumilla") and the contents of \
+the syllabus. Learning outcomes, methodology, laboratory sessions, requirements, evaluation and \
+bibliography give none.
+- Not knowledge: activities, assessments, projects, book titles, generic competences, course names or \
+codes, and generic headings such as "Introducción", "Unidad I" or "Sesión 3".
+
+## Topics
+- Each heading of the contents that groups items is one topic. Keep every such heading, in its order and \
+with its own words: never merge two headings into one, split one, reword it or add a topic that is not a \
+heading. Two headings with the same words are one topic.
+- With two levels of headings, the topic is the one that directly contains the items; leave out the upper \
+level.
+- If the contents have only generic headings, group their items under topics named by the subject they share.
+- The summary gives concepts, never topics.
+- A heading that names several pieces of knowledge stays one topic: "Directorio Activo y DNS" is one topic.
+
+## Concepts
+- A concept is each item inside a topic: one piece of knowledge. A piece of knowledge named only in the \
+summary is a concept too, under the topic it fits best, unless it is one of the topics.
+- An item that names several pieces of knowledge gives one concept for each, unless together they are one \
+named piece of knowledge: "Archivos y editores" gives "Archivos" and "Editores"; "Stack, PUSH, POP" gives \
+three. Each element of an enumeration that can stand on its own is a concept.
+- Languages, notations and standards are concepts. Concrete products and tools are concepts only when the \
+course teaches them or uses them as content.
+- Give each piece of knowledge once.
+
+## Names
+- Name topics and concepts as the syllabus does, in its language, without numbering, the words "chapter" \
+or "unit", weeks or hours: "CAPÍTULO 3 SQL DDL (3 horas)" is the topic "SQL DDL". Do not translate, \
+summarize or invent.
+- "Introducción a X" and "Fundamentos de X" are X: "Introducción a la administración de sistemas \
+operativos" is "Administración de sistemas operativos".
+- Keep qualifiers: "SQL avanzado" stays "SQL avanzado". Drop activity wording such as "estudio de", \
+"definición de", "aplicaciones de" or "representación de X en Y" when the knowledge is X or Y.
+
+## Linking to the graph
+- Every new topic belongs to exactly one knowledge unit of the vocabulary: the one whose subject covers \
+the content of the topic, judged by the unit and its area. A topic that already exists keeps its unit.
+- Reuse what exists only when the syllabus names the same knowledge as a node of the vocabulary, with the \
+same or equivalent words. A related, broader or narrower node is not the same knowledge: leave "existing" \
+null. When in doubt, it is new.
 - References are only the ones listed in the vocabulary, copied exactly.
+
+## Required concepts
+- Every course builds on knowledge it does not teach. Give the main concepts its contents use as input: \
+what students must already know, as learnt in the courses its requirements name. For instance, a course \
+whose contents program with arrays assumes control structures and functions.
+- Required concepts are only existing concepts of the vocabulary, the ones earlier courses teach. If the \
+vocabulary has none of what the course needs, give no required concepts.
+
+## Relations between concepts
+- Prerequisites: go through the concepts of this syllabus and, for each, give the concepts one must know \
+to understand it, among the concepts of this syllabus, the required ones and the vocabulary. A nested or \
+advanced form requires its basic form; a construct requires the ones it is built from. Give direct \
+prerequisites only, not the ones a chain of others already implies.
+- Specializations: a concept and the more general concept it is a kind of, as a priority queue is a kind \
+of queue. The general concept must be in this syllabus or the vocabulary; if it is not, give none. Two \
+kinds of the same thing are siblings, and neither specializes the other. A part, a variant of scope or a \
+related idea is not a kind.
+- Prerequisites must not form a cycle, and neither must specializations, counting the existing ones the \
+vocabulary lists.
 """
 
 
@@ -203,6 +241,16 @@ def build_vocabulary(snapshot: Snapshot) -> Vocabulary:
             for child, parent in parents.items() if child in ref_of_key and parent in ref_of_key
         )
         text.append("## Placement\n" + "\n".join(placement))
+    # The relations already in the graph, so the model can avoid closing a cycle (RM-04).
+    for edge_type, title, verb in ((HAS_PREREQUISITE, "Existing prerequisites", "requires"),
+                                   (SPECIALIZES, "Existing specializations", "is a kind of")):
+        lines = sorted(
+            f"{ref_of_key[edge.source]} {verb} {ref_of_key[edge.target]}"
+            for edge in snapshot.edges
+            if edge.type == edge_type and edge.source in ref_of_key and edge.target in ref_of_key
+        )
+        if lines:
+            text.append(f"## {title}\n" + "\n".join(lines))
     return Vocabulary(refs, "\n\n".join(text))
 
 
@@ -263,7 +311,6 @@ class _Linker:
         return NodeFact(key, label, {prop: value for prop, value in labels.items() if value is not None})
 
     def link(self, output: SyllabusOutput) -> ExtractedFacts | None:
-        topics: dict[str, str] = {}
         concepts: dict[str, str] = {}
         taught: list[str] = []
         for topic in output.topics:
@@ -271,7 +318,6 @@ class _Linker:
             key = self.node(TOPIC, topic.name, topic.existing, place)
             if key is None:
                 continue
-            topics.setdefault(normalize_label(topic.name), key)
             # A topic that already exists keeps its unit.
             if key not in self.snapshot.nodes and topic.knowledge_unit is not None:
                 unit = self.resolve(topic.knowledge_unit, KNOWLEDGE_UNIT, f"{place}, knowledge_unit")
@@ -286,17 +332,10 @@ class _Linker:
 
         required: list[str] = []
         for concept in output.required_concepts:
-            place = f"required concept {concept.name!r}"
-            key = self.node(CONCEPT, concept.name, concept.existing, place)
-            if key is None:
-                continue
-            concepts.setdefault(normalize_label(concept.name), key)
-            required.append(key)
-            if key not in self.snapshot.nodes and concept.topic is not None:
-                topic = (self.resolve(concept.topic, TOPIC, f"{place}, topic") if _is_ref(concept.topic)
-                         else topics.get(normalize_label(concept.topic)))
-                if topic is not None:
-                    self.edges.append(EdgeFact(PART_OF, key, topic))
+            key = self.node(CONCEPT, concept.name, concept.existing, f"required concept {concept.name!r}")
+            if key is not None:
+                concepts.setdefault(normalize_label(concept.name), key)
+                required.append(key)
 
         for edge_type, relations in ((HAS_PREREQUISITE, output.prerequisites), (SPECIALIZES, output.specializations)):
             for relation in relations:

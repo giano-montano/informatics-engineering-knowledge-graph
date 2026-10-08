@@ -86,6 +86,18 @@ def test_the_vocabulary_shows_each_unit_with_its_area_and_where_nodes_hang():
     assert "C-001 part of T-001" in VOCABULARY.text and "T-001 part of K-001" in VOCABULARY.text
 
 
+def test_the_vocabulary_shows_the_existing_relations_between_concepts():
+    snapshot = Snapshot(
+        nodes={**SNAPSHOT.nodes, "dfs": SnapshotNode(CONCEPT, INSTITUTIONAL, "DFS")},
+        edges=(*SNAPSHOT.edges, EdgeFact(HAS_PREREQUISITE, "dfs", "concept"), EdgeFact(SPECIALIZES, "dfs", "concept")),
+    )
+    vocabulary = build_vocabulary(snapshot)
+    # Concepts sort by label, and "DFS" comes before "Árbol de expansión".
+    assert vocabulary.refs["C-001"] == "dfs"
+    assert "C-001 requires C-002" in vocabulary.text
+    assert "C-001 is a kind of C-002" in vocabulary.text
+
+
 # --- Linking ------------------------------------------------------------------------
 
 def test_new_mentions_get_new_keys_and_their_partonomy():
@@ -127,23 +139,27 @@ def test_repeated_mentions_merge_into_one_node_and_one_edge():
     assert facts.edges == (EdgeFact(PART_OF, "new-1", "ku"), EdgeFact(PART_OF, "new-2", "new-1"))
 
 
-def test_required_concepts_hang_from_their_topic_and_are_not_taught():
-    facts = link(output(required_concepts=[
-        {"name": "Recursión", "topic": "Búsqueda heurística"},
-        {"name": "Spanning tree", "existing": "C-001"},
-        {"name": "A*", "topic": "T-001"},
-    ]))
-    assert facts.required == ("new-3", "concept")
-    assert EdgeFact(PART_OF, "new-3", "new-1") in facts.edges
+def test_required_concepts_are_existing_ones_and_add_no_partonomy():
+    facts = link(output(required_concepts=[{"name": "Spanning tree", "existing": "C-001"}]))
+    assert facts.required == ("concept",)
+    assert not [edge for edge in facts.edges if edge.source == "concept"]
+
+
+def test_a_required_concept_the_course_also_teaches_is_only_taught():
+    facts = link(SyllabusOutput.model_validate({
+        "topics": [{"name": "Grafos", "existing": "T-001", "concepts": [{"name": "MST", "existing": "C-001"}]}],
+        "required_concepts": [{"name": "MST", "existing": "C-001"}],
+    }))
+    assert facts.taught == ("concept",) and facts.required == ()
 
 
 def test_relations_join_concepts_of_the_output_and_existing_ones():
     facts = link(output(
-        required_concepts=[{"name": "Recursión", "topic": "Búsqueda heurística"}],
-        prerequisites=[{"concept": "A*", "prerequisite": "recursion"}],
+        required_concepts=[{"name": "Spanning tree", "existing": "C-001"}],
+        prerequisites=[{"concept": "A*", "prerequisite": "spanning trees"}],
         specializations=[{"concept": "A*", "generalization": "C-001"}],
     ))
-    assert EdgeFact(HAS_PREREQUISITE, "new-2", "new-3") in facts.edges
+    assert EdgeFact(HAS_PREREQUISITE, "new-2", "concept") in facts.edges
     assert EdgeFact(SPECIALIZES, "new-2", "concept") in facts.edges
 
 
@@ -153,7 +169,6 @@ def test_relations_join_concepts_of_the_output_and_existing_ones():
     ({"topics": [{"name": "X", "existing": "T-001", "concepts": [{"name": "Y", "existing": "C-999"}]}]},
      "concept 'Y'"),
     ({"required_concepts": [{"name": "Y", "existing": "C-999"}]}, "required concept 'Y'"),
-    ({"required_concepts": [{"name": "Y", "topic": "T-999"}]}, "required concept 'Y', topic"),
     ({"prerequisites": [{"concept": "A*", "prerequisite": "C-999"}]}, "relation end 'C-999'"),
 ])
 def test_a_reference_outside_the_vocabulary_is_ex_02(fields, place):
@@ -172,7 +187,7 @@ def fields_ref(fields):
     ({"topics": [{"name": "X", "existing": "T-001", "concepts": [{"name": "Y", "existing": "T-001"}]}]},
      "concept 'Y'"),
     ({"required_concepts": [{"name": "Y", "existing": "K-001"}]}, "required concept 'Y'"),
-    ({"required_concepts": [{"name": "Y", "topic": "C-001"}]}, "required concept 'Y', topic"),
+    ({"required_concepts": [{"name": "Y", "existing": "T-001"}]}, "required concept 'Y'"),
     ({"specializations": [{"concept": "A*", "generalization": "T-001"}]}, "relation end 'T-001'"),
 ])
 def test_a_reference_of_another_class_is_ex_03(fields, place):
@@ -183,8 +198,7 @@ def test_a_reference_of_another_class_is_ex_03(fields, place):
 @pytest.mark.parametrize("fields, message", [
     ({"topics": []}, "at least 1"),
     ({"topics": [{"name": "X", "concepts": []}]}, "has no knowledge_unit"),
-    ({"required_concepts": [{"name": "Y"}]}, "has no topic"),
-    ({"required_concepts": [{"name": "Y", "topic": "Otro tema"}]}, "is not in the output"),
+    ({"required_concepts": [{"name": "Y"}]}, "existing\n  Field required"),
     ({"prerequisites": [{"concept": "A*", "prerequisite": "Dijkstra"}]}, "neither a concept"),
     ({"topics": [{"name": "X", "knowledge_unit": "K-001"}]}, "Field required"),
 ])

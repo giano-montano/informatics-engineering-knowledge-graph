@@ -108,6 +108,13 @@ EDGE_PROPERTIES_BY_SOURCE_LAYER = MappingProxyType({
     INSTITUTIONAL: (PROVENANCE,),
 })
 
+# Full-text index of the search by name (RF-18), created by the load. The
+# analyzer ignores accents and case, so "arboles" finds "Árboles".
+SEARCH_INDEX = "name_search"
+SEARCH_LABELS = KNOWLEDGE_ELEMENT_SUBCLASSES + (COURSE,)
+SEARCH_PROPERTIES = (PREF_LABEL_ES, PREF_LABEL_EN, COURSE_CODE)
+SEARCH_ANALYZER = "standard-folding"
+
 # Locator form (RI-10): an absolute URI with scheme http or https. The same
 # pattern serves Python's re.fullmatch and Cypher's =~, which both match the
 # whole string.

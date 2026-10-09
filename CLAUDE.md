@@ -86,6 +86,8 @@ README.md                      Cómo levantar el sistema y qué se puede probar.
 docs/tesis.md                  El documento de tesis.
 docs/estandares-de-codigo.md   Convenciones. Vinculantes.
 docs/decisiones/               Un archivo por decisión rehecha.
+docs/diseño-de-las-rutas-de-navegación.md
+                               Decisiones de la navegación que no son ADR.
 docs/repositorio/              Auditorías con su deuda, y el traspaso del
                                laboratorio, archivado.
 docs/architecture/             Modelo C4 en LikeC4 (*.c4).
@@ -141,10 +143,11 @@ poner una, `docker compose down -v` y volver a levantar.
 
 **La carga del backbone** (`iekg-build load`) revisa los dos TTL contra la
 Tabla 1 del anexo, proyecta el backbone y lo valida en memoria; recién entonces
-vacía la base, crea las 8 restricciones de unicidad, escribe 180 nodos y 341
-aristas en una transacción y audita las 15 reglas. El reporte queda en
-`var/operational.sqlite`. Códigos de salida: 0 limpio; 1 cargado, con
-violaciones en la auditoría; 2 rechazado sin tocar la base; 3 fallido.
+vacía la base, crea las 8 restricciones de unicidad y el índice de la
+búsqueda, escribe 180 nodos y 341 aristas en una transacción y audita las 15
+reglas. El reporte queda en `var/operational.sqlite`. Códigos de salida: 0
+limpio; 1 cargado, con violaciones en la auditoría; 2 rechazado sin tocar la
+base; 3 fallido.
 
 Para verificarla desde cero:
 
@@ -161,6 +164,7 @@ Para verificarla desde cero:
      `WAS_DERIVED_FROM`.
    - `MATCH p = (:KnowledgeUnit)-[:PART_OF]->(a:KnowledgeArea) WHERE a.key ENDS WITH '#KA-AI' RETURN p`
    - `SHOW CONSTRAINTS`: 8, con nombre `<Etiqueta>_key_unique`.
+   - `SHOW INDEXES`: entre los de Neo4j, `name_search`, de tipo `FULLTEXT`.
 
 La consola de Windows puede mostrar mal las tildes de la salida; los datos
 están bien guardados y el Browser los muestra correctamente.

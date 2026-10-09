@@ -141,7 +141,7 @@ def _write_and_audit(driver: Driver, database: str, batch: Batch, target: str, o
     except (DriverError, Neo4jError) as error:
         out(f"Failed while emptying the base: {error}. Its state is unknown; run the load again.")
         return None
-    out(f"  {constraints} uniqueness constraints")
+    out(f"  {constraints} uniqueness constraints and the search index")
 
     out("Writing the reference layer in one transaction")
     try:

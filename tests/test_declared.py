@@ -51,6 +51,12 @@ def test_the_batch_brings_the_declared_nodes_and_edges():
             EdgeFact(TEACHES_CONCEPT, course, "c"), EdgeFact(REQUIRES_CONCEPT, course, "r")} <= set(batch.edges)
 
 
+def test_the_resource_is_about_its_course_and_each_of_its_topics_only():
+    batch = assemble_batch(DECLARATION, EXTRACTED, Snapshot(), public_base_url="http://localhost")
+    about = {edge.target for edge in batch.edges if edge.type == IS_ABOUT}
+    assert about == {course_key("1INF33"), "t"}
+
+
 def test_repeated_edges_are_merged():
     batch = assemble_batch(DECLARATION, EXTRACTED, Snapshot(), public_base_url="http://localhost")
     assert batch.edges.count(EdgeFact(PART_OF, "c", "t")) == 1

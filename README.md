@@ -48,8 +48,9 @@ La carga hace esto, en orden:
 1. Lee `ontology/ontologia_informatica.ttl` y `ontology/backbone_cs2023.ttl`,
    y rechaza cualquier constructo que no sepa proyectar.
 2. Valida en memoria lo que va a escribir.
-3. Vacía la base, crea las restricciones de unicidad y escribe 180 nodos y 341
-   aristas en una sola transacción.
+3. Vacía la base, crea las restricciones de unicidad y el índice de la
+   búsqueda por nombre, y escribe 180 nodos y 341 aristas en una sola
+   transacción.
 4. Audita el grafo completo y guarda el reporte en `var/operational.sqlite`.
 
 Si falla el paso 1 o el 2, la base queda como estaba.
@@ -87,6 +88,9 @@ RETURN p;
 
 // Restricciones de unicidad: 8, una por etiqueta
 SHOW CONSTRAINTS;
+
+// El índice de la búsqueda: name_search, de tipo FULLTEXT
+SHOW INDEXES;
 ```
 
 ## Limpiar y volver a cargar

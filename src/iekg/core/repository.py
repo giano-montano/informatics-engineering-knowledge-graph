@@ -36,6 +36,10 @@ from iekg.graph_schema import (
     PREF_LABEL_EN,
     PREF_LABEL_ES,
     PROVENANCE,
+    SEARCH_ANALYZER,
+    SEARCH_INDEX,
+    SEARCH_LABELS,
+    SEARCH_PROPERTIES,
     TOPIC,
     WAS_DERIVED_FROM,
 )
@@ -251,7 +255,9 @@ class GraphRepository:
         self._database = database
 
     def reset(self) -> int:
-        """Empty the base and create the uniqueness constraints; return how many.
+        """Empty the base and create the uniqueness constraints and the search index.
+
+        Returns how many constraints it created.
 
         Schema commands cannot share a transaction with data writes, so each
         runs on its own.
@@ -270,6 +276,11 @@ class GraphRepository:
                     f"CREATE CONSTRAINT {constraint_name(label)} "
                     f"FOR (n:{label}) REQUIRE n.{KEY} IS UNIQUE"
                 ).consume()
+            session.run(
+                f"CREATE FULLTEXT INDEX {SEARCH_INDEX} FOR (n:{'|'.join(SEARCH_LABELS)}) "
+                f"ON EACH [{', '.join(f'n.{name}' for name in SEARCH_PROPERTIES)}] "
+                f"OPTIONS {{indexConfig: {{`fulltext.analyzer`: '{SEARCH_ANALYZER}'}}}}"
+            ).consume()
         return len(ALL_LABELS)
 
     def read_snapshot(self) -> Snapshot:

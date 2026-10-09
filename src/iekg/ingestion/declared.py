@@ -22,6 +22,7 @@ from iekg.graph_schema import (
     RESOURCE_LOCATOR,
     RESOURCE_TYPE,
     TEACHES_CONCEPT,
+    TOPIC,
 )
 
 # The only resource type of the MVP, and it implies a course.
@@ -100,6 +101,8 @@ def assemble_batch(
     declared_edges = (
         EdgeFact(HAS_RESOURCE_TYPE, resource, resource_type),
         EdgeFact(IS_ABOUT, resource, course),
+        # A syllabus is about its topics too: it presents them as its units (DD-05).
+        *(EdgeFact(IS_ABOUT, resource, node.key) for node in extracted.nodes if node.label == TOPIC),
         *(EdgeFact(TEACHES_CONCEPT, course, key) for key in extracted.taught),
         *(EdgeFact(REQUIRES_CONCEPT, course, key) for key in extracted.required),
     )

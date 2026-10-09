@@ -8,12 +8,13 @@ y, más adelante, el contenido extraído de los sílabos de la carrera.
 
 | Funciona | Todavía no existe |
 |---|---|
-| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | Rutas de navegación de la API |
-| Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | Aplicación web |
-| Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | Imagen de Docker del sistema |
+| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | Aplicación web |
+| Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | Imagen de Docker del sistema |
+| Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | Script de medición de los patrones de consulta (AC-05) |
 | Reaplicación de los hechos guardados después de una carga | |
 | Registro de corridas, descartes y reportes de auditoría en SQLite | |
 | API de operación (subir, corridas, descartes, auditoría) y entrega de documentos | |
+| API de navegación: búsqueda, detalle de un nodo y las consultas derivadas | |
 
 ## Requisitos
 
@@ -135,6 +136,14 @@ ejemplos, la genera la propia API en <http://localhost:8000/docs> (OpenAPI en
 | `GET /api/runs/{id}` | sí | Una corrida completa, con el reporte de auditoría que la cerró |
 | `GET /api/runs/{id}/discards` | sí | Descartes de una corrida rechazada, con su lote o su salida cruda |
 | `GET /api/audit-reports/latest` | sí | Último reporte de auditoría y estado de la compuerta |
+| `GET /api/search?q=` | no | Elementos y cursos cuyo nombre o código empieza por cada palabra, por puntaje (RF-18) |
+| `GET /api/nodes?key=` | no | Un nodo con sus propiedades, sus vecinos y algunos vecinos de estos |
+| `GET /api/concepts/prerequisites?key=` | no | Prerrequisitos de un concepto, transitivos (RF-11) |
+| `GET /api/courses/prerequisites?key=` | no | Lo que un curso enseña y requiere, y los cursos que enseñan lo requerido (RF-12) |
+| `GET /api/elements/location?key=` | no | De qué es parte un elemento, hasta su área, y qué lo compone (RF-13) |
+| `GET /api/elements/resources?key=` | no | Recursos de un elemento o curso y de sus partes (RF-14) |
+| `GET /api/learning-path?key=&grain=` | no | Qué aprender antes de un concepto, tema, unidad, área o curso, por tema, curso o área (RF-15) |
+| `GET /api/concepts/specializations?key=` | no | De qué es tipo un concepto y qué es tipo de él, transitivo (RF-16) |
 | `GET /resources/{clave}` | no | El PDF de un recurso, solo si el grafo lo tiene |
 
 Ejemplos, con el token de `.env` (en PowerShell, `curl.exe`; en Linux, `curl`):
@@ -156,6 +165,12 @@ curl.exe -H $H http://localhost:8000/api/audit-reports/latest
 
 # El documento, en la dirección de su localizador (pública)
 curl.exe -O http://localhost:8000/resources/fadc83a6-a59e-47c9-a82d-8471fecb6178
+
+# Navegación (pública). La clave va como parámetro: las de referencia son IRIs con '#'
+curl.exe -G --data-urlencode "q=inteligencia artif" http://localhost:8000/api/search
+$KA = "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-AI"
+curl.exe -G --data-urlencode "key=$KA" http://localhost:8000/api/elements/location
+curl.exe -G --data-urlencode "key=$KA" -d "grain=course" http://localhost:8000/api/learning-path
 ```
 
 Sin token, o con otro, las rutas de `/api` responden 401. Un archivo que no
@@ -166,6 +181,14 @@ corrida ni el PDF: hay que volver a subirlo.
 
 `/resources/{clave}` responde 404 mientras el grafo no tenga el recurso: antes
 de que la corrida escriba, y después de una carga hasta reaplicar.
+
+Las rutas de navegación devuelven siempre `{nodes, edges}`: un trozo del grafo
+tal como está guardado, con la procedencia de cada nodo y de cada arista entre
+sus nodos. Una clave que no existe, o que es de otra clase que la que la ruta
+espera (un curso en `/api/concepts/prerequisites`), responde 404. Las cotas de
+profundidad, de vecinos y de resultados están en la cabecera de
+`src/iekg/api/navigation.py`; el diseño, en
+`docs/diseño-de-las-rutas-de-navegación.md`.
 
 El worker corre como proceso hijo de la API y su salida aparece en la consola
 de la API. Si termina sin error y quedan corridas pendientes con la compuerta

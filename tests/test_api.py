@@ -1,7 +1,8 @@
-"""The API on a fake worker launcher and a fake graph lookup.
+"""The API on a fake worker launcher, a fake graph lookup and fake navigation queries.
 
 The operational store is a real SQLite file under ``tmp_path``. The lookup of
-a resource in Neo4j has its own test, marked ``neo4j``.
+a resource in Neo4j has its own test, marked ``neo4j``; the navigation
+queries have theirs in ``test_navigation.py``.
 """
 
 import sys
@@ -14,12 +15,24 @@ from uuid import uuid4
 import pytest
 from fastapi.testclient import TestClient
 
+from iekg.api import navigation
 from iekg.api.app import ApiContext, create_app
+from iekg.api.navigation import GraphEdge, GraphNode, Subgraph
 from iekg.api.server import ChildWorker, resource_exists_in, should_relaunch
 from iekg.core.auditor import AuditReport, RuleResult
 from iekg.core.batch import Batch, NodeFact, Snapshot
 from iekg.core.repository import write_batch_in
-from iekg.graph_schema import INSTITUTIONAL, KEY, LAYER, LEARNING_RESOURCE, REFERENCE, RESOURCE_LOCATOR
+from iekg.graph_schema import (
+    CONCEPT,
+    COURSE,
+    INSTITUTIONAL,
+    KEY,
+    LAYER,
+    LEARNING_RESOURCE,
+    REFERENCE,
+    RESOURCE_LOCATOR,
+    WAS_DERIVED_FROM,
+)
 from iekg.ingestion.declared import SYLLABUS
 from iekg.ingestion.orchestrator import NO_REPORT, REPORT_OPEN, REPORT_WITH_VIOLATIONS, document_path
 from iekg.operational_store import INGESTION, LOAD, PENDING, Discard, OperationalStore
@@ -58,11 +71,27 @@ class FakeGraph:
 
 
 @dataclass
+class FakeNavigation:
+    """Answers every query with ``subgraph``; None stands for a key it does not find."""
+
+    subgraph: Subgraph | None = field(default_factory=Subgraph)
+    queries: list[navigation.Query] = field(default_factory=list)
+
+    def fetch(self, query: navigation.Query) -> Subgraph | None:
+        self.queries.append(query)
+        return self.subgraph
+
+    def stopwords(self) -> frozenset[str]:
+        return frozenset({"a"})
+
+
+@dataclass
 class Api:
     client: TestClient
     context: ApiContext
     worker: FakeWorker
     graph: FakeGraph
+    navigation: FakeNavigation
 
     def store(self) -> OperationalStore:
         return self.context.store()
@@ -70,10 +99,10 @@ class Api:
 
 @contextmanager
 def serving(tmp_path, worker: FakeWorker):
-    graph = FakeGraph()
-    context = ApiContext(TOKEN, tmp_path / "operational.sqlite", tmp_path / "documents", worker, graph)
+    graph, nav = FakeGraph(), FakeNavigation()
+    context = ApiContext(TOKEN, tmp_path / "operational.sqlite", tmp_path / "documents", worker, graph, nav)
     with TestClient(create_app(context)) as client:
-        yield Api(client, context, worker, graph)
+        yield Api(client, context, worker, graph, nav)
 
 
 @pytest.fixture
@@ -334,6 +363,93 @@ def test_a_resource_of_the_graph_without_its_file_is_not_found(api):
 @pytest.mark.parametrize("key", ["not-a-uuid", "..%2Foperational.sqlite"])
 def test_a_key_that_is_not_a_uuid_is_refused(api, key):
     assert api.client.get(f"/resources/{key}").status_code in (404, 422)
+
+
+# --- Navigation (RF-11 to RF-18) ----------------------------------------------
+
+KEY_ROUTES = [
+    ("/api/nodes", navigation.node_detail),
+    ("/api/concepts/prerequisites", navigation.concept_prerequisites),
+    ("/api/courses/prerequisites", navigation.course_prerequisites),
+    ("/api/elements/location", navigation.element_location),
+    ("/api/elements/resources", navigation.element_resources),
+    ("/api/concepts/specializations", navigation.concept_specializations),
+]
+IRI = "https://example.org/cs2023#KA-AI"
+
+
+@pytest.mark.parametrize("path, query", KEY_ROUTES)
+def test_a_navigation_route_runs_its_query_without_the_token(api, path, query):
+    response = api.client.get(path, params={"key": IRI})
+    assert response.status_code == 200
+    assert response.json() == {"nodes": [], "edges": []}
+    assert api.navigation.queries == [query(IRI)]
+
+
+@pytest.mark.parametrize("grain", ["topic", "course", "area"])
+def test_the_learning_path_runs_with_its_grain(api, grain):
+    assert api.client.get("/api/learning-path", params={"key": IRI, "grain": grain}).status_code == 200
+    assert api.navigation.queries == [navigation.learning_path(IRI, grain)]
+
+
+@pytest.mark.parametrize("path, params", [(path, {}) for path, _ in KEY_ROUTES] + [
+    ("/api/learning-path", {"grain": "topic"}),
+])
+def test_a_key_the_graph_does_not_have_is_not_found(api, path, params):
+    api.navigation.subgraph = None
+    response = api.client.get(path, params={"key": IRI, **params})
+    assert response.status_code == 404
+    assert "with this key" in response.json()["detail"]
+
+
+@pytest.mark.parametrize("path, params", [
+    ("/api/nodes", {}),
+    ("/api/nodes", {"key": ""}),
+    ("/api/learning-path", {"key": IRI}),
+    ("/api/learning-path", {"key": IRI, "grain": "unit"}),
+    ("/api/search", {}),
+    ("/api/search", {"q": ""}),
+    ("/api/search", {"q": "x" * 201}),
+])
+def test_a_navigation_route_refuses_wrong_parameters(api, path, params):
+    assert api.client.get(path, params=params).status_code == 422
+    assert api.navigation.queries == []
+
+
+def test_the_search_sends_every_word_as_a_prefix(api):
+    assert api.client.get("/api/search", params={"q": "Orientada a OBJETOS"}).status_code == 200
+    [query] = api.navigation.queries
+    assert query.parameters["lucene"] == "+orientada* a* +objetos*"
+
+
+def test_a_search_without_words_finds_nothing_and_asks_nothing(api):
+    response = api.client.get("/api/search", params={"q": "+-*?"})
+    assert response.json() == {"nodes": [], "edges": []}
+    assert api.navigation.queries == []
+
+
+def test_a_node_carries_only_what_applies_to_its_class(api):
+    api.navigation.subgraph = Subgraph(
+        nodes=(
+            GraphNode("c", CONCEPT, INSTITUTIONAL, "Punteros", None, depth=1),
+            GraphNode("z", COURSE, INSTITUTIONAL, "Algoritmia", None, course_code="1INF99", depth=0),
+            GraphNode("r", LEARNING_RESOURCE, INSTITUTIONAL, "Sílabo 1INF99", None, locator="http://h/resources/r"),
+            GraphNode("t", CONCEPT, INSTITUTIONAL, "Árboles", None, more_neighbors=False,
+                      has_description=True, description=None),
+        ),
+        edges=(GraphEdge(WAS_DERIVED_FROM, "c", "r", "r"),),
+    )
+    body = api.client.get("/api/nodes", params={"key": "c"}).json()
+    common = {"name_en": None, "layer": INSTITUTIONAL}
+    assert body["nodes"] == [
+        {"key": "c", "label": CONCEPT, "name_es": "Punteros", **common, "depth": 1},
+        {"key": "z", "label": COURSE, "name_es": "Algoritmia", **common, "course_code": "1INF99", "depth": 0},
+        {"key": "r", "label": LEARNING_RESOURCE, "name_es": "Sílabo 1INF99", **common,
+         "locator": "http://h/resources/r"},
+        {"key": "t", "label": CONCEPT, "name_es": "Árboles", **common, "description": None,
+         "more_neighbors": False},
+    ]
+    assert body["edges"] == [{"type": WAS_DERIVED_FROM, "source": "c", "target": "r", "provenance": "r"}]
 
 
 # --- Real adapters ----------------------------------------------------------

@@ -14,6 +14,7 @@ import uvicorn
 from neo4j import Driver, GraphDatabase, NotificationDisabledCategory
 
 from iekg.api.app import ApiContext, create_app, work_waiting
+from iekg.api.navigation import Neo4jNavigation
 from iekg.core.repository import Tx
 from iekg.graph_schema import INSTITUTIONAL, KEY, LAYER, LEARNING_RESOURCE
 from iekg.settings import ApiSettings, Settings, SettingsError
@@ -95,6 +96,7 @@ def main() -> int:
             documents_dir=settings.documents_dir,
             worker=ChildWorker(lambda: work_waiting(settings.operational_db)),
             resources=Neo4jResources(driver, settings.neo4j_database),
+            navigation=Neo4jNavigation(driver, settings.neo4j_database),
         ))
         # Passing the app object, not an import string, rules out more workers.
         uvicorn.run(app, host=api.host, port=api.port)

@@ -4,7 +4,9 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from iekg.api.navigation import GraphNode, Subgraph
 from iekg.core.batch import Batch, batch_to_data
+from iekg.graph_schema import COURSE, LEARNING_RESOURCE
 from iekg.operational_store import RUN_STATES, Discard, Run, StoredAuditReport
 
 _STATES = ", ".join(RUN_STATES)
@@ -139,3 +141,73 @@ class LatestAuditReport(BaseModel):
 
     gate: AuditGate
     report: AuditReportView | None = Field(description="Null if no write path has recorded one yet.")
+
+
+# --- Navigation -------------------------------------------------------------
+
+
+class NodeView(BaseModel):
+    key: str
+    label: str = Field(description="Its class, the most specific one.")
+    name_es: str | None
+    name_en: str | None
+    layer: str | None = Field(description="reference or institutional (RM-01).")
+    course_code: str | None = Field(None, description="Only on a course.")
+    locator: str | None = Field(None, description="Only on a learning resource: where its document is.")
+    description: str | None = Field(None, description="Only on the node a detail is about.")
+    depth: int | None = Field(None, description="Where the pattern measures it: the distance from the starting node.")
+    score: float | None = Field(None, description="Only in a search: the relevance of the match.")
+    more_neighbors: bool | None = Field(None, description="Only in a detail: whether the node has neighbors left out.")
+
+    @classmethod
+    def of(cls, node: GraphNode) -> "NodeView":
+        # Only what applies to the node is set, and only what is set is sent.
+        fields = {"key": node.key, "label": node.label, "name_es": node.name_es, "name_en": node.name_en,
+                  "layer": node.layer}
+        if node.label == COURSE:
+            fields["course_code"] = node.course_code
+        if node.label == LEARNING_RESOURCE:
+            fields["locator"] = node.locator
+        if node.has_description:
+            fields["description"] = node.description
+        for name in ("depth", "score", "more_neighbors"):
+            if getattr(node, name) is not None:
+                fields[name] = getattr(node, name)
+        return cls(**fields)
+
+
+class EdgeView(BaseModel):
+    type: str
+    source: str = Field(description="The key of the node it leaves, in the direction of the asserted property.")
+    target: str
+    provenance: str | None = Field(description="The key of the resource it was derived from, among the nodes; "
+                                               "null in the reference layer.")
+
+
+class SubgraphView(BaseModel):
+    model_config = _example({
+        "nodes": [
+            {"key": "15d8…", "label": "Concept", "name_es": "Variables estáticas", "name_en": None,
+             "layer": "institutional", "depth": 0},
+            {"key": "9a1c…", "label": "Concept", "name_es": "Punteros", "name_en": None,
+             "layer": "institutional", "depth": 1},
+            {"key": "fadc…", "label": "LearningResource", "name_es": "Sílabo 1INF25", "name_en": None,
+             "layer": "institutional", "locator": "http://localhost:8000/resources/fadc…"},
+        ],
+        "edges": [
+            {"type": "HAS_PREREQUISITE", "source": "15d8…", "target": "9a1c…", "provenance": "fadc…"},
+            {"type": "WAS_DERIVED_FROM", "source": "15d8…", "target": "fadc…", "provenance": "fadc…"},
+            {"type": "WAS_DERIVED_FROM", "source": "9a1c…", "target": "fadc…", "provenance": "fadc…"},
+        ],
+    })
+
+    nodes: list[NodeView]
+    edges: list[EdgeView]
+
+    @classmethod
+    def of(cls, subgraph: Subgraph) -> "SubgraphView":
+        return cls(
+            nodes=[NodeView.of(node) for node in subgraph.nodes],
+            edges=[EdgeView(type=e.type, source=e.source, target=e.target, provenance=e.provenance)
+                   for e in subgraph.edges],
+        )

@@ -1,6 +1,6 @@
 # Diseño de las rutas de navegación
 
-**Fecha:** 2026-10-09 · **Requisitos:** RF-11 a RF-18 · **Atributos:** AC-05, AC-03
+**Fecha:** 2026-10-09, revisado el mismo día al implementarlo · **Requisitos:** RF-11 a RF-18 · **Atributos:** AC-05, AC-03
 
 Documento interno. Reúne las decisiones de diseño de las rutas de navegación de la API, con sus alternativas descartadas. No es un ADR: ninguna cambia la arquitectura, que ya fija el componente de rutas de navegación del modelo C4. Es insumo para la tesis y para la implementación.
 
@@ -63,6 +63,10 @@ Medido el 2026-10-09 sobre Neo4j 5.26.28. El plan, con `EXPLAIN`, en Community (
 |---|---|
 | Devolver los caminos | Crecen de forma exponencial con los rombos; un solo nodo de partida así rompe el percentil 95 de AC-05. |
 
+La distancia de cada nodo (`depth`) se obtiene agrupando por el nodo alcanzado con `min(length(path))`: el planificador mantiene la expansión con poda, porque solo necesita el camino más corto a cada nodo. Medido en los mismos 16 rombos: 115 accesos, igual que con `DISTINCT`. `SHORTEST 1` hacia cada nodo cuesta 4297, y calcular primero los nodos y después la distancia a cada uno, 3456.
+
+Cuando la consulta agrupa por otra cosa (en el elevado, la distancia del prerrequisito y no la del camino), el planificador vuelve a enumerar caminos (`VarLengthExpand(All)`). Ahí se calculan antes los nodos distintos por cada punto de partida.
+
 ## 4. Profundidad máxima (RF-11)
 
 Los recorridos transitivos llevan una sola cota, declarada como una constante con nombre en la cabecera del módulo de navegación, fuera del Cypher (ADR-014: la especificación es lo que es dato). No va en el esquema del grafo, que declara lo que el grafo admite (ADR-008). Valor provisional: 10. Se cambia con un commit. El script de medición reporta la cota usada y la mayor profundidad alcanzada en el piloto; si son iguales, hubo recorte.
@@ -78,6 +82,8 @@ Con las consultas de la sección 3, la cota no cambia el costo: acota el tamaño
 ## 5. Rutas
 
 Bajo `/api`, públicas (ADR-013), en un router distinto del de operación, que exige el token a nivel de router. La clave va como parámetro de consulta y no en la ruta, porque las claves de referencia son IRIs con `#` y `/`.
+
+Una clave que no existe, o que es de otra clase que la que la ruta espera (un curso en `/api/concepts/prerequisites`), responde 404; el mensaje dice qué clase esperaba. 422 queda para los parámetros mal formados.
 
 | Ruta | Requisito | Patrón medido |
 |---|---|---|
@@ -105,8 +111,8 @@ Nodos de partida: aquellos desde los que el script de medición ejecuta cada pat
 | Patrón | Qué calcula (derivación del Paso 5) | Nodos de partida |
 |---|---|---|
 | Prerrequisito entre cursos (PC2) | El curso X precede al curso Z si X enseña un concepto que Z requiere. La respuesta trae los conceptos que Z enseña y los que requiere (RF-12), y los cursos que enseñan estos últimos. | Todo `Course` |
-| Área de un concepto (PC3) | Subir por `PART_OF` hasta el área. La ruta, para cualquier elemento, trae también su composición descendente (RF-13); el patrón medido parte de los conceptos. | Todo `Concept` |
-| Recursos agregados (PC5) | Los recursos que tratan sobre X (`IS_ABOUT`) más los que tratan sobre cualquier parte de X (`PART_OF` hacia abajo). | Todo elemento de conocimiento y todo curso |
+| Área de un concepto (PC3) | Subir por `PART_OF` hasta el área. La ruta, para cualquier elemento, trae también su composición descendente (RF-13), sin cota, y los `HAS_PREREQUISITE` entre sus partes, que dan el orden en que conviene aprenderlas (PC4). El patrón medido parte de los conceptos. | Todo `Concept` |
+| Recursos agregados (PC5) | Los recursos que tratan sobre X (`IS_ABOUT`) más los que tratan sobre cualquier parte de X (`PART_OF` hacia abajo). La respuesta trae las partes que llevan a cada recurso y el tipo de cada recurso (`HAS_RESOURCE_TYPE`), por el que PC5 filtra. | Todo elemento de conocimiento y todo curso |
 | Prerrequisito elevado (PC6) | Ver abajo. | Cada par (objetivo, grano) |
 | Cierre de especialización (PC7) | `SPECIALIZES` transitivo en ambos sentidos, con la cota. | Todo `Concept` |
 
@@ -114,9 +120,9 @@ RF-11 (prerrequisitos de un concepto, transitivo y con la cota) no es uno de los
 
 ### Prerrequisito elevado (RF-15, PC6)
 
-PC6 pregunta qué debe aprenderse para abordar un concepto, tema, curso o área. El **objetivo** es ese elemento; el **grano** es la unidad en que se responde: tema, curso o área (tesis, l. 1035).
+PC6 pregunta qué debe aprenderse para abordar un concepto, tema, curso o área. El **objetivo** es ese elemento, y también una unidad de conocimiento, que se trata como un tema o un área; el **grano** es la unidad en que se responde: tema, curso o área (tesis, l. 1035).
 
-1. Bajar del objetivo a sus conceptos: él mismo si es un concepto, sus partes por `PART_OF` si es un tema o un área, los que enseña si es un curso.
+1. Bajar del objetivo a sus conceptos: él mismo si es un concepto, sus partes por `PART_OF` si es un tema, una unidad o un área, los que enseña si es un curso.
 2. Seguir sus prerrequisitos por `HAS_PREREQUISITE`, con la cota, y descartar los que ya están dentro del objetivo.
 3. Subir cada prerrequisito al grano: a su tema o a su área por `PART_OF`, o a los cursos que lo enseñan. Con grano curso, el propio curso objetivo queda fuera.
 
@@ -125,6 +131,7 @@ Con objetivo curso y grano curso, este patrón da el prerrequisito entre cursos 
 | Alternativa | Motivo del descarte |
 |---|---|
 | Grano igual al nivel del objetivo | No responde qué cursos llevar para abordar un tema. |
+| Objetivo limitado a la lista de PC6 | La unidad es el nivel en que el estudiante recorre CS2023, y bajar de ella a sus conceptos es lo mismo que desde un tema o un área. Cuesta más pares (objetivo, grano) en la medición. |
 | Todos los granos en una respuesta | La respuesta más pesada, y el patrón medido deja de ser «elevar a un grano». |
 | Ampliar el prerrequisito entre cursos con `HAS_PREREQUISITE` | Cambia la derivación del Paso 5; el elevado con grano curso ya la cubre. |
 
@@ -144,12 +151,18 @@ Un concepto no tiene partes: sus recursos son los que tratan sobre él, y en el 
 
 Un índice de texto completo con el analizador `standard-folding`, declarado en el esquema del grafo y creado por la carga. Cubre las etiquetas preferidas de los elementos de conocimiento y de los cursos, y el código del curso.
 
-Medido el 2026-10-08 en `neo4j:5.26.28-community`: el índice existe en Community; ignora tildes y mayúsculas; busca palabras enteras salvo con comodín (`arbol*`); los comodines no pasan por el analizador (`árbol*` no encuentra nada). Por eso la API quita las tildes del texto, lo pasa a minúsculas, escapa la sintaxis de Lucene y agrega `*` a cada palabra antes de consultar con `db.index.fulltext.queryNodes`. Todas las palabras tienen que aparecer (se combinan con AND, no con el OR por omisión de Lucene). Devuelve los nodos ordenados por puntaje, con un máximo de resultados.
+Medido el 2026-10-08 en `neo4j:5.26.28-community`: el índice existe en Community; ignora tildes y mayúsculas; busca palabras enteras salvo con comodín (`arbol*`); los comodines no pasan por el analizador (`árbol*` no encuentra nada). Por eso la API quita las tildes del texto, lo pasa a minúsculas, lo separa en palabras donde el tokenizador del índice lo separa y agrega `*` a cada una antes de consultar con `db.index.fulltext.queryNodes`. El tokenizador separa en todo lo que no es letra ni dígito, salvo un punto, un apóstrofo o un guion bajo entre ellos: «node.js», «802.11» y «o'reilly» son una palabra cada una (medido: separándolas, esos nombres escritos completos no se encuentran a sí mismos). Ninguno de esos caracteres está entre los especiales de la sintaxis de Lucene (documentación del analizador sintáctico clásico de Lucene, «Escaping Special Characters»), así que no queda nada que escapar. Todas tienen que aparecer (cada una con `+`, no con el OR por omisión de Lucene), salvo las palabras vacías. Devuelve los nodos ordenados por puntaje y, a igual puntaje, por clave, con un máximo de 20.
+
+**Palabras vacías.** Medido el 2026-10-09: `standard-folding` descarta al indexar 33 palabras vacías del inglés, y varias son también palabras del español («a», «no», «as»). Exigirlas no encuentra nada: `+programacion* +orientada* +a* +objetos*` no encuentra «Programación orientada a objetos». La API pide la lista a la base (`db.index.fulltext.listAvailableAnalyzers`, para el analizador declarado) y deja esas palabras como cláusulas opcionales, que solo suman puntaje. Así «an», sola, sigue sirviendo de prefijo de «Análisis».
 
 | Alternativa | Motivo del descarte |
 |---|---|
 | `toLower(...) CONTAINS` | No ignora tildes: `arbol` no encuentra «Árboles». Y recorre todos los nodos. |
 | Analizador `spanish` | Con lematización y palabras vacías; no evaluado. |
+| Escapar la sintaxis de Lucene en cada palabra separada por espacios | El índice parte «cliente-servidor» en dos palabras; `cliente\-servidor*` no encuentra nada (medido con `e\-learning*`). |
+| Quitar las palabras vacías de la consulta | Una palabra vacía que se está escribiendo puede ser el prefijo de otra («an» de «Análisis»). |
+| Analizador `standard-no-stop-words` | No quita tildes. |
+| Lista de palabras vacías escrita en el código | Puede separarse de la del analizador; la base ya la declara. |
 
 ## 8. Medición de AC-05
 
@@ -161,7 +174,7 @@ El tiempo en el motor es la suma de `result_available_after` y `result_consumed_
 
 Devuelve el nodo con todas sus propiedades, sus vecinos directos y algunos vecinos de esos vecinos: lo que rodea al elemento en pantalla y desde donde el estudiante sigue explorando, a la manera de una enciclopedia. Cuenta como vecino todo nodo unido por una arista de cualquier tipo salvo `WAS_DERIVED_FROM`, que llega por la regla de la sección 2: de lo contrario, el detalle de CS2023 traería los 179 elementos de referencia.
 
-Dos cotas, declaradas junto a la de profundidad, acotan la respuesta: un máximo de vecinos directos (provisional: 25) y un máximo de vecinos de segundo nivel por cada vecino directo (provisional: 5). Cuando hay más, se eligen en un orden fijo, para que la misma consulta dé siempre la misma respuesta. La respuesta indica, por nodo, si quedaron vecinos fuera, para que R6 ofrezca expandirlo con otra llamada.
+Dos cotas, declaradas junto a la de profundidad, acotan la respuesta: un máximo de vecinos directos (provisional: 25) y un máximo de vecinos de segundo nivel por cada vecino directo (provisional: 5), sin contar el nodo ni sus vecinos directos. Cuando hay más, se eligen en un orden fijo, para que la misma consulta dé siempre la misma respuesta: primero los unidos por una arista que sale del nodo, después por tipo de arista, por nombre en español y por clave. Las aristas que salen dicen de qué es parte el nodo, qué requiere y de qué es tipo: son pocas, y un recorte por nombre las perdería entre las partes de un tema. La respuesta indica, por nodo, si tiene vecinos que no están en la respuesta (`more_neighbors`), para que R6 ofrezca expandirlo con otra llamada.
 
 No es uno de los cinco patrones medidos: su recorrido tiene longitud fija y no deriva un cierre ni un agregado.
 
@@ -174,3 +187,7 @@ No es uno de los cinco patrones medidos: su recorrido tiene longitud fija y no d
 ## 10. Evidencia del prerrequisito elevado
 
 La respuesta del elevado trae, además de los temas, cursos o áreas del grano, los conceptos prerrequisito y las aristas que los justifican: `HAS_PREREQUISITE` entre conceptos, y `PART_OF` o `TEACHES_CONCEPT` hacia el grano. Es la regla de la sección 1, y es lo que permite mostrar por qué un curso precede a otro.
+
+Del lado del objetivo trae los conceptos de los que sale una arista `HAS_PREREQUISITE` hacia fuera de él, y lo que los une con el objetivo dentro de su partonomía; no todos sus conceptos. Con grano área, trae también el tema y la unidad de cada prerrequisito, por los que pasa su `PART_OF` hasta el área.
+
+`depth` distingue la respuesta de la evidencia: es 0 en el objetivo y en lo que está dentro de él; en un prerrequisito, su distancia al objetivo; en un tema, curso o área del grano, la de su prerrequisito más cercano. El tema y la unidad intermedios del grano área no la llevan.

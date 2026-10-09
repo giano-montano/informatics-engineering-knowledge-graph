@@ -102,8 +102,10 @@ src/iekg/ingestion/            Ingesta (#worker del C4): envío, orquestador,
                                extractor (Docling + PydanticAI), hechos
                                declarados y el punto de entrada `iekg-worker`.
 src/iekg/api/                  API (#api del C4): rutas de operación bajo
-                               `/api`, con token, y `/resources/{clave}`;
-                               punto de entrada `iekg-api`.
+                               `/api`, con token; rutas de navegación bajo
+                               `/api`, públicas, con sus consultas y cotas en
+                               `navigation.py`; `/resources/{clave}`; punto
+                               de entrada `iekg-api`.
 src/iekg/operational_store.py  Almacén operacional (SQLite): corridas,
                                descartes y reportes de auditoría.
 src/iekg/fact_store.py         Almacén de hechos: un archivo por corrida escrita.
@@ -115,9 +117,10 @@ tests/                         Pruebas; una negativa por cada forma de violar
 var/                           Almacenes locales del sistema. Ignorado por git.
 ```
 
-Lo que **no** hay todavía: las rutas de navegación de la API (su diseño está
-en `docs/diseño-de-las-rutas-de-navegación.md`), la aplicación web y la imagen
-de Docker propia.
+Lo que **no** hay todavía: el script de medición de AC-05
+(`scripts/measure_navigation.py`), la aplicación web y la imagen de Docker
+propia. El diseño de la navegación está en
+`docs/diseño-de-las-rutas-de-navegación.md`.
 
 ## 7. Comandos
 

@@ -1,8 +1,9 @@
-"""The API application: operation routes under ``/api`` and the documents under ``/resources``.
+"""The API application: operation and navigation routes under ``/api``, and the documents under ``/resources``.
 
 The API never writes in the graph (ADR-007). The operation routes record runs
-and launch the worker; ``/resources`` only reads. What the tests replace —
-the worker launcher and the graph lookup — comes in through ``ApiContext``.
+and launch the worker; the navigation routes and ``/resources`` only read.
+What the tests replace — the worker launcher, the graph lookup and the
+navigation queries — comes in through ``ApiContext``.
 """
 
 import secrets
@@ -13,7 +14,7 @@ from pathlib import Path
 from typing import Annotated, Protocol
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -24,8 +25,11 @@ from iekg.api.models import (
     RunDetail,
     RunDiscards,
     RunSummary,
+    SubgraphView,
     SubmittedRun,
 )
+from iekg.api import navigation
+from iekg.api.navigation import Grain, Subgraph
 from iekg.ingestion.orchestrator import document_path, gate_closed_by, has_work
 from iekg.ingestion.submission import SubmissionError, submit_document, withdraw_submission
 from iekg.operational_store import OperationalStore
@@ -46,6 +50,16 @@ class ResourceIndex(Protocol):
         ...
 
 
+class GraphNavigation(Protocol):
+    def fetch(self, query: navigation.Query) -> Subgraph | None:
+        """The subgraph the query returns; None if its starting node is not there."""
+        ...
+
+    def stopwords(self) -> frozenset[str]:
+        """The stop words of the search index's analyzer."""
+        ...
+
+
 @dataclass(frozen=True)
 class ApiContext:
     operator_token: str
@@ -53,6 +67,7 @@ class ApiContext:
     documents_dir: Path
     worker: WorkerLauncher
     resources: ResourceIndex
+    navigation: GraphNavigation
 
     def store(self) -> OperationalStore:
         # Opened and closed inside each endpoint, not in a dependency: a sqlite3
@@ -81,11 +96,12 @@ def create_app(context: ApiContext) -> FastAPI:
 
     app = FastAPI(
         title="IEKG API",
-        summary="Knowledge graph of the Informatics Engineering curriculum: operation and documents.",
+        summary="Knowledge graph of the Informatics Engineering curriculum: operation, navigation and documents.",
         version="0.1.0",
         lifespan=lifespan,
     )
     app.include_router(operations_router(context), prefix="/api")
+    app.include_router(navigation_router(context), prefix="/api")
     app.include_router(documents_router(context))
     return app
 
@@ -170,6 +186,86 @@ def operations_router(context: ApiContext) -> APIRouter:
             gate=AuditGate(state="closed" if reason else "open", reason=reason),
             report=AuditReportView.of(latest) if latest else None,
         )
+
+    return router
+
+
+Key = Annotated[str, Query(min_length=1, description="The key of the node; an IRI in the reference layer.")]
+_NOT_FOUND = {404: {"description": "No node of the expected class with this key"}}
+
+
+def navigation_router(context: ApiContext) -> APIRouter:
+    """The derivations of R1's step 5, the search and the detail of a node (RF-11 to RF-18). Public.
+
+    Every route returns a piece of the graph as stored, with the provenance of
+    each node and edge among its nodes (RF-17).
+    """
+    router = APIRouter(tags=["navigation"])
+
+    def get(path: str):
+        # Only what applies to each node is sent (see NodeView).
+        return router.get(path, responses=_NOT_FOUND, response_model_exclude_unset=True)
+
+    def subgraph(query: navigation.Query, expected: str) -> SubgraphView:
+        found = context.navigation.fetch(query)
+        if found is None:
+            raise HTTPException(404, f"no {expected} with this key")
+        return SubgraphView.of(found)
+
+    @router.get("/search", response_model_exclude_unset=True)
+    def search(
+        q: Annotated[str, Query(min_length=1, max_length=200, description="Words of a name or a course code.")],
+    ) -> SubgraphView:
+        """Knowledge elements and courses whose names or code start with every word, by score (RF-18).
+
+        Accents and case are ignored. At most ``MAX_SEARCH_RESULTS`` nodes.
+        """
+        query = navigation.search(q, context.navigation.stopwords())
+        if query is None:
+            return SubgraphView(nodes=[], edges=[])
+        return SubgraphView.of(context.navigation.fetch(query) or Subgraph())
+
+    @get("/nodes")
+    def node_detail(key: Key) -> SubgraphView:
+        """The node with its properties, its direct neighbors and a few of theirs, by any edge but WAS_DERIVED_FROM."""
+        return subgraph(navigation.node_detail(key), "node")
+
+    @get("/concepts/prerequisites")
+    def concept_prerequisites(key: Key) -> SubgraphView:
+        """The prerequisites of a concept, transitively and with bounded depth (RF-11)."""
+        return subgraph(navigation.concept_prerequisites(key), "concept")
+
+    @get("/courses/prerequisites")
+    def course_prerequisites(key: Key) -> SubgraphView:
+        """What a course teaches and requires, and the courses that teach what it requires (RF-12)."""
+        return subgraph(navigation.course_prerequisites(key), "course")
+
+    @get("/elements/location")
+    def element_location(key: Key) -> SubgraphView:
+        """What a knowledge element is part of, up to its area, and what is part of it (RF-13)."""
+        return subgraph(navigation.element_location(key), "knowledge element")
+
+    @get("/elements/resources")
+    def element_resources(key: Key) -> SubgraphView:
+        """The learning resources about an element or a course, and about any of its parts (RF-14)."""
+        return subgraph(navigation.element_resources(key), "knowledge element or course")
+
+    @get("/learning-path")
+    def learning_path(
+        key: Key,
+        grain: Annotated[Grain, Query(description="The unit of the answer: topics, courses or areas.")],
+    ) -> SubgraphView:
+        """What to learn before a concept, topic, unit, area or course, lifted to the grain (RF-15).
+
+        ``depth`` is 0 inside the target; for a prerequisite, its distance from
+        the target, and for a node of the grain, that of its nearest prerequisite.
+        """
+        return subgraph(navigation.learning_path(key, grain), "knowledge element or course")
+
+    @get("/concepts/specializations")
+    def concept_specializations(key: Key) -> SubgraphView:
+        """What a concept is a kind of, and what is a kind of it, transitively (RF-16)."""
+        return subgraph(navigation.concept_specializations(key), "concept")
 
     return router
 

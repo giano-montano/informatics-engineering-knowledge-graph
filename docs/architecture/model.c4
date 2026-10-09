@@ -102,7 +102,8 @@ model {
         technology 'FastAPI'
         summary 'Consultas derivadas y entrega de documentos.'
         description '''
-          Ejecuta los cinco patrones de consulta de DD-07, la búsqueda por
+          Ejecuta los cinco patrones de consulta derivados (DD-07 y DD-08),
+          los prerrequisitos de un concepto, la búsqueda por
           nombre y el detalle de un nodo, y sirve el documento de cada
           recurso institucional.
 

@@ -116,7 +116,8 @@ var/                           Almacenes locales del sistema. Ignorado por git.
 ```
 
 Lo que **no** hay todavía: las rutas de navegación de la API (su diseño está
-pendiente), la aplicación web y la imagen de Docker propia.
+en `docs/diseño-de-las-rutas-de-navegación.md`), la aplicación web y la imagen
+de Docker propia.
 
 ## 7. Comandos
 

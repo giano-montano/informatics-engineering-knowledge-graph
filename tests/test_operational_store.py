@@ -112,6 +112,17 @@ def test_runs_are_taken_oldest_first_and_only_once(tmp_path):
         assert store.take_pending_run() is None
 
 
+def test_only_a_run_no_worker_took_is_withdrawn(tmp_path):
+    with OperationalStore(tmp_path / "operational.sqlite") as store:
+        assert not store.has_pending_runs()
+        taken, waiting = new_run(store, "a"), new_run(store, "b")
+        store.take_pending_run()
+        assert store.has_pending_runs()
+        assert not store.withdraw_pending_run(taken)
+        assert store.withdraw_pending_run(waiting)
+        assert not store.has_pending_runs()
+        assert [run.id for run in store.list_runs()] == [taken]
+
 def test_a_written_run_moves_through_its_states(tmp_path):
     with OperationalStore(tmp_path / "operational.sqlite") as store:
         run_id = new_run(store)

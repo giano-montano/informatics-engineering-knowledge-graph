@@ -56,3 +56,12 @@ def submit_document(
     except Exception:
         target.unlink(missing_ok=True)
         raise
+
+
+def withdraw_submission(store: OperationalStore, documents: Path, run_id: int) -> bool:
+    """Undo a submission no worker took yet, run and document; False if one already took it (ADR-007)."""
+    resource_key = store.get_run(run_id).resource_key
+    if not store.withdraw_pending_run(run_id):
+        return False
+    document_path(documents, resource_key).unlink(missing_ok=True)
+    return True

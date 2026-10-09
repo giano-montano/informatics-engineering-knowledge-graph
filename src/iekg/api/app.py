@@ -6,6 +6,8 @@ the worker launcher and the graph lookup — comes in through ``ApiContext``.
 """
 
 import secrets
+import sys
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated, Protocol
@@ -24,14 +26,17 @@ from iekg.api.models import (
     RunSummary,
     SubmittedRun,
 )
-from iekg.ingestion.orchestrator import document_path, gate_closed_by
-from iekg.ingestion.submission import SubmissionError, submit_document
+from iekg.ingestion.orchestrator import document_path, gate_closed_by, has_work
+from iekg.ingestion.submission import SubmissionError, submit_document, withdraw_submission
 from iekg.operational_store import OperationalStore
 
 
 class WorkerLauncher(Protocol):
     def ensure_running(self) -> bool:
-        """Launch the worker unless one is active; True if this call launched it."""
+        """Launch the worker unless one is active; True if this call launched it.
+
+        Raises ``OSError`` if the process cannot be started.
+        """
         ...
 
 
@@ -56,11 +61,29 @@ class ApiContext:
         return OperationalStore(self.operational_db)
 
 
+def work_waiting(operational_db: Path) -> bool:
+    """Whether a worker launched now would take a run (ADR-007)."""
+    with OperationalStore(operational_db) as store:
+        return has_work(store)
+
+
 def create_app(context: ApiContext) -> FastAPI:
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        # Picks up what stayed pending with the gate closed: the build
+        # processes run with the system stopped (ADR-007).
+        if work_waiting(context.operational_db):
+            try:
+                context.worker.ensure_running()
+            except OSError as error:
+                print(f"error: could not launch the worker: {error}", file=sys.stderr)
+        yield
+
     app = FastAPI(
         title="IEKG API",
         summary="Knowledge graph of the Informatics Engineering curriculum: operation and documents.",
         version="0.1.0",
+        lifespan=lifespan,
     )
     app.include_router(operations_router(context), prefix="/api")
     app.include_router(documents_router(context))
@@ -81,7 +104,10 @@ def operations_router(context: ApiContext) -> APIRouter:
     """Submission, run state, discards and audit report (RF-02, RF-03, RF-05, RF-23)."""
     router = APIRouter(tags=["operation"], dependencies=[Depends(_operator_guard(context.operator_token))])
 
-    @router.post("/runs", status_code=202, responses={422: {"description": "Not a PDF, or a declaration it lacks"}})
+    @router.post("/runs", status_code=202, responses={
+        422: {"description": "Not a PDF, or a declaration it lacks"},
+        503: {"description": "The worker could not be launched; nothing was recorded"},
+    })
     def submit_run(
         file: UploadFile,
         resource_type: Annotated[str, Form()],
@@ -97,7 +123,18 @@ def operations_router(context: ApiContext) -> APIRouter:
                 )
             except SubmissionError as error:
                 raise HTTPException(422, str(error)) from error
-        return SubmittedRun(run_id=run_id, worker_launched=context.worker.ensure_running())
+        try:
+            launched = context.worker.ensure_running()
+        except OSError as error:
+            # All or nothing: a run no worker will take is withdrawn (ADR-007).
+            with context.store() as store:
+                withdrawn = withdraw_submission(store, context.documents_dir, run_id)
+            if withdrawn:
+                raise HTTPException(
+                    503, f"could not launch the worker ({error}); nothing was recorded, submit the document again",
+                ) from error
+            launched = False
+        return SubmittedRun(run_id=run_id, worker_launched=launched)
 
     @router.get("/runs")
     def list_runs() -> list[RunSummary]:

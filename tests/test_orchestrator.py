@@ -25,7 +25,7 @@ from iekg.graph_schema import (
 )
 from iekg.ingestion.declared import SYLLABUS, ExtractedFacts, course_key
 from iekg.ingestion.extraction import EX_02, NonConformingOutput, ProviderFailure
-from iekg.ingestion.orchestrator import Orchestrator
+from iekg.ingestion.orchestrator import Orchestrator, has_work
 from iekg.operational_store import (
     COMPLETED,
     FAILED,
@@ -136,6 +136,18 @@ def test_an_open_or_dirty_latest_report_keeps_the_runs_pending(store, tmp_path, 
     orchestrator(store, tmp_path, FakeGraph(), facts_under(UNIT)).run_pending()
     assert statuses(store) == [PENDING]
 
+
+
+@pytest.mark.parametrize("gate, runs, work", [
+    (open_gate, 1, True),
+    (open_gate, 0, False),
+    (lambda store: None, 1, False),
+    (lambda store: (open_gate(store), store.open_audit_report(origin=LOAD)), 1, False),
+])
+def test_there_is_work_only_with_runs_pending_and_the_gate_open(store, gate, runs, work):
+    gate(store)
+    submit(store, runs)
+    assert has_work(store) == work
 
 # --- Outcomes of a run ---------------------------------------------------------
 

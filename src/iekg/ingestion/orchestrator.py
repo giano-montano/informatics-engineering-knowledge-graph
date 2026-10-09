@@ -72,6 +72,11 @@ def gate_closed_by(latest: StoredAuditReport | None) -> str | None:
     return None if latest.clean else REPORT_WITH_VIOLATIONS
 
 
+def has_work(store: OperationalStore) -> bool:
+    """Whether a worker launched now would take a run: some pending and the gate open."""
+    return store.has_pending_runs() and gate_closed_by(store.latest_audit_report()) is None
+
+
 @dataclass
 class Orchestrator:
     store: OperationalStore

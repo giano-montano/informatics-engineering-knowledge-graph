@@ -8,12 +8,12 @@ worker, and the single writer rests on there being one (ADR-007).
 import subprocess
 import sys
 import threading
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 import uvicorn
 from neo4j import Driver, GraphDatabase, NotificationDisabledCategory
 
-from iekg.api.app import ApiContext, create_app
+from iekg.api.app import ApiContext, create_app, work_waiting
 from iekg.core.repository import Tx
 from iekg.graph_schema import INSTITUTIONAL, KEY, LAYER, LEARNING_RESOURCE
 from iekg.settings import ApiSettings, Settings, SettingsError
@@ -21,13 +21,23 @@ from iekg.settings import ApiSettings, Settings, SettingsError
 WORKER_COMMAND = (sys.executable, "-m", "iekg.ingestion.worker")
 
 
-class ChildWorker:
-    """Launches the worker as a child process unless the last one is still running."""
+def should_relaunch(exit_code: int, has_work: Callable[[], bool]) -> bool:
+    """A worker that ended with an error is not relaunched: it would fail again in a loop (ADR-007)."""
+    return exit_code == 0 and has_work()
 
-    def __init__(self, command: Sequence[str] = WORKER_COMMAND) -> None:
+
+class ChildWorker:
+    """Launches the worker as a child process unless the last one is still running.
+
+    A thread waits for each child and launches another when it ends cleanly
+    with work left: a run that arrived while it was ending (ADR-007).
+    """
+
+    def __init__(self, has_work: Callable[[], bool], command: Sequence[str] = WORKER_COMMAND) -> None:
+        self._has_work = has_work
         self._command = list(command)
         self._process: subprocess.Popen | None = None
-        # Two uploads at once run in two threads; only one may launch.
+        # Uploads and the waiting thread run in different threads; only one may launch.
         self._lock = threading.Lock()
 
     def ensure_running(self) -> bool:
@@ -36,7 +46,16 @@ class ChildWorker:
                 return False
             # Its output goes to the API's console: it is the run log.
             self._process = subprocess.Popen(self._command)
+            threading.Thread(target=self._wait_for, args=(self._process,), daemon=True).start()
             return True
+
+    def _wait_for(self, process: subprocess.Popen) -> None:
+        if not should_relaunch(process.wait(), self._has_work):
+            return
+        try:
+            self.ensure_running()
+        except OSError as error:
+            print(f"error: could not launch the worker again: {error}", file=sys.stderr)
 
 
 _RESOURCE_EXISTS = f"""
@@ -74,7 +93,7 @@ def main() -> int:
             operator_token=api.operator_token,
             operational_db=settings.operational_db,
             documents_dir=settings.documents_dir,
-            worker=ChildWorker(),
+            worker=ChildWorker(lambda: work_waiting(settings.operational_db)),
             resources=Neo4jResources(driver, settings.neo4j_database),
         ))
         # Passing the app object, not an import string, rules out more workers.

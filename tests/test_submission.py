@@ -4,7 +4,7 @@ import pytest
 
 from iekg.ingestion.declared import SYLLABUS
 from iekg.ingestion.orchestrator import document_path
-from iekg.ingestion.submission import SubmissionError, submit_document
+from iekg.ingestion.submission import SubmissionError, submit_document, withdraw_submission
 from iekg.operational_store import PENDING, OperationalStore
 
 PDF = b"%PDF-1.7\n%fake body\n"
@@ -46,3 +46,15 @@ def test_an_unknown_resource_type_is_refused(tmp_path):
 def test_a_syllabus_without_its_course_is_refused(tmp_path, field):
     with pytest.raises(SubmissionError, match="code and the name"):
         submit(tmp_path, **{field: "  "})
+
+
+@pytest.mark.parametrize("taken", [False, True])
+def test_a_submission_is_withdrawn_with_its_document_only_while_no_worker_took_it(tmp_path, taken):
+    run = submit(tmp_path)
+    document = document_path(tmp_path / "documents", run.resource_key)
+    with OperationalStore(tmp_path / "operational.sqlite") as store:
+        if taken:
+            store.take_pending_run()
+        assert withdraw_submission(store, tmp_path / "documents", run.id) == (not taken)
+        assert len(store.list_runs()) == (1 if taken else 0)
+    assert document.is_file() == taken

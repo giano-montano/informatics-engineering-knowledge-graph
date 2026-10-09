@@ -5,6 +5,9 @@ a resource in Neo4j has its own test, marked ``neo4j``.
 """
 
 import sys
+import threading
+from collections.abc import Callable
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from uuid import uuid4
 
@@ -12,7 +15,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from iekg.api.app import ApiContext, create_app
-from iekg.api.server import ChildWorker, resource_exists_in
+from iekg.api.server import ChildWorker, resource_exists_in, should_relaunch
 from iekg.core.auditor import AuditReport, RuleResult
 from iekg.core.batch import Batch, NodeFact, Snapshot
 from iekg.core.repository import write_batch_in
@@ -32,10 +35,16 @@ DIRTY = AuditReport((RuleResult("RI-08", 1, ("x (Topic) is not part of any Knowl
 class FakeWorker:
     active: bool = False
     launches: int = 0
+    fails: bool = False
+    # What another worker does before this launch fails.
+    meanwhile: Callable[[], object] = lambda: None
 
     def ensure_running(self) -> bool:
         if self.active:
             return False
+        if self.fails:
+            self.meanwhile()
+            raise OSError("cannot start the worker")
         self.active, self.launches = True, self.launches + 1
         return True
 
@@ -59,12 +68,18 @@ class Api:
         return self.context.store()
 
 
-@pytest.fixture
-def api(tmp_path) -> Api:
-    worker, graph = FakeWorker(), FakeGraph()
+@contextmanager
+def serving(tmp_path, worker: FakeWorker):
+    graph = FakeGraph()
     context = ApiContext(TOKEN, tmp_path / "operational.sqlite", tmp_path / "documents", worker, graph)
     with TestClient(create_app(context)) as client:
         yield Api(client, context, worker, graph)
+
+
+@pytest.fixture
+def api(tmp_path) -> Api:
+    with serving(tmp_path, FakeWorker()) as api:
+        yield api
 
 
 def submit(api, content=PDF, file_name="silabo.pdf", headers=AUTH, **form):
@@ -120,6 +135,27 @@ def test_a_submission_while_the_worker_runs_does_not_launch_another(api):
     response = submit(api)
     assert response.json() == {"run_id": 2, "worker_launched": False}
     assert api.worker.launches == 1
+
+
+def test_a_submission_whose_worker_cannot_be_launched_records_nothing(api):
+    api.worker.fails = True
+    response = submit(api)
+    assert response.status_code == 503
+    assert "nothing was recorded" in response.json()["detail"]
+    with api.store() as store:
+        assert store.list_runs() == []
+    assert not any(api.context.documents_dir.glob("*"))
+
+
+def test_a_submission_another_worker_took_before_the_launch_failed_is_accepted(api):
+    def take():
+        with api.store() as store:
+            store.take_pending_run()
+
+    api.worker.fails, api.worker.meanwhile = True, take
+    response = submit(api)
+    assert response.status_code == 202
+    assert response.json() == {"run_id": 1, "worker_launched": False}
 
 
 @pytest.mark.parametrize("content, file_name", [(b"just text", "silabo.pdf"), (PDF, "silabo.txt")])
@@ -240,6 +276,31 @@ def test_the_gate_is_closed_as_the_worker_sees_it(api, reports, reason):
     assert (body["report"] is None) == (not reports)
 
 
+# --- Launch at start-up (ADR-007) -------------------------------------------
+
+
+def leave(tmp_path, *, pending: int, gate_open: bool):
+    with OperationalStore(tmp_path / "operational.sqlite") as store:
+        if gate_open:
+            store.complete_audit_report(store.open_audit_report(origin=LOAD), CLEAN)
+        for _ in range(pending):
+            store.create_run(resource_key=str(uuid4()), resource_type=SYLLABUS, course_code="1INF33",
+                             course_name="Bases de Datos", file_name="silabo.pdf")
+
+
+@pytest.mark.parametrize("pending, gate_open, launches", [(1, True, 1), (0, True, 0), (1, False, 0)])
+def test_the_api_launches_the_worker_at_start_up_only_if_it_has_work(tmp_path, pending, gate_open, launches):
+    leave(tmp_path, pending=pending, gate_open=gate_open)
+    with serving(tmp_path, FakeWorker()) as api:
+        assert api.worker.launches == launches
+
+
+def test_the_api_starts_even_if_it_cannot_launch_the_worker(tmp_path):
+    leave(tmp_path, pending=1, gate_open=True)
+    with serving(tmp_path, FakeWorker(fails=True)) as api:
+        assert [run["status"] for run in api.client.get("/api/runs", headers=AUTH).json()] == [PENDING]
+
+
 # --- Documents (RF-24) ------------------------------------------------------
 
 
@@ -279,12 +340,32 @@ def test_a_key_that_is_not_a_uuid_is_refused(api, key):
 
 
 def test_the_child_worker_is_launched_again_only_once_the_last_one_ended():
-    worker = ChildWorker([sys.executable, "-c", "import time; time.sleep(1)"])
+    worker = ChildWorker(lambda: False, [sys.executable, "-c", "import time; time.sleep(1)"])
     assert worker.ensure_running()
     assert not worker.ensure_running()
     worker._process.wait(timeout=10)
     assert worker.ensure_running()
     worker._process.wait(timeout=10)
+
+
+@pytest.mark.parametrize("exit_code, work, relaunch", [(0, True, True), (0, False, False), (3, True, False)])
+def test_a_worker_is_relaunched_only_after_a_clean_end_with_work_left(exit_code, work, relaunch):
+    assert should_relaunch(exit_code, lambda: work) == relaunch
+
+
+def test_the_child_worker_relaunches_itself_while_there_is_work():
+    answers, asked_twice = [True, False], threading.Event()
+
+    def has_work():
+        answer = answers.pop(0)
+        if not answers:
+            asked_twice.set()
+        return answer
+
+    worker = ChildWorker(has_work, [sys.executable, "-c", "pass"])
+    assert worker.ensure_running()
+    # Asked a second time only once a second child ended.
+    assert asked_twice.wait(timeout=10)
 
 
 @pytest.mark.neo4j

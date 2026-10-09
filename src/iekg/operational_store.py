@@ -260,6 +260,16 @@ class OperationalStore:
             ).fetchone()
         return _run(row) if row else None
 
+    def has_pending_runs(self) -> bool:
+        row = self._connection.execute("SELECT EXISTS (SELECT 1 FROM runs WHERE status = ?)", (PENDING,)).fetchone()
+        return bool(row[0])
+
+    def withdraw_pending_run(self, run_id: int) -> bool:
+        """Delete the run if no worker took it yet; False if one did (ADR-007)."""
+        with self._connection:
+            cursor = self._connection.execute("DELETE FROM runs WHERE id = ? AND status = ?", (run_id, PENDING))
+        return cursor.rowcount == 1
+
     def get_run(self, run_id: int) -> Run:
         row = self._connection.execute(f"SELECT {_RUN_COLUMNS} FROM runs WHERE id = ?", (run_id,)).fetchone()
         if row is None:

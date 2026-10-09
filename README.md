@@ -156,13 +156,18 @@ curl.exe -O http://localhost:8000/resources/fadc83a6-a59e-47c9-a82d-8471fecb6178
 
 Sin token, o con otro, las rutas de `/api` responden 401. Un archivo que no
 es PDF (por extensión o por contenido), un tipo de recurso desconocido o un
-sílabo sin código o nombre de curso responden 422 y no registran nada.
+sílabo sin código o nombre de curso responden 422 y no registran nada. Si la
+API no logra lanzar el worker, responde 503 y tampoco registra nada, ni la
+corrida ni el PDF: hay que volver a subirlo.
 
 `/resources/{clave}` responde 404 mientras el grafo no tenga el recurso: antes
 de que la corrida escriba, y después de una carga hasta reaplicar.
 
 El worker corre como proceso hijo de la API y su salida aparece en la consola
-de la API. Detener la API lo interrumpe (ADR-007).
+de la API. Si termina sin error y quedan corridas pendientes con la compuerta
+abierta, la API lanza otro. Hace lo mismo al arrancar, y así recoge lo que
+quedó pendiente durante una carga o una reaplicación. Detener la API
+interrumpe al worker (ADR-007).
 
 ## Ingestar un sílabo
 

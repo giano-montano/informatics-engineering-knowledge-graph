@@ -170,6 +170,28 @@ Medido el 2026-10-08 en `neo4j:5.26.28-community`: el índice existe en Communit
 
 El tiempo en el motor es la suma de `result_available_after` y `result_consumed_after` del `ResultSummary` del driver, medidos por el servidor. El reporte lleva, por patrón, la mediana y el percentil 95 de diez ejecuciones desde cada nodo de partida, la primera ejecución en frío aparte y sin umbral, el tamaño del grafo, el entorno (procesador, memoria, versión del motor), la cota de profundidad y la mayor profundidad alcanzada.
 
+Ese tiempo incluye la compilación del plan. Medido el 2026-10-09 en Enterprise, con solo el backbone: vaciada la caché de planes, la primera ejecución del elevado con grano área tardó 1541 ms y la de los recursos agregados, 897 ms; las cinco siguientes de cada una, entre 0 y 3 ms. El driver da milisegundos enteros, así que la resolución del reporte es de 1 ms.
+
+**En frío.** Es la primera ejecución de cada patrón con la caché de planes de consulta vacía: el script la vacía al empezar, con `db.clearQueryCaches()`. No reinicia el motor. Neo4j vuelve a cargar al arrancar las páginas que tenía en uso (`db.memory.pagecache.warmup.enable`, que `SHOW SETTINGS` da por activo en las dos ediciones), así que un reinicio tampoco deja fría la caché de páginas, y un grafo del orden de mil nodos cabe entero en ella.
+
+**Orden.** Por patrón, una ronda de calentamiento y diez rondas medidas. Cada ronda ejecuta el patrón una vez desde cada nodo de partida, en orden de clave; en el elevado, cada clave con sus tres granos, en el orden tema, curso, área. Entre dos ejecuciones desde el mismo nodo pasan todas las demás. La primera ejecución de la ronda de calentamiento es la ejecución en frío. En el elevado cada grano es una consulta distinta, con su propio plan: el reporte guarda los tiempos de la ronda de calentamiento, en los que se ve la compilación de los tres.
+
+**Estadísticos.** Por patrón, sobre todas sus ejecuciones medidas: la mediana; el percentil 95 por rango más cercano, es decir, el valor en la posición ⌈0,95·n⌉ de los tiempos ordenados; y el máximo. El patrón cumple si la mediana y el percentil 95 quedan por debajo de 1000 ms. Un patrón sin nodos de partida se reporta sin cifras.
+
+**Reporte.** Un JSON en `var/measurements/ac05-<fecha y hora>.json` con: los tiempos de cada ejecución, por nodo de partida; el resumen por patrón; el tamaño del grafo, en nodos por etiqueta y aristas por tipo; el entorno; la cota; y la mayor profundidad alcanzada, en el elevado y en la especialización, pues la ubicación tiene profundidad fija. El script imprime además el resumen como tabla Markdown. `var/` no se versiona: la medición formal se copia a la tesis.
+
+**Entorno.** Del motor, lo que él mismo informa: versión y edición (`dbms.components`); procesadores, memoria y sistema operativo que ve (`dbms.queryJmx`); y tamaño del heap y de la caché de páginas (`SHOW SETTINGS`). Del host, el modelo del procesador, que el motor no informa.
+
+**Planes.** El reporte lleva los operadores del plan de cada consulta medida (`EXPLAIN`) y señala una expansión variable sin poda o un recorrido de todos los nodos, de la base o de una etiqueta. Así, la corrida formal en Community comprueba lo de la sección 3. Verificado el 2026-10-09 en un contenedor temporal de `neo4j:5.26.28-community` con el backbone: en los siete planes, toda expansión variable es `VarLengthExpand(Pruning,BFS,All)` y el nodo de partida se busca con `NodeUniqueIndexSeek`. Una prueba exige lo mismo sobre un grafo pequeño que cubre los cinco patrones.
+
+| Alternativa | Motivo del descarte |
+|---|---|
+| Reiniciar el motor antes de medir | Paso manual fuera del script; el precalentado de páginas lo deja menos frío de lo que parece. |
+| Las diez ejecuciones de un nodo seguidas | Mide la misma consulta repetida: el escenario más optimista. |
+| Percentil interpolado | Puede dar un tiempo que no se observó; con resolución de 1 ms no cambia la conclusión. |
+| Reporte versionado en el repositorio | Es medición, no especificación. |
+| Tiempo medido en el cliente | Suma serialización y transporte, que AC-05 excluye. |
+
 ## 9. Detalle de un nodo
 
 Devuelve el nodo con todas sus propiedades, sus vecinos directos y algunos vecinos de esos vecinos: lo que rodea al elemento en pantalla y desde donde el estudiante sigue explorando, a la manera de una enciclopedia. Cuenta como vecino todo nodo unido por una arista de cualquier tipo salvo `WAS_DERIVED_FROM`, que llega por la regla de la sección 2: de lo contrario, el detalle de CS2023 traería los 179 elementos de referencia.

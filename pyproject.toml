@@ -58,6 +58,8 @@ packages = ["src/iekg"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# The development scripts are not part of the package; their tests import them.
+pythonpath = ["scripts"]
 markers = [
     "neo4j: needs a running Neo4j; writes only inside a transaction that is rolled back",
 ]

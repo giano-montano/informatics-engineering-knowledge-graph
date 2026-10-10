@@ -164,7 +164,7 @@ No son requisitos todavía: son lo que el protocolo de la tesis (§5.2.5 y Tabla
 | Pendiente | Lo que exige el protocolo | Qué falta decidir |
 | ----- | ----- | ----- |
 | Medición de las relaciones | CP-15 juzga todas las aristas de partonomía de tema a unidad; CP-16, una muestra aleatoria con semilla fija de 30 aristas de prerrequisito, de especialización y de concepto requerido, o todas si hay menos. Ambos, sobre el grafo final. | Cómo se obtienen esas aristas de forma reproducible y dónde vive ese procedimiento. |
-| Medición de AC-05 | Los cinco patrones desde cada uno de sus nodos de partida, diez ejecuciones tras una pasada de calentamiento, la ejecución en frío aparte, y el tamaño del grafo y el entorno junto a la medición. | Lo mismo: cómo se ejecuta de forma reproducible y dónde vive. |
+| Medición de AC-05 | Los cinco patrones desde cada uno de sus nodos de partida, diez ejecuciones tras una pasada de calentamiento, la ejecución en frío aparte, y el tamaño del grafo y el entorno junto a la medición. | Resuelto: `scripts/measure_navigation.py`, con el protocolo en la sección 8 del diseño de las rutas de navegación. Falta correrlo en la VM, sobre Community, con el grafo del piloto. |
 | Concepto requerido sin tema | CP-16 juzga `REQUIRES_CONCEPT`: un concepto que el curso necesita y no enseña. RI-08 exige que todo concepto tenga un tema padre. | De dónde sale ese tema cuando el sílabo no enseña el concepto. Es una pregunta para el ADR del extractor. |
 
 Un tercero no queda pendiente: la precisión de los intentos rechazados sale del lote candidato que guarda RF-05. Ante una salida no conforme (EX-01) puede no haber lote legible, y la tesis lo acepta («cuando ese lote es legible»).

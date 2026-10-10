@@ -112,15 +112,18 @@ src/iekg/fact_store.py         Almacén de hechos: un archivo por corrida escrit
 src/iekg/settings.py           Configuración desde el entorno y `.env`.
 scripts/submit_document.py     Ayuda de desarrollo: envía un PDF y corre el
                                worker sin la API. No es punto de entrada.
+scripts/measure_navigation.py  Ayuda de desarrollo: mide los cinco patrones de
+                               AC-05 con las funciones de las rutas; reporte
+                               en `var/measurements/`. Sus pruebas lo importan
+                               (`pythonpath` de pytest).
 tests/                         Pruebas; una negativa por cada forma de violar
                                cada regla o código EX.
 var/                           Almacenes locales del sistema. Ignorado por git.
 ```
 
-Lo que **no** hay todavía: el script de medición de AC-05
-(`scripts/measure_navigation.py`), la aplicación web y la imagen de Docker
-propia. El diseño de la navegación está en
-`docs/diseño-de-las-rutas-de-navegación.md`.
+Lo que **no** hay todavía: la aplicación web y la imagen de Docker propia. El
+diseño de la navegación y el protocolo de medición de AC-05 (sección 8) están
+en `docs/diseño-de-las-rutas-de-navegación.md`.
 
 ## 7. Comandos
 
@@ -134,6 +137,7 @@ uv run python scripts/submit_document.py SILABO.pdf --course 1INF33 --name "Base
 uv run iekg-worker                       # procesa las corridas pendientes
 uv run iekg-build reapply                # tras una carga, reescribe la capa institucional
 uv run iekg-api                          # la API en :8000; exige IEKG_OPERATOR_TOKEN
+uv run python scripts/measure_navigation.py   # AC-05; solo lee, reporte en var/measurements/
 start http://localhost:7474
 
 npm install               # una vez: LikeC4 fijado en package.json

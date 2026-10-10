@@ -10,11 +10,12 @@ y, más adelante, el contenido extraído de los sílabos de la carrera.
 |---|---|
 | Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | Aplicación web |
 | Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | Imagen de Docker del sistema |
-| Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | Script de medición de los patrones de consulta (AC-05) |
+| Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | |
 | Reaplicación de los hechos guardados después de una carga | |
 | Registro de corridas, descartes y reportes de auditoría en SQLite | |
 | API de operación (subir, corridas, descartes, auditoría) y entrega de documentos | |
 | API de navegación: búsqueda, detalle de un nodo y las consultas derivadas | |
+| Medición de los patrones de consulta (AC-05) | |
 
 ## Requisitos
 
@@ -242,6 +243,24 @@ que tiene archivo de hechos, sin volver a llamar al modelo de lenguaje. Salta
 las corridas detenidas por la auditoría y cierra con una sola auditoría. Se
 rechaza si la base ya tiene nodos institucionales: va justo después de una
 carga. Los códigos de salida son los de la carga.
+
+## Medir la navigación (AC-05)
+
+```powershell
+uv run python scripts/measure_navigation.py
+```
+
+Script de desarrollo, que solo lee. Vacía la caché de planes de consulta y
+ejecuta los cinco patrones medidos con las mismas funciones que las rutas,
+desde todos sus nodos de partida: una ronda de calentamiento, cuya primera
+ejecución es la de frío, y diez rondas medidas. Mide el tiempo en el motor que
+informa el servidor, con resolución de 1 ms. Imprime una tabla Markdown por
+patrón y escribe el reporte completo en
+`var/measurements/ac05-<fecha-hora>.json`: tiempos de cada ejecución, tamaño
+del grafo, entorno, cota de profundidad y planes. Sale con 0 si todos los
+patrones quedan bajo 1 s en mediana y percentil 95; con 1 si alguno no, o si
+alguno no tiene nodos de partida, como pasa con solo el backbone. El protocolo
+está en `docs/diseño-de-las-rutas-de-navegación.md`, sección 8.
 
 ## Pruebas
 

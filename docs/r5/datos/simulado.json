@@ -1,0 +1,163 @@
+{
+ "_nota": "SIMULADO. No hay ruta de la API que devuelva esto: sale de una consulta Cypher de solo lectura en desarrollo. Una propuesta que lo use lo declara como «ruta nueva necesaria».",
+ "areas": [
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-AR",
+   "name_es": "Arquitectura y Organización",
+   "name_en": "Architecture and Organization",
+   "units": 11,
+   "topics": 1,
+   "concepts": 6
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-PDC",
+   "name_es": "Computación Paralela y Distribuida",
+   "name_en": "Parallel and Distributed Computing",
+   "units": 5,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-SPD",
+   "name_es": "Desarrollo de Plataformas Especializadas",
+   "name_en": "Specialized Platform Development",
+   "units": 8,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-AL",
+   "name_es": "Fundamentos Algorítmicos",
+   "name_en": "Algorithmic Foundations",
+   "units": 5,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-MSF",
+   "name_es": "Fundamentos Matemáticos y Estadísticos",
+   "name_en": "Mathematical and Statistical Foundations",
+   "units": 5,
+   "topics": 1,
+   "concepts": 10
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-SF",
+   "name_es": "Fundamentos de Sistemas",
+   "name_en": "Systems Fundamentals",
+   "units": 9,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-FPL",
+   "name_es": "Fundamentos de los Lenguajes de Programación",
+   "name_en": "Foundations of Programming Languages",
+   "units": 22,
+   "topics": 1,
+   "concepts": 6
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-SDF",
+   "name_es": "Fundamentos del Desarrollo de Software",
+   "name_en": "Software Development Fundamentals",
+   "units": 5,
+   "topics": 15,
+   "concepts": 58
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-DM",
+   "name_es": "Gestión de Datos",
+   "name_en": "Data Management",
+   "units": 13,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-GIT",
+   "name_es": "Gráficos y Técnicas Interactivas",
+   "name_en": "Graphics and Interactive Techniques",
+   "units": 12,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-SE",
+   "name_es": "Ingeniería de Software",
+   "name_en": "Software Engineering",
+   "units": 9,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-AI",
+   "name_es": "Inteligencia Artificial",
+   "name_en": "Artificial Intelligence",
+   "units": 12,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-HCI",
+   "name_es": "Interacción Humano-Computadora",
+   "name_en": "Human-Computer Interaction",
+   "units": 6,
+   "topics": 0,
+   "concepts": 0
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-NC",
+   "name_es": "Redes y Comunicación",
+   "name_en": "Networking and Communication",
+   "units": 8,
+   "topics": 14,
+   "concepts": 132
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-SEC",
+   "name_es": "Seguridad",
+   "name_en": "Security",
+   "units": 7,
+   "topics": 1,
+   "concepts": 10
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-OS",
+   "name_es": "Sistemas Operativos",
+   "name_en": "Operating Systems",
+   "units": 14,
+   "topics": 6,
+   "concepts": 43
+  },
+  {
+   "key": "http://www.informatics-engineering-kms.org/ontology/informatic-engineering#KA-SEP",
+   "name_es": "Sociedad, Ética y la Profesión",
+   "name_en": "Society, Ethics, and the Profession",
+   "units": 11,
+   "topics": 0,
+   "concepts": 0
+  }
+ ],
+ "courses": [
+  {
+   "key": "2c4f27fc-7945-5378-95ed-9180df25e348",
+   "name_es": "Fundamentos de Programación",
+   "code": "1INF01"
+  },
+  {
+   "key": "555619e3-bbe6-5c80-be31-97f8a1449c0a",
+   "name_es": "Administración de Sistemas Operativos",
+   "code": "1INF35"
+  },
+  {
+   "key": "b2d9c106-684d-58b8-8462-4dc0c3b8d90c",
+   "name_es": "Técnicas de Programación",
+   "code": "INF144"
+  },
+  {
+   "key": "c5405343-8817-5bd7-820c-8013c9bbfeee",
+   "name_es": "Redes de Computadoras",
+   "code": "INF238"
+  }
+ ]
+}

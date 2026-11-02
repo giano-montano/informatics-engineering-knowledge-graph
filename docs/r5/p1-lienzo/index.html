@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Constelación · P1</title>
+  <meta name="description" content="Mapa interactivo de los conceptos de Ingeniería Informática: qué necesitas antes, dónde está cada tema y con qué material estudiarlo.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/400.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/600.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.3.0/500.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.3.0/600.css">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="barra">
+    <button class="marca" id="marca" title="Volver a la portada">
+      <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+        <path d="M16,3L27.3,9.5V22.5L16,29L4.7,22.5V9.5Z" fill="none" stroke="url(#gm)" stroke-width="1.8"/>
+        <circle cx="16" cy="16" r="4.2" fill="url(#gm)"/>
+        <circle cx="16" cy="8" r="1.6" fill="#3fd8ff"/><circle cx="22.5" cy="20" r="1.6" fill="#b98cff"/><circle cx="9.5" cy="20" r="1.6" fill="#5cffc8"/>
+        <path d="M16 9.6V12M21.2 19.2L19.4 18M10.8 19.2L12.6 18" stroke="#c9d0ff" stroke-width="1"/>
+        <defs><linearGradient id="gm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b98cff"/><stop offset="1" stop-color="#3fd8ff"/></linearGradient></defs>
+      </svg>
+      <span class="marca-texto">Constelación<small>Mapa de conceptos de Ingeniería Informática</small></span>
+    </button>
+
+    <div class="buscador" role="search">
+      <svg class="lupa" viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="1.7"/></svg>
+      <input id="buscar" type="search" autocomplete="off" spellcheck="false"
+             placeholder="Busca un tema, un concepto o un curso…"
+             role="combobox" aria-expanded="false" aria-controls="resultados" aria-autocomplete="list"
+             aria-label="Buscar en el grafo">
+      <kbd>Ctrl K</kbd>
+      <div id="resultados" class="resultados" role="listbox" hidden></div>
+    </div>
+
+    <div class="barra-der">
+      <span class="estado-datos" title="Datos reales, tomados del sistema el 2026-10-29">
+        <span class="punto" aria-hidden="true"></span>Datos reales · 4 sílabos cargados
+      </span>
+      <label class="interruptor interruptor-traza" title="Muestra a qué caso de uso y requisito responde cada vista">
+        <input type="checkbox" id="ver-traza"><span class="pista-int" aria-hidden="true"></span>Ver trazabilidad
+      </label>
+    </div>
+  </header>
+
+  <main class="principal">
+    <nav class="riel" aria-label="Lentes">
+      <button class="inicio" id="inicio" title="Portada: áreas y cursos">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11L12 4l8.5 7M6 9.5V20h12V9.5"/></svg>
+        <span class="nombre">Portada</span>
+      </button>
+      <div class="riel-sep" aria-hidden="true"></div>
+      <p class="riel-titulo" id="lentes-titulo">Lentes</p>
+      <div id="lentes" class="lentes" role="group" aria-labelledby="lentes-titulo"></div>
+      <a class="enlace-operador" href="../panel-operador/index.html" title="Panel del operador: cargar sílabos y revisar su ingesta">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>
+        <span class="nombre">Operador</span>
+      </a>
+    </nav>
+
+    <section class="escena en-portada" id="escena" aria-label="Mapa">
+      <div class="estrellas" aria-hidden="true"></div>
+      <div id="escena-lienzo" class="escena-lienzo"></div>
+
+      <div class="portada-titulo" aria-hidden="true">
+        <p>Las 17 áreas de la carrera según CS2023 · 4 cursos con sílabo</p>
+        <span class="etiqueta-simulado" title="El sistema todavía no entrega esta vista de inicio">simulado</span>
+      </div>
+
+      <div class="barra-lente" id="barra-lente" hidden>
+        <div class="barra-lente-cab">
+          <span class="lente-titulo" id="lente-titulo"></span>
+          <div class="granos" id="granos" role="group" aria-label="Ver el camino por" hidden>
+            <span class="granos-rotulo">Ver por:</span>
+            <button data-grano="topic" aria-pressed="false">tema</button>
+            <button data-grano="course" aria-pressed="true">curso</button>
+            <button data-grano="area" aria-pressed="false">área</button>
+          </div>
+        </div>
+        <p class="lente-resumen" id="lente-resumen" aria-live="polite"></p>
+        <div class="barra-lente-pie">
+          <label class="interruptor" title="Dibuja una línea de cada elemento a su fuente: el sílabo o CS2023">
+            <input type="checkbox" id="ver-procedencia"><span class="pista-int" aria-hidden="true"></span>Mostrar fuentes
+          </label>
+          <button class="boton-texto" id="limpiar" title="Quita lo agregado con + y deja solo lo que rodea al foco">Limpiar el mapa</button>
+        </div>
+      </div>
+
+      <div class="franja" id="franja" hidden></div>
+
+      <div class="info-flotante" id="info-flotante" role="tooltip"></div>
+
+      <aside class="recorrido" id="recorrido" aria-labelledby="recorrido-titulo">
+        <div class="recorrido-cab">
+          <button id="recorrido-titulo" title="Ver u ocultar todos los pasos">Recorrido sugerido</button>
+          <button class="cerrar-mini" id="recorrido-cerrar" aria-label="Cerrar el recorrido">×</button>
+        </div>
+        <ol id="recorrido-pasos"></ol>
+      </aside>
+      <button class="recorrido-abrir" id="recorrido-abrir" hidden>Recorrido sugerido</button>
+
+      <div class="leyenda" id="leyenda" hidden>
+        <p class="leyenda-tit">De dónde viene <span class="traza">RF-22</span></p>
+        <div class="ley-fila"><svg width="22" height="22" viewBox="-11 -11 22 22" aria-hidden="true"><path d="M0,-10L8.7,-5V5L0,10L-8.7,5V-5Z" fill="rgba(185,140,255,.15)" stroke="#b98cff" stroke-width="1.8"/><path d="M0,-6L5.2,-3V3L0,6L-5.2,3V-3Z" fill="none" stroke="#b98cff" stroke-width="1" opacity=".6"/></svg><span><b>Hexágono con contorno · CS2023</b>: estándar internacional del currículo de computación (ACM/IEEE)</span></div>
+        <div class="ley-fila"><svg width="22" height="22" viewBox="-11 -11 22 22" aria-hidden="true"><circle r="8.5" fill="#5cffc8"/></svg><span><b>Círculo relleno · Sílabo PUCP</b>: lo que dicen los sílabos de los cursos</span></div>
+        <p class="leyenda-tit">Qué es cada punto</p>
+        <div class="ley-clases">
+          <span style="--c:#b98cff">Área</span><span style="--c:#8b9bff">Unidad</span><span style="--c:#3fd8ff">Tema</span>
+          <span style="--c:#5cffc8">Concepto</span><span style="--c:#ffbe55">Curso</span><span style="--c:#ff7ab8">Sílabo</span>
+        </div>
+        <p class="leyenda-tit">Líneas</p>
+        <div class="ley-fila"><svg width="40" height="10" aria-hidden="true"><path d="M2 5H32" stroke="#e8ff6b" stroke-width="2.2" stroke-dasharray="6 5"/><path d="M31 1.5L38 5L31 8.5Z" fill="#e8ff6b"/></svg><span>Se necesita antes: va hacia lo que lo necesita</span></div>
+        <div class="ley-fila"><svg width="40" height="10" aria-hidden="true"><path d="M2 5H38" stroke="#8b9bff" stroke-width="1.4" opacity=".8"/></svg><span>Es parte de</span></div>
+        <div class="ley-fila"><svg width="40" height="10" aria-hidden="true"><path d="M2 5H38" stroke="#ffbe55" stroke-width="1.4" stroke-dasharray="2 4"/></svg><span>El curso lo enseña</span></div>
+        <div class="ley-fila"><svg width="40" height="10" aria-hidden="true"><path d="M2 5H38" stroke="#ff8a65" stroke-width="1.8" stroke-dasharray="8 4"/></svg><span>El curso lo pide</span></div>
+        <div class="ley-fila"><svg width="40" height="10" aria-hidden="true"><path d="M2 5H31" stroke="#ff9df0" stroke-width="1.8"/><path d="M31 1.5L38 5L31 8.5Z" fill="none" stroke="#ff9df0" stroke-width="1.3"/></svg><span>Es un tipo de</span></div>
+        <div class="ley-fila"><svg width="40" height="10" aria-hidden="true"><path d="M2 5H38" stroke="#ff7ab8" stroke-width="1.4"/></svg><span>El sílabo trata sobre</span></div>
+        <div class="ley-fila"><svg width="22" height="22" viewBox="-11 -11 22 22" aria-hidden="true"><circle r="7.5" fill="#0b0e26" stroke="#e8ff6b" stroke-width="1.4"/><path d="M-3.5,0H3.5M0,-3.5V3.5" stroke="#e8ff6b" stroke-width="1.6"/></svg><span>Tiene más conexiones: clic para verlas</span></div>
+        <p class="nota-ley">El grosor de una línea solo distingue su tipo: no mide importancia.</p>
+      </div>
+
+      <footer class="pie-escena">
+        <div class="rastro">
+          <button class="boton-icono" id="atras" title="Foco anterior (Alt + ←)" aria-label="Foco anterior" disabled>
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M12.5 4L6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          </button>
+          <span class="rastro-tit">Rastro</span>
+          <div class="rastro-lista" id="rastro-lista"></div>
+        </div>
+        <div class="controles">
+          <button class="boton-icono" id="leyenda-boton" aria-expanded="false" aria-controls="leyenda" title="Leyenda">
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="5" cy="6" r="2" fill="currentColor"/><path d="M9 6h8M9 14h8" stroke="currentColor" stroke-width="1.6"/><path d="M5,11.5L7.2,12.75V15.25L5,16.5L2.8,15.25V12.75Z" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+            <span>Leyenda</span>
+          </button>
+          <button class="boton-icono" id="zoom-menos" aria-label="Alejar">−</button>
+          <span class="zoom-valor" id="zoom-valor">100 %</span>
+          <button class="boton-icono" id="zoom-mas" aria-label="Acercar">+</button>
+          <button class="boton-icono" id="encuadrar" title="Encuadrar todo" aria-label="Encuadrar todo">
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          </button>
+        </div>
+      </footer>
+
+      <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+    </section>
+
+    <aside class="panel" id="panel" aria-label="Elemento en foco">
+      <div id="panel-cuerpo" class="panel-cuerpo"></div>
+    </aside>
+  </main>
+</div>
+
+<script src="../datos/datos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/lienzo.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

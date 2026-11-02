@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Itinerario · P3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div id="app" v-cloak>
+
+  <!-- ===================== barra superior ===================== -->
+  <header class="barra">
+    <button class="marca" @click="volverInicio" aria-label="Itinerario: volver al inicio">
+      <svg class="logo" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="14" fill="none" stroke="#FFD23F" stroke-width="6"/>
+        <rect x="1" y="16" width="38" height="8" rx="2" fill="#fff"/>
+      </svg>
+      <span class="marca-nombre">Itinerario</span>
+      <span class="marca-sub">Caminos de aprendizaje · Ingeniería Informática</span>
+    </button>
+
+    <div class="buscador buscador-barra" v-show="pantalla === 'ruta'">
+      <svg class="lupa" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <input type="search" v-model="consulta" @input="alBuscar" @keydown.enter="enterBusqueda" @focus="mostrarResultados = !!consulta"
+             @blur="mostrarResultados = false" placeholder="Otra meta: concepto, tema o curso…" aria-label="Buscar otra meta">
+      <div class="resultados" v-if="mostrarResultados && pantalla === 'ruta'">
+        <div class="resultados-cab">
+          <span>{{ resultados.length }} resultado{{ resultados.length === 1 ? '' : 's' }}</span>
+          <span v-if="busquedaSimulada" class="simulado" title="Este texto no está entre las búsquedas capturadas: la maqueta filtra los nombres por su cuenta.">búsqueda simulada</span>
+          <span v-else-if="traza" class="traza">CU-1 · RF-18</span>
+        </div>
+        <div v-if="!resultados.length" class="sin-resultados">
+          <p>Ningún concepto, tema, curso o área se llama así.</p>
+          <button class="enlace" @mousedown.prevent="verAreas">Recorrer las áreas de la carrera</button>
+        </div>
+        <button v-for="n in resultados" :key="n.key" class="resultado" @mousedown.prevent="elegirResultado(n)">
+          <span class="forma" :class="esRef(n) ? 'forma-ref' : 'forma-inst'" aria-hidden="true"></span>
+          <span class="resultado-nombre">{{ n.name_es }}</span>
+          <span class="resultado-tipo">{{ etiqueta(n) }}<template v-if="n.course_code"> · {{ n.course_code }}</template></span>
+          <span class="capa" :class="esRef(n) ? 'capa-ref' : 'capa-inst'">{{ capa(n) }}</span>
+          <span v-if="clavesConRuta[n.key]" class="con-ruta">con camino</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="barra-acciones">
+      <button class="interruptor" role="switch" :aria-checked="traza" @click="traza = !traza" title="Muestra junto a cada sección el caso de uso y los requisitos que cubre">
+        <span class="int-pista" aria-hidden="true"><span class="int-bola"></span></span>Ver trazabilidad
+      </button>
+      <button class="boton-barra" @click="recorridoAbierto = !recorridoAbierto" :aria-pressed="recorridoAbierto">Recorrido sugerido</button>
+    </div>
+  </header>
+
+  <!-- ===================== A · INICIO ===================== -->
+  <main class="inicio" v-show="pantalla === 'inicio'">
+    <section class="hero">
+      <div class="hero-texto">
+        <p class="sobre">Itinerario · caminos de aprendizaje</p>
+        <h1>¿Qué quieres aprender?</h1>
+        <p class="hero-sub">Explora cómo se conectan los conceptos de Ingeniería Informática: elige una meta y te mostramos qué conviene saber antes, trazado como una línea de metro, dónde está cada tema en la carrera y con qué material estudiarlo.</p>
+
+        <div class="buscador buscador-hero">
+          <svg class="lupa" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+          <input type="search" v-model="consulta" @input="alBuscar" @keydown.enter="enterBusqueda" @focus="mostrarResultados = !!consulta"
+                 @blur="mostrarResultados = false" placeholder="Busca un concepto, tema o curso…" aria-label="Buscar una meta">
+          <div class="resultados" v-if="mostrarResultados && pantalla === 'inicio'">
+            <div class="resultados-cab">
+              <span>{{ resultados.length }} resultado{{ resultados.length === 1 ? '' : 's' }}</span>
+              <span v-if="busquedaSimulada" class="simulado" title="Este texto no está entre las búsquedas capturadas: la maqueta filtra los nombres por su cuenta.">búsqueda simulada</span>
+              <span v-else-if="traza" class="traza">CU-1 · RF-18</span>
+            </div>
+            <div v-if="!resultados.length" class="sin-resultados">
+              <p>Ningún concepto, tema, curso o área se llama así: los sílabos cargados no tratan ese tema.</p>
+              <button class="enlace" @mousedown.prevent="verAreas">Recorrer las áreas de la carrera</button>
+            </div>
+            <button v-for="n in resultados" :key="n.key" class="resultado" @mousedown.prevent="elegirResultado(n)">
+              <span class="forma" :class="esRef(n) ? 'forma-ref' : 'forma-inst'" aria-hidden="true"></span>
+              <span class="resultado-nombre">{{ n.name_es }}</span>
+              <span class="resultado-tipo">{{ etiqueta(n) }}<template v-if="n.course_code"> · {{ n.course_code }}</template></span>
+              <span class="capa" :class="esRef(n) ? 'capa-ref' : 'capa-inst'">{{ capa(n) }}</span>
+              <span v-if="clavesConRuta[n.key]" class="con-ruta">con camino</span>
+            </button>
+          </div>
+        </div>
+        <p class="pruebas">Prueba con:
+          <button v-for="q in ['lógica', 'redes', 'arreglo', 'subred', 'ethernet', 'INF144', 'árbol']" :key="q" class="chip-texto" @click="sugerir(q)">{{ q }}</button>
+          <span v-if="traza" class="traza">CU-1 · RF-18 · RF-19</span>
+        </p>
+      </div>
+
+      <!-- ilustración de la idea: no son datos -->
+      <figure class="hero-figura" aria-hidden="true">
+        <svg viewBox="0 0 420 220">
+          <path d="M30 60 H120 L170 110 H250" stroke="#D7263D" stroke-width="10" fill="none" stroke-linejoin="round"/>
+          <path d="M30 160 H120 L170 110" stroke="#D7263D" stroke-width="10" fill="none" stroke-linejoin="round"/>
+          <path d="M250 110 H390" stroke="#0B5FBF" stroke-width="10" fill="none"/>
+          <circle cx="30" cy="60" r="11" fill="#fff" stroke="#15171C" stroke-width="5"/>
+          <circle cx="30" cy="160" r="11" fill="#fff" stroke="#15171C" stroke-width="5"/>
+          <rect x="238" y="96" width="24" height="30" rx="12" fill="#fff" stroke="#15171C" stroke-width="5"/>
+          <circle cx="390" cy="110" r="18" fill="#15171C"/><circle cx="390" cy="110" r="7" fill="#fff"/>
+          <text x="390" y="155" text-anchor="middle" class="hf-t">meta</text>
+          <text x="14" y="200" text-anchor="start" class="hf-t">lo que conviene saber antes</text>
+        </svg>
+        <figcaption>Así se ve un camino: estaciones, líneas y la meta</figcaption>
+      </figure>
+    </section>
+
+    <section class="bloque">
+      <header class="bloque-cab">
+        <h2>Metas con camino</h2>
+        <span class="simulado" title="La lista la armó la maqueta a partir de los caminos reales; el sistema todavía no la entrega.">simulado</span>
+        <span v-if="traza" class="traza">CU-1 · CU-8 · PC6</span>
+      </header>
+      <p class="bloque-nota">Los {{ destinos.length }} conceptos y temas para los que los sílabos registran algo que conviene saber antes. Los caminos son cortos: hasta 2 pasos.</p>
+      <div class="destinos-grid">
+        <div>
+          <h3 class="col-titulo">Temas <span class="cuenta">{{ destinosTemas.length }}</span></h3>
+          <div class="paradas-lista">
+            <button v-for="d in destinosTemas" :key="d.key" class="parada-chip" @click="abrirDestino(d.key)">
+              <span class="punto" aria-hidden="true"></span><span class="pc-nombre">{{ d.name_es }}</span>
+              <span class="pc-pasos">{{ d.max_depth === 1 ? 'directo' : 'hasta ' + d.max_depth + ' pasos' }}</span>
+            </button>
+          </div>
+        </div>
+        <div>
+          <h3 class="col-titulo">Conceptos <span class="cuenta">{{ destinosConceptos.length }}</span></h3>
+          <div class="paradas-lista paradas-lista-2">
+            <button v-for="d in destinosConceptos" :key="d.key" class="parada-chip" @click="abrirDestino(d.key)">
+              <span class="punto" aria-hidden="true"></span><span class="pc-nombre">{{ d.name_es }}</span>
+              <span class="pc-pasos">{{ d.max_depth === 1 ? 'directo' : 'hasta ' + d.max_depth + ' pasos' }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <header class="bloque-cab">
+        <h2>Caminos que cruzan cursos o áreas</h2>
+        <span class="simulado" title="La lista la armó la maqueta; los caminos son reales.">simulado</span>
+        <span v-if="traza" class="traza">CU-8 · PC6</span>
+      </header>
+      <p class="bloque-nota">Al verlos por curso o por área aparecen transbordos: un concepto que se enseña en dos cursos o que pertenece a dos áreas.</p>
+      <div class="tarjetas">
+        <button v-for="d in destinosCruzan" :key="d.key" class="tarjeta-ruta" @click="abrirDestino(d.key, { grano: d.courses.length > 1 ? 'course' : 'area' })">
+          <span class="tr-tipo">{{ d.label === 'Topic' ? 'Tema' : 'Concepto' }}</span>
+          <span class="tr-nombre">{{ d.name_es }}</span>
+          <span class="tr-lineas">
+            <span class="tr-rotulo">Cursos</span>
+            <span v-for="c in d.courses" :key="c" class="insignia" :style="{ background: colorCurso(c) }">{{ c }}</span>
+          </span>
+          <span class="tr-lineas">
+            <span class="tr-rotulo">Áreas</span>
+            <span v-for="a in d.areas" :key="a" class="insignia insignia-ref">{{ a }}</span>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <header class="bloque-cab">
+        <h2>Cursos</h2>
+        <span class="simulado" title="La lista de cursos la armó la maqueta; lo que se dice de cada uno es real.">simulado</span>
+        <span v-if="traza" class="traza">CU-1 · CU-4 · PC2</span>
+      </header>
+      <p class="bloque-nota">Con un curso como meta, ves lo que pide y qué curso conviene llevar antes.</p>
+      <div class="tarjetas tarjetas-4">
+        <button v-for="c in cursos" :key="c.nodo.key" class="tarjeta-curso" @click="abrirDestino(c.nodo.key)">
+          <span class="insignia insignia-grande" :style="{ background: colorCurso(c.nodo.course_code) }">{{ c.nodo.course_code }}</span>
+          <span class="tc-nombre">{{ c.nodo.name_es }}</span>
+          <span class="tc-dato">Enseña {{ c.ensena }} conceptos</span>
+          <span class="tc-dato" v-if="c.previos.length">Pide {{ c.requeridos }} que enseña
+            <span v-for="p in c.previos" :key="p.codigo" class="insignia" :style="{ background: p.color }">{{ p.codigo }}</span></span>
+          <span class="tc-dato tc-inicio" v-else>No pide conceptos de otros cursos</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="bloque" id="areas">
+      <header class="bloque-cab">
+        <h2>Áreas de la carrera</h2>
+        <span class="simulado" title="La lista de áreas con sus cuentas la armó la maqueta; el sistema todavía no la entrega.">simulado</span>
+        <span v-if="traza" class="traza">CU-1 · CU-6 · PC4</span>
+      </header>
+      <p class="bloque-nota">Las 17 áreas de CS2023, el estándar internacional del currículo de computación (ACM/IEEE). Las resaltadas ya tienen temas de los sílabos PUCP cargados.</p>
+      <div class="areas-grid">
+        <button v-for="a in areas" :key="a.key" class="area-tarjeta" :class="{ 'area-vacia': !a.topics }" @click="abrirDestino(a.key)">
+          <span class="insignia insignia-ref">{{ codigoArea(a.key) }}</span>
+          <span class="area-nombre">{{ a.name_es }}</span>
+          <span class="area-dato" v-if="a.topics">{{ a.topics }} {{ a.topics === 1 ? 'tema' : 'temas' }} · {{ a.concepts }} conceptos de los sílabos</span>
+          <span class="area-dato" v-else>{{ a.units }} unidades en CS2023; aún sin temas de los sílabos</span>
+        </button>
+      </div>
+    </section>
+
+    <footer class="pie">
+      Datos reales del grafo de desarrollo: CS2023 y los sílabos PUCP de 1INF01, INF144, INF238 y 1INF35, capturados el 2026-10-29.
+      Lo marcado <span class="simulado">simulado</span> lo armó la maqueta. Los PDF de los sílabos se abren cuando el sistema está en marcha.
+      <a class="enlace" href="../panel-operador/index.html">Panel del operador</a>
+    </footer>
+  </main>
+
+  <!-- ===================== B · CAMINO HASTA LA META ===================== -->
+  <main class="ruta" v-show="pantalla === 'ruta'">
+    <section class="cabecera-ruta" v-if="destino">
+      <div class="cab-izq">
+        <button class="volver" @click="volverInicio">← Inicio</button>
+        <p class="rotulo-destino">Meta</p>
+        <h1 class="destino-nombre">
+          <span class="forma forma-grande" :class="esRef(destino) ? 'forma-ref' : 'forma-inst'" aria-hidden="true"></span>{{ destino.name_es }}
+        </h1>
+        <div class="destino-meta">
+          <span class="tipo">{{ etiqueta(destino) }}</span>
+          <span v-if="destino.course_code" class="insignia" :style="{ background: colorCurso(destino.course_code) }">{{ destino.course_code }}</span>
+          <span class="capa" :class="esRef(destino) ? 'capa-ref' : 'capa-inst'">{{ capa(destino) }}</span>
+          <span v-if="destino.name_en" class="en">{{ destino.name_en }}</span>
+          <button class="enlace" @click="abrirFicha(destino.key)">Ficha de la meta</button>
+        </div>
+      </div>
+      <div class="cab-der">
+        <div class="pestanas" role="tablist" v-if="pestanas.length > 1">
+          <button v-for="p in pestanas" :key="p.id" role="tab" :aria-selected="pestana === p.id" class="pestana"
+                  :class="{ activa: pestana === p.id }" @click="cambiarPestana(p.id)">{{ p.nombre }}<span v-if="traza" class="traza">{{ p.traza }}</span></button>
+        </div>
+        <p v-else class="pestana-unica">{{ pestanas.length ? pestanas[0].nombre : '' }}<span v-if="traza && pestanas.length" class="traza">{{ pestanas[0].traza }}</span></p>
+        <div class="granos" v-if="pestana === 'pc6'" role="radiogroup" aria-label="Ver por">
+          <span class="granos-rotulo">Ver por</span>
+          <button v-for="g in GRANOS" :key="g.id" role="radio" :aria-checked="grano === g.id" class="grano"
+                  :class="{ activo: grano === g.id }" :title="g.ayuda" @click="cambiarGrano(g.id)">
+            <svg v-if="g.id === 'topic'" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+            <svg v-if="g.id === 'course'" viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+            <svg v-if="g.id === 'area'" viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+            {{ g.nombre }}
+          </button>
+          <span v-if="traza" class="traza">CU-8 · PC6 · RF-15</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="ruta-cuerpo">
+      <section class="mapa-tarjeta">
+        <div class="lineas-barra" v-if="modelo && !modelo.vacia">
+          <span class="lineas-titulo">{{ tituloLineas }}</span>
+          <button v-for="l in modelo.lineas" :key="l.key" class="linea-chip" @click="evidenciaLinea(l)" :title="'¿Por qué ' + l.nombre + ' está en el camino?'">
+            <span class="insignia" :class="{ 'insignia-ref': l.referencia }" :style="{ background: l.color }">{{ l.insignia }}</span>
+            <span class="lc-nombre">{{ l.nombre }}</span>
+            <span class="lc-dato" v-if="modelo.tipo === 'pc6'">{{ pasosTexto(l.depth) }}</span>
+            <span class="capa" :class="l.referencia ? 'capa-ref' : 'capa-inst'">{{ l.referencia ? 'CS2023' : 'Sílabo PUCP' }}</span>
+          </button>
+          <span v-if="!modelo.lineas.length" class="lc-vacio">Ninguna línea en este camino.</span>
+        </div>
+        <div class="aviso" v-if="modelo && modelo.tipo === 'pc2' && !modelo.vacia">
+          <strong>Cursos que conviene llevar antes.</strong>
+          Salen de lo que pide el sílabo de {{ destino.course_code }} y de qué curso lo enseña. El camino concepto a concepto de un curso queda dentro del propio curso, por eso aquí se muestra este.
+          <span v-if="traza" class="traza">CU-4 · PC2 · RF-12</span>
+        </div>
+        <div class="aviso" v-if="modelo && modelo.tipo === 'pc4' && !modelo.vacia">
+          <strong>En qué orden aprenderlo.</strong> Los conceptos de «{{ destino.name_es }}» que los sílabos piden unos antes que otros, agrupados en pasos.
+          <span v-if="traza" class="traza">CU-6 · PC4 · RF-13</span>
+        </div>
+
+        <div class="mapa-contenedor" v-show="modelo && !modelo.vacia">
+          <div v-once class="mapa-svg"><svg id="mapa" class="mapa"></svg></div>
+          <div class="zoom">
+            <button @click="acercar(1.25)" aria-label="Acercar">+</button>
+            <button @click="acercar(0.8)" aria-label="Alejar">−</button>
+            <button @click="encajar" aria-label="Encajar el mapa">⤢</button>
+          </div>
+          <div class="leyenda" :class="{ cerrada: !leyendaAbierta }">
+            <button class="leyenda-boton" @click="leyendaAbierta = !leyendaAbierta" :aria-expanded="leyendaAbierta">Leyenda</button>
+            <span v-if="traza && leyendaAbierta" class="traza">RF-22</span>
+            <ul v-show="leyendaAbierta">
+              <li><svg viewBox="0 0 30 24"><circle cx="15" cy="12" r="7" fill="#fff" stroke="#15171C" stroke-width="3.5"/></svg>Estación: un concepto de un sílabo <span class="capa capa-inst">Sílabo PUCP</span></li>
+              <li><svg viewBox="0 0 30 24"><rect x="9" y="2" width="12" height="20" rx="6" fill="#fff" stroke="#15171C" stroke-width="3.5"/></svg>Transbordo: el concepto está en varias líneas</li>
+              <li><svg viewBox="0 0 30 24"><circle cx="15" cy="12" r="10" fill="#15171C"/><circle cx="15" cy="12" r="4" fill="#fff"/></svg>Meta</li>
+              <li><svg viewBox="0 0 30 24"><path d="M2 12H28" stroke="#0B5FBF" stroke-width="6"/></svg>Línea de un tema o un curso <span class="capa capa-inst">Sílabo PUCP</span></li>
+              <li><svg viewBox="0 0 30 24"><path d="M2 12H28" stroke="#00875A" stroke-width="7"/><path d="M2 12H28" stroke="#fff" stroke-width="2.4"/></svg>Línea de un área, vía doble <span class="capa capa-ref">CS2023</span></li>
+              <li class="leyenda-nota">CS2023: estándar internacional del currículo de computación (ACM/IEEE). Sílabo PUCP: lo que dicen los sílabos de los cursos.</li>
+              <li><svg viewBox="0 0 30 24"><path d="M2 12H28" stroke="#15171C" stroke-width="3" stroke-dasharray="5 4"/></svg>Cambio de línea: los dos extremos no comparten línea</li>
+              <li><svg viewBox="0 0 30 24"><circle cx="15" cy="12" r="8" fill="#FFD23F" stroke="#15171C" stroke-width="2"/><text x="15" y="16" text-anchor="middle" font-size="11" font-weight="700">?</text></svg>¿Por qué este tramo? Muestra la fuente</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ===== G · estados vacíos ===== -->
+        <div class="vacia" v-if="modelo && modelo.vacia">
+          <svg class="vacia-figura" viewBox="0 0 220 80" aria-hidden="true">
+            <path d="M20 40H200" stroke="#D9D6CC" stroke-width="8" stroke-dasharray="2 14" stroke-linecap="round"/>
+            <circle cx="110" cy="40" r="20" fill="#15171C"/><circle cx="110" cy="40" r="8" fill="#fff"/>
+          </svg>
+          <template v-if="modelo.error">
+            <h2>No hay un camino registrado para «{{ destino.name_es }}».</h2>
+          </template>
+          <template v-else-if="modelo.tipo === 'pc6' && destino.label === 'Course'">
+            <h2>Dentro de un curso, el camino concepto a concepto no sale de él.</h2>
+            <p>Todo lo que «{{ destino.name_es }}» enseña solo pide conceptos que el mismo curso enseña. Para saber qué curso conviene llevar antes, mira lo que pide su sílabo.</p>
+            <button class="primario" @click="cambiarPestana('pc2')">Ver los cursos que conviene llevar antes</button>
+            <span v-if="traza" class="traza">CU-8 → CU-4</span>
+          </template>
+          <template v-else-if="modelo.tipo === 'pc6' && (destino.label === 'KnowledgeArea' || destino.label === 'KnowledgeUnit')">
+            <template v-if="extraVacia && extraVacia.conceptos === 0">
+              <h2>«{{ destino.name_es }}» existe en CS2023, pero aún no en los sílabos cargados.</h2>
+              <p>Ningún sílabo tiene temas en {{ destino.label === 'KnowledgeArea' ? 'esta área' : 'esta unidad' }}, así que no hay conceptos desde los que trazar un camino.</p>
+            </template>
+            <template v-else>
+              <h2>Nada de fuera de «{{ destino.name_es }}» hace falta antes.</h2>
+              <p>Sus {{ extraVacia ? extraVacia.conceptos : '' }} conceptos solo piden cosas que están dentro de {{ destino.label === 'KnowledgeArea' ? 'esta área' : 'esta unidad' }}.</p>
+              <button class="primario" @click="cambiarPestana('pc4')">Ver qué contiene y en qué orden aprenderlo</button>
+            </template>
+            <span v-if="traza" class="traza">CU-8 · PC6</span>
+          </template>
+          <template v-else-if="modelo.tipo === 'pc6'">
+            <h2>«{{ destino.name_es }}» no tiene prerrequisitos registrados fuera de sí mismo.</h2>
+            <p>Ningún sílabo cargado dice que {{ destino.label === 'Topic' ? 'sus conceptos necesiten' : 'necesite' }} algo de fuera. Puede ser un buen punto de partida.</p>
+            <button class="primario" v-if="destino.label === 'Topic'" @click="cambiarPestana('pc4')">Ver qué contiene y en qué orden aprenderlo</button>
+            <div class="vacia-chips" v-if="extraVacia && extraVacia.base && extraVacia.base.length">
+              <p class="vacia-rotulo">Conceptos que lo necesitan antes</p>
+              <button v-for="b in extraVacia.base" :key="b.key" class="chip-nodo" @click="abrirDestino(b.key)"><span class="forma forma-inst"></span>{{ b.name_es }}<span v-if="clavesConRuta[b.key]" class="con-ruta">con camino</span></button>
+            </div>
+            <span v-if="traza" class="traza">{{ destino.label === 'Concept' ? 'CU-3 · CU-8' : 'CU-8' }} · PC6</span>
+          </template>
+          <template v-else-if="modelo.tipo === 'pc2'">
+            <h2>{{ destino.course_code }} no pide conceptos de otros cursos.</h2>
+            <p>Según los sílabos cargados, «{{ destino.name_es }}» se puede llevar sin un curso previo. Enseña {{ modelo.ensena.length }} conceptos: están en su ficha.</p>
+            <span v-if="traza" class="traza">CU-4 · PC2</span>
+          </template>
+          <template v-else-if="modelo.tipo === 'pc4'">
+            <h2>Los sílabos no piden un orden entre las partes de «{{ destino.name_es }}».</h2>
+            <p>Esto es lo que contiene:</p>
+            <div class="contiene contiene-centro">
+              <template v-if="modelo.unidades.length">
+                <p class="vacia-rotulo">Unidades <span class="cuenta">{{ modelo.unidades.length }}</span></p>
+                <div class="chips chips-centro"><button v-for="u in modelo.unidades" :key="u.key" class="chip-nodo" @click="abrirDestino(u.key)"><span class="forma forma-ref"></span>{{ u.name_es }}</button></div>
+              </template>
+              <template v-if="modelo.temas.length">
+                <p class="vacia-rotulo">Temas <span class="cuenta">{{ modelo.temas.length }}</span></p>
+                <div class="chips chips-centro"><button v-for="t in modelo.temas" :key="t.key" class="chip-nodo" @click="abrirDestino(t.key)"><span class="forma forma-inst"></span>{{ t.name_es }}<span v-if="clavesConRuta[t.key]" class="con-ruta">con camino</span></button></div>
+              </template>
+              <template v-if="modelo.conceptos.length">
+                <p class="vacia-rotulo">Conceptos <span class="cuenta">{{ modelo.conceptos.length }}</span></p>
+                <div class="chips chips-centro"><button v-for="c in modelo.conceptos.slice(0, 30)" :key="c.key" class="chip-nodo" @click="abrirFicha(c.key)"><span class="forma forma-inst"></span>{{ c.name_es }}</button>
+                  <span v-if="modelo.conceptos.length > 30" class="chip-dato">y {{ modelo.conceptos.length - 30 }} más</span></div>
+              </template>
+            </div>
+            <span v-if="traza" class="traza">CU-6 · PC4 · RF-13</span>
+          </template>
+        </div>
+      </section>
+
+      <!-- ===================== panel lateral ===================== -->
+      <aside class="panel" aria-live="polite">
+        <!-- C · ficha de estación -->
+        <div v-if="ficha" class="ficha">
+          <div class="ficha-barra">
+            <button class="ficha-atras" @click="fichaAtras">← {{ pilaFichas.length ? 'Atrás' : (modelo && !modelo.vacia ? 'Indicaciones' : 'Cerrar') }}</button>
+            <button class="cerrar" @click="cerrarFicha" aria-label="Cerrar ficha">×</button>
+          </div>
+          <p class="ficha-tipo">
+            <span class="forma" :class="esRef(ficha.nodo) ? 'forma-ref' : 'forma-inst'" aria-hidden="true"></span>
+            {{ etiqueta(ficha.nodo) }}
+            <span v-if="ficha.nodo.course_code" class="insignia" :style="{ background: colorCurso(ficha.nodo.course_code) }">{{ ficha.nodo.course_code }}</span>
+            <span class="capa" :class="esRef(ficha.nodo) ? 'capa-ref' : 'capa-inst'">{{ capa(ficha.nodo) }}</span>
+          </p>
+          <h2 class="ficha-nombre">{{ ficha.nodo.name_es }}</h2>
+          <p v-if="ficha.nodo.name_en" class="en">{{ ficha.nodo.name_en }}</p>
+          <p v-if="ficha.nodo.description" class="ficha-desc">{{ ficha.nodo.description }}</p>
+
+          <div class="procedencia" v-if="ficha.procedencia.length">
+            <span class="proc-rotulo">Fuente</span>
+            <a v-for="r in ficha.procedencia" :key="r.key" class="fuente" :class="esRef(r) ? 'fuente-ref' : 'fuente-inst'" :href="r.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + r.name_es">{{ r.name_es }} ↗</a>
+            <span v-if="traza" class="traza">CU-10 · RF-21</span>
+          </div>
+
+          <div class="en-ruta" v-if="ficha.estacion">
+            <span class="er-rotulo">En este camino</span>
+            <span>{{ ficha.estacion.destino ? 'es la meta' : (ficha.estacion.interior ? 'está dentro de la meta' : (ficha.estacion.depth ? pasosTexto(ficha.estacion.depth) : 'paso ' + (ficha.estacion.col + 1))) }}</span>
+            <span v-for="lk in ficha.estacion.lineas" :key="lk" class="insignia" :class="{ 'insignia-ref': lineaDe(lk).referencia }" :style="{ background: lineaDe(lk).color }" :title="lineaDe(lk).nombre">{{ lineaDe(lk).insignia }}</span>
+          </div>
+
+          <div class="ficha-acciones">
+            <button class="primario" v-if="esDestinable(ficha.nodo) && (!destino || ficha.key !== destino.key)" @click="abrirDestino(ficha.key)">Ver el camino hasta aquí</button>
+            <a class="primario" v-if="ficha.nodo.locator" :href="ficha.nodo.locator" target="_blank" rel="noopener">Ver fuente ↗</a>
+          </div>
+
+          <section class="f-sec" v-if="ficha.curso">
+            <h3>Lo que pide y lo que enseña <span v-if="traza" class="traza">CU-4 · PC2 · RF-12</span></h3>
+            <p class="f-sub">Lo que pide <span class="cuenta">{{ ficha.curso.requiere.length }}</span></p>
+            <p class="f-nota" v-if="!ficha.curso.requiere.length">No pide conceptos que enseñe otro curso.</p>
+            <div class="chips" v-if="ficha.curso.requiere.length">
+              <button v-for="r in ficha.curso.requiere" :key="r.nodo.key" class="chip-nodo" @click="abrirFicha(r.nodo.key, true)">
+                <span class="forma forma-inst"></span>{{ r.nodo.name_es }}<span class="chip-dato">lo enseña {{ r.cursos.join(', ') }}</span>
+              </button>
+            </div>
+            <p class="f-sub">Lo que enseña <span class="cuenta">{{ ficha.curso.ensenaLista.length }}</span></p>
+            <div class="chips">
+              <button v-for="c in ficha.curso.ensenaLista.slice(0, 16)" :key="c.key" class="chip-nodo" @click="abrirFicha(c.key, true)"><span class="forma forma-inst"></span>{{ c.name_es }}</button>
+              <span v-if="ficha.curso.ensenaLista.length > 16" class="chip-dato">y {{ ficha.curso.ensenaLista.length - 16 }} más</span>
+            </div>
+          </section>
+
+          <section class="f-sec" v-if="ficha.prerrequisitos && ficha.prerrequisitos.length">
+            <h3>Qué necesitas antes <span v-if="traza" class="traza">CU-3 · PC1 · RF-11</span></h3>
+            <div class="chips">
+              <button v-for="p in ficha.prerrequisitos" :key="p.key" class="chip-nodo" @click="abrirFicha(p.key, true)">
+                <span class="forma forma-inst"></span>{{ p.name_es }}<span class="chip-dato">{{ pasosTexto(p.depth) }}</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="f-sec" v-if="ficha.ubicaciones.length">
+            <h3>Dónde está en la carrera <span v-if="traza" class="traza">CU-5 · PC3 · RF-13</span></h3>
+            <ol class="migas" v-for="(c, ci) in ficha.ubicaciones" :key="ci">
+              <li v-for="p in c" :key="p.nodo.key">
+                <button class="miga" @click="abrirFicha(p.nodo.key, true)" :disabled="p.nodo.key === ficha.key">
+                  <span class="forma" :class="esRef(p.nodo) ? 'forma-ref' : 'forma-inst'" aria-hidden="true"></span>
+                  <span class="miga-nombre">{{ p.nodo.name_es }}</span>
+                  <span class="miga-tipo">{{ etiqueta(p.nodo) }} · {{ capa(p.nodo) }}</span>
+                </button>
+              </li>
+            </ol>
+          </section>
+
+          <section class="f-sec" v-if="ficha.recursos !== null">
+            <h3>Material de estudio <span v-if="traza" class="traza">CU-7 · PC5 · RF-14</span></h3>
+            <ul class="recursos" v-if="ficha.recursos.length">
+              <li v-for="r in ficha.recursos" :key="r.recurso.key">
+                <a class="recurso" :href="r.recurso.locator" target="_blank" rel="noopener">
+                  <span class="rec-icono" aria-hidden="true">PDF</span>
+                  <span><strong>{{ r.recurso.name_es }}</strong>
+                  <small>{{ r.tipo ? r.tipo.name_es : 'Material' }} · trata sobre {{ nombres(r.sobre) }}</small></span>
+                  <span class="rec-abrir">↗</span>
+                </a>
+              </li>
+            </ul>
+            <template v-else-if="ficha.recursosTema.length">
+              <p class="f-nota">Un concepto no tiene material propio: este trata sobre su tema.</p>
+              <ul class="recursos">
+                <template v-for="t in ficha.recursosTema" :key="t.tema.key">
+                  <li v-for="r in t.recursos" :key="t.tema.key + r.recurso.key">
+                    <a class="recurso" :href="r.recurso.locator" target="_blank" rel="noopener">
+                      <span class="rec-icono" aria-hidden="true">PDF</span>
+                      <span><strong>{{ r.recurso.name_es }}</strong><small>{{ r.tipo ? r.tipo.name_es : 'Material' }} · trata sobre el tema {{ t.tema.name_es }}</small></span>
+                      <span class="rec-abrir">↗</span>
+                    </a>
+                  </li>
+                </template>
+              </ul>
+            </template>
+            <p v-else class="f-nota">No hay material que trate sobre esto ni sobre sus partes.</p>
+          </section>
+
+          <section class="f-sec" v-if="ficha.especial">
+            <h3>Es un tipo de y tipos <span v-if="traza" class="traza">CU-9 · PC7 · RF-16</span></h3>
+            <p class="f-sub" v-if="ficha.especial.arriba.length">Es un tipo de</p>
+            <div class="chips" v-if="ficha.especial.arriba.length">
+              <span v-for="s in ficha.especial.arriba" :key="s.nodo.key" class="chip-par">
+                <button class="chip-nodo" @click="abrirFicha(s.nodo.key, true)"><span class="forma forma-inst"></span>{{ s.nodo.name_es }}</button>
+                <a v-if="s.fuente" class="mini-fuente" :href="s.fuente.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + s.fuente.name_es">{{ codigoFuente(s.fuente) }} ↗</a>
+              </span>
+            </div>
+            <p class="f-sub" v-if="ficha.especial.abajo.length">Tipos</p>
+            <div class="chips" v-if="ficha.especial.abajo.length">
+              <span v-for="s in ficha.especial.abajo" :key="s.nodo.key" class="chip-par">
+                <button class="chip-nodo" @click="abrirFicha(s.nodo.key, true)"><span class="forma forma-inst"></span>{{ s.nodo.name_es }}</button>
+                <a v-if="s.fuente" class="mini-fuente" :href="s.fuente.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + s.fuente.name_es">{{ codigoFuente(s.fuente) }} ↗</a>
+              </span>
+            </div>
+          </section>
+
+          <section class="f-sec" v-if="ficha.grupos.length">
+            <h3>Alrededor <span v-if="traza" class="traza">CU-2 · RF-19</span></h3>
+            <p class="f-nota">Con qué se relaciona directamente. Abre uno para seguir explorando; «+» indica que tiene más relaciones. La etiqueta de la derecha es la fuente de la relación.</p>
+            <div v-for="g in ficha.grupos" :key="g.id" class="grupo">
+              <p class="f-sub">{{ g.titulo }} <span class="cuenta">{{ g.items.length }}</span></p>
+              <div class="chips">
+                <span v-for="it in g.items.slice(0, 14)" :key="it.nodo.key" class="chip-par">
+                  <button class="chip-nodo" @click="abrirFicha(it.nodo.key, true)" :title="it.mas ? 'Tiene más relaciones: ábrelo para verlas' : ''">
+                    <span class="forma" :class="esRef(it.nodo) ? 'forma-ref' : 'forma-inst'"></span>{{ it.nodo.name_es }}<span v-if="it.nodo.course_code" class="chip-dato">{{ it.nodo.course_code }}</span><span v-if="it.mas" class="chip-mas" aria-label="tiene más relaciones">+</span>
+                  </button>
+                  <a v-if="it.fuente" class="mini-fuente" :class="{ 'mini-ref': esRef(it.fuente) }" :href="it.fuente.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + it.fuente.name_es">{{ codigoFuente(it.fuente) }} ↗</a>
+                </span>
+                <span v-if="g.items.length > 14" class="chip-dato">y {{ g.items.length - 14 }} más</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- indicaciones: el mismo camino como lista ordenada, accesible -->
+        <div v-else-if="modelo && !modelo.vacia" class="indicaciones">
+          <p class="rotulo-panel">Indicaciones <span v-if="traza" class="traza">{{ modelo.tipo === 'pc2' ? 'CU-4 · PC2' : (modelo.tipo === 'pc4' ? 'CU-6 · PC4' : 'CU-3 · CU-8 · RF-20') }}</span></p>
+          <h2 class="ind-titulo">{{ modelo.tipo === 'pc4' ? 'Orden para aprender' : 'Para llegar a' }} «{{ destino.name_es }}»</h2>
+          <p class="resumen">{{ resumen }}</p>
+          <ol class="itinerario">
+            <li v-for="(p, i) in modelo.pasos" :key="p.col" class="paso" :class="{ 'paso-final': i === modelo.pasos.length - 1 && modelo.tipo !== 'pc4' }">
+              <p class="paso-titulo">{{ p.titulo }}</p>
+              <ul class="paradas">
+                <li v-for="s in p.estaciones" :key="s.key">
+                  <button class="parada" :class="{ sel: seleccion === s.key, destino: s.destino }" @click="abrirFicha(s.key)">
+                    <span class="parada-lineas" v-if="s.lineas.length">
+                      <span v-for="lk in s.lineas" :key="lk" class="mini-linea" :class="{ ref: lineaDe(lk).referencia }" :style="{ background: lineaDe(lk).color }">{{ lineaDe(lk).insignia }}</span>
+                    </span>
+                    <span class="parada-nombre">{{ s.nombre }}</span>
+                    <span class="parada-fuente" v-if="s.fuente">{{ s.fuente.name_es }}</span>
+                  </button>
+                  <p v-if="s.lineas.length > 1" class="transbordo">Transbordo · {{ nombresLineas(s) }}</p>
+                </li>
+              </ul>
+              <button v-if="i < modelo.pasos.length - 1" class="porque" @click="evidenciaPaso(i)">¿Por qué sigue esto?<span v-if="traza" class="traza">CU-10</span></button>
+            </li>
+          </ol>
+          <details class="extra" v-if="modelo.tipo === 'pc2'">
+            <summary>Lo que enseña {{ destino.course_code }} <span class="cuenta">{{ modelo.ensena.length }}</span></summary>
+            <div class="chips">
+              <button v-for="c in modelo.ensena" :key="c.key" class="chip-nodo" @click="abrirFicha(c.key)"><span class="forma forma-inst"></span>{{ c.name_es }}<span v-if="clavesConRuta[c.key]" class="con-ruta">con camino</span></button>
+            </div>
+          </details>
+          <details class="extra" v-if="modelo.tipo === 'pc4'" open>
+            <summary>Qué contiene <span v-if="traza" class="traza">CU-6 · PC4</span></summary>
+            <div class="contiene">
+              <template v-if="modelo.unidades.length">
+                <p class="f-sub">Unidades <span class="cuenta">{{ modelo.unidades.length }}</span></p>
+                <div class="chips"><button v-for="u in modelo.unidades" :key="u.key" class="chip-nodo" @click="abrirDestino(u.key)"><span class="forma forma-ref"></span>{{ u.name_es }}</button></div>
+              </template>
+              <template v-if="modelo.temas.length">
+                <p class="f-sub">Temas <span class="cuenta">{{ modelo.temas.length }}</span></p>
+                <div class="chips"><button v-for="t in modelo.temas" :key="t.key" class="chip-nodo" @click="abrirDestino(t.key)"><span class="forma forma-inst"></span>{{ t.name_es }}</button></div>
+              </template>
+              <p class="f-sub">Conceptos sin un orden registrado <span class="cuenta">{{ modelo.sinOrden.length }}</span></p>
+              <div class="chips">
+                <button v-for="c in modelo.sinOrden.slice(0, 30)" :key="c.key" class="chip-nodo" @click="abrirFicha(c.key)"><span class="forma forma-inst"></span>{{ c.name_es }}</button>
+                <span v-if="modelo.sinOrden.length > 30" class="chip-dato">y {{ modelo.sinOrden.length - 30 }} más</span>
+              </div>
+            </div>
+          </details>
+          <p class="nota-panel">Sin progreso ni marcas: las indicaciones muestran lo que dicen los sílabos, no lo que ya estudiaste.</p>
+        </div>
+        <div v-else class="indicaciones"><p class="f-nota">Cargando…</p></div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ===================== D · ¿Por qué? ===================== -->
+  <div class="velo" v-if="evidencia" @click.self="cerrarEvidencia">
+    <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="ev-titulo">
+      <header class="dialogo-cab">
+        <p class="rotulo-panel">¿Por qué? <span v-if="traza" class="traza">{{ evidencia.traza }}</span></p>
+        <h2 id="ev-titulo">{{ evidencia.titulo }}</h2>
+        <p class="dialogo-sub">{{ evidencia.subtitulo }}</p>
+        <button class="cerrar" @click="cerrarEvidencia" aria-label="Cerrar">×</button>
+      </header>
+      <ol class="evidencias">
+        <li v-for="it in evidencia.items" :key="it.id" class="evidencia" :class="'ev-' + it.tipo">
+          <p class="frase">
+            <button class="nodo-enlace" @click="cerrarEvidencia(); abrirFicha(it.desdeKey)"><span class="forma" :class="it.desdeRef ? 'forma-ref' : 'forma-inst'"></span>{{ it.desde }}</button>
+            <span class="verbo">{{ it.verbo }}</span>
+            <button class="nodo-enlace" @click="cerrarEvidencia(); abrirFicha(it.hastaKey)"><span class="forma" :class="it.hastaRef ? 'forma-ref' : 'forma-inst'"></span>{{ it.hasta }}</button>
+          </p>
+          <div class="ev-pie">
+            <code v-if="traza" class="cypher">{{ it.cypher }}</code>
+            <span v-else class="ev-fuente-rotulo">Fuente</span>
+            <a v-if="it.fuente" class="fuente" :class="esRef(it.fuente) ? 'fuente-ref' : 'fuente-inst'" :href="it.fuente.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + it.fuente.name_es">{{ it.fuente.name_es }} ↗</a>
+          </div>
+        </li>
+      </ol>
+      <footer class="dialogo-pie">Cada relación lleva el documento del que salió: el sílabo PUCP del curso, o CS2023. Los PDF de los sílabos se abren cuando el sistema está en marcha.</footer>
+    </div>
+  </div>
+
+  <!-- ===================== recorrido sugerido ===================== -->
+  <aside class="recorrido" v-if="recorridoAbierto" aria-label="Recorrido sugerido">
+    <header class="rec-cab">
+      <span>Recorrido sugerido · {{ pasoRecorrido + 1 }}/{{ recorrido.length }}</span>
+      <button class="cerrar" @click="recorridoAbierto = false" aria-label="Cerrar el recorrido">×</button>
+    </header>
+    <div class="rec-cuerpo">
+      <p class="rec-titulo">{{ recorrido[pasoRecorrido].titulo }} <span v-if="traza" class="traza">{{ recorrido[pasoRecorrido].cu }}</span></p>
+      <p class="rec-texto">{{ recorrido[pasoRecorrido].accion.texto }}</p>
+      <div class="rec-acciones">
+        <button class="primario rec-ir" @click="irPaso(pasoRecorrido)">Mostrar</button>
+        <span class="rec-puntos" aria-hidden="true"><span v-for="(p, i) in recorrido" :key="i" :class="{ on: i === pasoRecorrido }" @click="irPaso(i)"></span></span>
+        <button class="rec-flecha" :disabled="pasoRecorrido === 0" @click="irPaso(pasoRecorrido - 1)" aria-label="Paso anterior">‹</button>
+        <button class="rec-siguiente" :disabled="pasoRecorrido === recorrido.length - 1" @click="irPaso(pasoRecorrido + 1)">Siguiente ›</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script src="../datos/datos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.5.44/dist/vue.global.prod.js"></script>
+<script src="js/api.js"></script>
+<script src="js/modelo.js"></script>
+<script src="js/metro.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

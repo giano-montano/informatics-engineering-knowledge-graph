@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel del operador</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <span class="logo" aria-hidden="true">KG</span>
+      <span>Panel del operador <small>· grafo de Ingeniería Informática</small></span>
+    </div>
+    <nav class="nav oculto" id="nav" aria-label="Secciones del panel">
+      <a href="#sec-estado">Estado</a>
+      <a href="#sec-corridas">Corridas</a>
+      <a href="#sec-auditoria">Auditoría</a>
+    </nav>
+    <div class="derecha oculto" id="sesion-activa">
+      <span class="chip-token" title="El token vive solo en esta pestaña (sessionStorage)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>
+        <span class="texto">Token en esta pestaña</span> <span class="mono" id="token-enmascarado"></span>
+      </span>
+      <button class="btn btn-chico" id="btn-actualizar" type="button" title="Vuelve a pedir corridas y reporte">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 2.5v3h-3"/></svg>
+        Actualizar
+      </button>
+      <div class="menu">
+        <button class="btn btn-chico" id="btn-menu" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menu-lista">Sesión ▾</button>
+        <div class="menu-lista oculto" id="menu-lista" role="menu">
+          <button type="button" role="menuitem" id="btn-simular-401">Simular token rechazado (401)</button>
+          <button type="button" role="menuitem" id="btn-guia">Mostrar recorrido sugerido</button>
+          <div class="sep" role="separator"></div>
+          <button type="button" role="menuitem" id="btn-salir">Olvidar el token y salir</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="aviso-maqueta" role="note">
+    <span>Maqueta sin servidor: lee las respuestas reales capturadas de la API de operación.</span>
+    <span>Lo que no viene de la API va marcado así: <span class="simulado">simulado</span></span>
+  </div>
+
+  <!-- Acceso: el operador teclea el token (ADR-013) -->
+  <div class="acceso oculto" id="vista-acceso"></div>
+
+  <!-- Panel: una sola pantalla (RF-23) -->
+  <main class="oculto" id="vista-panel">
+    <div class="fila-2" id="sec-estado">
+      <section class="tarjeta" aria-labelledby="t-compuerta" id="zona-compuerta"></section>
+      <section class="tarjeta" aria-labelledby="t-carga" id="zona-carga"></section>
+    </div>
+
+    <section class="tarjeta" aria-labelledby="t-corridas" id="sec-corridas">
+      <header>
+        <h2 id="t-corridas">Corridas de ingesta</h2>
+        <span class="nota" id="corridas-actualizado"></span>
+        <span class="ruta">GET /api/runs · GET /api/runs/{id}</span>
+      </header>
+      <div class="maestro-detalle">
+        <div class="lista" id="zona-lista"></div>
+        <div class="detalle" id="zona-detalle"></div>
+      </div>
+    </section>
+
+    <section class="tarjeta" aria-labelledby="t-auditoria" id="sec-auditoria"></section>
+  </main>
+
+  <aside class="guia oculto" id="guia" aria-labelledby="t-guia">
+    <button class="btn btn-chico cerrar" type="button" id="btn-cerrar-guia" aria-label="Cerrar el recorrido">✕</button>
+    <h2 id="t-guia">Recorrido sugerido</h2>
+    <ol>
+      <li>Entra con cualquier token; antes, prueba <em>token inválido</em>.</li>
+      <li>Mira la compuerta: abierta, último reporte limpio.</li>
+      <li>Elige la corrida 3 → <em>Descartes</em> → ver el ejemplo.</li>
+      <li>Sube un PDF: la corrida 5 aparece <em>pendiente</em> (simulada).</li>
+      <li>Baja a las 15 reglas; prueba el ejemplo de compuerta cerrada.</li>
+    </ol>
+  </aside>
+
+  <div class="sr" aria-live="polite" id="anuncio"></div>
+
+  <script src="../datos/datos.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>

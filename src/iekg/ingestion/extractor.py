@@ -138,14 +138,24 @@ level.
 - A heading that names several pieces of knowledge stays one topic: "Directorio Activo y DNS" is one topic.
 
 ## Concepts
-- A concept is each item inside a topic: one piece of knowledge. A piece of knowledge named only in the \
-summary is a concept too, under the topic it fits best, unless it is one of the topics.
+- A concept is each item inside a topic: one piece of knowledge.
 - An item that names several pieces of knowledge gives one concept for each, unless together they are one \
 named piece of knowledge: "Archivos y editores" gives "Archivos" and "Editores"; "Stack, PUSH, POP" gives \
 three. Each element of an enumeration that can stand on its own is a concept.
 - Languages, notations and standards are concepts. Concrete products and tools are concepts only when the \
 course teaches them or uses them as content.
 - Give each piece of knowledge once.
+
+## The summary
+- Once the topics and their concepts are done, read the summary phrase by phrase. Each piece of knowledge \
+it names that is neither a topic nor already a concept is a concept too: add it under the topic it fits \
+best. "Se estudian la teoría de colas y la simulación de eventos discretos", with neither in the contents, \
+gives the concepts "Teoría de colas" and "Simulación de eventos discretos".
+- A summary names knowledge broadly, and a broad piece of knowledge is still a concept: keep it even if \
+no topic matches it well, or if the contents only touch it. When the summary calls them "temas" or \
+"tópicos", what it names is still concepts.
+- The nature, purpose and activities of the course are not knowledge, but a piece of knowledge named \
+inside them is.
 
 ## Names
 - Name topics and concepts as the syllabus does, in its language, without numbering, the words "chapter" \
@@ -176,6 +186,10 @@ vocabulary has none of what the course needs, give no required concepts.
 to understand it, among the concepts of this syllabus, the required ones and the vocabulary. A nested or \
 advanced form requires its basic form; a construct requires the ones it is built from. Give direct \
 prerequisites only, not the ones a chain of others already implies.
+- Look outside this syllabus too. A concept of this syllabus that builds directly on a required concept, \
+or on an existing concept this syllabus does not teach, requires it (C-…): if "Pila" exists and this \
+syllabus teaches "Evaluación de expresiones postfijas", the latter requires the former. Every required \
+concept is the prerequisite of at least one concept of this syllabus.
 - Specializations: a concept and the more general concept it is a kind of, as a priority queue is a kind \
 of queue. The general concept must be in this syllabus or the vocabulary; if it is not, give none. Two \
 kinds of the same thing are siblings, and neither specializes the other. A part, a variant of scope or a \

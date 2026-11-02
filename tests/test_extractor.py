@@ -78,6 +78,23 @@ def test_labels_that_name_the_same_thing_normalize_alike(a, b):
     assert normalize_label(a) == normalize_label(b)
 
 
+@pytest.mark.parametrize("a, b", [
+    ("red", "redes"), ("función", "funciones"), ("interfaz", "interfaces"), ("unidad", "unidades"),
+    ("árbol", "árboles"), ("carácter", "caracteres"), ("régimen", "regímenes"), ("switch", "switches"),
+    ("clúster", "clústeres"), ("router", "routers"), ("VLAN", "VLANs"), ("variable", "variables"),
+])
+def test_singular_and_plural_normalize_alike(a, b):
+    assert normalize_label(a) == normalize_label(b)
+
+
+@pytest.mark.parametrize("a, b", [
+    ("HTTPS", "HTTP"), ("IPS", "IP"), ("IDS", "ID"), ("FTPS", "FTP"), ("SMTPS", "SMTP"),
+    ("IMAPS", "IMAP"), ("LDAPS", "LDAP"), ("POP3S", "POP3"), ("bus", "bu"),
+])
+def test_a_protected_word_does_not_meet_its_cut_form(a, b):
+    assert normalize_label(a) != normalize_label(b)
+
+
 # --- Vocabulary -------------------------------------------------------------------
 
 def test_the_vocabulary_shows_each_unit_with_its_area_and_where_nodes_hang():

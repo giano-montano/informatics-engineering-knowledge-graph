@@ -10,10 +10,28 @@ import re
 import unicodedata
 
 
+# Words the singular below would turn into another term or mangle: acronyms
+# whose final "s" is a letter of the name, and words that end in "s" already in
+# the singular. Chosen from computing knowledge, never from the test cases.
+PROTECTED = frozenset({"https", "ips", "ids", "ftps", "smtps", "imaps", "ldaps", "pop3s", "bus"})
+
+
+def _singular(word: str) -> str:
+    # The Spanish plural, roughly: "-s" after a vowel, "-es" after a consonant,
+    # and "-ces" for a final "z". The key need not be a word ("variabl"); it is
+    # never shown. Known misses: "meses" and "paises" (stressed vowel + "s").
+    if word in PROTECTED:
+        return word
+    word = word.removesuffix("s")
+    if len(word) > 2 and word[-1] == "e" and word[-2] not in "aeiou":
+        word = word[:-1]
+    if word.endswith("z"):
+        word = word[:-1] + "c"
+    return word
+
+
 def normalize_label(label: str) -> str:
     text = unicodedata.normalize("NFD", label.lower())
     text = "".join(c for c in text if unicodedata.category(c) != "Mn")
     text = re.sub(r"[\W_]", " ", text)
-    # The singular, crudely: a final "s" goes from every word. Both sides of a
-    # comparison lose it, so "bases" meets "base" and "redes" meets "rede".
-    return " ".join(word.removesuffix("s") for word in text.split() if word.removesuffix("s"))
+    return " ".join(word for word in map(_singular, text.split()) if word)

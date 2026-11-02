@@ -38,3 +38,4 @@ casos-de-prueba/silabos-en-orden/
 
 # Almacenes de archivos locales del sistema (operacional, documentos, hechos).
 var/
+poster/

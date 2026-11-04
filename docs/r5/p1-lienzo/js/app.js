@@ -26,6 +26,7 @@
     respLente: null,
     respFoco: null,
     aristaSel: null,
+    porque: null,       // estación del camino cuyo «¿Por qué?» está abierto
     turno: 0,           // descarta respuestas viejas si el estudiante hace clic rápido
   };
 
@@ -127,6 +128,62 @@
     el.style.transform = `translate(${x}px, ${y}px)`;
   }
 
+  // ------------------------------------------------------------------ por qué de cada tramo del camino (CU-8)
+
+  /** ¿La meta es parte (por PART_OF, a cualquier altura) de esta estación? Pasa con su propio tema. */
+  function contieneLaMeta(resp, estacion, meta) {
+    let frente = [meta];
+    const vistos = new Set(frente);
+    while (frente.length) {
+      const sig = [];
+      for (const k of frente) {
+        for (const e of resp.edges) {
+          if (e.type !== 'PART_OF' || e.source !== k || vistos.has(e.target)) continue;
+          if (e.target === estacion) return true;
+          vistos.add(e.target); sig.push(e.target);
+        }
+      }
+      frente = sig;
+    }
+    return false;
+  }
+
+  /**
+   * Relaciones de la respuesta que unen una estación con la meta: el camino más corto que llega
+   * a la meta por «necesita antes» (no por «es parte de»). Solo lee aristas que trajo la API.
+   */
+  function justificarEstacion(resp, estacion, meta) {
+    const ady = new Map();
+    const poner = (k, v) => { if (!ady.has(k)) ady.set(k, []); ady.get(k).push(v); };
+    for (const e of resp.edges) {
+      if (e.type === 'WAS_DERIVED_FROM') continue;
+      poner(e.source, { k: e.target, e }); poner(e.target, { k: e.source, e });
+    }
+    const previo = new Map([[estacion, null]]);
+    const cola = [estacion];
+    while (cola.length) {
+      const k = cola.shift();
+      if (k === meta) break;
+      for (const v of ady.get(k) || []) {
+        if (previo.has(v.k)) continue;
+        if (v.k === meta && v.e.type !== 'HAS_PREREQUISITE') continue;
+        previo.set(v.k, { k, e: v.e });
+        cola.push(v.k);
+      }
+    }
+    if (!previo.has(meta)) return [];
+    const tramo = [];
+    for (let k = meta; previo.get(k); k = previo.get(k).k) tramo.unshift(previo.get(k).e);
+    return tramo;
+  }
+
+  function idDeArista(e) { return e.type + '|' + e.source + '|' + e.target; }
+
+  /** «su propio tema» / «el mismo tema», según el grano. */
+  function mismoGrupo(grano) {
+    return grano === 'topic' ? 'el mismo tema' : (grano === 'area' ? 'la misma área' : 'el mismo curso');
+  }
+
   // ------------------------------------------------------------------ portada (ruta nueva, simulada)
 
   async function mostrarPortada() {
@@ -164,6 +221,7 @@
     estado.respFoco = r.cuerpo;
     estado.nodoFoco = r.cuerpo.nodes[0];
     estado.aristaSel = null;
+    estado.porque = null;
     $('#panel').scrollTop = 0;
     lienzo.establecer(r.cuerpo, clave);
     if (opciones.rastro !== false) {
@@ -185,6 +243,7 @@
     turno = turno || ++estado.turno;
     estado.lente = lente;
     estado.respLente = null;
+    estado.porque = null;
     if (lente === 'vecindario' || !estado.foco) {
       lienzo.configurar({ resaltados: null, disposicion: null, verProcedencia: estado.verProcedencia });
       lienzo.dibujar();
@@ -239,6 +298,18 @@
     lienzo.seleccionar(id);
     pintarPanel().then(() => {
       const tarjeta = $('#tarjeta-arista');
+      if (tarjeta) tarjeta.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  }
+
+  /** Abre el «¿Por qué?» de una estación: la tarjeta en el panel y la línea que llega a la meta, marcada en el mapa. */
+  function abrirPorque(clave) {
+    estado.porque = estado.porque === clave ? null : clave;
+    const tramo = estado.porque ? justificarEstacion(estado.respLente, clave, estado.foco) : [];
+    lienzo.seleccionar(tramo.length ? idDeArista(tramo[tramo.length - 1]) : null);
+    pintarFranja();
+    pintarPanel().then(() => {
+      const tarjeta = $('#tarjeta-porque');
       if (tarjeta) tarjeta.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     });
   }
@@ -302,7 +373,9 @@
             ? `El camino hasta un curso sale vacío: lo que ${nombre} pide se aprende dentro del mismo curso. Para saber qué curso conviene llevar antes, abre <button class="enlace-lente" data-lente="cursos">Cursos que conviene llevar antes</button>.`
             : `${nombre} no tiene nada que aprender antes, visto por ${g.nombre}.`;
         }
-        return `Para llegar a ${nombre} conviene pasar antes por <b>${plural(s.estaciones.length, g.nombre, g.plural)}</b>, por ${plural(s.prerrequisitos.length, 'concepto que lo justifica', 'conceptos que lo justifican')}.`;
+        const propia = s.estaciones.find(x => contieneLaMeta(r, x.key, estado.foco));
+        return `Para llegar a ${nombre} conviene pasar antes por <b>${plural(s.estaciones.length, g.nombre, g.plural)}</b>, por ${plural(s.prerrequisitos.length, 'concepto que lo justifica', 'conceptos que lo justifican')}. <b>¿Por qué?</b>, junto a cada estación, muestra la relación y su fuente.` +
+          (propia ? `<span class="mismo-grupo">El prerrequisito está en ${mismoGrupo(estado.grano)}: «${esc(propia.name_es)}» también contiene a ${nombre}. Cuenta porque lo que se necesita antes es el concepto.</span>` : '');
       }
       case 'cursos': {
         const c = P.cursosPrevios(r, estado.foco);
@@ -320,7 +393,11 @@
         const partes = [['KnowledgeUnit', 'unidad', 'unidades'], ['Topic', 'tema', 'temas'], ['Concept', 'concepto', 'conceptos']]
           .filter(([k]) => c[k]).map(([k, s, p]) => `<b>${plural(c[k], s, p)}</b>`);
         if (!c.Topic) return `${nombre} contiene ${partes.join(', ') || 'nada todavía'}. Ningún sílabo cargado trata esta área por ahora.`;
-        return `${nombre} contiene ${partes.join(', ')}.` + ((c.Concept || 0) > 40 ? ' Acerca el zoom para leer el anillo exterior.' : '');
+        const disp = L.disponer('contiene', r, estado.foco);
+        const numerados = disp && disp.pasos ? disp.pasos.size : 0;
+        return `${nombre} contiene ${partes.join(', ')}.` +
+          (numerados ? ` El número sobre ${plural(numerados, 'concepto', 'conceptos')} es su paso dentro de su tema: en qué orden aprenderlo.` : '') +
+          ((c.Concept || 0) > 40 ? ' Acerca el zoom para leer el anillo exterior.' : '');
       }
       case 'recursos': {
         const rec = P.recursosDe(r, estado.foco);
@@ -356,7 +433,11 @@
     if (estado.lente === 'ruta' && r) {
       const s = P.resumenRuta(r, estado.foco, estado.grano);
       if (!s.vacia) {
-        const pasos = s.estaciones.map(n => `<button class="parada" data-ir="${esc(n.key)}" style="--c:${P.CLASES[n.label].color}">${iconoCapa(n.layer, 11)}<span>${esc(n.name_es)}</span></button>`);
+        const pasos = s.estaciones.map(n => {
+          const propia = contieneLaMeta(r, n.key, estado.foco);
+          return `<span class="estacion"><button class="parada${propia ? ' propia' : ''}" data-ir="${esc(n.key)}" style="--c:${P.CLASES[n.label].color}">${iconoCapa(n.layer, 11)}<span>${esc(n.name_es)}</span>${propia ? `<em class="marca-propia">${esc(mismoGrupo(estado.grano))}</em>` : ''}</button>` +
+            `<button class="porque${estado.porque === n.key ? ' activo' : ''}" data-porque="${esc(n.key)}" aria-expanded="${estado.porque === n.key}" aria-label="¿Por qué pasar por ${esc(n.name_es)}? Ver la relación y su fuente">¿Por qué?</button></span>`;
+        });
         pasos.push(`<span class="parada destino" style="--c:${P.CLASES[s.objetivo.label].color}">${iconoCapa(s.objetivo.layer, 11)}<span>${esc(s.objetivo.name_es)}</span></span>`);
         html = `<span class="franja-titulo">Camino hasta aquí · por ${esc(P.GRANOS[estado.grano].plural)}</span><div class="paradas">${pasos.join('<span class="flecha" aria-hidden="true"></span>')}</div>`;
       }
@@ -436,6 +517,27 @@
           <div class="sec-titulo"><span>Relación seleccionada ${traza('CU-10 · RF-21 · ' + a.type)}</span><button class="cerrar-mini" data-cerrar-arista aria-label="Cerrar">×</button></div>
           <p class="afirmacion">${o ? botonNodo(o) : ''}<span class="rel" style="--c:${L.COLOR_ARISTA[a.type]}">${esc(P.RELACIONES[a.type].frase)}</span>${d ? botonNodo(d) : ''}</p>
           <div class="procedencia">${doc ? `<span class="rotulo">${a.provenance ? 'Lo dice' : 'Lo define'}</span>${enlaceDocumento(doc)}` : '<span class="rotulo">Sin fuente en la respuesta</span>'}</div>
+        </section>`);
+      }
+    }
+
+    // ¿Por qué este tramo del camino? (CU-8)
+    if (estado.porque && estado.lente === 'ruta' && estado.respLente) {
+      const r = estado.respLente;
+      const est = P.nodoPorClave(r, estado.porque);
+      const tramo = justificarEstacion(r, estado.porque, clave);
+      const propia = contieneLaMeta(r, estado.porque, clave);
+      if (est) {
+        s.push(`<section class="tarjeta-arista tarjeta-porque" id="tarjeta-porque" aria-live="polite">
+          <div class="sec-titulo"><span>¿Por qué pasar por «${esc(est.name_es)}»? ${traza('CU-8 · PC6 · RF-21')}</span><button class="cerrar-mini" data-cerrar-porque aria-label="Cerrar">×</button></div>
+          ${propia ? `<p class="mismo-grupo">El prerrequisito está en ${mismoGrupo(estado.grano)}.</p>` : ''}
+          ${tramo.length ? `<ol class="tramo">${tramo.map(e => {
+            const o = P.nodoPorClave(r, e.source), d = P.nodoPorClave(r, e.target);
+            const doc = P.documentoDeArista(r, e);
+            return `<li><p class="afirmacion">${o ? botonNodo(o) : ''}<span class="rel" style="--c:${L.COLOR_ARISTA[e.type]}">${esc(P.RELACIONES[e.type].frase)}</span>${d ? botonNodo(d) : ''}</p>
+              <div class="procedencia">${doc ? `<span class="rotulo">${e.provenance ? 'Lo dice' : 'Lo define'}</span>${enlaceDocumento(doc)}` : '<span class="rotulo">Sin fuente en la respuesta</span>'}
+              <button class="mini-arista" data-arista="${esc(idDeArista(e))}" title="Marcar esta línea en el mapa">Ver en el mapa</button></div></li>`;
+          }).join('')}</ol>` : '<p class="nota">La respuesta no trae las relaciones que unen esta estación con la meta.</p>'}
         </section>`);
       }
     }
@@ -633,7 +735,7 @@
   // ------------------------------------------------------------------ delegación de clics
 
   document.addEventListener('click', ev => {
-    const t = ev.target.closest('[data-ir],[data-lente],[data-buscar],[data-arista],[data-cerrar-arista],[data-grano],[data-paso],[data-portada],[data-ver-pasos]');
+    const t = ev.target.closest('[data-ir],[data-lente],[data-buscar],[data-arista],[data-cerrar-arista],[data-grano],[data-paso],[data-portada],[data-ver-pasos],[data-porque],[data-cerrar-porque]');
     if (!t) return;
     if (t.dataset.buscar !== undefined) {
       ev.preventDefault();
@@ -661,6 +763,8 @@
       aplicarLente('ruta');
       return;
     }
+    if (t.dataset.porque) { abrirPorque(t.dataset.porque); return; }
+    if (t.dataset.cerrarPorque !== undefined) { estado.porque = null; lienzo.seleccionar(null); pintarFranja(); pintarPanel(); return; }
     if (t.dataset.arista) { seleccionarArista(t.dataset.arista); return; }
     if (t.dataset.cerrarArista !== undefined) { estado.aristaSel = null; lienzo.seleccionar(null); pintarPanel(); return; }
     if (t.dataset.verPasos !== undefined) { $('#recorrido').classList.add('desplegado'); pintarRecorrido(); return; }

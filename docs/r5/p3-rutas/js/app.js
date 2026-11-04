@@ -67,6 +67,7 @@
         destinos: [], cursos: [], areas: [], destinosSimulados: false, traza: false,
         destino: null, pestana: 'pc6', grano: 'topic', modelo: null, cargando: false, extraVacia: null,
         seleccion: null, ficha: null, pilaFichas: [], cargandoFicha: false,
+        abiertos: {}, masVecinos: {},
         evidencia: null,
         recorridoAbierto: true, recorrido: RECORRIDO, pasoRecorrido: 0,
         leyendaAbierta: false, cs2023: null, verEnsena: false, verSinOrden: false,
@@ -110,6 +111,11 @@
         const n = m.lineas.length;
         return previos + (previos === 1 ? ' concepto que conviene saber antes' : ' conceptos que conviene saber antes') + (m.maxDepth === 1 ? ', todos directos' : ', hasta a ' + m.maxDepth + ' pasos') +
           ', en ' + n + ' ' + (n === 1 ? M.GRANO[this.grano].nombre.toLowerCase() : M.GRANO[this.grano].plural) + '.';
+      },
+      lineasMismaMeta() { return this.modelo && this.modelo.tipo === 'pc6' ? this.modelo.lineas.filter(function (l) { return l.contieneMeta; }) : []; },
+      textoMismaLinea() {
+        const g = { topic: 'en el mismo tema', course: 'en el mismo curso', area: 'en la misma área' }[this.grano];
+        return 'El prerrequisito está ' + g + ' que la meta.';
       },
       lineasPorKey() { const m = {}; (this.modelo ? this.modelo.lineas : []).forEach(function (l) { m[l.key] = l; }); return m; }
     },
@@ -246,7 +252,8 @@
         let sub;
         if (this.modelo.tipo === 'pc2') sub = l.codigo + ' enseña conceptos que pide el curso meta.';
         else if (this.modelo.tipo === 'pc4') sub = 'Conceptos de esta línea que tienen un orden.';
-        else sub = 'Está en el camino porque contiene o enseña algo que conviene saber antes de la meta; lo más cercano ' + (l.depth === 1 ? 'es directo' : 'está a ' + l.depth + ' pasos') + '.';
+        else sub = 'Está en el camino porque contiene o enseña algo que conviene saber antes de la meta; lo más cercano ' + (l.depth === 1 ? 'es directo' : 'está a ' + l.depth + ' pasos') + '.' +
+          (l.contieneMeta ? ' ' + this.textoMismaLinea + ' La meta también pertenece a esta línea.' : '');
         this.evidencia = { titulo: 'Línea ' + l.insignia + ' · ' + l.nombre, subtitulo: sub, items: M.evidenciaLinea(this.modelo, l, this.cs2023), lineas: [l], linea: l, traza: 'CU-8 · CU-10 · PC6 · RF-21' };
       },
       cerrarEvidencia() { this.evidencia = null; },
@@ -258,7 +265,41 @@
         this.cargandoFicha = true;
         this.seleccion = key;
         if (metro) metro.seleccionar(key);
+        this.abiertos = {}; this.masVecinos = {};
         try { this.ficha = markRaw(await this.construirFicha(key)); } finally { this.cargandoFicha = false; }
+      },
+      /* CU-2: el segundo nivel se abre dentro de la misma ficha */
+      alternarVecino(k) { this.abiertos = Object.assign({}, this.abiertos, { [k]: !this.abiertos[k] }); },
+      todosAbiertos(g) { return g.items.every((it) => !this.tieneSegundo(it) || this.abiertos[it.nodo.key]); },
+      alternarGrupo(g) {
+        const abrir = !this.todosAbiertos(g); const a = Object.assign({}, this.abiertos);
+        g.items.forEach((it) => { if (this.tieneSegundo(it)) a[it.nodo.key] = abrir; });
+        this.abiertos = a;
+      },
+      tieneSegundo(it) { return it.segundo.length > 0 || it.mas; },
+      cuentaSegundo(it) { return this.segundoDe(it).length; },
+      segundoDe(it) {
+        const extra = this.masVecinos[it.nodo.key];
+        const lista = it.segundo.concat(extra && extra.items ? extra.items : []);
+        const visto = {};
+        return lista.filter(function (r) { if (visto[r.clave]) return false; visto[r.clave] = true; return true; });
+      },
+      segundoAgrupado(it) {
+        const g = {};
+        this.segundoDe(it).forEach(function (r) { (g[r.id] = g[r.id] || []).push(r); });
+        return ORDEN_RELACION.filter(function (id) { return g[id]; }).map(function (id) {
+          return { id: id, titulo: RELACION[id], items: g[id].sort(function (a, b) { return M.nombre(a.nodo).localeCompare(M.nombre(b.nodo), 'es'); }) };
+        });
+      },
+      async verMasVecino(it) {
+        const k = it.nodo.key; const fichaKey = this.ficha.key;
+        this.masVecinos = Object.assign({}, this.masVecinos, { [k]: { cargando: true, items: [] } });
+        let items = [];
+        try { items = M.relacionesDe(await api('/api/nodes', { key: k }), k, fichaKey, this.cs2023); } catch (e) { items = []; }
+        if (!this.ficha || this.ficha.key !== fichaKey) return;
+        const antes = this.cuentaSegundo(it);
+        this.masVecinos = Object.assign({}, this.masVecinos, { [k]: { cargando: false, cargado: true, items: items } });
+        this.masVecinos[k].nuevas = this.cuentaSegundo(it) - antes;
       },
       fichaAtras() {
         const k = this.pilaFichas.pop();
@@ -281,7 +322,8 @@
           if (e.source === key) { dir = 'out'; otro = e.target; } else if (e.target === key) { dir = 'in'; otro = e.source; }
           if (!dir || !by[otro]) return;
           const id = e.type + ':' + dir;
-          (grupos[id] = grupos[id] || []).push({ nodo: by[otro], fuente: M.fuenteDeArista(det, e, cs), mas: !!by[otro].more_neighbors });
+          (grupos[id] = grupos[id] || []).push({ nodo: by[otro], fuente: M.fuenteDeArista(det, e, cs), mas: !!by[otro].more_neighbors,
+            segundo: M.relacionesDe(det, otro, key, cs) });
         });
         f.grupos = ORDEN_RELACION.filter(function (id) { return grupos[id]; }).map(function (id) {
           return { id: id, titulo: RELACION[id], items: grupos[id].sort(function (a, b) { return M.nombre(a.nodo).localeCompare(M.nombre(b.nodo), 'es'); }) };

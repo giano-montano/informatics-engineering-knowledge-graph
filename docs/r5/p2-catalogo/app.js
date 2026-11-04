@@ -124,7 +124,7 @@
       resaltada() { return this.$route.query.resaltar === this.fila.clave; },
     },
     template: `
-      <li class="fila" :class="['fila--' + fila.capa, { 'fila--resaltada': resaltada }]">
+      <li class="fila" :class="['fila--' + fila.capa, { 'fila--resaltada': resaltada, 'fila--propio': fila.propio }]">
         <div class="fila-linea">
           <glifo :capa="fila.capa" :label="fila.label"/>
           <router-link class="fila-nombre" :to="$aFicha(fila.clave)">{{ fila.nombre }}</router-link>
@@ -133,6 +133,7 @@
           <span v-if="fila.notas && fila.notas.length" class="fila-notas"><nota v-for="n in fila.notas" :key="n.clave" :nota="n"/></span>
         </div>
         <div v-if="fila.detalle" class="fila-detalle">{{ fila.detalle }}</div>
+        <p v-if="fila.aviso" class="fila-propio-aviso"><span class="marca-propio">{{ fila.marca }}</span> {{ fila.aviso }}</p>
         <p v-if="resaltada && fila.notas && fila.notas.length" class="fila-aviso">
           Fuente: <b>{{ fila.notas[0].nombre }}</b>. Pulsa la marca <span class="nota" :class="'nota--' + fila.notas[0].capa">{{ fila.notas[0].corto }}</span> para abrir el documento.
         </p>
@@ -246,29 +247,61 @@
         <li><svg viewBox="0 0 26 10" aria-hidden="true"><line x1="1" y1="5" x2="20" y2="5" class="ley-pre"/><path d="M18,1L25,5L18,9" class="ley-pre-f"/></svg> necesita antes / es un tipo de</li>
         <li><svg viewBox="0 0 26 10" aria-hidden="true"><line x1="1" y1="5" x2="25" y2="5" class="ley-parte"/></svg> está dentro de</li>
         <li><svg viewBox="0 0 26 10" aria-hidden="true"><line x1="1" y1="5" x2="25" y2="5" class="ley-curso"/></svg> lo enseña / lo pide</li>
-        <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><circle class="ley-mas" r="6"/><circle class="ley-inst" r="3"/></svg> tiene más relaciones: su ficha las muestra</li>
+        <li><svg viewBox="-8 -8 16 16" aria-hidden="true"><circle class="ley-mas" r="6"/><circle class="ley-inst" r="3"/></svg> tiene más relaciones: elígelo y agrégalas</li>
       </ul>`,
   };
 
   const MiniMapa = {
     props: ['detalle'],
-    data() { return { info: null }; },
+    data() { return { info: null, grande: null, expandidos: [], seleccion: null }; },
     mounted() { this.pintar(); },
-    watch: { detalle() { this.pintar(); } },
+    watch: { detalle() { this.reiniciar(); this.pintar(); } },
+    computed: {
+      // El vecindario que muestra el mapa agrandado: el de la ficha más los agregados.
+      vista() { return this.grande || this.detalle; },
+      nodoElegido() { return this.seleccion ? this.vista.nodes.find((n) => n.key === this.seleccion) : null; },
+      nuevos() {
+        // Elementos que agregaría expandir el elegido (sin contar documentos).
+        const k = this.seleccion;
+        const extra = k && IEKG_DATOS['/api/nodes'] && IEKG_DATOS['/api/nodes'][k];
+        if (!extra) return 0;
+        // Lo que de verdad aparecería en el mapa: misma regla de dibujo que IEKG_MINIMAPA.
+        const ahora = IEKG_MINIMAPA.datosMapa(this.vista).nodes.length;
+        return IEKG_MINIMAPA.datosMapa(IEKG_MINIMAPA.unir(this.vista, extra)).nodes.length - ahora;
+      },
+    },
     methods: {
       pintar() {
         this.$nextTick(() => {
           this.info = IEKG_MINIMAPA.dibujar(this.$refs.svg, this.detalle, { grande: false, alElegir: (k) => this.$router.push(aFicha(k)) });
         });
       },
+      reiniciar() { this.grande = null; this.expandidos = []; this.seleccion = null; },
+      pintarGrande() {
+        this.$nextTick(() => IEKG_MINIMAPA.dibujar(this.$refs.svgGrande, this.vista, {
+          grande: true,
+          expandidos: new Set(this.expandidos),
+          seleccion: this.seleccion,
+          // En el mapa agrandado, un clic elige el elemento; el pie ofrece abrir su ficha o agregar lo que lo rodea.
+          alElegir: (k) => { this.seleccion = k; this.pintarGrande(); },
+        }));
+      },
       abrir() {
         const d = this.$refs.dialogo;
         if (d.showModal) d.showModal(); else d.setAttribute('open', '');
-        this.$nextTick(() => IEKG_MINIMAPA.dibujar(this.$refs.svgGrande, this.detalle, {
-          grande: true,
-          alElegir: (k) => { this.cerrar(); this.$router.push(aFicha(k)); },
-        }));
+        this.pintarGrande();
       },
+      async expandir() {
+        const k = this.seleccion;
+        if (!k || this.expandidos.includes(k)) return;
+        const extra = await api('/api/nodes', { key: k });
+        M.recordar(extra);
+        this.grande = IEKG_MINIMAPA.unir(this.vista, extra);
+        this.expandidos.push(k);
+        this.pintarGrande();
+      },
+      deshacer() { this.reiniciar(); this.pintarGrande(); },
+      abrirFicha() { const k = this.seleccion; this.cerrar(); this.$router.push(aFicha(k)); },
       cerrar() { const d = this.$refs.dialogo; if (d.close) d.close(); else d.removeAttribute('open'); },
     },
     template: `
@@ -282,10 +315,20 @@
         <dialog ref="dialogo" class="dialogo-mapa" aria-labelledby="titulo-mapa" @click.self="cerrar">
           <div class="dialogo-interior">
             <header class="dialogo-cabecera">
-              <h2 id="titulo-mapa">Lo que rodea a «{{ detalle.nodes[0].name_es }}»</h2>
+              <h2 id="titulo-mapa">Lo que rodea a «{{ detalle.nodes[0].name_es }}» <traza c="CU-2 · RF-19"/></h2>
               <button type="button" class="boton-mini" @click="cerrar">Cerrar <span aria-hidden="true">×</span></button>
             </header>
-            <svg ref="svgGrande" class="mm-svg-grande" role="img" aria-label="Mapa ampliado. La rueda o el pellizco acercan; Tab recorre los elementos y Enter abre su ficha."></svg>
+            <svg ref="svgGrande" class="mm-svg-grande" role="img" aria-label="Mapa ampliado. La rueda o el pellizco acercan; Tab recorre los elementos y Enter elige uno."></svg>
+            <div class="mm-eleccion" aria-live="polite">
+              <template v-if="nodoElegido">
+                <span class="mm-eleccion-nombre"><glifo :capa="nodoElegido.layer" :label="nodoElegido.label"/><b>{{ nodoElegido.name_es }}</b> <span class="tenue">{{ $clase(nodoElegido.label).corto }}</span></span>
+                <button type="button" class="boton-mini" @click="abrirFicha">Abrir su ficha</button>
+                <button v-if="!expandidos.includes(seleccion) && seleccion !== detalle.nodes[0].key" type="button" class="boton-mini boton-mini--fuerte" :disabled="!nuevos" @click="expandir">{{ nuevos ? 'Agregar lo que lo rodea (' + nuevos + (nuevos === 1 ? ' elemento nuevo' : ' elementos nuevos') + ')' : 'Lo que lo rodea ya está en el mapa' }}</button>
+                <span v-else-if="expandidos.includes(seleccion)" class="tenue">Lo que lo rodea ya está agregado.</span>
+              </template>
+              <span v-else class="tenue">Pulsa un elemento para elegirlo: puedes abrir su ficha o agregar al mapa lo que lo rodea, sin salir de aquí. Los de anillo punteado tienen más relaciones de las que se ven.</span>
+              <button v-if="expandidos.length" type="button" class="enlace-texto mm-deshacer" @click="deshacer">Quitar lo agregado ({{ expandidos.length }})</button>
+            </div>
             <footer class="dialogo-pie"><leyenda/><span class="tenue">Se muestran hasta 25 vecinos y algunos vecinos de cada uno. Los documentos están en «Fuentes de esta ficha».</span></footer>
           </div>
         </dialog>

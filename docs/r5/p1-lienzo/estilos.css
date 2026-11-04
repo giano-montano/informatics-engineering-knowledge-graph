@@ -193,7 +193,7 @@ code { font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.88em; col
 .arista.atenuada { opacity: 0.05; animation: none; filter: none; }
 .arista.incidente, .arista.encima { opacity: 1; stroke-width: 2.6; }
 .arista.sel { opacity: 1; stroke-width: 3.4; filter: url(#brillo-linea); }
-.toque { fill: none; stroke: transparent; stroke-width: 12; cursor: pointer; pointer-events: stroke; }
+.toque { fill: none; stroke: transparent; cursor: pointer; pointer-events: stroke; }
 
 .anillo circle { fill: none; stroke: rgba(150, 165, 255, 0.15); stroke-dasharray: 2 7; }
 .anillo text, .columna { fill: #8f97c6; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; }
@@ -497,3 +497,37 @@ body.ver-traza .interruptor-traza input:checked + .pista-int::after { box-shadow
 .num-paso { flex: none; min-width: 52px; margin-top: 5px; font-size: 11px; font-weight: 600; color: var(--lima); text-transform: uppercase; letter-spacing: 0.08em; }
 .pasos-orden li > div { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .chip-busqueda.destacado { border-color: var(--cian); color: #fff; background: rgba(63, 216, 255, 0.16); }
+
+/* ------------------------------------------------------------------ orden de aprendizaje en el mapa (CU-6) */
+.num-orden circle { fill: #0b0e26; stroke: var(--lima); stroke-width: 1.2; }
+.num-orden text { fill: var(--lima); font-size: 9.5px; font-weight: 700; pointer-events: none; }
+.nodo.atenuado .num-orden { display: none; }
+
+/* ------------------------------------------------------------------ «¿Por qué?» de cada estación (CU-8) */
+.estacion { display: inline-flex; align-items: center; gap: 4px; }
+.porque { min-height: 24px; padding: 3px 8px; border-radius: 999px; font-size: 11.5px; color: var(--cian); border: 1px solid rgba(63, 216, 255, 0.4); }
+.porque:hover, .porque.activo { background: rgba(63, 216, 255, 0.16); color: #fff; }
+.marca-propia { font-style: normal; font-size: 10.5px; color: var(--lima); border: 1px solid rgba(232, 255, 107, 0.45); border-radius: 6px; padding: 0 5px; }
+.mismo-grupo { display: block; margin-top: 6px; font-size: 12.5px; color: var(--lima); }
+.tramo { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.tramo li + li { border-top: 1px solid var(--borde); padding-top: 10px; }
+.tramo .procedencia { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+
+/* ------------------------------------------------------------------ teléfono (360-480 px) */
+@media (max-width: 520px) {
+  .app { height: auto; min-height: 100vh; }
+  .principal { grid-template-rows: auto 70vh auto; }
+  .barra { padding: 8px 10px; }
+  .marca-texto { display: none; }
+  .buscador input { padding-right: 12px; }
+  .buscador kbd { display: none; }
+  .lente, .inicio { min-width: 64px; }
+  .barra-lente { top: 8px; left: 8px; width: calc(100% - 16px); padding: 10px; }
+  .barra-lente-pie { flex-wrap: wrap; }
+  .franja { left: 8px; right: 8px; max-width: none; bottom: 64px; }
+  .recorrido, .recorrido.compacto, .leyenda { left: 8px; right: 8px; width: auto; bottom: 64px; }
+  .controles { left: 8px; right: 8px; }
+  .rastro { min-width: 0; }
+  .zoom-valor { display: none; }
+  .panel { max-height: none; }
+}

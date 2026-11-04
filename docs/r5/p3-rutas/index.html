@@ -249,10 +249,16 @@
             <span class="insignia" :class="{ 'insignia-ref': l.referencia }" :style="{ background: l.color }">{{ l.insignia }}</span>
             <span class="lc-nombre">{{ l.nombre }}</span>
             <span class="lc-dato" v-if="modelo.tipo === 'pc6'">{{ pasosTexto(l.depth) }}</span>
+            <span class="lc-meta" v-if="l.contieneMeta">también la meta</span>
             <span class="capa" :class="l.referencia ? 'capa-ref' : 'capa-inst'">{{ l.referencia ? 'CS2023' : 'Sílabo PUCP' }}</span>
           </button>
           <span v-if="!modelo.lineas.length" class="lc-vacio">Ninguna línea en este camino.</span>
         </div>
+        <p class="nota-misma" v-if="lineasMismaMeta.length">
+          <strong>{{ textoMismaLinea }}</strong>
+          «{{ lineasMismaMeta.map((l) => l.nombre).join("» y «") }}» contiene a la meta y también a algo que conviene saber antes; por eso aparece en el camino.
+          <span v-if="traza" class="traza">CU-8 · PC6 · RF-15</span>
+        </p>
         <div class="aviso" v-if="modelo && modelo.tipo === 'pc2' && !modelo.vacia">
           <strong>Cursos que conviene llevar antes.</strong>
           Salen de lo que pide el sílabo de {{ destino.course_code }} y de qué curso lo enseña. El camino concepto a concepto de un curso queda dentro del propio curso, por eso aquí se muestra este.
@@ -473,18 +479,36 @@
 
           <section class="f-sec" v-if="ficha.grupos.length">
             <h3>Alrededor <span v-if="traza" class="traza">CU-2 · RF-19</span></h3>
-            <p class="f-nota">Con qué se relaciona directamente. Abre uno para seguir explorando; «+» indica que tiene más relaciones. La etiqueta de la derecha es la fuente de la relación.</p>
+            <p class="f-nota">Con qué se relaciona y, al desplegar «▸», con qué se relaciona cada vecino, sin salir de esta ficha. Tocar un nombre abre su ficha. La etiqueta de la derecha es la fuente de la relación.</p>
             <div v-for="g in ficha.grupos" :key="g.id" class="grupo">
-              <p class="f-sub">{{ g.titulo }} <span class="cuenta">{{ g.items.length }}</span></p>
-              <div class="chips">
-                <span v-for="it in g.items.slice(0, 14)" :key="it.nodo.key" class="chip-par">
-                  <button class="chip-nodo" @click="abrirFicha(it.nodo.key, true)" :title="it.mas ? 'Tiene más relaciones: ábrelo para verlas' : ''">
-                    <span class="forma" :class="esRef(it.nodo) ? 'forma-ref' : 'forma-inst'"></span>{{ it.nodo.name_es }}<span v-if="it.nodo.course_code" class="chip-dato">{{ it.nodo.course_code }}</span><span v-if="it.mas" class="chip-mas" aria-label="tiene más relaciones">+</span>
-                  </button>
-                  <a v-if="it.fuente" class="mini-fuente" :class="{ 'mini-ref': esRef(it.fuente) }" :href="it.fuente.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + it.fuente.name_es">{{ codigoFuente(it.fuente) }} ↗</a>
-                </span>
-                <span v-if="g.items.length > 14" class="chip-dato">y {{ g.items.length - 14 }} más</span>
-              </div>
+              <p class="f-sub">{{ g.titulo }} <span class="cuenta">{{ g.items.length }}</span>
+                <button v-if="g.items.some(tieneSegundo)" class="enlace-mini" @click="alternarGrupo(g)">{{ todosAbiertos(g) ? 'Plegar todo' : 'Desplegar todo' }}</button></p>
+              <ul class="vecinos">
+                <li v-for="it in g.items.slice(0, 14)" :key="it.nodo.key" class="vecino">
+                  <div class="vecino-fila">
+                    <button v-if="tieneSegundo(it)" class="desplegar" :aria-expanded="!!abiertos[it.nodo.key]" @click="alternarVecino(it.nodo.key)" :aria-label="(abiertos[it.nodo.key] ? 'Plegar' : 'Desplegar') + ' lo que rodea a ' + it.nodo.name_es">{{ abiertos[it.nodo.key] ? '▾' : '▸' }}</button>
+                    <span v-else class="desplegar-hueco" aria-hidden="true"></span>
+                    <button class="chip-nodo" @click="abrirFicha(it.nodo.key, true)">
+                      <span class="forma" :class="esRef(it.nodo) ? 'forma-ref' : 'forma-inst'"></span>{{ it.nodo.name_es }}<span v-if="it.nodo.course_code" class="chip-dato">{{ it.nodo.course_code }}</span><span v-if="cuentaSegundo(it)" class="chip-mas" :title="cuentaSegundo(it) + ' relaciones más allá'">{{ cuentaSegundo(it) }}{{ it.mas && !(masVecinos[it.nodo.key] && masVecinos[it.nodo.key].cargado) ? '+' : '' }}</span>
+                    </button>
+                    <a v-if="it.fuente" class="mini-fuente" :class="{ 'mini-ref': esRef(it.fuente) }" :href="it.fuente.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + it.fuente.name_es">{{ codigoFuente(it.fuente) }} ↗</a>
+                  </div>
+                  <div v-if="abiertos[it.nodo.key]" class="segundo">
+                    <p class="segundo-titulo">Alrededor de «{{ it.nodo.name_es }}» <span v-if="traza" class="traza">CU-2 · RF-19</span></p>
+                    <div v-for="sg in segundoAgrupado(it)" :key="sg.id" class="segundo-grupo">
+                      <span class="segundo-rel">{{ sg.titulo }}</span>
+                      <span v-for="r in sg.items" :key="r.clave" class="chip-par">
+                        <button class="chip-nodo chip-chico" @click="abrirFicha(r.nodo.key, true)"><span class="forma" :class="esRef(r.nodo) ? 'forma-ref' : 'forma-inst'"></span>{{ r.nodo.name_es }}</button>
+                        <a v-if="r.fuente" class="mini-fuente" :class="{ 'mini-ref': esRef(r.fuente) }" :href="r.fuente.locator" target="_blank" rel="noopener" :title="'Ver fuente: ' + r.fuente.name_es">{{ codigoFuente(r.fuente) }} ↗</a>
+                      </span>
+                    </div>
+                    <p v-if="!segundoDe(it).length && !it.mas" class="f-nota">No tiene otras relaciones.</p>
+                    <button v-if="it.mas && !(masVecinos[it.nodo.key] && masVecinos[it.nodo.key].cargado)" class="enlace-mini" :disabled="masVecinos[it.nodo.key] && masVecinos[it.nodo.key].cargando" @click="verMasVecino(it)">{{ masVecinos[it.nodo.key] && masVecinos[it.nodo.key].cargando ? 'Cargando…' : 'Ver más relaciones de «' + it.nodo.name_es + '»' }}</button>
+                    <p v-else-if="masVecinos[it.nodo.key] && masVecinos[it.nodo.key].cargado" class="f-nota">Se agregaron {{ masVecinos[it.nodo.key].nuevas }} relaciones aquí mismo.</p>
+                  </div>
+                </li>
+              </ul>
+              <p v-if="g.items.length > 14" class="f-nota">y {{ g.items.length - 14 }} más</p>
             </div>
           </section>
         </div>
@@ -521,19 +545,31 @@
           <details class="extra" v-if="modelo.tipo === 'pc4'" open>
             <summary>Qué contiene <span v-if="traza" class="traza">CU-6 · PC4</span></summary>
             <div class="contiene">
-              <template v-if="modelo.unidades.length">
-                <p class="f-sub">Unidades <span class="cuenta">{{ modelo.unidades.length }}</span></p>
-                <div class="chips"><button v-for="u in modelo.unidades" :key="u.key" class="chip-nodo" @click="abrirDestino(u.key)"><span class="forma forma-ref"></span>{{ u.name_es }}</button></div>
-              </template>
-              <template v-if="modelo.temas.length">
-                <p class="f-sub">Temas <span class="cuenta">{{ modelo.temas.length }}</span></p>
-                <div class="chips"><button v-for="t in modelo.temas" :key="t.key" class="chip-nodo" @click="abrirDestino(t.key)"><span class="forma forma-inst"></span>{{ t.name_es }}</button></div>
-              </template>
-              <p class="f-sub">Conceptos sin un orden registrado <span class="cuenta">{{ modelo.sinOrden.length }}</span></p>
-              <div class="chips">
-                <button v-for="c in modelo.sinOrden.slice(0, 30)" :key="c.key" class="chip-nodo" @click="abrirFicha(c.key)"><span class="forma forma-inst"></span>{{ c.name_es }}</button>
-                <span v-if="modelo.sinOrden.length > 30" class="chip-dato">y {{ modelo.sinOrden.length - 30 }} más</span>
+              <p class="f-nota">Nivel por nivel{{ destino.label === 'KnowledgeArea' ? ': unidad › tema › conceptos' : (destino.label === 'KnowledgeUnit' ? ': tema › conceptos' : '') }}. Dentro de cada tema, los pasos numerados son el orden que piden los sílabos.</p>
+              <div v-for="g in modelo.arbol.grupos" :key="g.nodo ? g.nodo.key : 'tema'" class="arbol-unidad">
+                <button v-if="g.nodo && g.nodo.key !== destino.key" class="arbol-cab" @click="abrirDestino(g.nodo.key)">
+                  <span class="forma forma-ref"></span><span>{{ g.nodo.name_es }}</span><span class="miga-tipo">Unidad · CS2023</span>
+                </button>
+                <div v-for="t in g.temas" :key="t.nodo.key" class="arbol-tema">
+                  <button v-if="t.nodo.key !== destino.key" class="arbol-cab arbol-cab-tema" @click="abrirDestino(t.nodo.key)">
+                    <span class="forma forma-inst"></span><span>{{ t.nodo.name_es }}</span><span class="miga-tipo">Tema · {{ t.conceptos }} conceptos</span>
+                  </button>
+                  <ol class="pasos-tema" v-if="t.pasos.length">
+                    <li v-for="p in t.pasos" :key="p.num">
+                      <span class="paso-num" :aria-label="'Paso ' + p.num">{{ p.num }}</span>
+                      <span class="chips">
+                        <button v-for="c in p.conceptos" :key="c.key" class="chip-nodo chip-chico" @click="abrirFicha(c.key)"><span class="forma forma-inst"></span>{{ c.name_es }}</button>
+                      </span>
+                    </li>
+                  </ol>
+                  <p v-if="t.sinOrden.length" class="f-sub">{{ t.pasos.length ? 'Sin un orden registrado' : 'Conceptos, sin un orden registrado' }} <span class="cuenta">{{ t.sinOrden.length }}</span></p>
+                  <div class="chips" v-if="t.sinOrden.length">
+                    <button v-for="c in t.sinOrden.slice(0, 12)" :key="c.key" class="chip-nodo chip-chico" @click="abrirFicha(c.key)"><span class="forma forma-inst"></span>{{ c.name_es }}</button>
+                    <span v-if="t.sinOrden.length > 12" class="chip-dato">y {{ t.sinOrden.length - 12 }} más</span>
+                  </div>
+                </div>
               </div>
+              <p v-if="modelo.arbol.vacias.length" class="f-nota">Además, {{ modelo.arbol.vacias.length }} {{ modelo.arbol.vacias.length === 1 ? 'unidad existe' : 'unidades existen' }} en CS2023 sin temas de los sílabos todavía.</p>
             </div>
           </details>
           <p class="nota-panel">Sin progreso ni marcas: las indicaciones muestran lo que dicen los sílabos, no lo que ya estudiaste.</p>

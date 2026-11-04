@@ -55,6 +55,11 @@
       lista.sort((a, b) => a.name_es.localeCompare(b.name_es, 'es'));
       lista.forEach((n, i) => obj.set(n.key, { x: (maxD / 2 - d) * 250, y: (i - (lista.length - 1) / 2) * 74 }));
     }
+    // Lo demás de la respuesta (p. ej. el sílabo de donde sale) va en una fila debajo, dentro del encuadre.
+    const alto = Math.max(1, ...[...porD.values()].map(l => l.length));
+    const resto = resp.nodes.filter(n => !obj.has(n.key) && n.key !== foco)
+      .sort((a, b) => a.name_es.localeCompare(b.name_es, 'es'));
+    resto.forEach((n, i) => obj.set(n.key, { x: (i - (resto.length - 1) / 2) * 230, y: ((alto - 1) / 2) * 74 + 130 }));
     return { objetivos: obj, anillos: [], columnas: [...porD.keys()].sort().map(d => ({ x: (maxD / 2 - d) * 250, rotulo: d === 0 ? 'En foco' : (d === 1 ? 'Directo' : `A ${d} pasos`) })) };
   }
 
@@ -128,7 +133,9 @@
       });
       const arriba = -((alto - 1) / 2) * paso - 50;
       const columnas = orden.pasos.map((l, i) => ({ x: (i - (n - 1) / 2) * sep, y: arriba, rotulo: `Paso ${i + 1}` }));
-      return { objetivos: obj, anillos: [], columnas, resaltar };
+      const pasos = new Map();
+      if (orden.relacionados.size) for (const [k, v] of orden.paso) pasos.set(k, v);
+      return { objetivos: obj, anillos: [], columnas, resaltar, pasos };
     }
     const claves = new Set(resaltar);
     const padre = new Map();
@@ -161,7 +168,13 @@
       const rotulos = nodoFoco && nodoFoco.label === 'KnowledgeArea' ? ['', 'Unidades', 'Temas', 'Conceptos'] : ['', 'Temas', 'Conceptos'];
       for (let i = 1; i <= arbol.height; i++) anillos.push({ r: i * sep, rotulo: rotulos[i] || '' });
     }
-    return { objetivos: obj, anillos, columnas: [], resaltar };
+    // En qué orden aprenderlo, dentro de cada tema: numera los conceptos que dependen entre sí.
+    const pasos = new Map();
+    for (const t of partes.filter(x => x.label === 'Topic')) {
+      const o = P.ordenDeAprendizaje(resp, t.key);
+      for (const k of o.relacionados) if (!pasos.has(k)) pasos.set(k, o.paso.get(k));
+    }
+    return { objetivos: obj, anillos, columnas: [], resaltar, pasos };
   }
 
   /** Recursos (PC5): columnas de elementos, recursos y tipo de recurso. */
@@ -277,11 +290,13 @@
     const raizG = svg.append('g').attr('class', 'mundo');
     const capaGuias = raizG.append('g').attr('class', 'guias');
     const capaAristas = raizG.append('g').attr('class', 'aristas');
-    const capaToques = raizG.append('g').attr('class', 'toques');
+    const capaToques = raizG.append('g').attr('class', 'toques').style('stroke-width', '24px');
     const capaNodos = raizG.append('g').attr('class', 'nodos');
 
     const zoom = d3.zoom().scaleExtent([0.15, 4]).on('zoom', ev => {
       raizG.attr('transform', ev.transform);
+      // Área de toque de las líneas: 24 px en pantalla, sea cual sea el zoom.
+      capaToques.style('stroke-width', (24 / ev.transform.k) + 'px');
       svg.classed('lejos', ev.transform.k < 0.55).classed('cerca', ev.transform.k > 1.7);
       if (cb.alZoom) cb.alZoom(ev.transform.k);
     });
@@ -525,6 +540,9 @@
       exp.append('title').text('Ver más: agrega sus conexiones al lienzo');
       ent.append('text').attr('class', 'etq');
       ent.append('text').attr('class', 'sub');
+      const orden = ent.append('g').attr('class', 'num-orden').attr('aria-hidden', 'true');
+      orden.append('circle').attr('r', 7.5);
+      orden.append('text').attr('dy', '0.35em').attr('text-anchor', 'middle');
       selNodos = ent.merge(selNodos);
 
       selNodos
@@ -537,6 +555,7 @@
           return c.join(' ');
         })
         .attr('aria-label', d => `${P.nombreClase(d)}: ${d.name_es}. Origen: ${P.CAPAS[d.layer].nombre} (${P.CAPAS[d.layer].forma}).` +
+          (disposicion && disposicion.pasos && disposicion.pasos.has(d.key) ? ` Paso ${disposicion.pasos.get(d.key)} de su tema.` : '') +
           (d.more_neighbors && !d.expandido ? ' Tiene más conexiones: tecla + para verlas.' : ''));
 
       selNodos.select('.halo').attr('r', d => radio(d) + 9);
@@ -549,6 +568,12 @@
       selNodos.select('.expandir')
         .attr('transform', d => `translate(${radio(d) * 0.8 + 3},${-radio(d) * 0.8 - 3})`)
         .style('display', d => (!portada && d.more_neighbors && !d.expandido && d.key !== foco && !(resaltados && !resaltados.has(d.key))) ? null : 'none');
+
+      const pasosOrden = disposicion && disposicion.pasos;
+      selNodos.select('.num-orden')
+        .style('display', d => (pasosOrden && pasosOrden.has(d.key) ? null : 'none'))
+        .attr('transform', d => `translate(${-radio(d) - 4},${-radio(d) - 4})`)
+        .select('text').text(d => (pasosOrden && pasosOrden.has(d.key) ? pasosOrden.get(d.key) : ''));
 
       selNodos.select('.etq')
         .attr('class', d => 'etq ' + claseEtiqueta(d, obj, muchos))

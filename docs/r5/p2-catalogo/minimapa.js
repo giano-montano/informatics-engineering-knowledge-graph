@@ -20,6 +20,11 @@
     const links = detalle.edges
       .filter((e) => e.type !== 'WAS_DERIVED_FROM' && claves.has(e.source) && claves.has(e.target))
       .map((e) => ({ source: e.source, target: e.target, type: e.type }));
+    // Sin documentos a la vista, un nodo que solo se une por un sílabo quedaría suelto:
+    // no se dibuja (pasa al expandir un tema, cuyos vecinos de segundo nivel son temas del mismo sílabo).
+    const unidos = new Set(links.flatMap((l) => [l.source, l.target]));
+    const visibles = conDocs ? nodes : nodes.filter((n) => n.key === foco.key || unidos.has(n.key));
+    nodes.length = 0; nodes.push(...visibles);
     const vecinos = new Set();
     for (const l of links) {
       if (l.source === foco.key) vecinos.add(l.target);
@@ -43,6 +48,9 @@
   function dibujar(svg, detalle, opciones) {
     const d3 = global.d3;
     const { grande, alElegir } = opciones || {};
+    // Expansión en el sitio (CU-2): claves cuyos vecindarios ya se agregaron, y la elegida.
+    const expandidos = (opciones && opciones.expandidos) || new Set();
+    const seleccion = opciones && opciones.seleccion;
     const id = `mm${++contador}`;
     const { nodes, links, foco } = datosMapa(detalle);
     const raiz = d3.select(svg);
@@ -79,19 +87,19 @@
       .attr('marker-end', (l) => (l.type === 'HAS_PREREQUISITE' || l.type === 'SPECIALIZES' ? `url(#${id}-flecha)` : null));
 
     const g = capa.append('g').selectAll('g').data(nodes).join('g')
-      .attr('class', (n) => `mm-nodo mm-${n.layer} mm-nivel${n.nivel}`)
+      .attr('class', (n) => `mm-nodo mm-${n.layer} mm-nivel${n.nivel}${expandidos.has(n.key) ? ' mm-expandido' : ''}${n.key === seleccion ? ' mm-seleccionado' : ''}`)
       .attr('transform', (n) => `translate(${n.x},${n.y})`)
       .attr('tabindex', grande ? 0 : -1)
       .attr('role', 'link')
       .attr('aria-label', (n) => `${n.name}${n.code ? ` (${n.code})` : ''}`)
       .on('click', (ev, n) => { if (alElegir && n.key !== foco) alElegir(n.key); })
       .on('keydown', (ev, n) => { if ((ev.key === 'Enter' || ev.key === ' ') && alElegir && n.key !== foco) { ev.preventDefault(); alElegir(n.key); } });
-    g.append('title').text((n) => `${n.name}${n.code ? ` (${n.code})` : ''} · ${n.layer === 'reference' ? 'CS2023' : 'Sílabo PUCP'}${n.mas ? ' · tiene más relaciones' : ''}`);
-    // Anillo punteado: el vecino tiene más relaciones de las que caben; su ficha las muestra.
-    g.filter((n) => grande && n.mas && n.nivel > 0).append('circle').attr('class', 'mm-mas').attr('r', (n) => radio(n) + 4);
+    g.append('title').text((n) => `${n.name}${n.code ? ` (${n.code})` : ''} · ${n.layer === 'reference' ? 'CS2023' : 'Sílabo PUCP'}${expandidos.has(n.key) ? ' · sus relaciones ya están agregadas' : n.mas ? ' · tiene más relaciones' : ''}`);
+    // Anillo punteado: el vecino tiene más relaciones de las que caben; al elegirlo se pueden agregar.
+    g.filter((n) => grande && n.mas && n.nivel > 0 && !expandidos.has(n.key)).append('circle').attr('class', 'mm-mas').attr('r', (n) => radio(n) + 4);
     g.append('path').attr('d', (n) => forma(n, radio(n)));
 
-    const conEtiqueta = (n) => n.nivel === 0 || (grande && n.nivel === 1);
+    const conEtiqueta = (n) => n.nivel === 0 || (grande && (n.nivel === 1 || expandidos.has(n.key) || n.key === seleccion));
     g.filter(conEtiqueta).append('text')
       .attr('class', 'mm-etiqueta')
       .attr('y', (n) => radio(n) + (grande ? 14 : 11))
@@ -104,5 +112,19 @@
     return { nodos: nodes.length, aristas: links.length };
   }
 
-  global.IEKG_MINIMAPA = { dibujar, datosMapa };
+  // Une al vecindario mostrado el detalle de otro nodo (`/api/nodes` de esa clave),
+  // sin duplicar nodos ni aristas. El foco sigue siendo nodes[0].
+  function unir(base, extra) {
+    const nodos = new Map(base.nodes.map((n) => [n.key, n]));
+    for (const n of extra.nodes) {
+      if (!nodos.has(n.key)) nodos.set(n.key, n);
+      else if (n.more_neighbors && !nodos.get(n.key).more_neighbors) nodos.set(n.key, Object.assign({}, nodos.get(n.key), { more_neighbors: true }));
+    }
+    const id = (e) => `${e.type}|${e.source}|${e.target}`;
+    const aristas = new Map(base.edges.map((e) => [id(e), e]));
+    for (const e of extra.edges) if (!aristas.has(id(e))) aristas.set(id(e), e);
+    return { nodes: [...nodos.values()], edges: [...aristas.values()] };
+  }
+
+  global.IEKG_MINIMAPA = { dibujar, datosMapa, unir };
 })(typeof window !== 'undefined' ? window : globalThis);

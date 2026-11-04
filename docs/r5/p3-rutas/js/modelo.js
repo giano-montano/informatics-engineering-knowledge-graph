@@ -162,6 +162,9 @@
       .sort(function (a, b) { return (a.depth - b.depth) || porNombre(a, b); });
     const lineas = crearLineas(grupos);
     const lineaPorKey = {}; lineas.forEach(function (l) { lineaPorKey[l.key] = l; });
+    // Una línea puede contener a la propia meta: el prerrequisito está en el mismo tema
+    // (o curso, o área). Es correcto (PC6 sube cada prerrequisito a su grano); se marca.
+    lineas.forEach(function (l) { l.contieneMeta = pertenencia(resp, grano, objKey, l.key).length > 0; });
 
     const estaciones = conceptos.map(function (n) {
       const suyas = lineas.filter(function (l) { return pertenencia(resp, grano, n.key, l.key).length > 0; }).map(function (l) { return l.key; });
@@ -258,7 +261,7 @@
     const temas = Object.keys(desc).map(function (k) { return by[k]; }).filter(function (n) { return n && n.label === 'Topic'; }).sort(porNombre);
     const unidades = Object.keys(desc).map(function (k) { return by[k]; }).filter(function (n) { return n && n.label === 'KnowledgeUnit'; }).sort(porNombre);
     const hp = resp.edges.filter(function (e) { return e.type === 'HAS_PREREQUISITE' && desc[e.source] && desc[e.target]; });
-    const base = { tipo: 'pc4', modo: 'topic', grano: 'topic', objetivo: obj, resp: resp, temas: temas, unidades: unidades, conceptos: conceptos };
+    const base = { tipo: 'pc4', modo: 'topic', grano: 'topic', objetivo: obj, resp: resp, temas: temas, unidades: unidades, conceptos: conceptos, arbol: arbolContenido(resp, key) };
     if (!hp.length) return Object.assign(base, { vacia: true, estaciones: [], tramos: [], lineas: [], pasos: [], sinOrden: conceptos });
 
     const implicados = {};
@@ -302,6 +305,83 @@
       vacia: false, estaciones: estaciones, tramos: tramos, lineas: lineas, terminal: null, pasos: pasos,
       unirColumna: false, sinOrden: conceptos.filter(function (c) { return !implicados[c.key]; })
     });
+  }
+
+  /* ---------- CU-6: composición anidada (unidad › tema › conceptos) ---------- */
+
+  /** Orden de aprendizaje dentro de un tema: pasos por camino más largo entre sus
+   *  conceptos (solo los HAS_PREREQUISITE con ambos extremos en el tema). */
+  function ordenDeTema(resp, conceptos) {
+    const dentro = {}; conceptos.forEach(function (c) { dentro[c.key] = true; });
+    const hp = resp.edges.filter(function (e) { return e.type === 'HAS_PREREQUISITE' && dentro[e.source] && dentro[e.target] && e.source !== e.target; });
+    const implicados = {};
+    hp.forEach(function (e) { implicados[e.source] = true; implicados[e.target] = true; });
+    const capa = {};
+    function calcular(k, enCurso) {
+      if (capa[k] !== undefined) return capa[k];
+      if (enCurso[k]) return 0;
+      enCurso[k] = true;
+      const previos = hp.filter(function (e) { return e.source === k; }).map(function (e) { return e.target; });
+      capa[k] = previos.length ? 1 + Math.max.apply(null, previos.map(function (p) { return calcular(p, enCurso); })) : 0;
+      return capa[k];
+    }
+    Object.keys(implicados).forEach(function (k) { calcular(k, {}); });
+    const pasos = [];
+    conceptos.forEach(function (c) {
+      if (!implicados[c.key]) return;
+      (pasos[capa[c.key]] = pasos[capa[c.key]] || []).push(c);
+    });
+    return {
+      pasos: pasos.filter(Boolean).map(function (lista, i) { return { num: i + 1, conceptos: lista.sort(porNombre) }; }),
+      sinOrden: conceptos.filter(function (c) { return !implicados[c.key]; }).sort(porNombre),
+      tramos: hp.length
+    };
+  }
+
+  /** Árbol de lo que contiene un tema, una unidad o un área, desde /api/elements/location.
+   *  grupos: una unidad cada uno (o uno sin unidad si la meta es un tema); cada grupo
+   *  lleva sus temas y cada tema sus conceptos en pasos. vacias: unidades sin temas. */
+  function arbolContenido(resp, key) {
+    const by = indice(resp);
+    const obj = by[key];
+    const hijos = {};
+    resp.edges.forEach(function (e) {
+      if (e.type !== 'PART_OF' || e.source === e.target || !by[e.source]) return;
+      const l = (hijos[e.target] = hijos[e.target] || []);
+      if (l.indexOf(e.source) < 0) l.push(e.source);
+    });
+    function de(k, label) { return (hijos[k] || []).map(function (h) { return by[h]; }).filter(function (n) { return n.label === label; }).sort(porNombre); }
+    function tema(t) {
+      const cs = de(t.key, 'Concept');
+      const o = ordenDeTema(resp, cs);
+      return { nodo: t, conceptos: cs.length, pasos: o.pasos, sinOrden: o.sinOrden };
+    }
+    function unidad(u) { return { nodo: u, temas: de(u.key, 'Topic').map(tema) }; }
+    let grupos;
+    if (obj.label === 'Topic') grupos = [{ nodo: null, temas: [tema(obj)] }];
+    else if (obj.label === 'KnowledgeUnit') grupos = [unidad(obj)];
+    else grupos = de(key, 'KnowledgeUnit').map(unidad);
+    const conTemas = grupos.filter(function (g) { return g.temas.length; });
+    return {
+      grupos: conTemas,
+      vacias: grupos.filter(function (g) { return !g.temas.length; }).map(function (g) { return g.nodo; }),
+      temas: conTemas.reduce(function (a, g) { return a + g.temas.length; }, 0)
+    };
+  }
+
+  /** Relaciones de `key` dentro de una respuesta, vistas desde `key`; omite `excluir`
+   *  (el elemento de la ficha) y WAS_DERIVED_FROM. CU-2, segundo nivel. */
+  function relacionesDe(resp, key, excluir, cs2023) {
+    const by = indice(resp);
+    const out = [];
+    resp.edges.forEach(function (e) {
+      if (e.type === 'WAS_DERIVED_FROM') return;
+      let dir = null; let otro = null;
+      if (e.source === key) { dir = 'out'; otro = e.target; } else if (e.target === key) { dir = 'in'; otro = e.source; }
+      if (!dir || otro === key || otro === excluir || !by[otro]) return;
+      out.push({ id: e.type + ':' + dir, clave: e.type + ':' + dir + ':' + otro, nodo: by[otro], fuente: fuenteDeArista(resp, e, cs2023) });
+    });
+    return out;
   }
 
   /* ---------- evidencia ("¿Por qué?") ---------- */
@@ -429,6 +509,7 @@
     indice: indice, nombre: nombre, procedencia: procedencia, fuenteDeArista: fuenteDeArista,
     codigoFuente: codigoFuente, codigoArea: codigoArea, codigoUnidad: codigoUnidad, cadenaPartOf: cadenaPartOf,
     rutaElevada: rutaElevada, rutaEntreCursos: rutaEntreCursos, ordenInterno: ordenInterno,
+    arbolContenido: arbolContenido, ordenDeTema: ordenDeTema, relacionesDe: relacionesDe,
     evidenciaTramo: evidenciaTramo, evidenciaLinea: evidenciaLinea, itemDeArista: itemDeArista,
     disponer: disponer
   };

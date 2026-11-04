@@ -29,7 +29,8 @@ uso, que son los pasos con que esa interfaz resuelve cada uno.
 - **PDF de los sílabos (RF-21):** los enlaces apuntan a `http://localhost:8000/resources/<clave>`,
   el localizador guardado en el grafo. Abren con la API levantada en el puerto por omisión:
   `docker compose up -d` y `uv run iekg-api`. El de CS2023 abre la página de la ACM.
-- Las capturas de cada propuesta (`pN-*/capturas/`) son los wireframes de la Fase 1.
+- Las capturas de P3 (`p3-rutas/capturas/`) son sus wireframes de la Fase 1. Las de P1 y P2 se
+  rehacen al cerrar la propuesta.
 - Las librerías y las fuentes vienen de jsDelivr y Google Fonts, así que hace falta conexión.
 
 ## Recorrido sugerido
@@ -101,8 +102,8 @@ la última estable).
 ```
 casos-de-uso.md   los once casos de uso, comunes a las tres propuestas
 datos/            datos.js, operacion.json, simulado.json y LEEME.md (forma de cada respuesta)
-p1-lienzo/        index.html, js/, estilos.css, README.md, adr/P1-0015…0018, capturas/
-p2-catalogo/      index.html, *.js, estilos.css, README.md, adr/P2-0015…0018, capturas/
+p1-lienzo/        index.html, js/, estilos.css, README.md, adr/P1-0015…0018
+p2-catalogo/      index.html, *.js, estilos.css, README.md, adr/P2-0015…0018
 p3-rutas/         index.html, js/, estilos.css, README.md, adr/P3-0015…0018, capturas/
 panel-operador/   index.html, panel.js, panel.css, README.md
 ```

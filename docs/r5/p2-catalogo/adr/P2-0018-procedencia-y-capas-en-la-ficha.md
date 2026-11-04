@@ -12,6 +12,6 @@
 **Consecuencias.**
 - Un estudiante ve de qué curso sale cada dato sin abrir nada: «Matemática Discreta ↗ 1INF01» dice que fue ese sílabo el que ubicó el tema en la unidad.
 - Las filas de referencia (área ← unidad) citan a CS2023 con un marco punteado, distinto del institucional.
-- Negativa: las marcas son pequeñas (10,5 px) y se repiten en cada fila. Una fila que resume varias aristas (un curso previo, con lo que enseña uno y asume el otro) lleva varias marcas, y en un móvil bajan a su propia línea.
+- Negativa: las marcas son pequeñas (12 px) y se repiten en cada fila. Una fila que resume varias aristas (un curso previo, con lo que enseña uno y asume el otro) lleva varias marcas, y en un móvil bajan a su propia línea.
 
 **Fila para la Tabla 20.** Marca de fuente por fila y capa por insignia, forma y filete · cumple RF-21 en cada arista mostrada y RF-22 sin depender del color.

@@ -58,7 +58,8 @@ Los casos de uso son los del catálogo común, [`../casos-de-uso.md`](../casos-d
 1. Con «Lógica proposicional» en foco, elige la lente «Qué contiene».
 2. El mapa pone sus 10 conceptos en columnas: «Paso 1» (Conjunción, Disyunción, Negación y otros tres), «Paso 2» (Tabla de verdad) y «Paso 3» (Contingencia, Contradicción, Tautología). Cada paso usa lo del anterior.
 3. En el panel, «Qué contiene» da las cifras y la lista «En qué orden aprenderlo».
-4. Con un área, como «Redes y Comunicación», la lente dibuja unidades, temas y conceptos en anillos (8, 14 y 132). Para leer el anillo exterior se acerca el zoom. El panel lista el orden solo de los 17 conceptos que dependen entre sí.
+4. Con un área, como «Redes y Comunicación», la lente dibuja unidades, temas y conceptos en anillos (8, 14 y 132). Los 15 conceptos que dependen de otro de su mismo tema llevan en el mapa un número: su paso dentro de ese tema. La barra de la lente lo explica. Para leer el anillo exterior se acerca el zoom.
+5. El panel lista el orden de los 17 conceptos que dependen entre sí en toda el área (dos de ellos dependen de un concepto de otro tema, por eso el mapa numera 15).
 
 **Flujo CU-7 · Encontrar material de estudio sobre algo**
 1. Con «Lógica proposicional» en foco, el panel muestra «Material de estudio»: «Abrir Sílabo 1INF01», de tipo sílabo.
@@ -68,8 +69,8 @@ Los casos de uso son los del catálogo común, [`../casos-de-uso.md`](../casos-d
 **Flujo CU-8 · Ver el camino hasta una meta, por temas, cursos o áreas**
 1. Con «Entrada y salida de datos desde archivos» en foco, elige la lente «Camino hasta aquí» y, en «Ver por:», «curso».
 2. El mapa pone arriba los cursos por los que conviene pasar antes (Administración de Sistemas Operativos, Técnicas de Programación) y abajo el concepto que lo justifica (Archivos). La franja superior los muestra como estaciones hacia la meta.
-3. Con «Ver por: tema» las estaciones son «Administración local» e «Ingreso y salida de datos»; con «Ver por: área», «Fundamentos del Desarrollo de Software» y «Sistemas Operativos».
-4. Al pasar el cursor o hacer clic en una línea del camino, ve qué relación la justifica y su fuente.
+3. Con «Ver por: tema» las estaciones son «Administración local» e «Ingreso y salida de datos»; con «Ver por: área», «Fundamentos del Desarrollo de Software» y «Sistemas Operativos». «Ingreso y salida de datos» lleva la marca «el mismo tema», y la barra explica en una línea que el prerrequisito está en el mismo tema que la meta: lo que se necesita antes es el concepto («Archivos»), no el tema.
+4. Junto a cada estación de la franja hay un botón «¿Por qué?». Al pulsarlo, el panel muestra la tarjeta «¿Por qué pasar por…?» con cada relación que une esa estación con la meta («Administración de Sistemas Operativos enseña Archivos», «Entrada y salida de datos desde archivos necesita antes Archivos»), cada una con su fuente y «Ver en el mapa»; la línea que llega a la meta queda marcada en el mapa. No depende del cursor.
 5. Con un curso como meta, el camino sale vacío: la barra lo explica y ofrece «Cursos que conviene llevar antes».
 
 **Flujo CU-9 · Ver de qué es un tipo un concepto y qué tipos tiene**
@@ -79,7 +80,7 @@ Los casos de uso son los del catálogo común, [`../casos-de-uso.md`](../casos-d
 
 **Flujo CU-10 · Comprobar de dónde sale un dato**
 1. Con «Contradicción» en «Qué necesitas antes», pasa el cursor sobre la línea hacia «Tabla de verdad»: «Fuente: Sílabo 1INF01».
-2. Hace clic en la línea, o en «Ver fuente» junto a «Tabla de verdad» en el panel: la tarjeta «Relación seleccionada» (pantalla F) dice «Lo dice: Ver fuente · Sílabo 1INF01». El botón abre el PDF en una pestaña nueva.
+2. Hace clic o toca la línea (en pantalla táctil, el área de toque mide 24 px a cualquier zoom), o pulsa «Ver fuente» junto a «Tabla de verdad» en el panel: la tarjeta «Relación seleccionada» (pantalla F) dice «Lo dice: Ver fuente · Sílabo 1INF01». El botón abre el PDF en una pestaña nueva.
 3. Para el elemento en foco, la sección «Fuente» del panel enlaza su sílabo. Para un elemento de CS2023, como «Matemática Discreta», enlaza la publicación de ACM.
 4. El interruptor «Mostrar fuentes» dibuja en el mapa la línea de cada elemento a su fuente.
 
@@ -100,11 +101,11 @@ Pantallas:
 | CU-3 · Saber qué conceptos necesito antes de aprender uno | D, E | Lente «Qué necesitas antes» en columnas; sección del panel con «Ver fuente» por relación |
 | CU-4 · Saber qué pide un curso y qué curso conviene llevar antes | D, E | Lente «Cursos que conviene llevar antes»: lo que pide, el curso que lo enseña y lo que enseña; franja de estaciones |
 | CU-5 · Ubicar un concepto o tema dentro de la carrera | D, E | Migas en el panel y cadena vertical en la lente «Dónde está en la carrera» |
-| CU-6 · Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo | D, E | Lente «Qué contiene»: pasos para un tema, anillos para una unidad o un área; lista «En qué orden aprenderlo» |
+| CU-6 · Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo | D, E | Lente «Qué contiene»: pasos para un tema, anillos para una unidad o un área con el número de paso dentro de su tema sobre cada concepto; lista «En qué orden aprenderlo» |
 | CU-7 · Encontrar material de estudio sobre algo | D, E | Sección «Material de estudio» con enlace; lente en columnas; un concepto remite a su tema |
-| CU-8 · Ver el camino hasta una meta, por temas, cursos o áreas | D | Lente «Camino hasta aquí» con «Ver por: tema · curso · área» y franja de estaciones |
+| CU-8 · Ver el camino hasta una meta, por temas, cursos o áreas | D, E | Lente «Camino hasta aquí» con «Ver por: tema · curso · área»; franja de estaciones con «¿Por qué?» por estación (relación y fuente en el panel) y marca «el mismo tema» cuando el prerrequisito está en el tema de la meta |
 | CU-9 · Ver de qué es un tipo un concepto y qué tipos tiene | D, E | Lente y sección «Tipos» |
-| CU-10 · Comprobar de dónde sale un dato | C, D, E, F | Fuente al pasar el cursor sobre una línea, tarjeta «Relación seleccionada», sección «Fuente», «Ver fuente» por relación, interruptor «Mostrar fuentes» |
+| CU-10 · Comprobar de dónde sale un dato | C, D, E, F | Fuente al pasar el cursor sobre una línea o al tocarla (área de toque de 24 px), tarjeta «Relación seleccionada», sección «Fuente», «Ver fuente» por relación, interruptor «Mostrar fuentes» |
 
 **RF-22, en todas las pantallas:** CS2023 es un hexágono con contorno y lo de los sílabos, un círculo relleno, con su nombre escrito en el panel («CS2023», «Sílabo PUCP»), en la leyenda y en el texto accesible de cada punto. No depende del color.
 

@@ -26,7 +26,9 @@ Los casos de uso son comunes a las tres propuestas y están en [`../casos-de-uso
 1. En la ficha de «Contradicción» (C), el recuadro «Mapa: lo que lo rodea» muestra sus vecinos: el tema, los conceptos que necesita, el curso que lo enseña y algunos vecinos de estos.
 2. Las secciones de la ficha nombran cada relación por escrito: «Dónde está en la carrera», «Qué necesitas antes», «Qué depende de él», «Cursos que lo enseñan o lo piden».
 3. Pulsa un vecino, en el mapa o en una lista: su ficha pasa a estar en foco. El botón «atrás» del navegador vuelve a la anterior.
-4. Pulsa «Agrandar» (H): ve el mapa con nombres y zoom, y un anillo punteado en los vecinos que tienen más relaciones de las que caben. Para verlas, abre la ficha de ese vecino: el mapa no las agrega en el sitio.
+4. Pulsa «Agrandar» (H): ve el mapa con nombres y zoom, y un anillo punteado en los vecinos que tienen más relaciones de las que caben.
+5. Pulsa uno de ellos, «Lógica proposicional»: queda elegido, y el pie ofrece «Abrir su ficha» y «Agregar lo que lo rodea (4 elementos nuevos)».
+6. Lo agrega: el mapa suma el vecindario de ese tema sin salir de la ficha de «Contradicción», y el vecino deja de llevar el anillo. Puede seguir con otro vecino, o pulsar «Quitar lo agregado» para volver al mapa inicial.
 
 **Flujo CU-3 · Saber qué conceptos necesito antes de aprender uno**
 1. Abre la ficha de «Contradicción» (C).
@@ -48,7 +50,7 @@ Los casos de uso son comunes a las tres propuestas y están en [`../casos-de-uso
 **Flujo CU-6 · Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo**
 1. En la ficha de «Lógica proposicional» (D), «Qué contiene y en qué orden aprenderlo» agrupa sus 10 conceptos en tres pasos: primero «Negación», «Conjunción», «Disyunción» y otros; luego «Tabla de verdad»; al final «Tautología», «Contradicción» y «Contingencia».
 2. Cada concepto dice en qué se apoya («se apoya en Tabla de verdad»).
-3. En la ficha de una unidad o un área (E), «Qué contiene» lista sus partes nivel por nivel: unidades de CS2023 y, dentro, los temas de los sílabos con sus conceptos. En «Redes y Comunicación», 6 unidades con contenido y 2 que por ahora solo están en CS2023.
+3. En la ficha de una unidad o un área (E), «Qué contiene» lista sus partes nivel por nivel, cada nivel plegable con «Ver»: en un área, unidad › tema › conceptos; en una unidad, tema › conceptos. En «Redes y Comunicación», 6 unidades con contenido y 2 que por ahora solo están en CS2023; al abrir una unidad aparecen sus temas, y al abrir un tema, sus conceptos.
 
 **Flujo CU-7 · Encontrar material de estudio sobre algo**
 1. En la ficha de «Lógica proposicional» (D), «Material de estudio» muestra el «Sílabo 1INF01», de tipo sílabo, que trata directamente sobre el tema.
@@ -60,8 +62,9 @@ Los casos de uso son comunes a las tres propuestas y están en [`../casos-de-uso
 1. Abre la ficha de «Entrada y salida de datos desde archivos» (C) y baja a «Camino hasta aquí».
 2. En «Ver por», elige «curso»: en «Directo» aparecen «Administración de Sistemas Operativos (1INF35)» y «Técnicas de Programación (INF144)»; al final, «Aquí», la meta.
 3. Debajo de cada curso ve el concepto que lo justifica, «Archivos», con «lo necesita Entrada y salida de datos desde archivos» y sus marcas de fuente.
-4. Cambia a «tema» o «área» y el mismo camino se agrupa en «Administración local» o en «Sistemas Operativos». La elección queda en la URL.
-5. Si la meta es un curso, el camino sale vacío: la sección explica por qué y lleva a «Cursos que conviene llevar antes» (flujo CU-4).
+4. Cambia a «tema» o «área» y el mismo camino se agrupa en «Administración local» e «Ingreso y salida de datos», o en «Sistemas Operativos» y «Fundamentos del Desarrollo de Software»: «Archivos» está en dos temas. La elección queda en la URL.
+5. «Ingreso y salida de datos» es el tema de la propia meta. Su fila lleva la marca «su mismo tema» y una línea: «El prerrequisito está en el mismo tema: se cuenta porque la meta es este concepto, no su tema». Lo mismo con «Técnicas de Programación» en «curso» y con su área en «área».
+6. Si la meta es un curso, el camino sale vacío: la sección explica por qué y lleva a «Cursos que conviene llevar antes» (flujo CU-4).
 
 **Flujo CU-9 · Ver de qué es un tipo un concepto y qué tipos tiene**
 1. Busca «ethernet» y abre «Ethernet IEEE 802.3» (C).
@@ -84,20 +87,20 @@ Pantallas:
 - **E · Ficha de unidad o de área:** dónde está (unidad), qué contiene, camino hasta aquí, material, fuente.
 - **F · Ficha de curso:** lo que pide, cursos que conviene llevar antes, lo que enseña, camino hasta aquí, material, fuente.
 - **G · Ficha de sílabo:** trata sobre (curso y temas) y el botón para abrir el documento.
-- **H · Mapa agrandado:** diálogo con el mapa de lo que rodea a la ficha, con nombres, zoom, teclado y leyenda.
+- **H · Mapa agrandado:** diálogo con el mapa de lo que rodea a la ficha, con nombres, zoom, teclado y leyenda; al elegir un elemento, abre su ficha o agrega lo que lo rodea.
 
 En todas las fichas (C a G), el lateral lleva el mini mapa, el índice «En esta ficha» y «Datos de la ficha».
 
 | Caso de uso | Pantallas | Cómo |
 |---|---|---|
 | CU-1 · Encontrar por dónde empezar | A, B | Buscador en la portada y en la barra; portada con cursos y áreas sin buscar (simulada); estado vacío que ofrece las áreas. |
-| CU-2 · Explorar lo que rodea a un elemento | C–G, H | Mini mapa y secciones con cada relación por escrito; cada vecino lleva a su ficha; el mapa agrandado marca los vecinos con más relaciones, que se ven en su ficha. |
+| CU-2 · Explorar lo que rodea a un elemento | C–G, H | Mini mapa y secciones con cada relación por escrito; cada vecino lleva a su ficha; el mapa agrandado marca los vecinos con más relaciones y, al elegir uno, agrega en el sitio lo que lo rodea (sin salir de la ficha). |
 | CU-3 · Saber qué conceptos necesito antes | C | «Qué necesitas antes», en «Directos» y «A N pasos», con quién lo necesita y su fuente; «Qué depende de él». |
 | CU-4 · Qué pide un curso y qué curso llevar antes | F | «Lo que pide», «Cursos que conviene llevar antes» con los conceptos como evidencia, «Lo que enseña» por tema. |
 | CU-5 · Ubicar un concepto o tema | C, D, E | Migas y «Dónde está en la carrera», con la fuente de cada eslabón. |
-| CU-6 · Qué contiene y en qué orden | D, E | «Qué contiene y en qué orden aprenderlo» (pasos por prerrequisitos internos); unidades y temas desplegables. |
+| CU-6 · Qué contiene y en qué orden | D, E | «Qué contiene y en qué orden aprenderlo» (pasos por prerrequisitos internos); en unidad y área, el contenido nivel por nivel (unidad › tema › conceptos), plegable. |
 | CU-7 · Encontrar material de estudio | C, D, E, F, G | «Material de estudio», con su tipo y por qué parte llega; en un concepto, el de su tema; botón para abrir el sílabo. |
-| CU-8 · Ver el camino hasta una meta | C, D, E, F | «Camino hasta aquí» con «Ver por: tema · curso · área», etapas por distancia y la evidencia de cada paso; meta curso: explica el vacío y remite a CU-4. |
+| CU-8 · Ver el camino hasta una meta | C, D, E, F | «Camino hasta aquí» con «Ver por: tema · curso · área», etapas por distancia y la evidencia de cada paso; el tema, curso o área de la propia meta va marcado y explicado; meta curso: explica el vacío y remite a CU-4. |
 | CU-9 · De qué es un tipo y qué tipos tiene | C | «Es un tipo de · Tipos». |
 | CU-10 · Comprobar de dónde sale un dato | C–G | Marca `↗` en cada fila, «Fuentes de esta ficha», sección «Fuente» y botón del sílabo en su ficha. |
 
@@ -219,9 +222,9 @@ views {
 
 - **Escala.** La ficha de un área grande es larga (KA-NC: 8 unidades, 14 temas, 132 conceptos); se pliega a 8 filas por grupo, y los temas y conceptos van bajo «Ver N temas». Con muchos más sílabos, la portada y «Lo que enseña» crecen linealmente: el catálogo aguanta mejor que un lienzo, pero pedirá paginación en R4. El mapa está acotado por el detalle (25 vecinos y 5 de segundo nivel).
 - **Secciones recortadas.** «Qué depende de él» y «Cursos que lo enseñan o lo piden» salen de `/api/nodes`, con la cota de 25 vecinos. Si el foco tiene `more_neighbors`, «Datos de la ficha» avisa que algunas listas pueden estar recortadas; una ruta inversa de prerrequisitos lo resolvería.
-- **Exploración a pedido (CU-2).** El mapa no agrega en el sitio los vecinos de un vecino: los marca con un anillo y remite a su ficha. Es coherente con el enfoque, pero no es la expansión incremental que describe el caso de uso.
-- **Legibilidad.** El mini mapa pequeño solo rotula el foco: sirve para orientarse, no para leer. Las marcas de fuente se repiten en cada fila y son pequeñas.
-- **Accesibilidad.** RF-22 va por forma, filete y texto, no solo por color. El mapa agrandado se recorre con teclado, y las mismas relaciones están escritas en las secciones. Pendiente: medir el contraste del ocre de CS2023 (#8a5a12 sobre #f7efe1) y el tamaño de las marcas (10,5 px), y probar con lector de pantalla.
+- **Exploración a pedido (CU-2).** El mapa agrandado agrega en el sitio el vecindario de un vecino, con la misma respuesta de `/api/nodes` que su ficha (otra llamada por vecino). Cada vecindario agregado sigue acotado a 25 vecinos. Los nodos que solo se unirían por un sílabo no se dibujan, porque el mapa no muestra documentos.
+- **Legibilidad.** El mini mapa pequeño solo rotula el foco: sirve para orientarse, no para leer. Las marcas de fuente se repiten en cada fila, aunque ya miden 12 px. En el teléfono (360 a 390 px) ninguna pantalla desborda a lo ancho.
+- **Accesibilidad.** RF-22 va por forma, filete y texto, no solo por color. El mapa agrandado se recorre con teclado, y las mismas relaciones están escritas en las secciones. El ocre de CS2023 (#8a5a12) da 5,18:1 sobre su fondo (#f7efe1) y 5,91:1 sobre blanco: pasa AA (4,5:1) para texto normal. Las marcas de fuente y de trazabilidad son de 12 px. Pendiente: probar con lector de pantalla.
 - **Dependencias externas.** Las fuentes vienen de Google Fonts (hay respaldo en Georgia y system-ui); en R6 conviene servirlas con la aplicación.
 
 ## 7. Costo documental si se elige

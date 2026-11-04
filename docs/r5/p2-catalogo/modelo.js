@@ -416,11 +416,18 @@
       const fl = agregarNota(fila(u.nodo, {
         nombreEn: u.nodo.name_en,
         detalle: temas.length ? `${temas.length} ${temas.length === 1 ? 'tema' : 'temas'} · ${conceptos} conceptos` : 'por ahora, solo en CS2023',
-        sub: temas.map((t) => agregarNota(fila(t.nodo, { detalle: `${hijos(loc, t.nodo.key).length} conceptos` }), fuentes.de(t.arista))).sort(porNombre),
+        // Nivel por nivel (CU-6): unidad › tema › conceptos, cada nivel plegable.
+        sub: temas.map((t) => {
+          const cs = hijos(loc, t.nodo.key);
+          return agregarNota(fila(t.nodo, {
+            detalle: `${cs.length} ${cs.length === 1 ? 'concepto' : 'conceptos'}`,
+            sub: cs.map((x) => agregarNota(fila(x.nodo), fuentes.de(x.arista))).sort(porNombre),
+          }), fuentes.de(t.arista));
+        }).sort(porNombre),
       }), fuentes.de(u.arista));
       (temas.length ? con : sin).push(fl);
     }
-    const contiene = seccion('contiene', 'Qué contiene', 'CU-6 · PC4 · RF-13', { ayuda: 'Las unidades de CS2023 de esta área y, dentro de cada una, los temas de los sílabos.' });
+    const contiene = seccion('contiene', 'Qué contiene', 'CU-6 · PC4 · RF-13', { ayuda: 'Nivel por nivel: las unidades de CS2023 de esta área; dentro de cada una, los temas de los sílabos, y dentro de cada tema, sus conceptos. Abre cada nivel con «Ver».' });
     if (con.length) contiene.grupos.push({ titulo: 'Con contenido de los sílabos', filas: con.sort(porNombre) });
     if (sin.length) contiene.grupos.push({ titulo: 'Solo en CS2023', filas: sin.sort(porNombre), tenue: true });
 
@@ -588,25 +595,37 @@
     const labelGrano = GRANOS[grano].label;
     const objetivo = resp.nodes.find((n) => n.key === clave) || resp.nodes[0];
     const prereqs = resp.nodes.filter((n) => n.label === 'Concept' && n.depth > 0);
-    const padre = new Map(resp.edges.filter((e) => e.type === 'PART_OF').map((e) => [e.source, e]));
+    const padres = new Map();
+    for (const e of resp.edges.filter((x) => x.type === 'PART_OF')) {
+      if (!padres.has(e.source)) padres.set(e.source, []);
+      padres.get(e.source).push(e);
+    }
 
     function subeA(concepto) {
       const destinos = [];
       if (grano === 'course') {
         resp.edges.filter((e) => e.type === 'TEACHES_CONCEPT' && e.target === concepto).forEach((e) => destinos.push({ clave: e.source, aristas: [e] }));
       } else {
-        let k = concepto;
-        const aristas = [];
-        while (padre.has(k)) {
-          const e = padre.get(k);
-          aristas.push(e);
-          k = e.target;
-          if ((idx.get(k) || {}).label === labelGrano) { destinos.push({ clave: k, aristas: aristas.slice() }); break; }
+        // Un concepto puede estar en más de un tema: se siguen todas sus aristas PART_OF.
+        const cola = [{ k: concepto, aristas: [] }];
+        const vistos = new Set([concepto]);
+        while (cola.length) {
+          const { k, aristas } = cola.shift();
+          for (const e of (padres.get(k) || [])) {
+            if (vistos.has(e.target)) continue;
+            vistos.add(e.target);
+            const camino = aristas.concat([e]);
+            if ((idx.get(e.target) || {}).label === labelGrano) destinos.push({ clave: e.target, aristas: camino });
+            else cola.push({ k: e.target, aristas: camino });
+          }
         }
       }
       return destinos;
     }
 
+    // El tema (curso, área) del propio objetivo: si un prerrequisito cae ahí, la ruta
+    // lo incluye porque el objetivo es el concepto, no su tema (diseño de las rutas, §6).
+    const propios = new Set(subeA(objetivo.key).map((d) => d.clave));
     const items = new Map();
     for (const p of prereqs) {
       for (const d of subeA(p.key)) {
@@ -624,7 +643,13 @@
     for (const it of items.values()) {
       const d = it.nodo.depth != null ? it.nodo.depth : Math.min(...it.conceptos.map((c) => c.profundidad));
       if (!niveles.has(d)) niveles.set(d, []);
-      const fl = fila(it.nodo, { sub: it.conceptos.sort(porNombre) });
+      const propio = propios.has(it.nodo.key);
+      const fl = fila(it.nodo, {
+        sub: it.conceptos.sort(porNombre),
+        propio,
+        marca: propio ? { topic: 'su mismo tema', course: 'su mismo curso', area: 'su misma área' }[grano] : null,
+        aviso: propio ? `El prerrequisito está en ${{ topic: 'el mismo tema', course: 'el mismo curso', area: 'la misma área' }[grano]}: se cuenta porque la meta es este ${(CLASES[objetivo.label] || { corto: 'elemento' }).corto.toLowerCase()}, no su ${{ topic: 'tema', course: 'curso', area: 'área' }[grano]}.` : null,
+      });
       it.conceptos.forEach((c) => c.notas.forEach((n) => agregarNota(fl, n)));
       niveles.get(d).push(fl);
     }

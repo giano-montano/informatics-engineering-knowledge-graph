@@ -12,6 +12,6 @@
 **Consecuencias.**
 - Atrás y adelante del navegador funcionan, y cada ficha se puede enlazar o citar.
 - Las listas largas (KA-NC: 158 nodos) se pliegan; la ficha de un área es pesada, pero se lee.
-- Negativa: lo que mejor responde esta propuesta es «qué hay sobre esto», no «cómo se conecta con lo demás». El mapa es secundario, así que la exploración visual de RF-19 recae en una vista acotada al vecindario, sin expansión a pedido (CU-2).
+- Negativa: lo que mejor responde esta propuesta es «qué hay sobre esto», no «cómo se conecta con lo demás». El mapa es secundario, así que la exploración visual de RF-19 recae en una vista acotada al vecindario; la expansión a pedido (CU-2) solo está en el mapa agrandado.
 
 **Fila para la Tabla 20.** Enfoque de navegación por fichas, con mini mapa secundario · responde la necesidad más votada de recursos y prerrequisitos (E16) y no depende de descripciones que el grafo no tiene.

@@ -35,9 +35,10 @@ Los casos de uso son comunes a las tres propuestas y están en [`../casos-de-uso
 
 **Flujo CU-2 · Explorar lo que rodea a un elemento**
 1. En el camino (B), toca una estación, por ejemplo «Tabla de verdad»: se abre su ficha (C).
-2. La sección «Alrededor» agrupa sus vecinos directos por relación: «Requiere» (Negación, Conjunción, Disyunción), «Lo necesitan antes» (Tautología, Contradicción, Contingencia), «Es parte de» y «Lo enseña». Cada vecino lleva la fuente de su relación.
-3. Toca un vecino: su ficha reemplaza a la anterior, y «← Atrás» vuelve.
-4. Un «+» marca los vecinos que tienen más relaciones. Abrirlo muestra las suyas.
+2. La sección «Alrededor» agrupa sus vecinos directos por relación: «Requiere» (Negación, Conjunción, Disyunción), «Lo necesitan antes» (Tautología, Contradicción, Contingencia), «Es parte de» y «Lo enseña». Cada vecino lleva la fuente de su relación y el número de relaciones que tiene más allá.
+3. El «▸» de un vecino despliega, dentro de la misma ficha, su segundo nivel: «Alrededor de «Negación»: Es parte de Lógica proposicional · Lo enseña Fundamentos de Programación», cada relación con su fuente. «Desplegar todo» abre el segundo nivel de un grupo entero.
+4. Si un vecino tiene más relaciones de las que trajo la ficha (un «+» tras su número), «Ver más relaciones de «Fundamentos de Programación»» las agrega en el mismo despliegue (16 más), sin cambiar de ficha.
+5. Tocar un nombre, de primer o de segundo nivel, abre su ficha; «← Atrás» vuelve.
 
 **Flujo CU-3 · Saber qué conceptos necesito antes de aprender uno**
 1. Abre la meta «Contradicción» (desde la entrada o con «Ver el camino hasta aquí» en una ficha).
@@ -63,8 +64,8 @@ Los casos de uso son comunes a las tres propuestas y están en [`../casos-de-uso
 **Flujo CU-6 · Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo**
 1. Con la meta «Lógica proposicional», toca la pestaña «Qué contiene y en qué orden» (pantalla E).
 2. El mapa agrupa en pasos los 7 conceptos que tienen un orden. «Primero»: Negación, Conjunción y Disyunción. «Paso 2»: Tabla de verdad. «Paso 3»: Tautología, Contradicción y Contingencia.
-3. En el panel, «Qué contiene» lista los conceptos sin un orden registrado. En un área o una unidad, lista además sus unidades y temas.
-4. Un área, por ejemplo «Redes y Comunicación» desde «Áreas de la carrera», se abre directamente en esta pestaña.
+3. En el panel, «Qué contiene» anida nivel por nivel: unidad › tema › conceptos. Dentro de cada tema, los conceptos con orden van en pasos numerados (en «Lógica proposicional»: 1 Conjunción, Disyunción, Negación; 2 Tabla de verdad; 3 Contingencia, Contradicción, Tautología) y debajo, los que no tienen un orden registrado.
+4. Un área, por ejemplo «Redes y Comunicación» desde «Áreas de la carrera», se abre directamente en esta pestaña: 6 unidades con 14 temas, cada uno con sus pasos (en «Subredes y enrutamiento»: 1 Direccionamiento de subredes, 2 VLSM, 3 CIDR); las 2 unidades sin temas de los sílabos se cuentan aparte.
 
 **Flujo CU-7 · Encontrar material de estudio sobre algo**
 1. En la ficha (C) de un tema, por ejemplo «Lógica proposicional», la sección «Material de estudio» muestra el «Sílabo 1INF01», de tipo Sílabo, «trata sobre Lógica proposicional».
@@ -75,7 +76,7 @@ Los casos de uso son comunes a las tres propuestas y están en [`../casos-de-uso
 1. Abre la meta «Entrada y salida de datos desde archivos» (está en «Caminos que cruzan cursos o áreas»).
 2. En la pantalla B, pulsa «Ver por: curso». Las líneas pasan a ser INF144 (azul) y 1INF35 (naranja), y «Archivos» aparece como transbordo.
 3. Con «área», las líneas son SDF y OS, de CS2023, dibujadas como vía doble con insignia cuadrada.
-4. La barra «Líneas del camino» explica cada línea al tocarla.
+4. La barra «Líneas del camino» explica cada línea al tocarla. Si una línea contiene también a la meta, lleva la marca «también la meta» y una línea lo explica: «El prerrequisito está en el mismo tema que la meta» (con «tema», «Ingreso y salida de datos»).
 5. Si la meta no tiene camino, la pantalla G explica por qué. Si la meta es un curso, remite a sus cursos previos (CU-4).
 
 **Flujo CU-9 · Ver de qué es un tipo un concepto y qué tipos tiene**
@@ -103,11 +104,11 @@ Los casos de uso son comunes a las tres propuestas y están en [`../casos-de-uso
 | Caso de uso | Pantallas | Cómo |
 |---|---|---|
 | CU-1 · Encontrar por dónde empezar | A | Buscador con origen y marca «con camino»; listas de metas, cursos y áreas; si nada coincide, ofrece las áreas. |
-| CU-2 · Explorar lo que rodea a un elemento | C | «Alrededor»: vecinos directos por relación, con «Atrás» y «+» para los que tienen más. |
+| CU-2 · Explorar lo que rodea a un elemento | C | «Alrededor»: vecinos directos por relación y, desplegado en la misma ficha, su segundo nivel; «Ver más» agrega relaciones ahí mismo. |
 | CU-3 · Saber qué conceptos necesito antes de aprender uno | B, C, G | Columnas por distancia en el mapa y en «Indicaciones»; «Qué necesitas antes» en la ficha; lo que depende de él si no necesita nada. |
 | CU-4 · Saber qué pide un curso y qué curso conviene llevar antes | F, C, D | «Lo que pide» sobre la línea del curso que lo enseña; la ficha lista lo que pide y lo que enseña. |
 | CU-5 · Ubicar un concepto o tema dentro de la carrera | C | «Dónde está en la carrera»: una cadena tema › unidad › área por cada tema al que pertenece. |
-| CU-6 · Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo | E, G | Pasos de orden en el mapa; «Qué contiene» con unidades, temas y conceptos sin orden. |
+| CU-6 · Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo | E, G | Pasos de orden en el mapa; «Qué contiene» anidado unidad › tema › conceptos, con pasos numerados dentro de cada tema. |
 | CU-7 · Encontrar material de estudio sobre algo | C | «Material de estudio» con su tipo y su tema; en un concepto, el material de su tema. |
 | CU-8 · Ver el camino hasta una meta, por temas, cursos o áreas | B, D, G | Mapa con «Ver por: tema · curso · área», transbordos y «?» por tramo y por línea. |
 | CU-9 · Ver de qué es un tipo un concepto y qué tipos tiene | C | «Es un tipo de y tipos», con la fuente de cada relación. |

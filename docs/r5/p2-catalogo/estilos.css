@@ -86,7 +86,7 @@ main { outline: none; min-height: 70vh; }
 .insignia--institutional { color: var(--inst); background: var(--inst-fondo); border: 1px solid var(--inst-filete); border-left: 3px solid var(--inst); }
 .insignia-capa { font-weight: 400; text-transform: none; letter-spacing: 0; }
 
-.nota { display: inline-block; font: 500 10.5px/1 var(--mono); padding: 3px 5px 2px; margin-left: 4px; border-radius: 2px; text-decoration: none; vertical-align: 2px; white-space: nowrap; }
+.nota { display: inline-block; font: 500 12px/1 var(--mono); padding: 3px 5px 2px; margin-left: 4px; border-radius: 2px; text-decoration: none; vertical-align: 2px; white-space: nowrap; }
 .nota::before { content: '↗ '; opacity: 0.6; }
 .nota--institutional { color: var(--inst); border: 1px solid var(--inst-filete); background: var(--blanco); }
 .nota--reference { color: var(--ref); border: 1px dashed var(--ref-filete); background: var(--blanco); }
@@ -292,7 +292,7 @@ a.nota:hover { background: var(--tinta); color: var(--papel); border-color: var(
 .capturadas { margin-top: 28px; font-size: 13.5px; }
 
 /* ── Trazabilidad (apagada por omisión) ─────────────────────────────────── */
-.traza { display: inline-block; font: 500 10.5px/1 var(--mono); letter-spacing: 0.02em; text-transform: none; color: var(--doc); background: #f3eff9; border: 1px solid #d8cfe8; padding: 3px 6px; border-radius: 2px; white-space: nowrap; vertical-align: 2px; margin-left: 6px; }
+.traza { display: inline-block; font: 500 12px/1 var(--mono); letter-spacing: 0.02em; text-transform: none; color: var(--doc); background: #f3eff9; border: 1px solid #d8cfe8; padding: 3px 6px; border-radius: 2px; white-space: nowrap; vertical-align: 2px; margin-left: 6px; }
 .seccion-cabecera .traza { margin-left: 0; }
 .interruptor { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; font-size: 14px; color: var(--tinta-2); }
 .interruptor-pista { position: relative; width: 30px; height: 17px; border-radius: 999px; background: var(--filete-2); transition: background 0.15s; }
@@ -349,3 +349,25 @@ a.nota:hover { background: var(--tinta); color: var(--papel); border-color: var(
   .guia { right: 16px; bottom: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* ── Mapa agrandado: elegir y agregar lo que rodea (CU-2) ─────────────────── */
+.mm-eleccion { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 20px; border-top: 1px solid var(--filete); font-size: 14px; background: var(--blanco); }
+.mm-eleccion-nombre { display: inline-flex; align-items: center; gap: 6px; }
+.boton-mini--fuerte { border-color: var(--foco); color: var(--foco); font-weight: 600; }
+.boton-mini:disabled { opacity: 0.55; cursor: default; }
+.mm-deshacer { margin-left: auto; }
+.mm-seleccionado path { stroke: var(--acento); stroke-width: 3; }
+.mm-expandido path { stroke-width: 2.5; }
+
+/* ── Camino por tema: el prerrequisito cae en el tema del propio objetivo ─── */
+.fila--propio { border-left: 3px solid var(--acento); padding-left: 8px; }
+.fila-propio-aviso { margin: 4px 0 0 17px; font-size: 14px; color: var(--tinta-2); }
+.marca-propio { display: inline-block; font: 600 12px/1 var(--sans); color: var(--acento); border: 1px solid currentColor; border-radius: 2px; padding: 2px 5px; margin-right: 6px; }
+
+/* ── Teléfono (360–390 px): nada más ancho que la pantalla ───────────────── */
+@media (max-width: 420px) {
+  .barra-nav { flex-wrap: wrap; row-gap: 6px; }
+  .fila-nombre, .ficha-titulo, .migas, .fila-detalle { overflow-wrap: anywhere; }
+  .dialogo-mapa { width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; }
+  .mm-deshacer { margin-left: 0; }
+}

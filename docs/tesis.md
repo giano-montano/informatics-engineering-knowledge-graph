@@ -399,7 +399,7 @@ Diseñar e implementar un sistema de gestión de conocimiento basado en grafos d
 | Objetivo: O 3: Diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. |  |  |
 | :---- | :---- | :---- |
 | **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
-| R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Documentos de arquitectura con diagramas C4 y ADRs. | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
+| R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Documentos de arquitectura con diagramas C4 y ADRs.  Esquema visual del mecanismo de navegación y documentación de flujos de usuario. | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
 | R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | \- Pasa exitosamente las pruebas de aceptación (con **asesor de tesis**), donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. \- Pasa exitosamente pruebas de aceptación con al menos 3 usuarios reales para validar la construcción del grafo de conocimiento. |
 
 3. ## **Métodos, procedimientos y herramientas** {#métodos,-procedimientos-y-herramientas}
@@ -1127,7 +1127,7 @@ La arquitectura se documenta con el modelo C4 (Brown, s. f.), que describe un si
 | ADR-005 | Cada regla se impide al escribir y se comprueba con una consulta de auditoría al cierre de cada carga, ingesta y reaplicación | Restricciones del motor o disparadores | Las restricciones necesarias son exclusivas de la edición Enterprise; los disparadores solo frenan escrituras externas | AC-01 |
 | ADR-006 | La ingesta no borra nada; la procedencia se fija al crear cada elemento | Retirar lo que la nueva versión de un documento ya no afirma | Exige comparar versiones, la reconciliación que descarta ADR-004 | AC-03 |
 | ADR-007 | La API lanza el worker si no hay otro activo; este procesa las ingestas una tras otra y se detiene si la última auditoría tiene violaciones | Un servicio aparte invocado por HTTP, o un proceso residente | Un proceso hijo serializa las escrituras sin otro servicio que desplegar | AC-01 |
-| ADR-008 | Lo que el grafo admite se declara una sola vez, y lo leen el extractor, el validador, las escrituras y la auditoría | Generar esa declaración desde el archivo de la ontología | Exige analizar construcciones que la T-Box no usa, y la dirección de cada par inverso igual se escribe a mano | AC-01 |
+| ADR-008 | Lo que el grafo admite se declara una sola vez, y lo leen el extractor, el validador, las escrituras y la auditoría | Generar esa declaración desde el archivo de la ontología | Exige interpretar uniones anónimas, inversas y subpropiedades para una T-Box que no cambia, y la dirección de cada par inverso igual se escribe a mano | AC-01 |
 | ADR-009 | Todo recurso institucional es un documento subido que el sistema sirve; el operador declara su tipo y su curso | Que el modelo de lenguaje extraiga el código del curso | Un error de lectura crearía otro curso sin aviso | AC-03 |
 | ADR-010 | El lote es el documento: si una regla falla, no se escribe nada y se guardan las violaciones con el lote candidato; hay un solo reintento que devuelve el error al modelo | Lotes por tema o hecho a hecho | Exigen ordenar dependencias y resolver las aristas que cruzan lotes | AC-01 |
 | ADR-011 | Cada ingesta lee al inicio todos los nodos; el extractor recibe ese vocabulario completo y el validador trabaja sobre él | Recuperar solo los nodos candidatos | A escala piloto el vocabulario cabe completo; la selección sería otro componente que diseñar y medir | AC-01 |
@@ -1257,7 +1257,7 @@ La anotó un modelo de lenguaje (Claude, de Anthropic), un sílabo por sesión, 
 Cada entrada de la anotación registra:
 
 * El tipo, asignado por la estructura del sílabo. Es tema el título de una unidad o capítulo que agrupa ítems; es concepto cada ítem dentro de un tema.  
-* El nivel. Una entrada es obligatoria si el sílabo la nombra literalmente en la sumilla o en los contenidos. Es aceptable si se infiere sin ambigüedad o si aparece solo en otras secciones, como los resultados de aprendizaje.  
+* El nivel: Una entrada es obligatoria si el sílabo la nombra literalmente en la sumilla o en los contenidos. Es aceptable si se infiere sin ambigüedad o si aparece solo en otras secciones, como los resultados de aprendizaje.  
 * La etiqueta tal como figura en el sílabo, junto con sus nombres alternativos: siglas, traducción, singular y variantes de uso común.  
 * El fragmento del sílabo que sustenta la entrada.
 
@@ -1814,15 +1814,14 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 
 [^5]: Las seis propiedades de la columna Inversa se declaran explícitamente en la ontología; con ellas el total asciende a diecisiete propiedades de objeto. «Simple» indica una propiedad no transitiva, condición que OWL exige para admitir restricciones de cardinalidad. hasPart hereda dominio y rango de isPartOf por inversión.
 
+[image1]: 
 
+[image2]: 
 
+[image3]: 
 
+[image4]: 
 
+[image5]: 
 
-
-
-
-
-
-
-
+[image6]: 

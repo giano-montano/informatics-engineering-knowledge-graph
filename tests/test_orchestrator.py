@@ -41,7 +41,7 @@ from iekg.operational_store import (
 
 CLEAN = AuditReport((RuleResult("RI-01", 0, ()),))
 DIRTY = AuditReport((RuleResult("RI-08", 1, ("x (Topic) is not part of any KnowledgeUnit",)),))
-EXTRACTION = Extraction("model-2026-01-01", {"temperature": 0}, "prompt-v1", 0)
+EXTRACTION = Extraction("model-2026-01-01", {"temperature": 0}, "prompt-v1", 0, 30_000, 2_000)
 UNIT = "ku"
 
 
@@ -158,6 +158,7 @@ def test_a_written_run_completes_and_saves_exactly_the_written_batch(store, tmp_
     orchestrator(store, tmp_path, graph, facts_under(UNIT)).run_pending()
     run = store.get_run(run_id)
     assert (run.status, run.model, run.content_retries) == (COMPLETED, EXTRACTION.model, 0)
+    assert (run.input_tokens, run.output_tokens) == (30_000, 2_000)
     saved = FactStore(tmp_path / "facts").load(run_id)
     assert (saved.batch, saved.provenance, saved.layer) == (graph.written[0], run.resource_key, INSTITUTIONAL)
     assert store.latest_audit_report().run_id == str(run_id) and store.latest_audit_report().clean

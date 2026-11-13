@@ -76,6 +76,9 @@ CREATE TABLE IF NOT EXISTS runs (
     model_settings TEXT,
     prompt_version TEXT,
     content_retries INTEGER,
+    -- Summed over every response of the model, retries included.
+    input_tokens INTEGER,
+    output_tokens INTEGER,
     error TEXT,
     audit_report_id INTEGER REFERENCES audit_reports (id)
 );
@@ -96,6 +99,14 @@ CREATE TABLE IF NOT EXISTS rejected_outputs (
     CHECK (batch IS NOT NULL OR raw_output IS NOT NULL)
 );
 """
+
+# Columns added after the first stores were created. The store holds evidence
+# that is not rebuilt (ADR-013), so an older file gains them instead of being
+# replaced; their rows keep NULL.
+_ADDED_COLUMNS = (
+    ("runs", "input_tokens", "INTEGER"),
+    ("runs", "output_tokens", "INTEGER"),
+)
 
 
 @dataclass(frozen=True)
@@ -129,18 +140,22 @@ class Run:
     model_settings: Mapping | None
     prompt_version: str | None
     content_retries: int | None
+    input_tokens: int | None
+    output_tokens: int | None
     error: str | None
     audit_report_id: int | None
 
 
 @dataclass(frozen=True)
 class Extraction:
-    """How a run's extraction was made, as RF-25 asks to record it."""
+    """How a run's extraction was made, as RF-25 asks to record it, and what it consumed."""
 
     model: str
     model_settings: Mapping
     prompt_version: str
     content_retries: int
+    input_tokens: int
+    output_tokens: int
 
 
 @dataclass(frozen=True)
@@ -153,7 +168,7 @@ class Discard:
 _RUN_COLUMNS = (
     "id, status, created_at, started_at, finished_at, resource_key, resource_type, course_code, course_name,"
     " file_name,"
-    " model, model_settings, prompt_version, content_retries, error, audit_report_id"
+    " model, model_settings, prompt_version, content_retries, input_tokens, output_tokens, error, audit_report_id"
 )
 
 
@@ -166,6 +181,11 @@ class OperationalStore:
         self._connection.execute("PRAGMA journal_mode = WAL")
         self._connection.execute("PRAGMA foreign_keys = ON")
         self._connection.executescript(_SCHEMA)
+        for table, column, declaration in _ADDED_COLUMNS:
+            present = {row[1] for row in self._connection.execute(f"PRAGMA table_info({table})")}
+            if column not in present:
+                with self._connection:
+                    self._connection.execute(f"ALTER TABLE {table} ADD COLUMN {column} {declaration}")
 
     def __enter__(self) -> "OperationalStore":
         return self
@@ -287,6 +307,8 @@ class OperationalStore:
                 model_settings=json.dumps(dict(extraction.model_settings), sort_keys=True),
                 prompt_version=extraction.prompt_version,
                 content_retries=extraction.content_retries,
+                input_tokens=extraction.input_tokens,
+                output_tokens=extraction.output_tokens,
             )
 
     def reject_run(

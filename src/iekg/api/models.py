@@ -91,6 +91,8 @@ class RunDetail(BaseModel):
     model_settings: dict | None
     prompt_version: str | None
     content_retries: int | None
+    input_tokens: int | None = Field(description="Summed over every response of the model, retries included.")
+    output_tokens: int | None = Field(description="Summed over every response of the model, retries included.")
     error: str | None
     audit_report: AuditReportView | None = Field(description="The report of the audit that closed the run, if any.")
 

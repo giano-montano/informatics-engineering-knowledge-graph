@@ -327,11 +327,13 @@ class _Linker:
     def link(self, output: SyllabusOutput) -> ExtractedFacts | None:
         concepts: dict[str, str] = {}
         taught: list[str] = []
+        headings: list[tuple[str, frozenset[str]]] = []
         for topic in output.topics:
             place = f"topic {topic.name!r}"
             key = self.node(TOPIC, topic.name, topic.existing, place)
             if key is None:
                 continue
+            headings.append((key, _segments(topic.name)))
             # A topic that already exists keeps its unit.
             if key not in self.snapshot.nodes and topic.knowledge_unit is not None:
                 unit = self.resolve(topic.knowledge_unit, KNOWLEDGE_UNIT, f"{place}, knowledge_unit")
@@ -347,9 +349,17 @@ class _Linker:
         required: list[str] = []
         for concept in output.required_concepts:
             key = self.node(CONCEPT, concept.name, concept.existing, f"required concept {concept.name!r}")
-            if key is not None:
-                concepts.setdefault(normalize_label(concept.name), key)
-                required.append(key)
+            if key is None:
+                continue
+            concepts.setdefault(normalize_label(concept.name), key)
+            # What a heading of this syllabus names, the course teaches, even
+            # if the model required it (requisitos-funcionales-de-referencia, §8).
+            node = self.snapshot.nodes[key]
+            names = {normalize_label(text) for text in (concept.name, node.pref_label_es, node.pref_label_en) if text}
+            hosts = [topic_key for topic_key, segments in headings if names & segments]
+            for topic_key in hosts:
+                self.edges.append(EdgeFact(PART_OF, key, topic_key))
+            (taught if hosts else required).append(key)
 
         for edge_type, relations in ((HAS_PREREQUISITE, output.prerequisites), (SPECIALIZES, output.specializations)):
             for relation in relations:
@@ -372,6 +382,15 @@ class _Linker:
             taught=tuple(taught),
             required=tuple(required),
         )
+
+
+# A heading names its pieces of knowledge between these: "Virtualización y
+# computación en la nube" names two.
+_HEADING_SEPARATOR = re.compile(r"[,;:]|\s(?:y|e|and)\s", re.IGNORECASE)
+
+
+def _segments(heading: str) -> frozenset[str]:
+    return frozenset(filter(None, map(normalize_label, _HEADING_SEPARATOR.split(heading))))
 
 
 def link_output(
@@ -469,11 +488,14 @@ class LanguageModelExtractor:
         # With typed output the last message may lack the model name: walk back.
         answered = next((m.model_name for m in reversed(history) if isinstance(m, ModelResponse) and m.model_name),
                         None)
+        responses = [m for m in history if isinstance(m, ModelResponse)]
         return Extraction(
             model=answered or self._model_name,
             model_settings={**self._settings_record, "requested_model": self._model_name},
             prompt_version=prompt_version(),
             content_retries=retries,
+            input_tokens=sum(m.usage.input_tokens for m in responses),
+            output_tokens=sum(m.usage.output_tokens for m in responses),
         )
 
 

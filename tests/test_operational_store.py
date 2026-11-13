@@ -127,7 +127,7 @@ def test_a_written_run_moves_through_its_states(tmp_path):
     with OperationalStore(tmp_path / "operational.sqlite") as store:
         run_id = new_run(store)
         store.take_pending_run()
-        store.record_extraction(run_id, Extraction("model-x-2026", {"temperature": 0}, "v1", 1))
+        store.record_extraction(run_id, Extraction("model-x-2026", {"temperature": 0}, "v1", 1, 61_000, 4_200))
         report_id = store.open_audit_report(origin="ingestion", run_id=str(run_id))
         store.attach_audit_report(run_id, report_id)
         store.mark_written(run_id)
@@ -137,7 +137,23 @@ def test_a_written_run_moves_through_its_states(tmp_path):
     assert (run.status, run.model, run.model_settings, run.prompt_version, run.content_retries) == (
         COMPLETED, "model-x-2026", {"temperature": 0}, "v1", 1,
     )
+    assert (run.input_tokens, run.output_tokens) == (61_000, 4_200)
     assert run.audit_report_id == report_id and run.finished_at is not None
+
+
+def test_a_store_created_without_the_token_columns_gains_them_and_keeps_its_runs(tmp_path):
+    path = tmp_path / "operational.sqlite"
+    with OperationalStore(path) as store:
+        run_id = new_run(store)
+    with sqlite3.connect(path) as connection:
+        connection.execute("ALTER TABLE runs DROP COLUMN input_tokens")
+        connection.execute("ALTER TABLE runs DROP COLUMN output_tokens")
+    with OperationalStore(path) as store:
+        run = store.get_run(run_id)
+        assert (run.resource_key, run.input_tokens, run.output_tokens) == ("doc-1", None, None)
+        store.take_pending_run()
+        store.record_extraction(run_id, Extraction("m", {}, "v1", 0, 10, 2))
+        assert (store.get_run(run_id).input_tokens, store.get_run(run_id).output_tokens) == (10, 2)
 
 
 def test_a_written_run_with_a_dirty_audit_is_stopped(tmp_path):

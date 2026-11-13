@@ -12,6 +12,7 @@ from pydantic_ai import models
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelResponse, TextPart
 from pydantic_ai.models.function import FunctionModel
+from pydantic_ai.usage import RequestUsage
 
 from iekg.core.batch import EdgeFact, NodeFact, Snapshot, SnapshotNode
 from iekg.graph_schema import (
@@ -95,6 +96,23 @@ def test_a_protected_word_does_not_meet_its_cut_form(a, b):
     assert normalize_label(a) != normalize_label(b)
 
 
+@pytest.mark.parametrize("a, b", [
+    ("C++", "C"), ("C#", "C"), ("C++", "C#"), ("F#", "F"), ("Árboles B+", "Árbol B"), ("C++11", "C 11"),
+])
+def test_a_plus_or_hash_after_a_letter_is_part_of_the_name(a, b):
+    assert normalize_label(a) != normalize_label(b)
+
+
+@pytest.mark.parametrize("a, b", [
+    ("Lenguaje C++", "lenguaje c++"), ("Java y C#.", "java y c#"), ("Árboles B+", "arbol b+"),
+    # Anywhere else they are punctuation.
+    ("HTML+CSS", "HTML CSS"), ("HTML + CSS", "HTML CSS"), ("3+4", "3 4"), ("Tema #3", "tema 3"),
+    ("C + +", "C"), ("C++x", "C x"),
+])
+def test_a_plus_or_hash_elsewhere_is_punctuation(a, b):
+    assert normalize_label(a) == normalize_label(b)
+
+
 # --- Vocabulary -------------------------------------------------------------------
 
 def test_the_vocabulary_shows_each_unit_with_its_area_and_where_nodes_hang():
@@ -170,6 +188,60 @@ def test_a_required_concept_the_course_also_teaches_is_only_taught():
     assert facts.taught == ("concept",) and facts.required == ()
 
 
+# Concepts other courses teach, for the required ones a heading may name.
+TAUGHT_ELSEWHERE = Snapshot(
+    nodes={
+        **SNAPSHOT.nodes,
+        "virt": SnapshotNode(CONCEPT, INSTITUTIONAL, "Virtualización", "Virtualization"),
+        "cloud": SnapshotNode(CONCEPT, INSTITUTIONAL, "Computación en la nube"),
+        "graph": SnapshotNode(CONCEPT, INSTITUTIONAL, "Grafo"),
+        "c": SnapshotNode(CONCEPT, INSTITUTIONAL, "C"),
+    },
+    edges=SNAPSHOT.edges,
+)
+
+
+def link_requiring(topics, *required):
+    vocabulary = build_vocabulary(TAUGHT_ELSEWHERE)
+    ref = {key: ref for ref, key in vocabulary.refs.items()}
+    out = SyllabusOutput.model_validate({
+        "topics": [{"name": name, "knowledge_unit": "K-001", "concepts": []} for name in topics],
+        "required_concepts": [{"name": name, "existing": ref[key]} for name, key in required],
+    })
+    return link_output(out, TAUGHT_ELSEWHERE, vocabulary, keys())
+
+
+def test_a_required_concept_a_heading_names_is_taught_under_that_topic():
+    # The case of 1INF35 (requisitos-funcionales-de-referencia, §8).
+    facts = link_requiring(["Virtualización y computación en la nube"],
+                           ("Virtualización", "virt"), ("Computación en la nube", "cloud"))
+    assert facts.taught == ("virt", "cloud") and facts.required == ()
+    assert EdgeFact(PART_OF, "virt", "new-1") in facts.edges and EdgeFact(PART_OF, "cloud", "new-1") in facts.edges
+
+
+def test_a_heading_names_the_concept_by_its_label_in_the_graph_too():
+    facts = link_requiring(["Virtualization: concepts"], ("Máquinas virtuales", "virt"))
+    assert facts.taught == ("virt",) and facts.required == ()
+
+
+def test_a_required_concept_named_in_two_headings_hangs_from_both():
+    facts = link_requiring(["Árboles y grafos", "Recorridos: grafos"], ("Grafo", "graph"))
+    assert facts.taught == ("graph",)
+    assert {EdgeFact(PART_OF, "graph", "new-1"), EdgeFact(PART_OF, "graph", "new-2")} <= set(facts.edges)
+
+
+@pytest.mark.parametrize("topic, required", [
+    # Inside a segment, not a segment: the course builds on graphs.
+    ("Algoritmos sobre grafos", ("Grafo", "graph")),
+    # The language C is not C#.
+    ("Lenguajes de programación: Java y C#", ("C", "c")),
+])
+def test_a_required_concept_only_inside_a_segment_stays_required(topic, required):
+    facts = link_requiring([topic], required)
+    assert facts.taught == () and facts.required == (required[1],)
+    assert not [edge for edge in facts.edges if edge.source == required[1]]
+
+
 def test_relations_join_concepts_of_the_output_and_existing_ones():
     facts = link(output(
         required_concepts=[{"name": "Spanning tree", "existing": "C-001"}],
@@ -229,6 +301,8 @@ def test_what_the_output_schema_refuses_is_ex_01(fields, message):
 VALID = output().model_dump()
 UNKNOWN_UNIT = {"topics": [{"name": "X", "knowledge_unit": "K-999", "concepts": []}]}
 NO_UNIT = {"topics": [{"name": "X", "concepts": []}]}
+# What each scripted response reports it consumed.
+USAGE = RequestUsage(input_tokens=30_000, output_tokens=2_000)
 
 
 def scripted(*answers):
@@ -241,7 +315,7 @@ def scripted(*answers):
         next_answer = remaining.pop(0)
         if isinstance(next_answer, Exception):
             raise next_answer
-        return ModelResponse(parts=[TextPart(json.dumps(next_answer))])
+        return ModelResponse(parts=[TextPart(json.dumps(next_answer))], usage=USAGE)
 
     return FunctionModel(answer, model_name="scripted-model"), calls
 
@@ -260,6 +334,7 @@ def test_a_conforming_output_yields_facts_and_records_how_it_was_asked(tmp_path)
     assert (extraction.model, extraction.content_retries) == ("scripted-model", 0)
     assert extraction.model_settings == {"reasoning_effort": "low", "requested_model": "scripted-model"}
     assert len(extraction.prompt_version) == 12
+    assert (extraction.input_tokens, extraction.output_tokens) == (30_000, 2_000)
 
 
 @pytest.mark.parametrize("first", [NO_UNIT, UNKNOWN_UNIT, {"not": "the schema"}])
@@ -268,6 +343,8 @@ def test_one_non_conforming_output_is_retried_once_with_its_error(tmp_path, firs
     facts, extraction = extractor(model).extract(tmp_path / "doc.pdf", SNAPSHOT)
     assert extraction.content_retries == 1 and len(calls) == 2
     assert facts.nodes[0].properties == {PREF_LABEL_ES: "Búsqueda heurística"}
+    # The retry is paid too.
+    assert (extraction.input_tokens, extraction.output_tokens) == (60_000, 4_000)
 
 
 @pytest.mark.parametrize("answers, code", [
@@ -284,6 +361,7 @@ def test_a_second_non_conforming_output_rejects_with_its_code_and_raw_output(tmp
     assert [d.rule for d in caught.value.discards] == [code]
     assert json.loads(caught.value.raw_output) == answers[1]
     assert caught.value.extraction.content_retries == 1
+    assert (caught.value.extraction.input_tokens, caught.value.extraction.output_tokens) == (60_000, 4_000)
 
 
 def test_a_provider_error_is_a_provider_failure(tmp_path):

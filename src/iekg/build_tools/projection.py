@@ -7,8 +7,8 @@ silence: the load rejects it.
 The T-Box is not projected: its declarations and axioms have no representation
 of their own in the graph and live on as the graph schema and the integrity
 rules. The load only checks that the T-Box uses no construct the table does not
-cover. Whether the graph schema matches the T-Box's content is a separate test
-(ADR-008).
+cover. Whether the graph schema matches the T-Box's content is a separate test,
+tests/test_graph_schema_matches_tbox.py (ADR-008).
 """
 
 from collections import defaultdict

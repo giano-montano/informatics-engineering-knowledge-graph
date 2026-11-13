@@ -90,6 +90,8 @@ docs/diseño-de-las-rutas-de-navegación.md
                                Decisiones de la navegación que no son ADR.
 docs/repositorio/              Auditorías con su deuda, y el traspaso del
                                laboratorio, archivado.
+docs/referencias/              Notas sobre herramientas de terceros, con
+                               fuentes verificadas y fechadas (docling.md).
 docs/architecture/             Modelo C4 en LikeC4 (*.c4).
 ontology/*.ttl                 R1 (esquema OWL) y R2 (backbone CS2023).
 docker-compose.yml             Neo4j 5.26 LTS.

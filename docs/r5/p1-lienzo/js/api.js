@@ -43,26 +43,27 @@
     WAS_DERIVED_FROM:  { salida: 'Fuente',            entrada: 'Es fuente de',           frase: 'sale de' },
   };
 
-  // Qué lente aplica a cada clase: lo decide la etiqueta del nodo, sin llamar a la API.
-  // `traza` es lo que muestra el interruptor «Ver trazabilidad» (catálogo de casos de uso).
+  // Las vistas del mapa. Cada una responde una pregunta del estudiante sobre el elemento en foco,
+  // y cuáles aplican lo decide la clase del nodo, sin llamar a la API.
+  // `nombre` es el vocabulario común a las tres propuestas; `ayuda`, la pregunta en lenguaje llano.
   const ELEMENTOS = ['KnowledgeArea', 'KnowledgeUnit', 'Topic', 'Concept'];
   const LENTES = {
-    vecindario:        { nombre: 'Vecindario', corto: 'Vecindario', ruta: '/api/nodes', clases: null,
-                         ayuda: 'Lo que rodea al elemento en foco.', traza: 'CU-2 · RF-19' },
-    prerrequisitos:    { nombre: 'Qué necesitas antes', corto: 'Qué necesitas antes', ruta: '/api/concepts/prerequisites', clases: ['Concept'],
-                         ayuda: 'Los conceptos que conviene saber antes.', traza: 'CU-3 · PC1 · RF-11 · RF-20' },
-    ruta:              { nombre: 'Camino hasta aquí', corto: 'Camino hasta aquí', ruta: '/api/learning-path', clases: ELEMENTOS.concat('Course'),
-                         ayuda: 'Lo que conviene aprender antes, agrupado por tema, curso o área.', traza: 'CU-8 · PC6 · RF-15 · RF-20' },
-    cursos:            { nombre: 'Cursos que conviene llevar antes', corto: 'Cursos que conviene llevar antes', ruta: '/api/courses/prerequisites', clases: ['Course'],
-                         ayuda: 'Lo que pide el curso y qué curso lo enseña.', traza: 'CU-4 · PC2 · RF-12' },
-    ubicacion:         { nombre: 'Dónde está en la carrera', corto: 'Dónde está en la carrera', ruta: '/api/elements/location', clases: ['KnowledgeUnit', 'Topic', 'Concept'],
-                         ayuda: 'Su tema, su unidad y su área de CS2023.', traza: 'CU-5 · PC3 · RF-13 · RF-20' },
-    contiene:          { nombre: 'Qué contiene', corto: 'Qué contiene', ruta: '/api/elements/location', clases: ['KnowledgeArea', 'KnowledgeUnit', 'Topic'],
-                         ayuda: 'Sus partes y en qué orden aprenderlas.', traza: 'CU-6 · PC4 · RF-13' },
-    recursos:          { nombre: 'Material de estudio', corto: 'Material de estudio', ruta: '/api/elements/resources', clases: ELEMENTOS.concat('Course'),
-                         ayuda: 'Los sílabos que tratan sobre esto o sus partes.', traza: 'CU-7 · PC5 · RF-14 · RF-20' },
-    especializaciones: { nombre: 'Tipos', corto: 'Tipos', ruta: '/api/concepts/specializations', clases: ['Concept'],
-                         ayuda: 'De qué es un tipo y qué tipos tiene.', traza: 'CU-9 · PC7 · RF-16' },
+    vecindario:        { nombre: 'Lo que lo rodea', ruta: '/api/nodes', clases: null,
+                         ayuda: '¿Con qué se relaciona directamente?' },
+    prerrequisitos:    { nombre: 'Qué necesitas antes', ruta: '/api/concepts/prerequisites', clases: ['Concept'],
+                         ayuda: '¿Qué conceptos conviene saber antes de aprender este?' },
+    ruta:              { nombre: 'Camino hasta aquí', ruta: '/api/learning-path', clases: ELEMENTOS.concat('Course'),
+                         ayuda: '¿Por qué temas, cursos o áreas conviene pasar antes de llegar aquí?' },
+    cursos:            { nombre: 'Cursos que conviene llevar antes', ruta: '/api/courses/prerequisites', clases: ['Course'],
+                         ayuda: '¿Qué pide este curso, qué enseña y qué curso conviene llevar antes?' },
+    ubicacion:         { nombre: 'Dónde está en la carrera', ruta: '/api/elements/location', clases: ['KnowledgeUnit', 'Topic', 'Concept'],
+                         ayuda: '¿A qué tema, unidad y área pertenece?' },
+    contiene:          { nombre: 'Qué contiene', ruta: '/api/elements/location', clases: ['KnowledgeArea', 'KnowledgeUnit', 'Topic'],
+                         ayuda: '¿De qué partes se compone y en qué orden conviene aprenderlas?' },
+    recursos:          { nombre: 'Material de estudio', ruta: '/api/elements/resources', clases: ELEMENTOS.concat('Course'),
+                         ayuda: '¿Con qué material se puede estudiar?' },
+    especializaciones: { nombre: 'Tipos', ruta: '/api/concepts/specializations', clases: ['Concept'],
+                         ayuda: '¿De qué concepto más general es un tipo y qué tipos tiene?' },
   };
 
   const GRANOS = {

@@ -1,4 +1,4 @@
-/* Constelación (P1) · estado, panel del foco, buscador, lentes, rastro, trazabilidad y recorrido. */
+/* Constelación (P1) · estado, cabecera de contexto, panel del foco, buscador, rastro y recorrido. */
 (function () {
   'use strict';
   const P = window.IEKG_P1;
@@ -13,7 +13,7 @@
     archivos: '9a161bca-1a01-43de-8875-7bdfb53ebd84',
   };
 
-  // Orden de las lentes en el riel.
+  // Orden de las vistas en la cabecera. Solo se ofrecen las que aplican al elemento en foco.
   const ORDEN_LENTES = ['vecindario', 'prerrequisitos', 'ruta', 'cursos', 'ubicacion', 'contiene', 'recursos', 'especializaciones'];
 
   const estado = {
@@ -25,8 +25,10 @@
     verProcedencia: false,
     respLente: null,
     respFoco: null,
+    disp: null,         // disposición de la vista activa (lo que el mapa decidió mostrar)
+    expansiones: 0,     // cuántas veces se usó «+» desde el último foco
     aristaSel: null,
-    porque: null,       // estación del camino cuyo «¿Por qué?» está abierto
+    porque: null,       // parada del camino cuyo «¿Por qué?» está abierto
     turno: 0,           // descarta respuestas viejas si el estudiante hace clic rápido
   };
 
@@ -37,15 +39,19 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  /** Insignia de trazabilidad: invisible salvo con «Ver trazabilidad» activo. */
-  function traza(codigos, detalle) {
-    return `<span class="traza"${detalle ? ` title="${esc(detalle)}"` : ''}>${esc(codigos)}</span>`;
-  }
-
   const ARTICULO = { Área: 'un área', Unidad: 'una unidad', Tema: 'un tema', Concepto: 'un concepto', Curso: 'un curso',
     Sílabo: 'un sílabo', Documento: 'un documento', 'Tipo de recurso': 'un tipo de recurso' };
   function conArticulo(n) { return ARTICULO[P.nombreClase(n)] || P.nombreClase(n).toLowerCase(); }
   function plural(n, uno, varios) { return `${n} ${n === 1 ? uno : varios}`; }
+
+  const ICONO = {
+    sale: '<svg class="ico" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2L2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+    cerrar: '<svg class="ico" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+    antes: '<svg class="ico" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2L3.5 6l4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+    despues: '<svg class="ico" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+    doc: '<svg class="ico" width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.5h6l4 4v9H3z M9 1.5v4h4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>',
+    mapa: '<svg class="ico" width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.2" fill="currentColor"/><circle cx="2.8" cy="4" r="1.4" fill="currentColor"/><circle cx="13.2" cy="4.6" r="1.4" fill="currentColor"/><circle cx="12" cy="13" r="1.4" fill="currentColor"/><path d="M4 4.8l2.3 1.9M11.9 5.3L9.8 6.9M11 12l-1.6-2.3" stroke="currentColor" stroke-width="1"/></svg>',
+  };
 
   function iconoCapa(capa, tam) {
     tam = tam || 14;
@@ -73,10 +79,14 @@
   function enlaceDocumento(doc, texto) {
     if (!doc || !doc.locator) return '';
     const ref = doc.layer === 'reference';
-    return `<a class="enlace-doc capa-${doc.layer}" href="${esc(doc.locator)}" target="_blank" rel="noopener">` +
-      `<svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 1.5h6l4 4v9H3z M9 1.5v4h4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>` +
-      `<span>${esc(texto || ('Ver fuente · ' + (ref ? 'CS2023' : doc.name_es)))}</span><span class="sale" aria-hidden="true">↗</span>` +
+    return `<a class="enlace-doc capa-${doc.layer}" href="${esc(doc.locator)}" target="_blank" rel="noopener">${ICONO.doc}` +
+      `<span>${esc(texto || (ref ? 'CS2023' : doc.name_es))}</span>${ICONO.sale}` +
       `<span class="sr">(abre ${ref ? 'CS2023 en la biblioteca digital de ACM' : 'el PDF del sílabo'} en una pestaña nueva)</span></a>`;
+  }
+
+  function botonFuente(arista, nombre) {
+    return `<button class="mini-arista" data-arista="${esc(idDeArista(arista))}" title="Ver qué documento afirma esta relación"` +
+      `${nombre ? ` aria-label="Ver la fuente de la relación con ${esc(nombre)}"` : ''}>fuente</button>`;
   }
 
   let temporizadorAviso = null;
@@ -98,14 +108,15 @@
     alPasarNodo: (n, ev) => mostrarInfo(n ? infoNodo(n) : null, ev),
     alPasarArista: (a, ev) => mostrarInfo(a ? infoArista(a) : null, ev),
     alZoom: k => { $('#zoom-valor').textContent = Math.round(k * 100) + ' %'; },
+    alDibujar: pintarLeyendaViva,
   });
 
   function infoNodo(n) {
     return `<strong>${esc(n.name_es)}</strong>${n.name_en ? `<span class="en" lang="en">${esc(n.name_en)}</span>` : ''}` +
       `<span class="linea">${chipClase(n)} ${iconoCapa(n.layer, 11)} ${esc(P.CAPAS[n.layer].nombre)}</span>` +
-      (estado.foco === null ? '<span class="pista">Clic: empezar aquí</span>' :
-        (n.key === estado.foco ? '<span class="pista">En foco</span>' :
-          `<span class="pista">Clic: poner en foco${n.more_neighbors && !n.expandido ? ' · <b>+</b>: ver más conexiones' : ''}</span>`));
+      (estado.foco === null ? '<span class="pista">Clic para empezar aquí</span>' :
+        (n.key === estado.foco ? '<span class="pista">Es el elemento en foco</span>' :
+          `<span class="pista">Clic para ir a él${n.more_neighbors && !n.expandido && estado.lente === 'vecindario' ? ' · <b>+</b> para traer sus conexiones' : ''}</span>`));
   }
 
   function infoArista(a) {
@@ -113,7 +124,7 @@
     const s = P.nodoPorClave(cont, a.source), t = P.nodoPorClave(cont, a.target);
     const doc = P.documentoDeArista(cont, a);
     return `<span class="linea"><b>${esc(s ? s.name_es : '')}</b> ${esc(P.RELACIONES[a.type].frase)} <b>${esc(t ? t.name_es : '')}</b></span>` +
-      `<span class="pista">${doc ? 'Fuente: ' + esc(doc.layer === 'reference' ? 'CS2023' : doc.name_es) : 'Sin fuente en la respuesta'} · clic: ver la fuente</span>`;
+      `<span class="pista">${doc ? 'Lo dice: ' + esc(doc.layer === 'reference' ? 'CS2023' : doc.name_es) : 'Sin fuente registrada'} · clic para ver la fuente</span>`;
   }
 
   function mostrarInfo(html, ev) {
@@ -128,9 +139,18 @@
     el.style.transform = `translate(${x}px, ${y}px)`;
   }
 
+  /** El mapa se encuadra en el hueco que dejan la cabecera y el pie. */
+  function medirMargen() {
+    lienzo.configurar({ margen: { arriba: $('#contexto').offsetHeight + 14, abajo: $('#pie-escena').offsetHeight + 26 } });
+  }
+
+  function encuadrarLuego(turno, ms) {
+    setTimeout(() => { if (turno === estado.turno) { medirMargen(); lienzo.encuadrar(null, ms); } }, 60);
+  }
+
   // ------------------------------------------------------------------ por qué de cada tramo del camino (CU-8)
 
-  /** ¿La meta es parte (por PART_OF, a cualquier altura) de esta estación? Pasa con su propio tema. */
+  /** ¿La meta es parte (por PART_OF, a cualquier altura) de esta parada? Pasa con su propio tema. */
   function contieneLaMeta(resp, estacion, meta) {
     let frente = [meta];
     const vistos = new Set(frente);
@@ -149,7 +169,7 @@
   }
 
   /**
-   * Relaciones de la respuesta que unen una estación con la meta: el camino más corto que llega
+   * Relaciones de la respuesta que unen una parada con la meta: el camino más corto que llega
    * a la meta por «necesita antes» (no por «es parte de»). Solo lee aristas que trajo la API.
    */
   function justificarEstacion(resp, estacion, meta) {
@@ -179,7 +199,7 @@
 
   function idDeArista(e) { return e.type + '|' + e.source + '|' + e.target; }
 
-  /** «su propio tema» / «el mismo tema», según el grano. */
+  /** «el mismo tema» / «la misma área» / «el mismo curso», según por qué se agrupa el camino. */
   function mismoGrupo(grano) {
     return grano === 'topic' ? 'el mismo tema' : (grano === 'area' ? 'la misma área' : 'el mismo curso');
   }
@@ -187,28 +207,29 @@
   // ------------------------------------------------------------------ portada (ruta nueva, simulada)
 
   async function mostrarPortada() {
-    estado.turno++;
+    const turno = ++estado.turno;
     estado.foco = null; estado.nodoFoco = null; estado.respFoco = null; estado.respLente = null;
-    estado.aristaSel = null; estado.lente = 'vecindario';
+    estado.aristaSel = null; estado.lente = 'vecindario'; estado.disp = null; estado.expansiones = 0;
     const r = await P.apiPortada();
     const lista = r.cuerpo.areas.map(a => ({
       key: a.key, label: 'KnowledgeArea', name_es: a.name_es, name_en: a.name_en, layer: 'reference',
-      concepts: a.concepts, sub: a.concepts > 0 ? `${plural(a.topics, 'tema', 'temas')} · ${a.concepts} conceptos` : 'solo en CS2023',
+      concepts: a.concepts, sub: a.concepts > 0 ? `${plural(a.topics, 'tema', 'temas')} · ${a.concepts} conceptos` : '',
     })).concat(r.cuerpo.courses.map(c => ({
-      key: c.key, label: 'Course', name_es: c.name_es, layer: 'institutional', course_code: c.code, sub: 'curso con sílabo',
+      key: c.key, label: 'Course', name_es: c.name_es, layer: 'institutional', course_code: c.code,
     })));
+    estado.portada = { areas: r.cuerpo.areas.length, conTemas: r.cuerpo.areas.filter(a => a.concepts > 0).length, cursos: r.cuerpo.courses.length };
+    $('#escena').classList.add('en-portada');
+    buscador.value = '';
     lienzo.mostrarPortada(lista);
     lienzo.dibujar();
-    setTimeout(() => lienzo.encuadrar(null, 900), 50);
-    $('#escena').classList.add('en-portada');
-    pintarRiel();
-    pintarBarraLente();
-    pintarFranja();
+    pintarContexto();
     pintarRastro();
+    pintarRecorrido();
     pintarPanel();
+    encuadrarLuego(turno, 800);
   }
 
-  // ------------------------------------------------------------------ foco, lentes y expansión
+  // ------------------------------------------------------------------ foco, vistas y expansión
 
   async function irA(clave, opciones) {
     opciones = opciones || {};
@@ -222,6 +243,7 @@
     estado.nodoFoco = r.cuerpo.nodes[0];
     estado.aristaSel = null;
     estado.porque = null;
+    estado.expansiones = 0;
     $('#panel').scrollTop = 0;
     lienzo.establecer(r.cuerpo, clave);
     if (opciones.rastro !== false) {
@@ -232,7 +254,7 @@
     let lente = opciones.lente || estado.lente;
     if (opciones.grano) estado.grano = opciones.grano;
     if (!P.lenteAplica(lente, estado.nodoFoco)) {
-      if (lente !== 'vecindario') aviso(`«${P.LENTES[lente].nombre}» no aplica a ${conArticulo(estado.nodoFoco)}: vuelves al vecindario.`);
+      if (lente !== 'vecindario') aviso(`«${P.LENTES[lente].nombre}» no aplica a ${conArticulo(estado.nodoFoco)}: ves lo que lo rodea.`);
       lente = 'vecindario';
     }
     await aplicarLente(lente, turno);
@@ -243,12 +265,9 @@
     turno = turno || ++estado.turno;
     estado.lente = lente;
     estado.respLente = null;
+    estado.disp = null;
     estado.porque = null;
-    if (lente === 'vecindario' || !estado.foco) {
-      lienzo.configurar({ resaltados: null, disposicion: null, verProcedencia: estado.verProcedencia });
-      lienzo.dibujar();
-      setTimeout(() => { if (turno === estado.turno) lienzo.encuadrar(estado.foco ? lienzo.cercanas(1) : null, 800); }, 120);
-    } else {
+    if (lente !== 'vecindario' && estado.foco) {
       const def = P.LENTES[lente];
       const params = { key: estado.foco };
       if (lente === 'ruta') params.grain = estado.grano;
@@ -257,18 +276,14 @@
       if (r.estado !== 200) { aviso('Esta vista no tiene datos para el elemento en foco.'); return aplicarLente('vecindario'); }
       estado.respLente = r.cuerpo;
       lienzo.agregar(r.cuerpo, estado.foco);
-      const disp = L.disponer(lente, r.cuerpo, estado.foco, estado.grano);
-      const resaltados = disp && disp.resaltar ? new Set(disp.resaltar) : new Set(r.cuerpo.nodes.map(n => n.key));
-      resaltados.add(estado.foco);
-      lienzo.configurar({ resaltados, disposicion: disp, verProcedencia: estado.verProcedencia });
-      lienzo.dibujar();
-      const claves = disp && disp.objetivos.size ? [...disp.objetivos.keys()] : [...resaltados];
-      setTimeout(() => { if (turno === estado.turno) lienzo.encuadrar(claves, 850); }, 60);
+      estado.disp = L.disponer(lente, r.cuerpo, estado.foco, estado.grano);
     }
-    pintarRiel();
-    pintarBarraLente();
-    pintarFranja();
+    lienzo.configurar({ disposicion: estado.disp, verProcedencia: estado.verProcedencia });
+    lienzo.dibujar();
+    pintarContexto();
+    pintarRecorrido();
     pintarPanel();
+    encuadrarLuego(turno, 750);
   }
 
   async function expandir(clave) {
@@ -277,18 +292,14 @@
     const nombre = r.cuerpo.nodes[0].name_es;
     lienzo.agregar(r.cuerpo, clave);
     lienzo.marcarExpandido(clave);
-    if (estado.lente !== 'vecindario') {
-      aviso(`Se agregaron las conexiones de «${nombre}». Vuelves al vecindario para verlas junto al foco.`);
-      await aplicarLente('vecindario');
-    } else {
-      lienzo.dibujar();
-      setTimeout(() => lienzo.encuadrar(null, 700), 700);
-      aviso(`Se agregaron las conexiones de «${nombre}». El foco no cambió.`);
-    }
+    estado.expansiones++;
+    aviso(`Se trajeron las conexiones de «${nombre}»: están arriba o abajo, con su nombre. Sigues en el mismo lugar.`);
+    await aplicarLente('vecindario');
   }
 
   function limpiar() {
     if (!estado.foco || !estado.respFoco) return;
+    estado.expansiones = 0;
     lienzo.establecer(estado.respFoco, estado.foco);
     aplicarLente(estado.lente);
   }
@@ -302,7 +313,7 @@
     });
   }
 
-  /** Abre el «¿Por qué?» de una estación: la tarjeta en el panel y la línea que llega a la meta, marcada en el mapa. */
+  /** Abre el «¿Por qué?» de una parada: la tarjeta en el panel y la línea que llega a la meta, marcada en el mapa. */
   function abrirPorque(clave) {
     estado.porque = estado.porque === clave ? null : clave;
     const tramo = estado.porque ? justificarEstacion(estado.respLente, clave, estado.foco) : [];
@@ -314,150 +325,206 @@
     });
   }
 
-  // ------------------------------------------------------------------ riel de lentes
-
-  const ICONOS_LENTE = {
-    vecindario: '<circle cx="12" cy="12" r="3.2"/><circle cx="4.5" cy="6" r="1.8"/><circle cx="19.5" cy="6" r="1.8"/><circle cx="5" cy="18.5" r="1.8"/><circle cx="19" cy="18.5" r="1.8"/><path d="M9.4 10.4L6 7.2M14.6 10.4L18 7.2M9.6 13.8L6.4 17.2M14.4 13.8L17.6 17.2"/>',
-    prerrequisitos: '<circle cx="4.5" cy="12" r="2"/><circle cx="12" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><circle cx="19.5" cy="12" r="2.6"/><path d="M6.3 11L10.2 8M6.3 13L10.2 16M13.9 7.9L17.2 10.7M13.9 16.1L17.2 13.3"/>',
-    ruta: '<circle cx="4.5" cy="18" r="2"/><circle cx="12" cy="9" r="2"/><circle cx="19.5" cy="15" r="2.6"/><path d="M6 16.4l4.6-5.6M13.8 10.3l3.7 3"/>',
-    cursos: '<rect x="2.5" y="5" width="7" height="14" rx="1.5"/><rect x="14.5" y="5" width="7" height="14" rx="1.5"/><path d="M9.5 12h5M12.5 10l2 2-2 2"/>',
-    ubicacion: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
-    contiene: '<circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="9.8" stroke-dasharray="2 2.5"/>',
-    recursos: '<path d="M6 2.8h8l4 4v14.4H6z M14 2.8v4h4 M9 12h6M9 15.5h6M9 9h3"/>',
-    especializaciones: '<circle cx="12" cy="5" r="2.4"/><circle cx="5" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 7.4V16M10.6 6.9L6 16.2M13.4 6.9L18 16.2"/>',
-  };
-
-  function pintarRiel() {
-    const n = estado.nodoFoco;
-    $('#lentes').innerHTML = ORDEN_LENTES.map(id => {
-      const def = P.LENTES[id];
-      const aplica = !!n && P.lenteAplica(id, n);
-      const motivo = !n ? 'Elige primero un elemento en el mapa' : (aplica ? def.ayuda : `No aplica a ${conArticulo(n)}`);
-      return `<button class="lente${estado.lente === id && n ? ' activa' : ''}" data-lente="${id}" ${aplica ? '' : 'disabled'} ` +
-        `aria-pressed="${estado.lente === id && !!n}" title="${esc(motivo)}">` +
-        `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONOS_LENTE[id]}</svg>` +
-        `<span class="nombre">${esc(def.corto)}</span>${traza(def.traza.split(' · ')[0])}</button>`;
-    }).join('');
-  }
-
-  // ------------------------------------------------------------------ barra de la lente y franja de ruta
+  // ------------------------------------------------------------------ cabecera de contexto: qué se ve y cómo leerlo
 
   function cadenaTexto(resp, clave) {
     const c = P.cadenasDeUbicacion(resp, clave)[0] || [];
     return c.map(x => `<b>${esc(x.name_es)}</b>`).join(' › ');
   }
 
+  /** La respuesta de la vista en una frase (`r`) y cómo leer el dibujo (`leer`). */
   function resumenLente() {
-    const n = estado.nodoFoco, r = estado.respLente;
-    if (!n) return '';
+    const n = estado.nodoFoco, r = estado.respLente, disp = estado.disp;
+    if (!n) return { r: '', leer: '' };
     const nombre = `<b>${esc(n.name_es)}</b>`;
     switch (estado.lente) {
-      case 'vecindario':
-        return `${nombre} y lo que lo rodea. Haz clic en un punto para moverte hacia él; el <b>+</b> muestra más conexiones sin perder el foco.`;
+      case 'vecindario': {
+        const d = lienzo.disposicion;
+        // Se cuenta lo que el mapa dibuja: tras pasar por otra vista puede haber más que en la primera respuesta.
+        const directos = d && d.directos !== undefined ? d.directos : P.conexiones(estado.respFoco, estado.foco).reduce((t, g) => t + g.items.length, 0);
+        const lejanos = d && d.lejanos ? ' Los puntos apagados de arriba y abajo están un paso más lejos.' : '';
+        const racimos = d && d.racimos ? ' Un grupo grande va en un recuadro de puntos: el nombre de cada uno sale al pasar el cursor, y la lista está en «Conexiones», en la ficha.' : '';
+        return {
+          r: directos ? `Aquí ves con qué se relaciona ${nombre}: ${plural(directos, 'elemento conectado', 'elementos conectados')} directamente, agrupados por tipo de relación.`
+            : `${nombre} todavía no tiene relaciones registradas.`,
+          leer: `Haz clic en un punto para ir a él.${racimos}${lejanos} El <b class="mas">+</b> trae las conexiones de un punto sin cambiar de lugar.` +
+            (estado.expansiones ? ' <button class="enlace-lente" id="limpiar">Quitar lo que trajiste con +</button>' : ''),
+        };
+      }
       case 'prerrequisitos': {
         const g = P.prerrequisitosPorProfundidad(r, estado.foco);
         const total = g.reduce((s, x) => s + x.items.length, 0);
         if (!total) {
           const dependen = P.conexiones(estado.respFoco, estado.foco).find(x => x.tipo === 'HAS_PREREQUISITE' && x.sentido === 'entrada');
-          return `${nombre} no necesita nada antes, según los sílabos cargados.` +
-            (dependen ? ` Se necesita para: ${dependen.items.map(i => `<b>${esc(i.nodo.name_es)}</b>`).join(', ')}.` : '');
+          return {
+            r: `${nombre} no necesita nada antes, según los sílabos cargados: puedes empezar por aquí.` +
+              (dependen ? ` Se necesita para ${dependen.items.map(i => `<b>${esc(i.nodo.name_es)}</b>`).join(', ')}.` : ''),
+            leer: '',
+          };
         }
         const max = g[g.length - 1].profundidad;
-        return `Para aprender ${nombre} conviene saber antes ${plural(total, 'concepto', 'conceptos')}, ${max > 1 ? `hasta <b>a ${max} pasos</b>` : 'todos <b>directos</b>'}. Se lee de izquierda a derecha.`;
+        return {
+          r: `Aquí ves lo que te falta saber antes de aprender ${nombre}: ${plural(total, 'concepto', 'conceptos')}` +
+            (max > 1 ? `, el más lejano a ${max} pasos.` : (total > 1 ? ', todos justo antes.' : ', justo antes.')),
+          leer: 'Se lee de izquierda a derecha: cada flecha sale de lo que se aprende primero y llega a lo que lo necesita. Haz clic en una flecha para ver qué sílabo lo dice.',
+        };
       }
       case 'ruta': {
         const s = P.resumenRuta(r, estado.foco, estado.grano);
         const g = P.GRANOS[estado.grano];
         if (s.vacia) {
           return n.label === 'Course'
-            ? `El camino hasta un curso sale vacío: lo que ${nombre} pide se aprende dentro del mismo curso. Para saber qué curso conviene llevar antes, abre <button class="enlace-lente" data-lente="cursos">Cursos que conviene llevar antes</button>.`
-            : `${nombre} no tiene nada que aprender antes, visto por ${g.nombre}.`;
+            ? { r: `Lo que ${nombre} pide se aprende dentro del mismo curso, así que no hay camino previo por ${g.plural}. Para saber qué curso conviene llevar antes, abre <button class="enlace-lente" data-lente="cursos">Cursos que conviene llevar antes</button>.`, leer: '' }
+            : { r: `Para llegar a ${nombre} no hace falta pasar antes por ${g.nombre === 'área' ? 'otra área' : 'otro ' + g.nombre}, según los sílabos cargados.`, leer: '' };
         }
         const propia = s.estaciones.find(x => contieneLaMeta(r, x.key, estado.foco));
-        return `Para llegar a ${nombre} conviene pasar antes por <b>${plural(s.estaciones.length, g.nombre, g.plural)}</b>, por ${plural(s.prerrequisitos.length, 'concepto que lo justifica', 'conceptos que lo justifican')}. <b>¿Por qué?</b>, junto a cada estación, muestra la relación y su fuente.` +
-          (propia ? `<span class="mismo-grupo">El prerrequisito está en ${mismoGrupo(estado.grano)}: «${esc(propia.name_es)}» también contiene a ${nombre}. Cuenta porque lo que se necesita antes es el concepto.</span>` : '');
+        const verbo = estado.grano === 'course' ? 'se enseña' : 'está';
+        return {
+          r: `Para llegar a ${nombre} conviene pasar antes por ${plural(s.estaciones.length, g.nombre, g.plural)}: ahí ${verbo} lo que necesitas saber antes (${plural(s.prerrequisitos.length, 'concepto', 'conceptos')}).`,
+          leer: `En el mapa: abajo, los conceptos que necesitas antes; arriba, ${estado.grano === 'area' ? 'las áreas' : 'los ' + g.plural} donde se aprenden. <b>¿Por qué?</b> muestra la relación exacta y su fuente.` +
+            (propia ? ` «${esc(propia.name_es)}» cuenta aunque también contiene a la meta: lo que se necesita antes es el concepto.` : ''),
+        };
       }
       case 'cursos': {
         const c = P.cursosPrevios(r, estado.foco);
-        if (!c.previos.length) return `${nombre} enseña ${c.ensenados} conceptos y no pide ninguno que enseñe otro curso cargado.`;
-        return `${nombre} pide ${plural(c.requeridos.length, 'concepto', 'conceptos')} que enseña ${c.previos.map(p => `<b>${esc(p.curso.name_es)}</b>`).join(' y ')}: conviene llevarlo antes. En arco, los ${c.ensenados} que enseña.`;
+        const ensena = `${plural(c.ensenados, 'concepto', 'conceptos')}`;
+        if (!c.previos.length) {
+          return {
+            r: `${nombre} enseña ${ensena}` + (c.requeridos.length ? ` y pide ${c.requeridos.length} que ningún otro curso cargado enseña.` : ' y no pide ninguno de otro curso cargado: no hay curso que convenga llevar antes.'),
+            leer: 'En el recuadro, lo que el curso enseña. La lista con nombres está en la ficha de la derecha.',
+          };
+        }
+        return {
+          r: `${nombre} pide ${plural(c.requeridos.length, 'concepto', 'conceptos')} que enseña ${c.previos.map(p => `<b>${esc(p.curso.name_es)}</b>`).join(' y ')}: conviene llevarlo antes.`,
+          leer: `De izquierda a derecha: el curso que conviene llevar antes, lo que este curso pide y, en el recuadro, los ${ensena} que enseña (la lista con nombres está en la ficha).`,
+        };
       }
       case 'ubicacion':
-        return `${nombre} está en ${cadenaTexto(r, estado.foco) || 'el nivel más alto'}.`;
+        return {
+          r: `${nombre} está en ${cadenaTexto(r, estado.foco) || 'el nivel más alto'}.`,
+          leer: 'De arriba abajo, de lo más general a lo más específico. Los hexágonos son del estándar CS2023; los círculos, de los sílabos. Haz clic en cualquiera para ir a él.',
+        };
       case 'contiene': {
         if (n.label === 'Topic') {
           const o = P.ordenDeAprendizaje(r, estado.foco);
-          return `${nombre} tiene ${plural(o.conceptos.length, 'concepto', 'conceptos')}. Las columnas dicen en qué orden aprenderlos: cada paso usa lo del anterior.`;
+          if (!o.relacionados.size) {
+            return { r: `${nombre} tiene ${plural(o.conceptos.length, 'concepto', 'conceptos')}. Ninguno depende de otro: se pueden aprender en cualquier orden.`, leer: 'Haz clic en un concepto para ver qué necesita antes.' };
+          }
+          return {
+            r: `${nombre} tiene ${plural(o.conceptos.length, 'concepto', 'conceptos')}, y conviene aprenderlos en ${plural(o.pasos.length, 'paso', 'pasos')}.`,
+            leer: 'Cada columna es un paso: lo de una columna usa lo de la anterior. Las flechas dicen exactamente qué necesita qué.',
+          };
         }
         const c = P.conteoPorClase({ nodes: P.descendientes(r, estado.foco) });
         const partes = [['KnowledgeUnit', 'unidad', 'unidades'], ['Topic', 'tema', 'temas'], ['Concept', 'concepto', 'conceptos']]
           .filter(([k]) => c[k]).map(([k, s, p]) => `<b>${plural(c[k], s, p)}</b>`);
-        if (!c.Topic) return `${nombre} contiene ${partes.join(', ') || 'nada todavía'}. Ningún sílabo cargado trata esta área por ahora.`;
-        const disp = L.disponer('contiene', r, estado.foco);
-        const numerados = disp && disp.pasos ? disp.pasos.size : 0;
-        return `${nombre} contiene ${partes.join(', ')}.` +
-          (numerados ? ` El número sobre ${plural(numerados, 'concepto', 'conceptos')} es su paso dentro de su tema: en qué orden aprenderlo.` : '') +
-          ((c.Concept || 0) > 40 ? ' Acerca el zoom para leer el anillo exterior.' : '');
+        if (!c.Topic) return { r: `${nombre} contiene ${partes.join(', ') || 'nada todavía'}. Ningún sílabo cargado trata esta parte de CS2023 por ahora.`, leer: '' };
+        const hastaTemas = disp && !disp.verConceptos;
+        return {
+          r: `${nombre} contiene ${partes.join(', ').replace(/, ([^,]*)$/, ' y $1')}.`,
+          leer: (hastaTemas
+            ? `Con más de ${L.MAX_CONCEPTOS_EN_ARBOL} conceptos, el mapa llega hasta los temas para que se pueda leer. Entra a un tema para ver sus conceptos y en qué orden aprenderlos.`
+            : 'De izquierda a derecha, de lo más general a lo más específico. Entra a un tema para ver en qué orden aprender sus conceptos.') +
+            (disp && disp.unidadesResumidas ? ' Las unidades sin temas están en «Conexiones», en la ficha.' : ''),
+        };
       }
       case 'recursos': {
         const rec = P.recursosDe(r, estado.foco);
-        if (!rec.length) return `Un concepto no tiene material propio: los sílabos describen temas. En el panel tienes el de su tema.`;
-        return `${plural(rec.length, 'sílabo trata', 'sílabos tratan')} sobre ${nombre} o sus partes.`;
+        if (!rec.length) return { r: `${nombre} no tiene material propio: los sílabos describen temas, no conceptos sueltos. En la ficha tienes el de su tema.`, leer: '' };
+        return {
+          r: `${plural(rec.length, 'sílabo trata', 'sílabos tratan')} sobre ${nombre} o sobre sus partes.`,
+          leer: 'De izquierda a derecha: el elemento, sus partes y los sílabos que tratan sobre ellas. El enlace para abrir cada sílabo está en la ficha.',
+        };
       }
       case 'especializaciones': {
         const e = P.especializaciones(r, estado.foco);
-        if (!e.todas.length) return `${nombre} no es un tipo de otro concepto ni tiene tipos. Hay pocos casos en los sílabos cargados: prueba con «ethernet».`;
-        return `${nombre}${e.generales.length ? ` es un tipo de <b>${esc(e.generales.map(x => x.name_es).join(', '))}</b>` : ''}${e.generales.length && e.tipos.length ? ' y' : ''}${e.tipos.length ? ` tiene ${plural(e.tipos.length, 'tipo', 'tipos')}` : ''}.`;
+        if (!e.todas.length) return { r: `${nombre} no es un tipo de otro concepto ni tiene tipos registrados. Hay pocos casos en los sílabos cargados: prueba con «ethernet».`, leer: '' };
+        return {
+          r: `${nombre}${e.generales.length ? ` es un tipo de <b>${esc(e.generales.map(x => x.name_es).join(', '))}</b>` : ''}${e.generales.length && e.tipos.length ? ' y' : ''}${e.tipos.length ? ` tiene ${plural(e.tipos.length, 'tipo', 'tipos')}` : ''}.`,
+          leer: 'Arriba, el concepto más general; abajo, sus tipos. La flecha se lee «es un tipo de».',
+        };
       }
-      default: return '';
+      default: return { r: '', leer: '' };
     }
   }
 
-  function pintarBarraLente() {
-    const barra = $('#barra-lente');
-    if (!estado.nodoFoco) { barra.hidden = true; return; }
-    barra.hidden = false;
-    const def = P.LENTES[estado.lente];
-    $('#lente-titulo').innerHTML = `${esc(def.nombre)} ${traza(def.traza, def.ruta)}`;
-    $('#lente-resumen').innerHTML = resumenLente();
-    const granos = $('#granos');
+  function pintarContexto() {
+    const n = estado.nodoFoco;
+    const vistas = $('#vistas'), granos = $('#granos');
+    $('#inicio').hidden = !n;
+    if (!n) {
+      const p = estado.portada || { areas: 17, conTemas: 0, cursos: 4 };
+      $('#contexto-foco').innerHTML = '<h1 class="contexto-titulo">Elige por dónde empezar</h1>';
+      vistas.hidden = true; granos.hidden = true;
+      $('#vista-respuesta').innerHTML = `Alrededor, las <b>${p.areas} áreas</b> de la carrera según el estándar CS2023: las ${p.conTemas} que brillan ya tienen temas de los sílabos cargados. Al centro, los <b>${p.cursos} cursos</b> con sílabo.`;
+      $('#vista-leer').innerHTML = 'Haz clic en un área o en un curso, o busca por nombre arriba. <span class="etiqueta-simulado" title="El sistema todavía no entrega esta vista de inicio: necesita una ruta nueva">vista simulada</span>';
+      pintarFranja();
+      return;
+    }
+    $('#contexto-foco').innerHTML = `${chipClase(n)}<h1 class="contexto-titulo">${esc(n.name_es)}${n.course_code ? ` <em>${esc(n.course_code)}</em>` : ''}</h1>`;
+    vistas.hidden = false;
+    vistas.innerHTML = ORDEN_LENTES.filter(id => P.lenteAplica(id, n)).map(id => {
+      const def = P.LENTES[id];
+      const activa = estado.lente === id;
+      return `<button class="vista${activa ? ' activa' : ''}" data-lente="${id}" aria-pressed="${activa}" title="${esc(def.ayuda)}">${esc(def.nombre)}</button>`;
+    }).join('');
+    const res = resumenLente();
+    $('#vista-respuesta').innerHTML = res.r;
+    $('#vista-leer').innerHTML = res.leer;
+    $('#vista-leer').hidden = !res.leer;
     granos.hidden = estado.lente !== 'ruta';
     granos.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.grano === estado.grano)));
-    $('#ver-procedencia').checked = estado.verProcedencia;
+    pintarFranja();
   }
 
+  /** El camino en una línea: las paradas, en el orden en que conviene pasar, hasta la meta. */
   function pintarFranja() {
     const f = $('#franja');
     const r = estado.respLente;
     let html = '';
-    if (estado.lente === 'ruta' && r) {
+    const parada = (n, extra) => `<button class="parada" data-ir="${esc(n.key)}" style="--c:${P.CLASES[n.label].color}">${iconoCapa(n.layer, 11)}<span>${esc(n.name_es)}${n.course_code ? ` <em>${esc(n.course_code)}</em>` : ''}</span>${extra || ''}</button>`;
+    const flecha = '<span class="flecha" aria-hidden="true"></span>';
+    // Solo el camino lleva franja: en las demás vistas, el mapa ya dice lo mismo.
+    if (estado.lente === 'ruta' && r && estado.nodoFoco) {
       const s = P.resumenRuta(r, estado.foco, estado.grano);
       if (!s.vacia) {
-        const pasos = s.estaciones.map(n => {
+        // Las paradas a la misma distancia no tienen orden entre sí: van juntas, sin flecha.
+        const grupos = [];
+        for (const n of s.estaciones) {
+          const u = grupos[grupos.length - 1];
+          if (u && u.d === n.depth) u.items.push(n); else grupos.push({ d: n.depth, items: [n] });
+        }
+        html = grupos.map(g => `<span class="grupo-paradas">${g.items.map(n => {
           const propia = contieneLaMeta(r, n.key, estado.foco);
-          return `<span class="estacion"><button class="parada${propia ? ' propia' : ''}" data-ir="${esc(n.key)}" style="--c:${P.CLASES[n.label].color}">${iconoCapa(n.layer, 11)}<span>${esc(n.name_es)}</span>${propia ? `<em class="marca-propia">${esc(mismoGrupo(estado.grano))}</em>` : ''}</button>` +
+          return `<span class="estacion">${parada(n, propia ? `<em class="marca-propia" title="Lo que se necesita antes está en ${esc(mismoGrupo(estado.grano))} que la meta">${esc(mismoGrupo(estado.grano))}</em>` : '')}` +
             `<button class="porque${estado.porque === n.key ? ' activo' : ''}" data-porque="${esc(n.key)}" aria-expanded="${estado.porque === n.key}" aria-label="¿Por qué pasar por ${esc(n.name_es)}? Ver la relación y su fuente">¿Por qué?</button></span>`;
-        });
-        pasos.push(`<span class="parada destino" style="--c:${P.CLASES[s.objetivo.label].color}">${iconoCapa(s.objetivo.layer, 11)}<span>${esc(s.objetivo.name_es)}</span></span>`);
-        html = `<span class="franja-titulo">Camino hasta aquí · por ${esc(P.GRANOS[estado.grano].plural)}</span><div class="paradas">${pasos.join('<span class="flecha" aria-hidden="true"></span>')}</div>`;
-      }
-    } else if (estado.lente === 'cursos' && r) {
-      const c = P.cursosPrevios(r, estado.foco);
-      if (c.previos.length) {
-        const pasos = c.previos.map(p => `<button class="parada" data-ir="${esc(p.curso.key)}" style="--c:${P.CLASES.Course.color}">${iconoCapa('institutional', 11)}<span>${esc(p.curso.name_es)} <em>${esc(p.curso.course_code || '')}</em></span></button>`);
-        pasos.push(`<span class="parada destino" style="--c:${P.CLASES.Course.color}">${iconoCapa('institutional', 11)}<span>${esc(estado.nodoFoco.name_es)} <em>${esc(estado.nodoFoco.course_code || '')}</em></span></span>`);
-        html = `<span class="franja-titulo">Curso que conviene llevar antes</span><div class="paradas">${pasos.join('<span class="flecha" aria-hidden="true"></span>')}</div>`;
+        }).join('')}</span>`).join(flecha) + `<span class="llegada">${flecha}<span class="llegada-texto">y de ahí a la meta</span></span>`;
       }
     }
     f.innerHTML = html;
     f.hidden = !html;
   }
 
+  // ------------------------------------------------------------------ leyenda de la vista: solo lo que hay en pantalla
+
+  function pintarLeyendaViva(vista) {
+    const el = $('#leyenda-viva');
+    const orden = ['KnowledgeArea', 'KnowledgeUnit', 'Topic', 'Concept', 'Course', 'LearningResource', 'ResourceType'];
+    const clases = new Map();
+    const capas = new Set();
+    for (const n of vista.nodos) { clases.set(n.label, P.nombreClase(n)); capas.add(n.layer); }
+    const formas = [];
+    if (capas.has('reference')) formas.push(`<span class="ley-item capa-reference">${iconoCapa('reference', 13)}de CS2023</span>`);
+    if (capas.has('institutional')) formas.push(`<span class="ley-item capa-institutional">${iconoCapa('institutional', 13)}de un sílabo</span>`);
+    const colores = orden.filter(c => clases.has(c)).map(c => `<span class="ley-item" style="--c:${P.CLASES[c].color}"><i></i>${esc(clases.get(c))}</span>`);
+    el.innerHTML = formas.join('') + (formas.length && colores.length ? '<span class="ley-sep" aria-hidden="true"></span>' : '') + colores.join('');
+  }
+
   // ------------------------------------------------------------------ rastro
 
   function pintarRastro() {
     const el = $('#rastro-lista');
-    if (!estado.rastro.length) { el.innerHTML = '<span class="vacio">Lo que visites aparecerá aquí, para volver.</span>'; }
+    if (!estado.rastro.length) { el.innerHTML = '<span class="vacio">Lo que visites queda aquí, para volver.</span>'; }
     else {
       el.innerHTML = estado.rastro.map((x, i) => {
         const actual = x.key === estado.foco;
@@ -472,10 +539,24 @@
 
   // ------------------------------------------------------------------ panel del foco
 
+  /** Título de una sección de la ficha. Si tiene vista en el mapa, la ofrece o dice que es la que se está viendo. */
   function tituloSeccion(texto, lente, extra) {
-    const def = lente ? P.LENTES[lente] : null;
-    return `<h3 class="sec-titulo"><span>${esc(texto)} ${def ? traza(def.traza, def.ruta) : (extra || '')}</span>` +
-      `${lente && estado.lente !== lente && P.lenteAplica(lente, estado.nodoFoco) ? `<button class="enlace-lente" data-lente="${lente}">Ver en el mapa</button>` : ''}</h3>`;
+    let lado = extra || '';
+    if (lente && P.lenteAplica(lente, estado.nodoFoco)) {
+      lado = estado.lente === lente
+        ? `<span class="en-mapa">${ICONO.mapa}En el mapa</span>`
+        : `<button class="enlace-lente" data-lente="${lente}">Ver en el mapa</button>`;
+    }
+    return `<h3 class="sec-titulo"><span>${esc(texto)}</span>${lado}</h3>`;
+  }
+  function claseSeccion(lente) { return 'sec' + (lente && estado.lente === lente ? ' sec-activa' : ''); }
+
+  function tarjetaRelacion(resp, e, conMapa) {
+    const o = P.nodoPorClave(resp, e.source), d = P.nodoPorClave(resp, e.target);
+    const doc = P.documentoDeArista(resp, e);
+    return `<p class="afirmacion">${o ? botonNodo(o) : ''}<span class="rel" style="--c:${L.COLOR_ARISTA[e.type]}">${esc(P.RELACIONES[e.type].frase)}</span>${d ? botonNodo(d) : ''}</p>
+      <div class="procedencia">${doc ? `<span class="rotulo">${e.provenance ? 'Lo dice' : 'Lo define'}</span>${enlaceDocumento(doc)}` : '<span class="rotulo">Sin fuente registrada</span>'}
+      ${conMapa ? `<button class="mini-arista" data-arista="${esc(idDeArista(e))}" title="Marcar esta línea en el mapa">ver en el mapa</button>` : ''}</div>`;
   }
 
   async function pintarPanel() {
@@ -497,26 +578,31 @@
     const rf = estado.respFoco;
     const s = [];
 
-    // Cabecera.
+    // Cabecera: qué es, de dónde viene y qué documento lo afirma.
+    const fuentes = n.label === 'LearningResource' ? [n] : P.procedenciaDe(rf, clave);
+    const origen = n.layer === 'reference'
+      ? 'Viene de CS2023, el estándar internacional del currículo de computación (ACM/IEEE).'
+      : 'Viene del sílabo del curso. En esta maqueta, el PDF abre solo con el sistema en marcha.';
     s.push(`<header class="ficha" style="--c:${P.CLASES[n.label].color}">
       <div class="ficha-chips">${chipClase(n)} ${insigniaCapa(n)}</div>
       <h2>${esc(n.name_es)}</h2>
       ${n.name_en ? `<p class="en" lang="en">${esc(n.name_en)}</p>` : ''}
       ${n.course_code ? `<p class="codigo">Código ${esc(n.course_code)}</p>` : ''}
       ${n.description ? `<p class="descripcion">${esc(n.description)}</p>` : ''}
+      <div class="ficha-fuente" title="${esc(origen)}">
+        <span class="rotulo">${n.label === 'LearningResource' ? 'Documento' : 'Fuente'}</span>
+        ${fuentes.length ? fuentes.map(f => enlaceDocumento(f, n.label === 'LearningResource' ? 'Abrir ' + f.name_es : null)).join('') : '<span class="nota">no se registró de dónde sale</span>'}
+      </div>
+      <p class="nota">${origen}</p>
     </header>`);
 
     // Relación seleccionada: su fuente.
     if (estado.aristaSel) {
       const a = lienzo.arista(estado.aristaSel);
       if (a) {
-        const cont = lienzo.contenido();
-        const o = P.nodoPorClave(cont, a.source), d = P.nodoPorClave(cont, a.target);
-        const doc = P.documentoDeArista(cont, a);
         s.push(`<section class="tarjeta-arista" id="tarjeta-arista" aria-live="polite">
-          <div class="sec-titulo"><span>Relación seleccionada ${traza('CU-10 · RF-21 · ' + a.type)}</span><button class="cerrar-mini" data-cerrar-arista aria-label="Cerrar">×</button></div>
-          <p class="afirmacion">${o ? botonNodo(o) : ''}<span class="rel" style="--c:${L.COLOR_ARISTA[a.type]}">${esc(P.RELACIONES[a.type].frase)}</span>${d ? botonNodo(d) : ''}</p>
-          <div class="procedencia">${doc ? `<span class="rotulo">${a.provenance ? 'Lo dice' : 'Lo define'}</span>${enlaceDocumento(doc)}` : '<span class="rotulo">Sin fuente en la respuesta</span>'}</div>
+          <div class="sec-titulo"><span>Relación seleccionada</span><button class="cerrar-mini" data-cerrar-arista aria-label="Cerrar">${ICONO.cerrar}</button></div>
+          ${tarjetaRelacion(lienzo.contenido(), a, false)}
         </section>`);
       }
     }
@@ -529,37 +615,23 @@
       const propia = contieneLaMeta(r, estado.porque, clave);
       if (est) {
         s.push(`<section class="tarjeta-arista tarjeta-porque" id="tarjeta-porque" aria-live="polite">
-          <div class="sec-titulo"><span>¿Por qué pasar por «${esc(est.name_es)}»? ${traza('CU-8 · PC6 · RF-21')}</span><button class="cerrar-mini" data-cerrar-porque aria-label="Cerrar">×</button></div>
-          ${propia ? `<p class="mismo-grupo">El prerrequisito está en ${mismoGrupo(estado.grano)}.</p>` : ''}
-          ${tramo.length ? `<ol class="tramo">${tramo.map(e => {
-            const o = P.nodoPorClave(r, e.source), d = P.nodoPorClave(r, e.target);
-            const doc = P.documentoDeArista(r, e);
-            return `<li><p class="afirmacion">${o ? botonNodo(o) : ''}<span class="rel" style="--c:${L.COLOR_ARISTA[e.type]}">${esc(P.RELACIONES[e.type].frase)}</span>${d ? botonNodo(d) : ''}</p>
-              <div class="procedencia">${doc ? `<span class="rotulo">${e.provenance ? 'Lo dice' : 'Lo define'}</span>${enlaceDocumento(doc)}` : '<span class="rotulo">Sin fuente en la respuesta</span>'}
-              <button class="mini-arista" data-arista="${esc(idDeArista(e))}" title="Marcar esta línea en el mapa">Ver en el mapa</button></div></li>`;
-          }).join('')}</ol>` : '<p class="nota">La respuesta no trae las relaciones que unen esta estación con la meta.</p>'}
+          <div class="sec-titulo"><span>¿Por qué pasar por «${esc(est.name_es)}»?</span><button class="cerrar-mini" data-cerrar-porque aria-label="Cerrar">${ICONO.cerrar}</button></div>
+          ${propia ? `<p class="mismo-grupo">Lo que se necesita antes está en ${mismoGrupo(estado.grano)} que la meta.</p>` : ''}
+          ${tramo.length ? `<ol class="tramo">${tramo.map(e => `<li>${tarjetaRelacion(r, e, true)}</li>`).join('')}</ol>` : '<p class="nota">La respuesta no trae las relaciones que unen esta parada con la meta.</p>'}
         </section>`);
       }
     }
-
-    // Fuente del foco.
-    const fuentes = n.label === 'LearningResource' ? [n] : P.procedenciaDe(rf, clave);
-    s.push(`<section class="sec sec-procedencia">
-      <h3 class="sec-titulo"><span>${n.label === 'LearningResource' ? 'Documento' : 'Fuente'} ${traza('CU-10 · RF-21')}</span></h3>
-      ${fuentes.length ? fuentes.map(f => `<div class="procedencia">${enlaceDocumento(f, n.label === 'LearningResource' ? 'Abrir ' + f.name_es : null)}</div>`).join('') : '<p class="nota">No se registró de dónde sale.</p>'}
-      <p class="nota">${n.layer === 'reference' ? 'Viene de CS2023, el estándar internacional del currículo de computación (ACM/IEEE).' : 'Viene del sílabo del curso. El PDF se abre cuando el sistema está en marcha.'}</p>
-    </section>`);
 
     // Dónde está en la carrera.
     if (loc && loc.estado === 200 && P.lenteAplica('ubicacion', n)) {
       const cadenas = P.cadenasDeUbicacion(loc.cuerpo, clave);
       if (cadenas.length) {
-        s.push(`<section class="sec">${tituloSeccion('Dónde está en la carrera', 'ubicacion')}
+        s.push(`<section class="${claseSeccion('ubicacion')}">${tituloSeccion('Dónde está en la carrera', 'ubicacion')}
           ${cadenas.map(c => `<nav class="migas" aria-label="Dónde está en la carrera">${c.map(x => botonNodo(x)).join('<span class="sep" aria-hidden="true">›</span>')}<span class="sep" aria-hidden="true">›</span><span class="aqui">${esc(n.name_es)}</span></nav>`).join('')}
         </section>`);
       }
     } else if (n.label === 'Course') {
-      s.push(`<section class="sec">${tituloSeccion('Dónde está en la carrera', null, traza('CU-5 · PC3'))}<p class="nota">Un curso no es parte de CS2023: se ubica por los temas que enseña. Los ves en «Conexiones».</p></section>`);
+      s.push(`<section class="sec">${tituloSeccion('Dónde está en la carrera')}<p class="nota">Un curso no es parte de CS2023: se ubica por los temas que enseña. Están en «Conexiones», más abajo.</p></section>`);
     }
 
     // Qué contiene y en qué orden aprenderlo.
@@ -578,7 +650,7 @@
       } else if (orden.conceptos.length) {
         ordenHtml = '<p class="nota">Sus conceptos no dependen entre sí: se pueden aprender en cualquier orden.</p>';
       }
-      s.push(`<section class="sec">${tituloSeccion('Qué contiene', 'contiene')}
+      s.push(`<section class="${claseSeccion('contiene')}">${tituloSeccion('Qué contiene', 'contiene')}
         <p class="cifras">${cifras}</p>
         ${!c.Topic && n.label !== 'Topic' ? '<p class="nota">Esta parte de CS2023 todavía no aparece en ningún sílabo cargado.</p>' : ''}
         ${ordenHtml}</section>`);
@@ -593,21 +665,21 @@
         vacio = '<p class="nota">No necesita nada antes, según los sílabos cargados.</p>' +
           (dependen ? `<p class="grupo-titulo">Se necesita para</p>${dependen.items.map(it => `<div class="fila-item">${botonNodo(it.nodo)}</div>`).join('')}` : '');
       }
-      s.push(`<section class="sec">${tituloSeccion('Qué necesitas antes', grupos.length ? 'prerrequisitos' : null, grupos.length ? '' : traza(P.LENTES.prerrequisitos.traza))}
-        ${grupos.length ? grupos.map(g => `<div class="grupo"><p class="grupo-titulo">${g.profundidad === 1 ? 'Directo' : `A ${g.profundidad} pasos`}</p>
-          ${g.items.map(it => `<div class="fila-item">${botonNodo(it.nodo)}${it.arista ? `<button class="mini-arista" data-arista="${esc(it.arista.type + '|' + it.arista.source + '|' + it.arista.target)}" title="De dónde sale esta relación">Ver fuente</button>` : ''}</div>`).join('')}</div>`).join('') : vacio}
+      s.push(`<section class="${claseSeccion('prerrequisitos')}">${tituloSeccion('Qué necesitas antes', 'prerrequisitos')}
+        ${grupos.length ? grupos.map(g => `<div class="grupo"><p class="grupo-titulo">${g.profundidad === 1 ? 'Justo antes' : `${g.profundidad} pasos antes`}</p>
+          ${g.items.map(it => `<div class="fila-item">${botonNodo(it.nodo)}${it.arista ? botonFuente(it.arista, it.nodo.name_es) : ''}</div>`).join('')}</div>`).join('') : vacio}
       </section>`);
     }
 
     // Cursos que conviene llevar antes: lo que pide y lo que enseña.
     if (cur && cur.estado === 200) {
       const c = P.cursosPrevios(cur.cuerpo, clave);
-      s.push(`<section class="sec">${tituloSeccion('Cursos que conviene llevar antes', 'cursos')}
-        ${c.previos.length ? c.previos.map(p => `<div class="grupo">${botonNodo(p.curso)}<p class="grupo-titulo">porque enseña lo que este curso pide:</p>${p.evidencia.map(e => `<div class="fila-item">${botonNodo(e.nodo)}<button class="mini-arista" data-arista="${esc(e.arista.type + '|' + e.arista.source + '|' + e.arista.target)}" title="De dónde sale esta relación">Ver fuente</button></div>`).join('')}</div>`).join('')
+      s.push(`<section class="${claseSeccion('cursos')}">${tituloSeccion('Cursos que conviene llevar antes', 'cursos')}
+        ${c.previos.length ? c.previos.map(p => `<div class="grupo">${botonNodo(p.curso)}<p class="grupo-titulo">porque enseña lo que este curso pide:</p>${p.evidencia.map(e => `<div class="fila-item">${botonNodo(e.nodo)}${botonFuente(e.arista, e.nodo.name_es)}</div>`).join('')}</div>`).join('')
           : '<p class="nota">Ningún otro curso cargado enseña lo que este pide.</p>'}
         <p class="grupo-titulo">Lo que pide (${c.requeridos.length})</p>
         ${c.requeridos.length ? c.requeridos.map(x => `<div class="fila-item">${botonNodo(x)}</div>`).join('') : '<p class="nota">No pide conceptos previos.</p>'}
-        <details><summary><span class="rel" style="--c:${L.COLOR_ARISTA.TEACHES_CONCEPT}">Lo que enseña</span><span class="cuenta">${c.ensenados}</span></summary>
+        <details ${estado.lente === 'cursos' ? 'open' : ''}><summary><span class="rel" style="--c:${L.COLOR_ARISTA.TEACHES_CONCEPT}">Lo que enseña</span><span class="cuenta">${c.ensenados}</span></summary>
           <div class="lista">${c.listaEnsenados.map(x => `<div class="fila-item">${botonNodo(x)}</div>`).join('')}</div></details>
       </section>`);
     }
@@ -616,9 +688,9 @@
     if (esp && esp.estado === 200) {
       const e = P.especializaciones(esp.cuerpo, clave);
       if (e.todas.length) {
-        s.push(`<section class="sec">${tituloSeccion('Tipos', 'especializaciones')}
+        s.push(`<section class="${claseSeccion('especializaciones')}">${tituloSeccion('Tipos', 'especializaciones')}
           ${e.generales.length ? `<p class="grupo-titulo">Es un tipo de</p>${e.generales.map(x => `<div class="fila-item">${botonNodo(x)}</div>`).join('')}` : ''}
-          ${e.tipos.length ? `<p class="grupo-titulo">Tipos</p>${e.tipos.map(x => `<div class="fila-item">${botonNodo(x)}</div>`).join('')}` : ''}
+          ${e.tipos.length ? `<p class="grupo-titulo">Sus tipos</p>${e.tipos.map(x => `<div class="fila-item">${botonNodo(x)}</div>`).join('')}` : ''}
         </section>`);
       }
     }
@@ -631,20 +703,20 @@
         const tema = (P.cadenasDeUbicacion(loc.cuerpo, clave)[0] || []).find(x => x.label === 'Topic');
         if (tema) extra = `<button class="accion" data-ir="${esc(tema.key)}" data-ir-lente="recursos">Ver el material de su tema, «${esc(tema.name_es)}»</button>`;
       }
-      s.push(`<section class="sec">${tituloSeccion('Material de estudio', lista.length ? 'recursos' : null, lista.length ? '' : traza(P.LENTES.recursos.traza))}
+      s.push(`<section class="${claseSeccion(lista.length ? 'recursos' : null)}">${tituloSeccion('Material de estudio', lista.length ? 'recursos' : null)}
         ${lista.length ? lista.map(x => `<div class="recurso">${enlaceDocumento(x.recurso, 'Abrir ' + x.recurso.name_es)}<span class="tipo">${esc(x.tipo ? x.tipo.name_es : 'Recurso')}</span>
           ${x.elementos.length && !(x.elementos.length === 1 && x.elementos[0].key === clave) ? `<p class="sobre">trata sobre ${x.elementos.slice(0, 4).map(el => `<button class="enlace-texto" data-ir="${esc(el.key)}">${esc(el.name_es)}</button>`).join(', ')}${x.elementos.length > 4 ? ` y ${x.elementos.length - 4} más` : ''}</p>` : ''}</div>`).join('')
           : `<p class="nota">Un ${esc(P.nombreClase(n).toLowerCase())} no tiene material propio: los sílabos describen temas.</p>${extra}`}
       </section>`);
     }
 
-    // Conexiones: alternativa en texto al mapa.
+    // Conexiones: todo lo que rodea al foco, en texto. Es también la alternativa accesible al mapa.
     const grupos = P.conexiones(rf, clave);
-    s.push(`<section class="sec"><h3 class="sec-titulo"><span>Conexiones ${traza(P.LENTES.vecindario.traza, '/api/nodes')}</span><span class="cuenta">${grupos.reduce((t, g) => t + g.items.length, 0)}</span></h3>
+    s.push(`<section class="${claseSeccion('vecindario')}">${tituloSeccion('Conexiones', 'vecindario')}
       ${grupos.length ? grupos.map(g => `<details ${g.items.length <= 8 ? 'open' : ''}><summary><span class="rel" style="--c:${L.COLOR_ARISTA[g.tipo]}">${esc(g.rotulo)}</span><span class="cuenta">${g.items.length}</span></summary>
-        <div class="lista">${g.items.map(it => `<div class="fila-item">${botonNodo(it.nodo)}<button class="mini-arista" data-arista="${esc(it.arista.type + '|' + it.arista.source + '|' + it.arista.target)}" title="De dónde sale esta relación" aria-label="Ver la fuente de la relación con ${esc(it.nodo.name_es)}">Ver fuente</button></div>`).join('')}</div></details>`).join('')
+        <div class="lista">${g.items.map(it => `<div class="fila-item">${botonNodo(it.nodo)}${botonFuente(it.arista, it.nodo.name_es)}</div>`).join('')}</div></details>`).join('')
         : '<p class="nota">No tiene conexiones registradas.</p>'}
-      ${n.more_neighbors ? '<p class="nota">Se muestran hasta 25 conexiones directas. Los puntos con <b>+</b> tienen más: haz clic en el + para verlas.</p>' : ''}
+      ${n.more_neighbors ? '<p class="nota">Se muestran hasta 25 conexiones directas. En el mapa, los puntos con <b>+</b> tienen más.</p>' : ''}
     </section>`);
 
     panel.innerHTML = s.join('');
@@ -653,21 +725,21 @@
   function panelPortada() {
     const sugeridas = P.busquedasCapturadas().slice(0, 12);
     return `<header class="ficha bienvenida">
-        <p class="sobretitulo">Bienvenida ${traza('CU-1 · RF-18 · RF-19')}</p>
         <h2>Explora cómo se conecta la carrera</h2>
-        <p class="descripcion">Explora cómo se conectan los conceptos de Ingeniería Informática: qué necesitas saber antes, dónde está cada tema en la carrera y con qué material estudiarlo.</p>
-        <p class="descripcion">Elige un área o un curso en el mapa, o busca un tema arriba. Desde ahí, salta de punto en punto y usa las <b>lentes</b> de la izquierda: cada una muestra el mapa desde una pregunta distinta.</p>
+        <p class="descripcion">Este mapa une lo que dicen los sílabos de Ingeniería Informática con CS2023, el estándar internacional del currículo de computación. Sirve para ver qué necesitas saber antes de un concepto, dónde está cada tema en la carrera y con qué material estudiarlo.</p>
       </header>
-      <section class="sec"><h3 class="sec-titulo"><span>Dos orígenes, dos formas ${traza('RF-22')}</span></h3>
-        <div class="capa-explica capa-reference">${iconoCapa('reference', 26)}<div><b>CS2023</b><p>Hexágono con contorno. Estándar internacional del currículo de computación (ACM/IEEE): sus áreas y unidades.</p></div></div>
-        <div class="capa-explica capa-institutional">${iconoCapa('institutional', 26)}<div><b>Sílabo PUCP</b><p>Círculo relleno. Temas, conceptos y cursos que salen de los sílabos; cada uno enlaza a su PDF.</p></div></div>
-      </section>
-      <section class="sec"><h3 class="sec-titulo"><span>Empieza con una búsqueda</span></h3>
+      <section class="sec">${tituloSeccion('Busca por nombre')}
         <div class="sugerencias">${sugeridas.map(q => `<button class="chip-busqueda" data-buscar="${esc(q)}">${esc(q)}</button>`).join('')}</div>
-        <p class="nota">Estas búsquedas tienen respuesta real. Otra palabra se busca de forma aproximada en esta maqueta.</p>
+        <p class="nota">Estas búsquedas tienen respuesta real del sistema. Cualquier otra palabra se busca de forma aproximada en esta maqueta.</p>
       </section>
-      <section class="sec"><h3 class="sec-titulo"><span>En el mapa ${traza('CU-1 · ruta nueva: GET /api/overview')}</span></h3>
-        <p class="nota">Las 17 áreas de CS2023 y los 4 cursos con sílabo cargado. Las áreas que brillan ya tienen temas de los sílabos; las demás existen solo en CS2023. <span class="etiqueta-simulado" title="El sistema todavía no entrega esta vista de inicio">simulado</span> Esta vista de inicio todavía no la entrega el sistema.</p>
+      <section class="sec">${tituloSeccion('O sigue el recorrido sugerido')}
+        <p class="nota">Seis pasos con un ejemplo real: cada uno muestra una pregunta que el mapa responde.</p>
+        <ol class="pasos-recorrido">${PASOS.map((p, i) => `<li><button data-paso="${i}"><span class="num">${i + 1}</span><span>${esc(p.t)}</span></button></li>`).join('')}</ol>
+      </section>
+      <section class="sec">${tituloSeccion('Cómo leer el mapa')}
+        <div class="capa-explica capa-reference">${iconoCapa('reference', 24)}<p><b>Hexágono: viene de CS2023.</b> Las áreas y unidades del estándar internacional (ACM/IEEE).</p></div>
+        <div class="capa-explica capa-institutional">${iconoCapa('institutional', 24)}<p><b>Círculo relleno: viene de un sílabo PUCP.</b> Los temas, conceptos y cursos; cada uno enlaza a su PDF.</p></div>
+        <p class="nota">Siempre hay un elemento en foco, al centro. Sobre el mapa eliges qué quieres saber de él, y una frase te dice qué estás viendo.</p>
       </section>`;
   }
 
@@ -686,8 +758,8 @@
     resultados = r.cuerpo.nodes;
     indiceActivo = resultados.length ? 0 : -1;
     const cab = r.simulado
-      ? `<p class="res-cab">Búsqueda aproximada <span class="etiqueta-simulado">simulada</span>: en esta maqueta se filtra sobre los nombres reales. ${traza('CU-1 · RF-18', '/api/search')}</p>`
-      : `<p class="res-cab">${plural(resultados.length, 'resultado', 'resultados')} ${traza('CU-1 · RF-18', '/api/search')}</p>`;
+      ? `<p class="res-cab">Búsqueda aproximada <span class="etiqueta-simulado">simulada</span>: en esta maqueta se filtra sobre los nombres reales.</p>`
+      : `<p class="res-cab">${plural(resultados.length, 'resultado', 'resultados')}</p>`;
     if (!resultados.length) {
       lista.innerHTML = cab + `<div class="res-vacio"><b>Ningún sílabo cargado trata «${esc(q)}».</b><p>Prueba con otra palabra, o recorre las áreas de la carrera.</p>
         <div class="sugerencias"><button class="chip-busqueda destacado" data-portada>Ver las áreas</button>${['redes', 'lógica', 'puntero', 'ethernet'].map(s => `<button class="chip-busqueda" data-buscar="${s}">${s}</button>`).join('')}</div></div>`;
@@ -735,8 +807,9 @@
   // ------------------------------------------------------------------ delegación de clics
 
   document.addEventListener('click', ev => {
-    const t = ev.target.closest('[data-ir],[data-lente],[data-buscar],[data-arista],[data-cerrar-arista],[data-grano],[data-paso],[data-portada],[data-ver-pasos],[data-porque],[data-cerrar-porque]');
+    const t = ev.target.closest('[data-ir],[data-lente],[data-buscar],[data-arista],[data-cerrar-arista],[data-grano],[data-paso],[data-portada],[data-porque],[data-cerrar-porque],[data-cerrar-recorrido],#limpiar');
     if (!t) return;
+    if (t.id === 'limpiar') { limpiar(); return; }
     if (t.dataset.buscar !== undefined) {
       ev.preventDefault();
       buscador.value = t.dataset.buscar;
@@ -767,7 +840,7 @@
     if (t.dataset.cerrarPorque !== undefined) { estado.porque = null; lienzo.seleccionar(null); pintarFranja(); pintarPanel(); return; }
     if (t.dataset.arista) { seleccionarArista(t.dataset.arista); return; }
     if (t.dataset.cerrarArista !== undefined) { estado.aristaSel = null; lienzo.seleccionar(null); pintarPanel(); return; }
-    if (t.dataset.verPasos !== undefined) { $('#recorrido').classList.add('desplegado'); pintarRecorrido(); return; }
+    if (t.dataset.cerrarRecorrido !== undefined) { pasoActual = -1; pintarRecorrido(); encuadrarLuego(estado.turno); return; }
     if (t.dataset.paso !== undefined) { hacerPaso(Number(t.dataset.paso)); }
   });
 
@@ -779,84 +852,66 @@
   $('#atras').addEventListener('click', atras);
   $('#inicio').addEventListener('click', mostrarPortada);
   $('#marca').addEventListener('click', mostrarPortada);
-  $('#limpiar').addEventListener('click', limpiar);
   $('#ver-procedencia').addEventListener('change', ev => {
     estado.verProcedencia = ev.target.checked;
     lienzo.configurar({ verProcedencia: estado.verProcedencia });
     lienzo.dibujar();
+    encuadrarLuego(estado.turno);
   });
   $('#zoom-mas').addEventListener('click', () => lienzo.zoomPor(1.3));
   $('#zoom-menos').addEventListener('click', () => lienzo.zoomPor(1 / 1.3));
-  $('#encuadrar').addEventListener('click', () => lienzo.encuadrar(null));
+  $('#encuadrar').addEventListener('click', () => { medirMargen(); lienzo.encuadrar(null); });
   $('#leyenda-boton').addEventListener('click', () => {
     const l = $('#leyenda');
     l.hidden = !l.hidden;
     $('#leyenda-boton').setAttribute('aria-expanded', String(!l.hidden));
   });
-
-  // ------------------------------------------------------------------ «Ver trazabilidad»
-
-  function ponerTrazabilidad(si) {
-    document.body.classList.toggle('ver-traza', si);
-    $('#ver-traza').checked = si;
-    try { sessionStorage.setItem('p1-traza', si ? '1' : '0'); } catch (e) { /* sin almacenamiento */ }
-  }
-  $('#ver-traza').addEventListener('change', ev => ponerTrazabilidad(ev.target.checked));
+  let temporizadorTam = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(temporizadorTam);
+    temporizadorTam = setTimeout(() => { medirMargen(); lienzo.encuadrar(null, 300); }, 180);
+  });
 
   // ------------------------------------------------------------------ recorrido sugerido (común a las tres propuestas)
 
   const PASOS = [
-    { t: 'Busca «lógica» y abre el tema «Lógica proposicional».', cu: 'CU-1',
+    { t: 'Busca «lógica» y abre el tema «Lógica proposicional».',
       hacer: async () => { buscador.value = 'lógica'; await buscar('lógica'); cerrarResultados(); await irA(CLAVES.logica, { lente: 'vecindario' }); } },
-    { t: 'Mira qué contiene, en qué orden conviene aprenderlo y su material de estudio.', cu: 'CU-6 · CU-7',
+    { t: 'Mira qué contiene, en qué orden conviene aprenderlo y su material de estudio.',
       hacer: () => irA(CLAVES.logica, { lente: 'contiene' }) },
-    { t: 'Abre «Contradicción»: ¿qué necesitas saber antes?', cu: 'CU-3',
+    { t: 'Abre «Contradicción»: ¿qué necesitas saber antes?',
       hacer: () => irA(CLAVES.contradiccion, { lente: 'prerrequisitos' }) },
-    { t: '¿De dónde sale que «Contradicción» requiere «Tabla de verdad»? Ver la fuente.', cu: 'CU-10',
+    { t: '¿De dónde sale que «Contradicción» requiere «Tabla de verdad»? Ver la fuente.',
       hacer: async () => {
         if (estado.foco !== CLAVES.contradiccion || estado.lente !== 'prerrequisitos') await irA(CLAVES.contradiccion, { lente: 'prerrequisitos' });
         seleccionarArista(`HAS_PREREQUISITE|${CLAVES.contradiccion}|${CLAVES.tablaVerdad}`);
       } },
-    { t: 'El camino hasta «Entrada y salida de datos desde archivos», visto por cursos.', cu: 'CU-8',
+    { t: 'El camino hasta «Entrada y salida de datos desde archivos», visto por cursos.',
       hacer: () => irA(CLAVES.archivos, { lente: 'ruta', grano: 'course' }) },
-    { t: '«Técnicas de Programación»: qué pide y qué curso conviene llevar antes.', cu: 'CU-4',
+    { t: '«Técnicas de Programación»: qué pide y qué curso conviene llevar antes.',
       hacer: () => irA(CLAVES.inf144, { lente: 'cursos' }) },
   ];
 
-  // Tras ejecutar un paso, el recorrido se pliega a una barra compacta para no tapar el mapa.
+  // En el inicio, la lista de pasos está en el panel. Al seguir uno, queda una barra de un renglón sobre el rastro.
   let pasoActual = -1;
   function pintarRecorrido() {
     const caja = $('#recorrido');
-    const compacto = pasoActual >= 0 && !caja.classList.contains('desplegado');
-    caja.classList.toggle('compacto', compacto);
-    if (compacto) {
-      const p = PASOS[pasoActual];
-      $('#recorrido-pasos').innerHTML = `<li class="actual"><span class="num">${pasoActual + 1}</span><span><b>${esc(p.t)}</b>${traza(p.cu)}</span></li>
-        <li class="nav-pasos"><button data-paso="${Math.max(0, pasoActual - 1)}" ${pasoActual === 0 ? 'disabled' : ''}>‹ Anterior</button>
-        <span>${pasoActual + 1} de ${PASOS.length}</span>
-        ${pasoActual < PASOS.length - 1 ? `<button data-paso="${pasoActual + 1}" class="siguiente">Siguiente ›</button>` : '<button data-ver-pasos>Ver todos</button>'}</li>`;
-    } else {
-      $('#recorrido-pasos').innerHTML = PASOS.map((p, i) => `<li${i === pasoActual ? ' class="actual"' : ''}><button data-paso="${i}"><span class="num">${i + 1}</span><span><b>${esc(p.t)}</b>${traza(p.cu)}</span></button></li>`).join('');
-    }
+    if (pasoActual < 0 || !estado.nodoFoco) { caja.hidden = true; caja.innerHTML = ''; return; }
+    const p = PASOS[pasoActual];
+    caja.hidden = false;
+    caja.innerHTML = `<span class="num">${pasoActual + 1}</span>
+      <p><span class="recorrido-rotulo">Recorrido sugerido · paso ${pasoActual + 1} de ${PASOS.length}</span>${esc(p.t)}</p>
+      <div class="nav-pasos">
+        <button data-paso="${Math.max(0, pasoActual - 1)}" ${pasoActual === 0 ? 'disabled' : ''} aria-label="Paso anterior" title="Paso anterior">${ICONO.antes}</button>
+        <button class="siguiente" data-paso="${Math.min(PASOS.length - 1, pasoActual + 1)}" ${pasoActual === PASOS.length - 1 ? 'disabled' : ''}>Siguiente${ICONO.despues}</button>
+        <button data-cerrar-recorrido aria-label="Salir del recorrido" title="Salir del recorrido">${ICONO.cerrar}</button>
+      </div>`;
   }
   function hacerPaso(i) {
-    pasoActual = i;
-    $('#recorrido').classList.remove('desplegado');
     pintarRecorrido();
+    pasoActual = i;
     return PASOS[i].hacer();
   }
-  $('#recorrido-titulo').addEventListener('click', () => {
-    $('#recorrido').classList.toggle('desplegado');
-    pintarRecorrido();
-  });
-  $('#recorrido-cerrar').addEventListener('click', () => {
-    $('#recorrido').hidden = true; $('#recorrido-abrir').hidden = false;
-    try { sessionStorage.setItem('p1-recorrido', 'cerrado'); } catch (e) { /* sin almacenamiento */ }
-  });
-  $('#recorrido-abrir').addEventListener('click', () => {
-    $('#recorrido').hidden = false; $('#recorrido-abrir').hidden = true;
-    try { sessionStorage.removeItem('p1-recorrido'); } catch (e) { /* sin almacenamiento */ }
-  });
 
   // ------------------------------------------------------------------ arranque
 
@@ -868,13 +923,7 @@
     document.body.insertAdjacentHTML('afterbegin', '<p class="error-datos">No se pudo cargar la librería del mapa. La maqueta necesita conexión a internet.</p>');
     return;
   }
-  pintarRecorrido();
-  try {
-    if (sessionStorage.getItem('p1-recorrido') === 'cerrado') { $('#recorrido').hidden = true; $('#recorrido-abrir').hidden = false; }
-    if (sessionStorage.getItem('p1-traza') === '1') ponerTrazabilidad(true);
-  } catch (e) { /* sin almacenamiento */ }
-  // Enlaces directos: #paso=N abre un paso del recorrido; #traza activa «Ver trazabilidad» (útil para capturas).
-  if (/traza/.test(location.hash)) ponerTrazabilidad(true);
+  // Enlace directo: #paso=N abre un paso del recorrido (útil para capturas).
   mostrarPortada().then(() => {
     const m = /paso=(\d+)/.exec(location.hash);
     if (m && PASOS[Number(m[1]) - 1]) setTimeout(() => hacerPaso(Number(m[1]) - 1), 300);

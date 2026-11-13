@@ -13,7 +13,7 @@ uso, que son los pasos con que esa interfaz resuelve cada uno.
 
 | | Carpeta | Nombre en pantalla | Enfoque de navegación |
 |---|---|---|---|
-| P1 | [`p1-lienzo/`](p1-lienzo/README.md) | Constelación | El lienzo del grafo es el protagonista: foco, vecindario y **lentes** (una por patrón) sobre el mismo lienzo. |
+| P1 | [`p1-lienzo/`](p1-lienzo/README.md) | Constelación | El lienzo del grafo es el protagonista: un foco, lo que lo rodea y **lentes** (una por patrón, ofrecidas como preguntas sobre el foco) sobre el mismo lienzo. |
 | P2 | [`p2-catalogo/`](p2-catalogo/README.md) | Catálogo del conocimiento | Enciclopedia de **fichas** con URL propia; el grafo es un mini mapa secundario. |
 | P3 | [`p3-rutas/`](p3-rutas/README.md) | Itinerario | Se elige una **meta** y se ve el camino hasta ella como mapa de metro, agrupado por tema, curso o área a elección. |
 | — | [`panel-operador/`](panel-operador/README.md) | Panel del operador | Una pantalla sobria para RF-23, integrable en cualquiera de las tres. |
@@ -25,7 +25,9 @@ uso, que son los pasos con que esa interfaz resuelve cada uno.
 - Las tres traen el mismo **recorrido sugerido** de seis pasos (ver abajo), que se cierra con ×. Cada
   paso se abre directo con `index.html#paso=N`.
 - Los códigos de trazabilidad (caso de uso, pregunta de competencia, requisito) no se ven por
-  omisión; el interruptor «Ver trazabilidad» los muestra junto a cada sección.
+  omisión; en P2 y P3, el interruptor «Ver trazabilidad» los muestra junto a cada sección. P1 no
+  tiene ese interruptor: explica cada vista con una frase, y su correspondencia con los casos de
+  uso está en su README.
 - **PDF de los sílabos (RF-21):** los enlaces apuntan a `http://localhost:8000/resources/<clave>`,
   el localizador guardado en el grafo. Abren con la API levantada en el puerto por omisión:
   `docker compose up -d` y `uv run iekg-api`. El de CS2023 abre la página de la ACM.
@@ -73,10 +75,10 @@ Las tres usan las mismas palabras para lo mismo, en lenguaje llano y sin código
 |---|---|---|---|
 | Necesidad que atiende mejor (E16) | Entender cómo se conectan las áreas (61 %) y descubrir temas (52,6 %) | Encontrar recursos de estudio (72,1 %) | Saber qué conceptos previos se necesitan (83,1 %) |
 | Punto fuerte | Muestra el grafo como grafo; las lentes ponen los siete patrones sobre el mismo dibujo. | Se sostiene con datos escasos y sin descripciones; cada fila lleva su sílabo (RF-21 por arista); URL enlazables; la más accesible. | Responde la necesidad más votada en una sola pantalla; el «¿por qué?» de cada tramo muestra la evidencia, y el cambio de grano es inmediato. |
-| Punto débil | Legibilidad y accesibilidad: un área trae 158 nodos (resuelto con anillos y zoom), y un lienzo es difícil de recorrer con teclado o lector de pantalla. | El grafo queda en segundo plano: la exploración visual se concentra en un mapa acotado al vecindario. | Depende de que haya rutas: hoy 35 destinos tienen una, de profundidad 2 como máximo, y la vista de un curso se apoya en el prerrequisito entre cursos (PC2). |
+| Punto débil | Legibilidad y accesibilidad: un área trae 158 nodos (el mapa llega hasta los temas y resume lo que no cabe con nombre; los umbrales hay que revisarlos con los 13 sílabos), y un lienzo es difícil de recorrer con teclado o lector de pantalla. | El grafo queda en segundo plano: la exploración visual se concentra en un mapa acotado al vecindario. | Depende de que haya rutas: hoy 35 destinos tienen una, de profundidad 2 como máximo, y la vista de un curso se apoya en el prerrequisito entre cursos (PC2). |
 | Stack para R6 | Svelte 5.57.3 + Vite 8.3.5 · D3 7.9.0 (d3-force, SVG) | Vue 3.5.44 + Vue Router 5.4.0 + Vite · D3 7.9.0 (mini mapa) | Vue 3.5.44 + Vue Router 5.4.0 + Vite 8.3.5 · D3 7.9.0 con disposición por columnas propia |
 | Rutas nuevas en R4 | `GET /api/overview` (portada: áreas con conteos y cursos) | `GET /api/catalog` (ídem); opcional, el tema de cada concepto en `/api/courses/prerequisites` | `GET /api/learning-path/targets` (metas con camino), `GET /api/courses`, `GET /api/areas` |
-| Esfuerzo para R6 | **Alto:** simulación de fuerzas, expansión incremental, lentes, rendimiento y una alternativa accesible. | **Bajo:** listas y fichas, más un mini mapa acotado a 25 vecinos. | **Medio:** un dibujo a medida por grano, el caso especial del curso y los estados vacíos. |
+| Esfuerzo para R6 | **Alto:** una disposición por lente, colocación de etiquetas, expansión incremental, rendimiento y una alternativa accesible. | **Bajo:** listas y fichas, más un mini mapa acotado a 25 vecinos. | **Medio:** un dibujo a medida por grano, el caso especial del curso y los estados vacíos. |
 
 Las tres distinguen la capa (RF-22) por **forma y etiqueta de texto**, no solo por color: P1 usa
 hexágono y círculo; P2 y P3, cuadrado y círculo, con las insignias «CS2023» y «Sílabo». Las tres

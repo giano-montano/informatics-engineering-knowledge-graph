@@ -4,7 +4,7 @@
 
 **Decisión.**
 - **Capa por forma:** hexágono con doble contorno y relleno translúcido para CS2023; círculo relleno con brillo para los sílabos. Se repite en el panel con ícono y texto («CS2023», «Sílabo PUCP») y en la leyenda, que aclara qué es CS2023: el estándar internacional del currículo de computación (ACM/IEEE). El color queda para la clase (área, tema, concepto…).
-- **Fuente sin aristas:** `WAS_DERIVED_FROM` no se dibuja por omisión. El panel muestra la fuente del foco con su enlace («Ver fuente»), y cada prerrequisito, la de su arista. Al pasar el cursor sobre una arista se ve su fuente; un clic la fija en el panel con el enlace. El interruptor «Mostrar fuentes» dibuja esas aristas.
+- **Fuente sin aristas:** `WAS_DERIVED_FROM` no se dibuja por omisión. El panel muestra la fuente del foco con su enlace («Fuente»), y cada relación, la de su arista («fuente»). Al pasar el cursor sobre una arista se ve su fuente; un clic la fija en el panel con el enlace. El interruptor «Fuentes» dibuja esas aristas, con los documentos en una fila aparte.
 
 **Descartadas.**
 - Capa solo por color: no cumple RF-22, y falla con daltonismo.
@@ -13,6 +13,6 @@
 
 **Consecuencias.**
 - RF-21 y RF-22 quedan visibles en todas las pantallas sin depender de una lente.
-- Negativa: la fuente de una arista pide pasar el cursor o hacer clic. En pantallas táctiles depende del clic y de la lista «Conexiones» del panel (botón «Ver fuente»).
+- Negativa: la fuente de una arista pide pasar el cursor o hacer clic. En pantallas táctiles depende del clic y de la lista «Conexiones» del panel (enlace «fuente»).
 
 **Fila para la Tabla 20.** Forma por capa y fuente en el panel y bajo demanda · cumple RF-21 y RF-22 sin saturar el lienzo con `WAS_DERIVED_FROM`.

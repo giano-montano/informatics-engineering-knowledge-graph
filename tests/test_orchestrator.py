@@ -4,7 +4,7 @@ Failure paths run on an in-memory graph that can be told to fail. The written
 path runs on Neo4j inside a transaction that is rolled back.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from uuid import uuid4
 
 import pytest
@@ -42,6 +42,9 @@ from iekg.operational_store import (
 CLEAN = AuditReport((RuleResult("RI-01", 0, ()),))
 DIRTY = AuditReport((RuleResult("RI-08", 1, ("x (Topic) is not part of any KnowledgeUnit",)),))
 EXTRACTION = Extraction("model-2026-01-01", {"temperature": 0}, "prompt-v1", 0, 30_000, 2_000)
+# What an extraction that became facts carries: the output they came from.
+OUTPUT = {"topics": [{"name": "Búsqueda", "evidence": "UNIDAD 1 BÚSQUEDA", "concepts": []}]}
+CONFORMING = replace(EXTRACTION, output=OUTPUT)
 UNIT = "ku"
 
 
@@ -64,7 +67,7 @@ class FakeExtractor:
         outcome = self.outcomes.pop(0)
         if isinstance(outcome, Exception):
             raise outcome
-        return outcome, EXTRACTION
+        return outcome, CONFORMING
 
 
 @dataclass
@@ -162,6 +165,9 @@ def test_a_written_run_completes_and_saves_exactly_the_written_batch(store, tmp_
     saved = FactStore(tmp_path / "facts").load(run_id)
     assert (saved.batch, saved.provenance, saved.layer) == (graph.written[0], run.resource_key, INSTITUTIONAL)
     assert store.latest_audit_report().run_id == str(run_id) and store.latest_audit_report().clean
+    # The output, with its evidence, stays out of the fact store (ADR-012).
+    assert store.model_output_of(run_id) == OUTPUT
+    assert "UNIDAD 1" not in FactStore(tmp_path / "facts").path_of(run_id).read_text(encoding="utf-8")
 
 
 def test_a_non_conforming_output_rejects_the_run_and_the_worker_goes_on(store, tmp_path):
@@ -174,6 +180,7 @@ def test_a_non_conforming_output_rejects_the_run_and_the_worker_goes_on(store, t
     assert statuses(store) == [REJECTED, COMPLETED]
     assert store.discards_of(first) == [discard]
     assert store.rejected_output_of(first) == (None, '{"topics": []}')
+    assert store.model_output_of(first) is None
     assert store.get_run(first).model == EXTRACTION.model
     assert len(graph.written) == 1
 
@@ -197,6 +204,8 @@ def test_a_batch_with_violations_is_rejected_whole_and_not_written(store, tmp_pa
     assert [d.rule for d in store.discards_of(run_id)] == ["RI-08"]
     batch, raw_output = store.rejected_output_of(run_id)
     assert "t" in batch.nodes_by_key and raw_output is None
+    # The output its facts came from is kept however the run ends.
+    assert store.model_output_of(run_id) == OUTPUT
     assert graph.written == []
 
 

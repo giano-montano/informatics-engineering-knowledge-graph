@@ -109,7 +109,9 @@ src/iekg/api/                  API (#api del C4): rutas de operación bajo
                                `navigation.py`; `/resources/{clave}`; punto
                                de entrada `iekg-api`.
 src/iekg/operational_store.py  Almacén operacional (SQLite): corridas,
-                               descartes y reportes de auditoría.
+                               descartes, salida del modelo de cada corrida
+                               con hechos (con evidencia y justificación) y
+                               reportes de auditoría.
 src/iekg/fact_store.py         Almacén de hechos: un archivo por corrida escrita.
 src/iekg/settings.py           Configuración desde el entorno y `.env`.
 scripts/submit_document.py     Ayuda de desarrollo: envía un PDF y corre el

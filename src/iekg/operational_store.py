@@ -2,7 +2,7 @@
 
 Lives outside the graph database, so a load does not erase the evidence of
 AC-01 and AC-02. It holds the ingestion runs, the discards of the rejected
-ones and the audit reports. The latest report is what the worker's audit gate
+ones, the model output each run's facts came from and the audit reports. The latest report is what the worker's audit gate
 reads (ADR-007).
 
 A write path opens its report before it touches the graph and completes it
@@ -98,6 +98,13 @@ CREATE TABLE IF NOT EXISTS rejected_outputs (
     raw_output TEXT,
     CHECK (batch IS NOT NULL OR raw_output IS NOT NULL)
 );
+-- The conforming output the facts of a run came from, however the run ended.
+-- It keeps the evidence and the rationale of every mention and relation,
+-- which neither the batch nor the graph carry.
+CREATE TABLE IF NOT EXISTS model_outputs (
+    run_id INTEGER PRIMARY KEY REFERENCES runs (id),
+    output TEXT NOT NULL
+);
 """
 
 # Columns added after the first stores were created. The store holds evidence
@@ -148,7 +155,8 @@ class Run:
 
 @dataclass(frozen=True)
 class Extraction:
-    """How a run's extraction was made, as RF-25 asks to record it, and what it consumed."""
+    """How a run's extraction was made, as RF-25 asks to record it, what it consumed
+    and, when it became facts, the output they came from."""
 
     model: str
     model_settings: Mapping
@@ -156,6 +164,8 @@ class Extraction:
     content_retries: int
     input_tokens: int
     output_tokens: int
+    # None when the output never became facts: rejected_outputs keeps it then.
+    output: Mapping | None = None
 
 
 @dataclass(frozen=True)
@@ -310,6 +320,11 @@ class OperationalStore:
                 input_tokens=extraction.input_tokens,
                 output_tokens=extraction.output_tokens,
             )
+            if extraction.output is not None:
+                self._connection.execute(
+                    "INSERT INTO model_outputs (run_id, output) VALUES (?, ?)",
+                    (run_id, json.dumps(dict(extraction.output), ensure_ascii=False)),
+                )
 
     def reject_run(
         self,
@@ -376,6 +391,11 @@ class OperationalStore:
             raise KeyError(f"run {run_id} has no rejected output")
         batch, raw_output = row
         return (batch_from_data(json.loads(batch)) if batch else None), raw_output
+
+    def model_output_of(self, run_id: int) -> Mapping | None:
+        """The output the run's facts came from; None if it never had facts."""
+        row = self._connection.execute("SELECT output FROM model_outputs WHERE run_id = ?", (run_id,)).fetchone()
+        return json.loads(row[0]) if row else None
 
     def _update_run(self, run_id: int, expected: tuple[str, ...], **columns) -> None:
         # A run only moves forward: an update from an unexpected state is a bug.

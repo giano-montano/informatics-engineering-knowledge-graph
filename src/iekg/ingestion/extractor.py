@@ -476,7 +476,7 @@ class LanguageModelExtractor:
             used = _retries_in(history) + reference_retries
             linked = link_output(output, snapshot, vocabulary, self._new_key)
             if isinstance(linked, ExtractedFacts):
-                return linked, self._extraction(history, used)
+                return linked, self._extraction(history, used, output)
             if used >= CONTENT_RETRIES:
                 raise NonConformingOutput(linked, _last_text(history), self._extraction(history, used))
             reference_retries += 1
@@ -502,7 +502,9 @@ class LanguageModelExtractor:
         history[:] = result.all_messages()
         return result.output
 
-    def _extraction(self, history: Sequence[ModelMessage], retries: int) -> Extraction:
+    def _extraction(
+        self, history: Sequence[ModelMessage], retries: int, output: SyllabusOutput | None = None
+    ) -> Extraction:
         # With typed output the last message may lack the model name: walk back.
         answered = next((m.model_name for m in reversed(history) if isinstance(m, ModelResponse) and m.model_name),
                         None)
@@ -514,6 +516,8 @@ class LanguageModelExtractor:
             content_retries=retries,
             input_tokens=sum(m.usage.input_tokens for m in responses),
             output_tokens=sum(m.usage.output_tokens for m in responses),
+            # Evidence and rationale are kept only here (operational store).
+            output=output.model_dump(mode="json") if output is not None else None,
         )
 
 

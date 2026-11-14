@@ -156,6 +156,30 @@ def test_a_store_created_without_the_token_columns_gains_them_and_keeps_its_runs
         assert (store.get_run(run_id).input_tokens, store.get_run(run_id).output_tokens) == (10, 2)
 
 
+def test_the_output_an_extraction_carries_reads_back_and_one_without_leaves_none(tmp_path):
+    output = {"topics": [{"name": "Búsqueda", "evidence": "UNIDAD 1 BÚSQUEDA (3 horas)", "concepts": []}]}
+    with OperationalStore(tmp_path / "operational.sqlite") as store:
+        with_output, without = new_run(store), new_run(store, "doc-2")
+        store.take_pending_run()
+        store.take_pending_run()
+        store.record_extraction(with_output, Extraction("m", {}, "v1", 0, 10, 2, output))
+        store.record_extraction(without, Extraction("m", {}, "v1", 0, 10, 2))
+        assert store.model_output_of(with_output) == output
+        assert store.model_output_of(without) is None
+
+
+def test_a_store_created_without_the_model_outputs_gains_them(tmp_path):
+    path = tmp_path / "operational.sqlite"
+    with OperationalStore(path) as store:
+        run_id = new_run(store)
+    with sqlite3.connect(path) as connection:
+        connection.execute("DROP TABLE model_outputs")
+    with OperationalStore(path) as store:
+        store.take_pending_run()
+        store.record_extraction(run_id, Extraction("m", {}, "v1", 0, 10, 2, {"topics": []}))
+        assert store.model_output_of(run_id) == {"topics": []}
+
+
 def test_a_written_run_with_a_dirty_audit_is_stopped(tmp_path):
     with OperationalStore(tmp_path / "operational.sqlite") as store:
         run_id = new_run(store)

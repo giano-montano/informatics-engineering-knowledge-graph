@@ -1157,7 +1157,7 @@ La Figura 7 descompone el sistema en contenedores, es decir, en unidades que eje
 
 Cuatro contenedores ejecutan código. La aplicación web es la única superficie del sistema: reúne la navegación del estudiante y el panel del operador, y se diseña en R5. La API atiende las consultas de la navegación, registra cada ingesta que solicita el operador y sirve los documentos; nunca escribe en el grafo. El worker de ingesta ejecuta el pipeline que convierte un documento en hechos del grafo: la API lo lanza si no hay otro activo, y el worker procesa una tras otra las ingestas pendientes y termina (ADR-007). Los procesos de construcción cargan la capa de referencia y reaplican los hechos guardados. No son funcionalidad del producto, sino herramientas que el desarrollador ejecuta desde la línea de comandos; por eso el diagrama no les asigna un actor.
 
-Los otros cuatro almacenan datos: la base de grafos; el almacén operacional, con el estado de cada ingesta, los hechos descartados y los reportes de auditoría; el almacén de documentos, con los documentos subidos; y el almacén de hechos, con lo que cada ingesta escribió en el grafo.
+Los otros cuatro almacenan datos: la base de grafos; el almacén operacional, con el estado de cada ingesta, la salida del modelo que la originó, los hechos descartados y los reportes de auditoría; el almacén de documentos, con los documentos subidos; y el almacén de hechos, con lo que cada ingesta escribió en el grafo.
 
 Hay cuatro decisiones de este nivel que sostienen los atributos de calidad:
 

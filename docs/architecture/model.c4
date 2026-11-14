@@ -284,7 +284,7 @@ model {
 
     sqlite = dataStore 'Almacén operacional' {
       technology 'SQLite'
-      summary 'Estado de corridas, descartes y reportes de auditoría.'
+      summary 'Estado de corridas, salidas del modelo, descartes y reportes de auditoría.'
       description '''
         Escrito por la API al dar de alta una corrida, por el worker durante
         su ejecución y por los procesos de construcción, que registran su

@@ -374,6 +374,9 @@ def test_a_conforming_output_yields_facts_and_records_how_it_was_asked(tmp_path)
     assert extraction.model_settings == {"reasoning_effort": "low", "requested_model": "scripted-model"}
     assert len(extraction.prompt_version) == 12
     assert (extraction.input_tokens, extraction.output_tokens) == (30_000, 2_000)
+    # The output, evidence included, goes with the record; the facts carry none of it.
+    assert extraction.output == VALID
+    assert "Búsqueda heurística (cita)" not in repr(facts)
 
 
 @pytest.mark.parametrize("first", [NO_UNIT, UNKNOWN_UNIT, {"not": "the schema"}])
@@ -399,6 +402,8 @@ def test_a_second_non_conforming_output_rejects_with_its_code_and_raw_output(tmp
     assert len(calls) == 2
     assert [d.rule for d in caught.value.discards] == [code]
     assert json.loads(caught.value.raw_output) == answers[1]
+    # It never became facts: the raw output is what is kept.
+    assert caught.value.extraction.output is None
     assert caught.value.extraction.content_retries == 1
     assert (caught.value.extraction.input_tokens, caught.value.extraction.output_tokens) == (60_000, 4_000)
 

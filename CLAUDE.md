@@ -118,6 +118,11 @@ scripts/measure_navigation.py  Ayuda de desarrollo: mide los cinco patrones de
                                AC-05 con las funciones de las rutas; reporte
                                en `var/measurements/`. Sus pruebas lo importan
                                (`pythonpath` de pytest).
+scripts/evaluate_ingestion.py  Ayuda de desarrollo: mide CP-01 a CP-14 desde el
+                               almacén de hechos y la anotación, y compara con
+                               la extracción del revisor; reporte en
+                               `var/measurements/`. Cómo calcula cada medida:
+                               `casos-de-prueba/calculo-de-las-medidas-del-evaluador.md`.
 tests/                         Pruebas; una negativa por cada forma de violar
                                cada regla o código EX.
 var/                           Almacenes locales del sistema. Ignorado por git.
@@ -140,6 +145,9 @@ uv run iekg-worker                       # procesa las corridas pendientes
 uv run iekg-build reapply                # tras una carga, reescribe la capa institucional
 uv run iekg-api                          # la API en :8000; exige IEKG_OPERATOR_TOKEN
 uv run python scripts/measure_navigation.py   # AC-05; solo lee, reporte en var/measurements/
+uv run python scripts/evaluate_ingestion.py cases --from-run N   # CP-01 a CP-14, la cadena desde la corrida N
+uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out   # corridas sueltas del ajuste
+uv run python scripts/evaluate_ingestion.py review --from-run N  # revisor contra anotación y pipeline
 start http://localhost:7474
 
 npm install               # una vez: LikeC4 fijado en package.json

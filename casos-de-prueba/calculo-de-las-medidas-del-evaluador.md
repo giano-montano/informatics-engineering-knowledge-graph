@@ -1,7 +1,8 @@
 # Cómo calcula el evaluador cada medida
 
-**Fecha:** 2026-11-14. **Estado:** escrito antes del código; pendiente del
-visto bueno de Giano.
+**Fecha:** 2026-11-14. **Estado:** escrito antes del código e implementado
+el mismo día. Las elecciones de la sección 1 siguen pendientes de la revisión
+de Giano: cambiar una es cambiar pocas líneas y su prueba.
 
 Documentación interna del repositorio. Dice cómo `scripts/evaluate_ingestion.py`
 aplica las reglas de la sección «Casos de prueba de la ingesta automatizada» de
@@ -56,7 +57,12 @@ La F1 total sale de la precisión total y la exhaustividad total.
 precisión, que es lo que dice la tesis («queda fuera del grafo»). Sus nociones
 obligatorias **sí** entran al denominador de la exhaustividad total, como no
 recuperadas: el sistema no las extrajo. Es la lectura conservadora. El caso
-aparece en el reporte con su número de intentos y sin medidas propias.
+aparece en el reporte con su número de intentos y cero ítems.
+
+Esto vale para un sílabo que se intentó y se rechazó todas las veces. Un
+sílabo **sin ninguna corrida** en la ventana no se ingestó: no entra en
+ningún total y el reporte lo nombra como no ejecutado. Mientras falte alguno
+de los 13, no hay veredicto del indicador.
 
 **Elección 5. Cómo se cuentan duplicados y nociones partidas.** La tesis los
 define por pares («dos nodos…»). Contar pares infla la cifra cuando hay tres
@@ -240,7 +246,8 @@ Un identificador global puede estar a la vez duplicado y partido; se cuenta
 en las dos.
 
 Con `--hide-held-out` CP-14 no se calcula: sin los dos casos, el grafo no es
-el final.
+el final. Si falta algún caso en la ventana se calcula igual, con una
+advertencia.
 
 ## 8. Segunda parte: la extracción del revisor
 
@@ -267,6 +274,11 @@ blanco: los nombres del revisor que la anotación no registra (con el texto
 del sílabo y el comentario que escribió) y las nociones que el revisor no
 extrajo (con su etiqueta, nivel y evidencia). La adjudicación es de Giano; el
 evaluador no clasifica.
+
+La proporción de nociones se cuenta por noción y no por entrada, así que el
+denominador es menor que las entradas del sílabo: 39 nociones en 1INF27 y 85
+en 1INF37 (89 entradas), 124 en total frente a las 128 entradas que cita la
+tesis.
 
 Como la comparación exige coincidencia de nombres y el revisor no escribe
 nombres alternativos, las dos proporciones son cotas inferiores, y más

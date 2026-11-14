@@ -775,6 +775,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "httpx" },
+    { name = "openpyxl" },
     { name = "pytest" },
 ]
 
@@ -793,6 +794,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "httpx", specifier = ">=0.28,<0.29" },
+    { name = "openpyxl", specifier = ">=3.1,<4" },
     { name = "pytest", specifier = ">=8.3" },
 ]
 

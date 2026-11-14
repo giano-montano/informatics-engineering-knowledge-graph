@@ -7,6 +7,7 @@ thesis leaves open, is in casos-de-prueba/calculo-de-las-medidas-del-evaluador.m
 
     uv run python scripts/evaluate_ingestion.py cases --from-run 5
     uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out
+    uv run python scripts/evaluate_ingestion.py review --workbook FILLED.xlsx
     uv run python scripts/evaluate_ingestion.py review --from-run 5
 
 Reports go to var/measurements/, with Markdown tables on the console.
@@ -41,10 +42,11 @@ MANDATORY = "obligatoria"
 
 GOLD = Path("casos-de-prueba/gold/gold_consolidado.tsv")
 COMPOUND_HEADINGS = Path("casos-de-prueba/gold/scripts_consolidacion/idglobal.py")
-REVIEW = Path("casos-de-prueba/revision/hoja-de-extraccion.xlsx")
+REVIEW_DIR = Path("casos-de-prueba/revision")
 MEASUREMENTS = Path("var/measurements")
 
-_REVIEW_NAME, _REVIEW_TEXT, _REVIEW_COMMENT = "Tema o concepto", "Texto del sílabo", "Comentario"
+# The columns of the extraction sheet the reviewer fills.
+_REVIEW_NAME, _REVIEW_KIND, _REVIEW_TEXT, _REVIEW_COMMENT = "Tema o concepto", "Tipo", "Texto del sílabo", "Comentario"
 
 
 # --- The annotation ----------------------------------------------------------
@@ -484,38 +486,90 @@ def evaluate(
 
 
 # --- The reviewer's extraction -----------------------------------------------
+# The rules are those of casos-de-prueba/protocolo-de-revision-de-la-anotacion.md.
+
+REVIEWER, ANNOTATION = "revisor", "anotacion"
+SAME_NOTION = "misma_nocion"
+# The categories of the adjudication, by the side the unmatched row is on.
+CATEGORIES = {
+    REVIEWER: (SAME_NOTION, "omision", "criterio", "no_sustentada"),
+    ANNOTATION: (SAME_NOTION, "no_extraida", "inclusion_indebida", "criterio"),
+}
+COMPARISON_COLUMNS = ("lado", "nombre", "id_global", "nivel", "texto", "comentario",
+                      "categoria", "nocion", "alias_faltante", "justificacion", "regla")
+PIPELINE_COLUMNS = ("clave", "tipo", "nombre", "fila_del_revisor", "justificacion")
 
 
 @dataclass(frozen=True)
 class ReviewRow:
     name: str
+    kind: str = ""
     text: str = ""
     comment: str = ""
 
 
-def read_review(path: Path, syllabi: Sequence[str]) -> dict[str, list[ReviewRow]]:
-    """The reviewer's rows, from the sheets named after a syllabus."""
+def extraction_path(directory: Path, syllabus: str) -> Path:
+    return directory / f"extraccion_{syllabus}.tsv"
+
+
+def comparison_path(directory: Path, syllabus: str) -> Path:
+    return directory / f"comparacion_{syllabus}.tsv"
+
+
+def pipeline_comparison_path(directory: Path, syllabus: str) -> Path:
+    return directory / f"comparacion_pipeline_{syllabus}.tsv"
+
+
+def _flat(value: Any) -> str:
+    # A cell is one field of a tab-separated line.
+    return " ".join(str(value).split()) if value is not None else ""
+
+
+def write_tsv(path: Path, header: Sequence[str], rows: Iterable[Sequence[Any]]) -> None:
+    """Never over a file that exists: it may hold the reviewer's rows or the author's adjudication."""
+    with open(path, "x", encoding="utf-8", newline="") as file:
+        for row in (header, *rows):
+            file.write("\t".join(_flat(value) for value in row) + "\n")
+
+
+def read_tsv(path: Path) -> list[dict[str, str]]:
+    with open(path, encoding="utf-8", newline="") as file:
+        return [{name: (value or "").strip() for name, value in row.items() if name}
+                for row in csv.DictReader(file, delimiter="\t", quoting=csv.QUOTE_NONE)]
+
+
+def export_review(workbook_path: Path, directory: Path, syllabi: Sequence[str]) -> list[Path]:
+    """The reviewer's workbook as one file per syllabus, with its columns as
+    delivered. Rows without content are left out."""
     from openpyxl import load_workbook
 
-    workbook = load_workbook(path, read_only=True, data_only=True)
-    review = {}
-    for sheet in workbook.worksheets:
+    written = []
+    for sheet in load_workbook(workbook_path, read_only=True, data_only=True).worksheets:
         if sheet.title not in syllabi:
             continue
         rows = sheet.iter_rows(values_only=True)
         header = next((row for row in rows if _REVIEW_NAME in row), None)
         if header is None:
-            raise ValueError(f"{path}: sheet {sheet.title} has no column {_REVIEW_NAME!r}")
-        column = {title: index for index, title in enumerate(header) if title}
+            raise ValueError(f"{workbook_path}: sheet {sheet.title} has no column {_REVIEW_NAME!r}")
+        width = max(index for index, title in enumerate(header) if title) + 1
+        # The first column is the row number the template already brings.
+        filled = [row[:width] for row in rows if any(_flat(value) for value in row[1:width])]
+        path = extraction_path(directory, sheet.title)
+        write_tsv(path, header[:width], filled)
+        written.append(path)
+    return written
 
-        def cell(row: tuple, title: str) -> str:
-            value = row[column[title]] if title in column and column[title] < len(row) else None
-            return str(value).strip() if value is not None else ""
 
-        review[sheet.title] = [
-            ReviewRow(cell(row, _REVIEW_NAME), cell(row, _REVIEW_TEXT), cell(row, _REVIEW_COMMENT))
-            for row in rows if cell(row, _REVIEW_NAME)
-        ]
+def read_review(directory: Path, syllabi: Sequence[str]) -> dict[str, list[ReviewRow]]:
+    review = {}
+    for syllabus in syllabi:
+        path = extraction_path(directory, syllabus)
+        if path.exists():
+            review[syllabus] = [
+                ReviewRow(row[_REVIEW_NAME], row.get(_REVIEW_KIND, ""), row.get(_REVIEW_TEXT, ""),
+                          row.get(_REVIEW_COMMENT, ""))
+                for row in read_tsv(path) if row.get(_REVIEW_NAME)
+            ]
     return review
 
 
@@ -523,9 +577,16 @@ def _proportion(numerator: int, denominator: int) -> dict[str, Any]:
     return {"count": numerator, "of": denominator, "proportion": _ratio(numerator, denominator)}
 
 
-def compare_review(gold: Gold, syllabus: str, rows: Sequence[ReviewRow]) -> dict[str, Any]:
+def _is_marked(value: str) -> bool:
+    return normalize_label(value) not in ("", "no")
+
+
+def compare_review(
+    gold: Gold, syllabus: str, rows: Sequence[ReviewRow], adjudication: Sequence[Mapping[str, str]] | None = None
+) -> dict[str, Any]:
     """Reviewer against annotation, both ways, by normalized name: no type, no
-    level, and no one-to-one."""
+    level, and no one-to-one. ``adjudication`` is the comparison file as the
+    author filled it; without it, only the automatic matching is reported."""
     by_name: dict[str, ReviewRow] = {}
     for row in rows:
         by_name.setdefault(normalize_label(row.name), row)
@@ -533,37 +594,120 @@ def compare_review(gold: Gold, syllabus: str, rows: Sequence[ReviewRow]) -> dict
     notions: dict[str, Entry] = {}
     for entry in gold.entries_of(syllabus):
         notions.setdefault(entry.global_id, entry)
+    mandatory = set(gold.mandatory_notions_of(syllabus))
     extracted = {global_id for global_id in notions if gold.names[global_id] & by_name.keys()}
-    registered = [name for name in by_name if name in candidates_of]
-    return {
+    registered = {name for name in by_name if name in candidates_of}
+    # Descriptive: the reviewer has no rule for the type. A pair agrees if some
+    # entry of the notion in the syllabus has the type the reviewer wrote.
+    typed = [name for name in registered if by_name[name].kind.strip().lower() in KIND_OF.values()]
+    agreeing = [name for name in typed
+                if any(entry.kind == by_name[name].kind.strip().lower() for entry in candidates_of[name])]
+
+    def level(global_id: str) -> str:
+        return MANDATORY if global_id in mandatory else "aceptable"
+
+    compared = {
         "syllabus": syllabus,
         "reviewer_rows": len(rows),
         "repeated_rows": len(rows) - len(by_name),
         "reviewer_registered": _proportion(len(registered), len(by_name)),
         "notions_extracted": _proportion(len(extracted), len(notions)),
+        "mandatory_extracted": _proportion(len(extracted & mandatory), len(mandatory)),
+        "acceptable_extracted": _proportion(len(extracted - mandatory), len(notions) - len(mandatory)),
+        "type_agreement": _proportion(len(agreeing), len(typed)),
         "reviewer_only": [
             {"name": row.name, "text": row.text, "comment": row.comment}
-            for name, row in by_name.items() if name not in candidates_of
+            for name, row in by_name.items() if name not in registered
         ],
         "annotation_only": [
-            {"global_id": global_id, "entry": entry.id, "label": entry.label, "level": entry.level,
+            {"global_id": global_id, "entry": entry.id, "label": entry.label, "level": level(global_id),
              "evidence": entry.evidence}
             for global_id, entry in notions.items() if global_id not in extracted
         ],
+        "adjudicated": None,
     }
+    if adjudication is None:
+        return compared
+
+    filled: dict[tuple[str, str], Mapping[str, str]] = {}
+    for line in adjudication:
+        side = line["lado"]
+        if side not in CATEGORIES:
+            raise ValueError(f"{syllabus}: unknown side {side!r}")
+        if line["categoria"] and line["categoria"] not in CATEGORIES[side]:
+            raise ValueError(f"{syllabus}: {line['nombre']!r} has the category {line['categoria']!r}; "
+                             f"on the side {side} it is one of {', '.join(CATEGORIES[side])}")
+        filled[side, normalize_label(line["nombre"]) if side == REVIEWER else line["id_global"]] = line
+
+    counts = {side: Counter() for side in CATEGORIES}
+    pending = missing_aliases = 0
+    same: set[str] = set()
+    for only in compared["reviewer_only"]:
+        line = filled.get((REVIEWER, normalize_label(only["name"])), {})
+        category = line.get("categoria", "")
+        if category == SAME_NOTION:
+            if line["nocion"] not in notions:
+                raise ValueError(f"{syllabus}: {only['name']!r} is the same as {line['nocion']!r}, "
+                                 f"which is not a notion of the syllabus")
+            same.add(line["nocion"])
+            missing_aliases += _is_marked(line.get("alias_faltante", ""))
+        counts[REVIEWER][category] += 1
+        pending += not category
+    for only in compared["annotation_only"]:
+        # Paired by the author with a row of the reviewer: nothing else to classify.
+        category = SAME_NOTION if only["global_id"] in same else filled.get(
+            (ANNOTATION, only["global_id"]), {}).get("categoria", "")
+        counts[ANNOTATION][category] += 1
+        pending += not category
+    compared["adjudicated"] = {
+        "pending": pending,
+        "reviewer_registered": _proportion(len(registered) + counts[REVIEWER][SAME_NOTION], len(by_name)),
+        "notions_extracted": _proportion(len(extracted | same), len(notions)),
+        "categories": {side: {category: counts[side][category] for category in CATEGORIES[side]}
+                       for side in CATEGORIES},
+        "missing_aliases": missing_aliases,
+    }
+    return compared
 
 
-def pipeline_against_review(items: Sequence[Item], rows: Sequence[ReviewRow]) -> dict[str, Any]:
-    """The precision of a batch against the reviewer's names, without the annotation."""
+def comparison_rows(compared: Mapping[str, Any]) -> list[list[str]]:
+    """One row per discrepancy, with the columns of the adjudication left empty."""
+    return [
+        *([REVIEWER, d["name"], "", "", d["text"], d["comment"], "", "", "", "", ""]
+          for d in compared["reviewer_only"]),
+        *([ANNOTATION, d["label"], d["global_id"], d["level"], d["evidence"], "", "", "", "", "", ""]
+          for d in compared["annotation_only"]),
+    ]
+
+
+def pipeline_against_review(
+    items: Sequence[Item], rows: Sequence[ReviewRow], adjudication: Sequence[Mapping[str, str]] | None = None
+) -> dict[str, Any]:
+    """The precision of a batch against the reviewer's names, without the
+    annotation. With ``adjudication``, an item also hits if the author wrote
+    the row of the reviewer that names the same."""
     names = {normalize_label(row.name) for row in rows}
     found = [item for item in items if normalize_label(item.name) in names]
-    return {
+    compared = {
         "pipeline_registered": _proportion(len(found), len(items)),
         "pipeline_only": [
             {"key": item.key, "label": item.label, "name": item.name}
             for item in items if normalize_label(item.name) not in names
         ],
+        "adjudicated": None,
     }
+    if adjudication is not None:
+        paired = {line["clave"]: line["fila_del_revisor"] for line in adjudication if line["fila_del_revisor"]}
+        for key, name in paired.items():
+            if normalize_label(name) not in names:
+                raise ValueError(f"{key}: {name!r} is not a row of the reviewer")
+        same = sum(only["key"] in paired for only in compared["pipeline_only"])
+        compared["adjudicated"] = {"pipeline_registered": _proportion(len(found) + same, len(items))}
+    return compared
+
+
+def pipeline_comparison_rows(compared: Mapping[str, Any]) -> list[list[str]]:
+    return [[d["key"], d["label"], d["name"], "", ""] for d in compared["pipeline_only"]]
 
 
 def review(
@@ -571,6 +715,8 @@ def review(
     rows_of: Mapping[str, Sequence[ReviewRow]],
     attempts: Sequence[Attempt] = (),
     reference: Mapping[str, tuple[str, str]] | None = None,
+    adjudications: Mapping[str, Sequence[Mapping[str, str]]] | None = None,
+    pipeline_adjudications: Mapping[str, Sequence[Mapping[str, str]]] | None = None,
 ) -> dict[str, Any]:
     accepted: dict[str, tuple[Attempt, list[Item]]] = {}
     for attempt, items in walk(attempts, reference or {}):
@@ -580,38 +726,38 @@ def review(
     for syllabus in gold.syllabi:
         if syllabus not in rows_of:
             continue
-        compared = compare_review(gold, syllabus, rows_of[syllabus])
+        compared = compare_review(gold, syllabus, rows_of[syllabus], (adjudications or {}).get(syllabus))
         compared["pipeline"] = None
         if syllabus in accepted:
             attempt, items = accepted[syllabus]
-            compared["pipeline"] = {"run_id": attempt.run_id, **pipeline_against_review(items, rows_of[syllabus])}
+            compared["pipeline"] = {"run_id": attempt.run_id, **pipeline_against_review(
+                items, rows_of[syllabus], (pipeline_adjudications or {}).get(syllabus))}
         syllabi.append(compared)
 
-    def summed(name: str, source: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
-        parts = [part[name] for part in source]
-        return _proportion(sum(p["count"] for p in parts), sum(p["of"] for p in parts))
+    def summed(name: str, source: Sequence[Mapping[str, Any] | None]) -> dict[str, Any] | None:
+        # A total only where every syllabus has the figure.
+        if not source or any(part is None for part in source):
+            return None
+        return _proportion(sum(p[name]["count"] for p in source), sum(p[name]["of"] for p in source))
 
-    with_pipeline = [s["pipeline"] for s in syllabi if s["pipeline"]]
+    pipelines = [s["pipeline"] for s in syllabi]
+    adjudicated = [s["adjudicated"] for s in syllabi]
+    pipelines_adjudicated = [p and p["adjudicated"] for p in pipelines]
     return {
         "measured_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "syllabi": syllabi,
         "totals": {
-            "reviewer_registered": summed("reviewer_registered", syllabi),
-            "notions_extracted": summed("notions_extracted", syllabi),
-            "pipeline_registered": summed("pipeline_registered", with_pipeline) if with_pipeline else None,
+            **{name: summed(name, syllabi) for name in (
+                "reviewer_registered", "notions_extracted", "mandatory_extracted", "acceptable_extracted",
+                "type_agreement")},
+            "pipeline_registered": summed("pipeline_registered", pipelines),
+            "adjudicated": {
+                "reviewer_registered": summed("reviewer_registered", adjudicated),
+                "notions_extracted": summed("notions_extracted", adjudicated),
+                "pipeline_registered": summed("pipeline_registered", pipelines_adjudicated),
+            },
         },
     }
-
-
-def discrepancy_rows(report: Mapping[str, Any]) -> list[list[str]]:
-    """One row per discrepancy, with the category left for the adjudication."""
-    rows = [["silabo", "lado", "nombre", "id_global", "nivel", "texto", "comentario", "categoria"]]
-    for syllabus in report["syllabi"]:
-        code = syllabus["syllabus"]
-        rows += [[code, "revisor", d["name"], "", "", d["text"], d["comment"], ""] for d in syllabus["reviewer_only"]]
-        rows += [[code, "anotacion", d["label"], d["global_id"], d["level"], d["evidence"], "", ""]
-                 for d in syllabus["annotation_only"]]
-    return rows
 
 
 # --- Output ------------------------------------------------------------------
@@ -664,18 +810,36 @@ def markdown(report: Mapping[str, Any]) -> str:
 
 
 def review_markdown(report: Mapping[str, Any]) -> str:
-    def cells(part: Mapping[str, Any] | None) -> tuple:
-        return (f"{part['count']} / {part['of']}", part["proportion"]) if part else (None, None)
+    def cells(*parts: Mapping[str, Any] | None) -> tuple:
+        return tuple(value for part in parts
+                     for value in ((f"{part['count']} / {part['of']}", part["proportion"]) if part else (None, None)))
 
+    measures = ("reviewer_registered", "notions_extracted", "mandatory_extracted", "acceptable_extracted",
+                "type_agreement")
     header = ("Syllabus", "Reviewer rows", "Repeated", "Reviewer names the annotation has", "%",
-              "Notions the reviewer extracted", "%", "Items the reviewer has", "%")
-    rows = [(s["syllabus"], s["reviewer_rows"], s["repeated_rows"], *cells(s["reviewer_registered"]),
-             *cells(s["notions_extracted"]), *cells(s["pipeline"] and s["pipeline"]["pipeline_registered"]))
-            for s in report["syllabi"]]
+              "Notions the reviewer extracted", "%", "Mandatory", "%", "Acceptable", "%", "Same type", "%",
+              "Items the reviewer has", "%")
+    rows = [(s["syllabus"], s["reviewer_rows"], s["repeated_rows"], *cells(*(s[m] for m in measures)),
+             *cells(s["pipeline"] and s["pipeline"]["pipeline_registered"])) for s in report["syllabi"]]
     t = report["totals"]
-    rows.append(("Total", None, None, *cells(t["reviewer_registered"]), *cells(t["notions_extracted"]),
-                 *cells(t["pipeline_registered"])))
-    return "\n".join(_table(header, rows))
+    rows.append(("Total", None, None, *cells(*(t[m] for m in measures)), *cells(t["pipeline_registered"])))
+    lines = _table(header, rows)
+
+    after = [(s["syllabus"], s["adjudicated"], s["pipeline"] and s["pipeline"]["adjudicated"])
+             for s in report["syllabi"]]
+    if any(adjudicated or pipeline for _, adjudicated, pipeline in after):
+        lines += ["", "After the adjudication:", *_table(
+            ("Syllabus", "Pending", "Reviewer names the annotation has", "%", "Notions the reviewer extracted", "%",
+             "Missing aliases", "Items the reviewer has", "%"),
+            [*((syllabus, a and a["pending"], *cells(a and a["reviewer_registered"], a and a["notions_extracted"]),
+                a and a["missing_aliases"], *cells(p and p["pipeline_registered"])) for syllabus, a, p in after),
+             ("Total", None, *cells(t["adjudicated"]["reviewer_registered"], t["adjudicated"]["notions_extracted"]),
+              None, *cells(t["adjudicated"]["pipeline_registered"]))])]
+        for side in CATEGORIES:
+            lines += ["", f"Categories, side {side}:", *_table(
+                ("Syllabus", *CATEGORIES[side]),
+                [(syllabus, *(a["categories"][side][c] for c in CATEGORIES[side])) for syllabus, a, _ in after if a])]
+    return "\n".join(lines)
 
 
 # --- Reading the stores ------------------------------------------------------
@@ -728,7 +892,10 @@ def main() -> int:
                         help=f"cases: do not evaluate nor write {' and '.join(HELD_OUT)}")
     parser.add_argument("--gold", type=Path, default=GOLD)
     parser.add_argument("--compound-headings", type=Path, default=COMPOUND_HEADINGS)
-    parser.add_argument("--review", type=Path, default=REVIEW, help="review: the reviewer's workbook")
+    parser.add_argument("--review-dir", type=Path, default=REVIEW_DIR,
+                        help="review: where the extraction and the comparison files are")
+    parser.add_argument("--workbook", type=Path,
+                        help="review: the workbook the reviewer filled; exported once to the review directory")
     parser.add_argument("--facts-dir", type=Path, default=Path("var/facts"))
     parser.add_argument("--operational-db", type=Path, default=Path("var/operational.sqlite"))
     parser.add_argument("--backbone", type=Path, default=Path("ontology/backbone_cs2023.ttl"))
@@ -744,15 +911,34 @@ def main() -> int:
     stamp = f"{datetime.now():%Y%m%d-%H%M%S}"
 
     if args.command == "review":
-        report = {**source, **review(gold, read_review(args.review, gold.syllabi), attempts, reference)}
+        directory = args.review_dir
+        if args.workbook:
+            for path in export_review(args.workbook, directory, gold.syllabi):
+                print(f"Extraction exported to {path}")
+        rows_of = read_review(directory, gold.syllabi)
+        if not rows_of:
+            print(f"No extraction in {directory}; pass --workbook with the one the reviewer filled")
+            return 2
+
+        def filled(path_of) -> dict[str, list[dict[str, str]]]:
+            return {s: read_tsv(path_of(directory, s)) for s in rows_of if path_of(directory, s).exists()}
+
+        report = {**source, **review(gold, rows_of, attempts, reference,
+                                     filled(comparison_path), filled(pipeline_comparison_path))}
+        # The files the author fills are written once and only read from then on.
+        for compared in report["syllabi"]:
+            for path, header, rows in (
+                (comparison_path(directory, compared["syllabus"]), COMPARISON_COLUMNS, comparison_rows(compared)),
+                (pipeline_comparison_path(directory, compared["syllabus"]), PIPELINE_COLUMNS,
+                 compared["pipeline"] and pipeline_comparison_rows(compared["pipeline"])),
+            ):
+                if rows is not None and not path.exists():
+                    write_tsv(path, header, rows)
+                    print(f"To adjudicate: {path}")
         output = args.output_dir / f"review-{stamp}.json"
         _write(report, output)
-        discrepancies = args.output_dir / f"review-discrepancies-{stamp}.tsv"
-        with open(discrepancies, "w", encoding="utf-8", newline="") as file:
-            csv.writer(file, delimiter="\t", quoting=csv.QUOTE_NONE, escapechar="\\").writerows(
-                [[cell.replace("\t", " ").replace("\n", " ") for cell in row] for row in discrepancy_rows(report)])
         print(review_markdown(report))
-        print(f"\nReport written to {output}\nDiscrepancies written to {discrepancies}")
+        print(f"\nReport written to {output}")
         return 0
 
     report = {**source, **evaluate(

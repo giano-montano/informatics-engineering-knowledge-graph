@@ -6,9 +6,10 @@ import pytest
 from conftest import BACKBONE, ROOT
 
 from evaluate_ingestion import (
+    COMPARISON_COLUMNS,
     COMPOUND_HEADINGS,
     GOLD,
-    REVIEW,
+    REVIEW_DIR,
     Attempt,
     Entry,
     Gold,
@@ -16,8 +17,11 @@ from evaluate_ingestion import (
     ReviewRow,
     UnknownEndpoint,
     compare_review,
-    discrepancy_rows,
+    comparison_path,
+    comparison_rows,
     evaluate,
+    export_review,
+    extraction_path,
     fusion,
     items_of,
     load_compound_headings,
@@ -26,10 +30,13 @@ from evaluate_ingestion import (
     measure,
     most_hits,
     pipeline_against_review,
+    pipeline_comparison_rows,
     read_reference,
     read_review,
+    read_tsv,
     review,
     total,
+    write_tsv,
 )
 
 from iekg.core.batch import Batch, EdgeFact, NodeFact
@@ -292,7 +299,7 @@ def test_the_totals_are_sums_and_the_held_out_cases_are_reported_apart():
     assert totals["all"]["precision"] == 0.6
     assert (totals["tuning"]["cases"], totals["tuning"]["precision"]) == (1, 0.5)
     assert (totals["held_out"]["cases"], totals["held_out"]["precision"]) == (1, 1)
-    assert total([]) ["precision"] is None
+    assert total([])["precision"] is None
 
 
 def test_hiding_the_held_out_cases_leaves_no_figure_of_theirs():
@@ -387,30 +394,94 @@ GOLD_REVIEWED = Gold((
     entry(2, "G2", "Grafos", level="aceptable"),
     entry(3, "G3", "Pilas", kind="tema"),
     entry(4, "G3", "Pilas"),
+    entry(5, "G4", "Montículos", level="aceptable"),
 ))
+REVIEWED = [ReviewRow("Recursividad", "tema"), ReviewRow("recursividad", "concepto"), ReviewRow("Grafos", "Concepto"),
+            ReviewRow("Colas", "tema", "colas y pilas", "dudoso"), ReviewRow("Stacks", "tema")]
+
+
+def adjudicated(side, name, category, global_id="", notion="", missing_alias=""):
+    return {"lado": side, "nombre": name, "id_global": global_id, "categoria": category, "nocion": notion,
+            "alias_faltante": missing_alias}
 
 
 def test_the_reviewer_and_the_annotation_are_compared_both_ways_by_name():
-    rows = [ReviewRow("Recursividad"), ReviewRow("recursividad"), ReviewRow("Grafos"),
-            ReviewRow("Colas", "colas y pilas", "dudoso")]
-    compared = compare_review(GOLD_REVIEWED, "S1", rows)
-    assert (compared["reviewer_rows"], compared["repeated_rows"]) == (4, 1)
-    assert compared["reviewer_registered"] == {"count": 2, "of": 3, "proportion": 2 / 3}
-    # By notion and without level: the acceptable one counts, the two entries of G3 are one.
-    assert compared["notions_extracted"] == {"count": 2, "of": 3, "proportion": 2 / 3}
-    assert compared["reviewer_only"] == [{"name": "Colas", "text": "colas y pilas", "comment": "dudoso"}]
-    assert [d["global_id"] for d in compared["annotation_only"]] == ["G3"]
+    compared = compare_review(GOLD_REVIEWED, "S1", REVIEWED)
+    # Rows that normalize alike count once.
+    assert (compared["reviewer_rows"], compared["repeated_rows"]) == (5, 1)
+    assert compared["reviewer_registered"] == {"count": 2, "of": 4, "proportion": 0.5}
+    # By notion and without level: the two entries of G3 are one notion.
+    assert compared["notions_extracted"] == {"count": 2, "of": 4, "proportion": 0.5}
+    assert [d["name"] for d in compared["reviewer_only"]] == ["Colas", "Stacks"]
+    assert compared["reviewer_only"][0] == {"name": "Colas", "text": "colas y pilas", "comment": "dudoso"}
+    assert [(d["global_id"], d["level"]) for d in compared["annotation_only"]] == [
+        ("G3", "obligatoria"), ("G4", "aceptable")]
+    assert compared["adjudicated"] is None
+
+
+def test_the_notions_the_reviewer_extracted_are_split_by_level():
+    compared = compare_review(GOLD_REVIEWED, "S1", REVIEWED)
+    assert (compared["mandatory_extracted"]["count"], compared["mandatory_extracted"]["of"]) == (1, 2)
+    assert (compared["acceptable_extracted"]["count"], compared["acceptable_extracted"]["of"]) == (1, 2)
+
+
+def test_the_type_the_reviewer_wrote_is_compared_on_the_matched_pairs_only():
+    # "Recursividad" as a topic against a concept entry; "Grafos" agrees; the unmatched rows do not count.
+    assert compare_review(GOLD_REVIEWED, "S1", REVIEWED)["type_agreement"] == {"count": 1, "of": 2, "proportion": 0.5}
+    untyped = compare_review(GOLD_REVIEWED, "S1", [ReviewRow("Grafos")])
+    assert untyped["type_agreement"]["of"] == 0
+
+
+def test_the_adjudication_adds_the_pairs_the_author_made_and_counts_each_category():
+    compared = compare_review(GOLD_REVIEWED, "S1", REVIEWED, [
+        adjudicated("revisor", "Stacks", "misma_nocion", notion="G3", missing_alias="sí"),
+        adjudicated("revisor", "Colas", "omision"),
+        adjudicated("anotacion", "Montículos", "no_extraida", global_id="G4"),
+    ])
+    after = compared["adjudicated"]
+    assert after["reviewer_registered"] == {"count": 3, "of": 4, "proportion": 0.75}
+    assert after["notions_extracted"] == {"count": 3, "of": 4, "proportion": 0.75}
+    assert after["categories"]["revisor"] == {"misma_nocion": 1, "omision": 1, "criterio": 0, "no_sustentada": 0}
+    # G3 was paired through the reviewer's row: it needs no line of its own.
+    assert after["categories"]["anotacion"] == {
+        "misma_nocion": 1, "no_extraida": 1, "inclusion_indebida": 0, "criterio": 0}
+    assert (after["missing_aliases"], after["pending"]) == (1, 0)
+    # The automatic figures stay as they were.
+    assert compared["reviewer_registered"]["count"] == 2
+
+
+def test_a_discrepancy_without_a_category_is_pending():
+    compared = compare_review(GOLD_REVIEWED, "S1", REVIEWED, [adjudicated("revisor", "Colas", "criterio")])
+    assert compared["adjudicated"]["pending"] == 3
+
+
+@pytest.mark.parametrize("line, message", [
+    (adjudicated("revisor", "Colas", "no_extraida"), "category"),
+    (adjudicated("anotacion", "Montículos", "omision", global_id="G4"), "category"),
+    (adjudicated("revisor", "Stacks", "misma_nocion", notion="G9"), "not a notion"),
+    (adjudicated("pipeline", "Stacks", "criterio"), "side"),
+])
+def test_an_adjudication_outside_the_protocol_is_refused(line, message):
+    with pytest.raises(ValueError, match=message):
+        compare_review(GOLD_REVIEWED, "S1", REVIEWED, [line])
 
 
 def test_the_pipeline_is_compared_with_the_reviewer_without_type_nor_one_to_one():
     rows = [ReviewRow("Pilas"), ReviewRow("Recursión")]
-    compared = pipeline_against_review([topic("Pilas"), concept("Pilas"), concept("Recursividad")], rows)
+    items = [topic("Pilas"), concept("Pilas"), concept("Recursividad", key="r"), concept("Colas", key="q")]
+    compared = pipeline_against_review(items, rows)
     # No aliases on the reviewer's side: "Recursividad" does not reach "Recursión".
-    assert compared["pipeline_registered"] == {"count": 2, "of": 3, "proportion": 2 / 3}
-    assert [item["name"] for item in compared["pipeline_only"]] == ["Recursividad"]
+    assert compared["pipeline_registered"] == {"count": 2, "of": 4, "proportion": 0.5}
+    assert [item["name"] for item in compared["pipeline_only"]] == ["Recursividad", "Colas"]
+
+    paired = pipeline_against_review(items, rows, [
+        {"clave": "r", "fila_del_revisor": "Recursión"}, {"clave": "q", "fila_del_revisor": ""}])
+    assert paired["adjudicated"]["pipeline_registered"] == {"count": 3, "of": 4, "proportion": 0.75}
+    with pytest.raises(ValueError, match="not a row of the reviewer"):
+        pipeline_against_review(items, rows, [{"clave": "q", "fila_del_revisor": "Filas"}])
 
 
-def test_the_review_adds_the_pipeline_only_where_a_batch_was_accepted(tmp_path):
+def test_the_workbook_is_exported_once_and_the_files_to_adjudicate_come_back_as_written(tmp_path):
     from openpyxl import Workbook
 
     workbook = Workbook()
@@ -419,28 +490,53 @@ def test_the_review_adds_the_pipeline_only_where_a_batch_was_accepted(tmp_path):
     sheet.append(["Tiempo (min):", None, "S1"])
     sheet.append([])
     sheet.append(["N°", "Tema o concepto", "Tipo", "Texto del sílabo", "Página", "Comentario"])
-    sheet.append([1, "Recursión ", "concepto", "recursión y grafos", 2, None])
+    sheet.append([1, "Recursión ", "concepto", "recursión\ny grafos", 2, None])
     sheet.append([2, None, None, None, None, None])
-    sheet.append([3, "Colas", "tema", None, 3, "no estoy seguro"])
-    workbook.save(tmp_path / "review.xlsx")
+    sheet.append([3, "Colas", "tema", None, 3, "no estoy\tseguro"])
+    workbook.save(tmp_path / "filled.xlsx")
 
-    rows_of = read_review(tmp_path / "review.xlsx", GOLD_REVIEWED.syllabi)
-    assert rows_of == {"S1": [ReviewRow("Recursión", "recursión y grafos"), ReviewRow("Colas", "", "no estoy seguro")]}
+    (path,) = export_review(tmp_path / "filled.xlsx", tmp_path, GOLD_REVIEWED.syllabi)
+    assert path == extraction_path(tmp_path, "S1")
+    assert path.read_text(encoding="utf-8").split("\n")[:2] == [
+        "N°\tTema o concepto\tTipo\tTexto del sílabo\tPágina\tComentario", "1\tRecursión\tconcepto\trecursión y grafos\t2\t"]
+    rows_of = read_review(tmp_path, GOLD_REVIEWED.syllabi)
+    assert rows_of == {"S1": [ReviewRow("Recursión", "concepto", "recursión y grafos"),
+                              ReviewRow("Colas", "tema", "", "no estoy seguro")]}
+    # The reviewer's rows are never written over.
+    with pytest.raises(FileExistsError):
+        export_review(tmp_path / "filled.xlsx", tmp_path, GOLD_REVIEWED.syllabi)
 
+    report = review(GOLD_REVIEWED, rows_of, [accepted(1, "S1", concept("Recursión"), concept("Grafos", key="g"))], {})
+    (compared,) = report["syllabi"]
+    write_tsv(comparison_path(tmp_path, "S1"), COMPARISON_COLUMNS, comparison_rows(compared))
+    lines = read_tsv(comparison_path(tmp_path, "S1"))
+    assert [(line["lado"], line["nombre"], line["id_global"]) for line in lines] == [
+        ("revisor", "Colas", ""), ("anotacion", "Grafos", "G2"), ("anotacion", "Pilas", "G3"),
+        ("anotacion", "Montículos", "G4")]
+    assert compare_review(GOLD_REVIEWED, "S1", rows_of["S1"], lines)["adjudicated"]["pending"] == 4
+    assert pipeline_comparison_rows(compared["pipeline"]) == [["g", CONCEPT, "Grafos", "", ""]]
+
+
+def test_the_review_totals_wait_for_what_every_syllabus_has():
+    rows_of = {"S1": REVIEWED}
     without = review(GOLD_REVIEWED, rows_of)
     assert without["syllabi"][0]["pipeline"] is None
     assert without["totals"]["pipeline_registered"] is None
+    assert without["totals"]["adjudicated"]["reviewer_registered"] is None
     assert without["totals"]["reviewer_registered"]["proportion"] == 0.5
 
-    report = review(GOLD_REVIEWED, rows_of, [accepted(1, "S1", concept("Recursión"), concept("Grafos"))], {})
+    report = review(GOLD_REVIEWED, rows_of, [accepted(1, "S1", concept("Recursividad"), concept("Listas"))], {},
+                    {"S1": [adjudicated("revisor", "Stacks", "misma_nocion", notion="G3")]}, {"S1": []})
     assert report["totals"]["pipeline_registered"] == {"count": 1, "of": 2, "proportion": 0.5}
-    sides = [(row[1], row[2]) for row in discrepancy_rows(report)[1:]]
-    assert sides == [("revisor", "Colas"), ("anotacion", "Grafos"), ("anotacion", "Pilas")]
+    assert report["totals"]["adjudicated"]["reviewer_registered"]["count"] == 3
+    assert report["totals"]["adjudicated"]["pipeline_registered"]["count"] == 1
 
 
-def test_the_extraction_sheet_of_the_repository_is_read():
-    rows_of = read_review(ROOT / REVIEW, load_gold(ROOT / GOLD).syllabi)
-    assert set(rows_of) == {"1INF27", "1INF37"}
+def test_the_empty_sheet_of_the_repository_exports_no_rows(tmp_path):
+    syllabi = load_gold(ROOT / GOLD).syllabi
+    written = export_review(ROOT / REVIEW_DIR / "hoja-de-extraccion.xlsx", tmp_path, syllabi)
+    assert {path.name for path in written} == {"extraccion_1INF27.tsv", "extraccion_1INF37.tsv"}
+    assert read_review(tmp_path, syllabi) == {"1INF27": [], "1INF37": []}
 
 
 # --- The annotation of the repository -------------------------------------------

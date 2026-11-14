@@ -147,6 +147,7 @@ uv run iekg-api                          # la API en :8000; exige IEKG_OPERATOR_
 uv run python scripts/measure_navigation.py   # AC-05; solo lee, reporte en var/measurements/
 uv run python scripts/evaluate_ingestion.py cases --from-run N   # CP-01 a CP-14, la cadena desde la corrida N
 uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out   # corridas sueltas del ajuste
+uv run python scripts/evaluate_ingestion.py review --workbook LLENO.xlsx   # una vez: exporta la extracción y compara
 uv run python scripts/evaluate_ingestion.py review --from-run N  # revisor contra anotación y pipeline
 start http://localhost:7474
 

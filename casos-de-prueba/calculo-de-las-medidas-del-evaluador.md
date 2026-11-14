@@ -12,8 +12,8 @@ como **elección**: son los puntos que hay que revisar.
 
 **Costo documental:** ninguna edición de entregables. Todo lo de abajo es la
 salida 1 de `CLAUDE.md` §8 (el código cumple lo escrito) o un matiz declarado
-en este archivo (salida 2). Las elecciones 1 a 6 no contradicen la tesis; la
-precisan.
+en este archivo (salida 2). Las elecciones 1 a 6 no contradicen la tesis ni el
+protocolo de revisión; los precisan.
 
 ## 1. Lo que la tesis no fija
 
@@ -70,10 +70,22 @@ nodos. Se reporta por noción: cuántos identificadores globales tienen un
 duplicado y cuántos nodos sobran (los del mismo tipo menos uno); y cuántos
 identificadores globales están partidos. Los nodos de cada grupo se listan.
 
-**Elección 6. La segunda parte compara por nombre, sin uno a uno.** Ver la
-sección 7. La regla de uno a uno existe para castigar un nodo repetido en una
-ingesta; al ignorar el tipo, un tema y un concepto con el mismo nombre no son
-una repetición que castigar.
+**Elección 6. Lo que el protocolo de revisión deja abierto.** La segunda
+parte sigue `protocolo-de-revision-de-la-anotacion.md`, que ya fija la
+comparación por nombre, sin tipo, sin nivel y sin uno a uno. Tres detalles son
+de aquí:
+
+- *Obligatoria o aceptable, por noción.* El protocolo pide separar las
+  nociones extraídas por nivel, pero el nivel es de la entrada. Una noción es
+  obligatoria si tiene al menos una entrada obligatoria en el sílabo, igual
+  que en la exhaustividad; si no, es aceptable.
+- *Concordancia de tipo con el revisor.* Un par concuerda si alguna entrada de
+  la noción en ese sílabo tiene el tipo que escribió el revisor. De las filas
+  repetidas se toma el tipo de la primera. Las filas sin tipo no entran.
+- *Dónde se adjudica el pipeline contra el revisor.* El protocolo dice que un
+  ítem acierta también si el autor adjudica que nombra lo mismo que una fila,
+  pero no dice en qué archivo. Se usa `comparacion_pipeline_<sílabo>.tsv`, que
+  el protocolo no lista todavía.
 
 **Hueco que no se resuelve aquí: la lista de encabezados que nombran más de un
 saber.** La excepción de las medidas de fusión la necesita, y hoy vive solo
@@ -85,14 +97,6 @@ ahora: copiarla a un archivo de datos, que duplica; o deducirla de la
 estructura (alias que también es noción propia), que puede no dar las mismas
 27. **Pregunta:** ¿se queda así, o la lista pasa a un archivo de datos de
 `gold/` que lean los dos?
-
-**Hueco: el protocolo de revisión no está en el árbol.** El registro de la
-revisión y la tesis remiten a
-`casos-de-prueba/protocolo-de-revision-de-la-anotacion.md`, que no existe en
-la rama ni en el directorio de trabajo (2026-11-14). La segunda parte se
-diseñó con lo que dice la tesis en «Anotación de referencia» y con la hoja de
-extracción. Las categorías de discrepancia no se conocen aquí; el evaluador
-lista las discrepancias y deja la categoría en blanco.
 
 ## 2. Entradas
 
@@ -251,43 +255,61 @@ advertencia.
 
 ## 8. Segunda parte: la extracción del revisor
 
-Entrada: `casos-de-prueba/revision/hoja-de-extraccion.xlsx`, una hoja por
-sílabo (`1INF37`, `1INF27`), encabezados en la fila 3, una fila por tema o
-concepto desde la fila 4. Se lee la columna «Tema o concepto»; las filas sin
-nombre se saltan. El tipo que anotó el revisor no se usa.
+Las reglas son las del protocolo de revisión; aquí va cómo se ejecutan. Los
+archivos viven en `casos-de-prueba/revision/`.
 
-Todo se compara por nombre normalizado, sin tipo, sin nivel y sin uno a uno
-(elección 6). Los nombres repetidos del revisor cuentan una vez; cuántas filas
-se colapsaron se reporta.
+**Entrada.** La primera vez se pasa el Excel que llenó el revisor
+(`--workbook`). El evaluador lo exporta a `extraccion_<sílabo>.tsv`, una hoja
+por sílabo, con las columnas tal como vienen. Solo deja fuera las filas sin
+contenido y aplana los saltos de línea y tabulaciones de una celda, que
+romperían el TSV. Desde entonces lee siempre el TSV, y nunca lo sobrescribe.
 
-**Revisor contra anotación, en las dos direcciones**, por sílabo y en total:
+**Emparejamiento automático**, por sílabo y en total:
 
-- *Lo que extrajo el revisor y la anotación registra:* nombres del revisor
-  que están entre los nombres de alguna noción con entrada en ese sílabo,
-  entre los nombres del revisor.
-- *Las nociones de la anotación que el revisor extrajo:* nociones con entrada
-  en ese sílabo, de cualquier nivel, que tienen entre sus nombres algún
-  nombre del revisor, entre las nociones del sílabo.
-
-Las discrepancias salen en un TSV aparte, una por fila, con la categoría en
-blanco: los nombres del revisor que la anotación no registra (con el texto
-del sílabo y el comentario que escribió) y las nociones que el revisor no
-extrajo (con su etiqueta, nivel y evidencia). La adjudicación es de Giano; el
-evaluador no clasifica.
+- Filas del revisor que coinciden con una noción de la anotación, entre las
+  filas del revisor. Las que normalizan igual cuentan una vez; cuántas se
+  colapsaron se reporta.
+- Nociones de la anotación que el revisor extrajo, entre las nociones del
+  sílabo; en total, y separando obligatorias de aceptables (elección 6).
+- Concordancia de tipo de los pares emparejados (elección 6).
 
 La proporción de nociones se cuenta por noción y no por entrada, así que el
 denominador es menor que las entradas del sílabo: 39 nociones en 1INF27 y 85
 en 1INF37 (89 entradas), 124 en total frente a las 128 entradas que cita la
 tesis.
 
-Como la comparación exige coincidencia de nombres y el revisor no escribe
-nombres alternativos, las dos proporciones son cotas inferiores, y más
-bajas que las del pipeline contra la anotación.
+**Adjudicación.** El evaluador escribe `comparacion_<sílabo>.tsv` con una fila
+por discrepancia: las filas del revisor sin noción (`lado=revisor`) y las
+nociones sin fila (`lado=anotacion`). Las columnas `categoria`, `nocion`,
+`alias_faltante`, `justificacion` y `regla` salen vacías y las llena el autor.
+El archivo se escribe una sola vez; en las corridas siguientes solo se lee.
+
+- `categoria`: una de las del protocolo para ese lado. Otra cosa detiene el
+  evaluador.
+- `nocion`: el identificador global, cuando una fila del revisor es
+  `misma_nocion`. Tiene que ser una noción del sílabo.
+- Una noción de la anotación que el autor emparejó así queda como
+  `misma_nocion` sola; no hace falta llenar su fila.
+- `alias_faltante`: cualquier marca distinta de vacío o «no».
+
+Con el archivo lleno se reportan, además de lo automático: las dos
+proporciones después de la adjudicación (lo automático más los pares
+`misma_nocion`), el conteo de cada categoría por lado, los alias faltantes y
+cuántas discrepancias siguen sin categoría. Las cifras automáticas no cambian.
+
+Todo esto se calcula contra la anotación **anterior** a la corrección, como
+pide el protocolo: se corre antes de aplicar el parche, o con `--gold`
+apuntando a la versión anterior.
 
 **Pipeline contra revisor.** Para el lote aceptado de cada uno de los dos
-sílabos, en la cadena: ítems cuyo nombre normalizado está entre los nombres
-del revisor, entre los ítems del lote. Se lista lo que no coincide. Mide la
-precisión del pipeline sin pasar por la anotación.
+sílabos, en la cadena: ítems cuyo nombre normalizado es el de una fila del
+revisor, entre los ítems del lote. Los que no coinciden se escriben en
+`comparacion_pipeline_<sílabo>.tsv`; el autor anota en `fila_del_revisor` la
+fila que nombra lo mismo, si la hay, y esos ítems se suman en la cifra
+adjudicada. Un nombre que no es una fila del revisor detiene el evaluador.
+
+El tiempo del revisor, sus preguntas y las clases no pasan por el evaluador:
+van en el registro de la revisión.
 
 ## 9. Salidas
 
@@ -297,7 +319,8 @@ el detalle y, por consola, las tablas en Markdown.
 - `cp-extraction-<fecha-hora>.json`: modo, ventana de corridas, anotación
   usada (ruta y su línea de metadatos), casos, totales, intentos rechazados,
   CP-14 y advertencias.
-- `review-<fecha-hora>.json` y `review-discrepancies-<fecha-hora>.tsv`.
+- `review-<fecha-hora>.json`. Los archivos de la adjudicación no van aquí,
+  sino en `casos-de-prueba/revision/`, que se versiona.
 
 Código de salida de la primera parte: 0 si el indicador se aprueba o si no
 corresponde veredicto; 1 si hay veredicto y la precisión es menor que 75 %.
@@ -318,6 +341,8 @@ prueba:
 - **Tipo:** un `Topic` cuyo nombre es el de una entrada concepto es acierto,
   y baja la concordancia de tipo.
 - **Fusión:** un caso por cada situación y uno por cada lado de la excepción.
+- **Revisor:** cada medida del protocolo, la adjudicación con sus
+  categorías, y una adjudicación fuera del protocolo, que se rechaza.
 - **Ítems:** un nodo existente enlazado es ítem con la etiqueta del lote
   anterior; una unidad de CS2023 no lo es; un extremo desconocido detiene la
   evaluación.

@@ -1009,7 +1009,7 @@ Este resultado se obtuvo con las cinco fases del procedimiento descrito en el ca
 
 1. ### **Atributos de calidad del módulo del grafo de conocimiento** {#atributos-de-calidad-del-módulo-del-grafo-de-conocimiento}
 
-El diseño del módulo se guía por cinco atributos de calidad, derivados de las necesidades de los interesados, de las restricciones del entorno en que el módulo opera y de las condiciones del proceso de desarrollo. Cada uno se especifica como escenario de calidad en la forma de seis partes propuesta por Bass et al. (2021): fuente, estímulo, artefacto, entorno, respuesta y medida de respuesta. La medida es la parte decisiva, ya que un atributo sin medida verificable no puede sostener ninguna decisión de diseño. El vocabulario de caracterización proviene de la norma ISO/IEC 25010\. Se presentan los atributos seleccionados en la Tabla 14 y los escenarios de calidad en la Tabla 15\.
+El diseño del módulo se guía por cinco atributos de calidad, derivados de las necesidades de los interesados, de las restricciones del entorno en que el módulo opera y de las condiciones del proceso de desarrollo. Cada uno se especifica como escenario de calidad en la forma de seis partes propuesta por Bass et al. (2021): fuente, estímulo, artefacto, entorno, respuesta y medida de respuesta. La medida es la parte decisiva, ya que un atributo sin medida verificable no puede sostener ninguna decisión de diseño. El vocabulario de caracterización proviene de la norma ISO/IEC 25010 (International Organization for Standardization & International Electrotechnical Commission, 2023). Se presentan los atributos seleccionados en la Tabla 14 y los escenarios de calidad en la Tabla 15\.
 
 ###### **Tabla 14\. Atributos de calidad del módulo del grafo de conocimiento** {#tabla-14.-atributos-de-calidad-del-módulo-del-grafo-de-conocimiento}
 
@@ -1475,6 +1475,8 @@ Gunarathne, W. K. T. M., Chootong, C., Sommool, W., Ochirbat, A., Chen, Y.-C., R
 
 Huang, J., Lai, F., Zheng, Z., Lai, R., Chen, X., Tian, J., & Zheng, Y. (2026). Design and Evaluation of a Question-Answering System Based on Knowledge Graph-Augmented Large Language Models in K–12 Artificial Intelligence Curriculum. *Applied Sciences*, *16*(7), 3552\. [https\://doi.org/10.3390/app16073552](https://doi.org/10.3390/app16073552)
 
+International Organization for Standardization & International Electrotechnical Commission. (2023). *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model* (ISO/IEC 25010:2023).
+
 Kitchenham, B., & Charters, S. (2007). *Guidelines for performing Systematic Literature Reviews in Software Engineering*. *2*.
 
 Kumar, A. N., Raj, R. K., Aly, S. G., Anderson, M. D., Becker, B. A., Blumenthal, R. L., Eaton, E., Epstein, S. L., Goldweber, M., Jalote, P., Lea, D., Oudshoorn, M., Pias, M., Reiser, S., Servin, C., Simha, R., Winters, T., & Xiang, Q. (2024). *Computer Science Curricula 2023*. ACM. [https\://doi.org/10.1145/3664191](https://doi.org/10.1145/3664191)
@@ -1815,7 +1817,7 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 
 [^2]:  El umbral de al menos 5 clases y al menos 3 tipos de relación va de acuerdo a la aplicación de la metodología Ontology Development 101 de Noy y McGuinness
 
-[^3]: Umbral definido con base en resultados recientes de construcción automática de grafos de conocimiento educativos [(S. Li et al., 2026; Xu & Che, 2025\)](https://www.zotero.org/google-docs/?XCU8kT)
+[^3]: Umbral fijado por debajo de la precisión de extracción de entidades que reportan los trabajos más cercanos con modelos de lenguaje: entre 80 % y 85 % sobre tres sílabos (S. Li et al., 2026) y entre 82 % y 88 % sobre un curso (Xu & Che, 2025). El margen cubre la diferencia de idioma y de formato de entrada, y un emparejamiento más estricto: por etiqueta normalizada contra una anotación adjudicada, sin sinónimos no registrados.
 
 [^4]:  OntoGraf representa la jerarquía de subsunción y no rotula las propiedades de objeto, que se detallan en la Tabla 13\. Por esa misma limitación no se visualizan las relaciones de Recurso de Aprendizaje con Curso y con Elemento de Conocimiento (isAbout/hasResource y wasDerivedFrom).
 

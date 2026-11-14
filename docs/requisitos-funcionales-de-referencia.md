@@ -1,6 +1,6 @@
 # **Catálogo de requisitos funcionales**
 
-**Sistema:** KMS basado en grafo de conocimiento para Ingeniería Informática (PUCP) **Alcance:** R3–R6 · **Versión:** 1.3 · **Fecha:** octubre 2026
+**Sistema:** KMS basado en grafo de conocimiento para Ingeniería Informática (PUCP) **Alcance:** R3–R6 · **Versión:** 1.4 · **Fecha:** noviembre 2026
 
 Documento interno: guía los requisitos del módulo y su única fuente de verdad es este repositorio. No se replica en los documentos oficiales.
 
@@ -67,7 +67,7 @@ El desarrollador tampoco es actor: ejecuta los procesos de construcción (secci�
 | RF-06 | Enlazar las entidades extraídas a los nodos ya existentes en el grafo —de cualquiera de las dos capas— cuando exista correspondencia, evitando duplicados. La escritura no crea ni modifica nodos de la capa de referencia. | AC-01 | DD-02, ADR-011 |
 | RF-07 | Registrar la procedencia de cada instancia y de cada arista institucional escrita. | AC-03 | DD-09 |
 | RF-08 | Persistir en el almacén de hechos los hechos institucionales escritos en el grafo, de modo que puedan reaplicarse sin volver a invocar el modelo de lenguaje. | AC-04 | ADR-004, ADR-012 |
-| RF-25 | Fijar en la configuración el modelo de lenguaje por su versión exacta, no por un alias que el proveedor pueda mover, junto con sus parámetros de generación, y registrar con cada ejecución esos valores y la versión del prompt. | CP-01–CP-13 | — |
+| RF-25 | Fijar en la configuración el modelo de lenguaje por el nombre más específico que publique el proveedor (su versión fechada, si existe) y sus parámetros de generación, y registrar con cada ejecución el nombre del modelo que devuelve el proveedor, esos parámetros y la versión del prompt. | CP-01–CP-13 | ADR-015 |
 | RF-09 | Ejecutar el conjunto de consultas de integridad declaradas al cierre de la carga, de cada ingesta y de la reaplicación, y emitir un reporte por regla de integridad y del módulo en una sola ejecución. | AC-02 | DD-10, ADR-005 |
 
 ### **Consultas expuestas por la API**

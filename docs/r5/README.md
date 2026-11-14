@@ -114,3 +114,7 @@ Cada README de propuesta cierra con su **costo documental**: qué pasa a la Fase
 R5, el bloque `likec4` que extiende `kms.web` y las filas de la Tabla 20. Los ADR llevan prefijo
 provisional (`P1-`, `P2-`, `P3-`); los de la propuesta elegida pasan a `docs/decisiones/` desde el
 0015.
+
+> **Nota (2026-11-14):** el 0015 lo tomó ADR-015 (modelo de lenguaje de la corrida final). Los ADR
+> de R5 pasan desde el **0016**; los prefijos y números provisionales de las propuestas no se
+> renombran, se corrigen al moverlos.

@@ -1266,7 +1266,7 @@ Terminada la anotación de los 13 sílabos, una pasada de consolidación hizo do
 * Revisó que las reglas de la guía se hubieran aplicado igual en todos los sílabos y registró cada corrección.  
 * Asignó un identificador global a cada noción. Las entradas de distintos sílabos que nombran lo mismo comparten identificador, aunque una sea tema y otra concepto.
 
-Se escalaron 13 decisiones, y la consolidación registró 73 correcciones. Para comprobar la anotación de forma independiente, una persona ajena a su elaboración, con los cursos aprobados, la revisa completa en dos sílabos elegidos antes de la revisión por ser los extremos de la anotación: 1INF37, el de más entradas (89), y 1INF47, el de mayor proporción de aceptables (15 de 32). Juntos suman 121 entradas, el 16 % del total. La revisión cubre el sílabo completo porque solo así pueden detectarse las omisiones: el revisor confirma o corrige cada entrada (no corresponde, nivel equivocado o tipo equivocado) y anota los temas y conceptos que el sílabo nombra y la anotación omite. Se reportan la proporción de entradas confirmadas, las correcciones por motivo y las omisiones. Si una corrección revela un error sistemático de la guía, ese patrón se corrige en los 13 sílabos antes de ejecutar los casos de prueba, y se reporta.
+Se escalaron 13 decisiones, y la consolidación registró 73 correcciones. Para contrastar la anotación con un criterio humano, una persona ajena a su elaboración, con los cursos aprobados, extrae por su cuenta los temas y conceptos de dos sílabos, sin la guía de anotación y sin ver la anotación ni las salidas del pipeline. Los dos sílabos se eligieron antes de la extracción por ser los extremos de la anotación entre los cursos que no son de proyecto, cuyo sílabo describe sobre todo el proyecto y nombra pocos saberes: 1INF37, el de más entradas (89), y 1INF27, el de mayor proporción de aceptables (10 de 39). Juntos suman 128 entradas, el 17 % del total. El autor compara ambas extracciones por noción, sin considerar el tipo ni el nivel, con la normalización de las reglas de emparejamiento, y clasifica cada discrepancia en una categoría fijada antes de recibir la extracción. Se reportan la proporción de lo extraído por el revisor que la anotación registra, la proporción de las nociones de la anotación que el revisor extrajo y el conteo de cada categoría. En la anotación solo se corrige un error sistemático de aplicación de la guía: un mismo patrón, presente en los dos sílabos, que la guía resuelve y la anotación no siguió. Se corrige en los 13 sílabos antes de ejecutar los casos de prueba, hasta un máximo de dos patrones y 75 entradas, y se reporta. Tras la ejecución de los casos de prueba, la misma extracción permite medir la precisión del pipeline en esos dos sílabos sin pasar por la anotación. La constancia del revisor y su extracción están en el Anexo N; el protocolo completo, en el repositorio del proyecto.
 
 3. #### **Casos de prueba** {#casos-de-prueba}
 
@@ -1360,7 +1360,7 @@ R3 se comprometió a especificar el modelo de datos del grafo, los componentes i
 
 * Las decisiones de diseño y arquitectura: ADR-001 a ADR-014, en el repositorio, junto con el catálogo de requisitos funcionales que citan.
 
-* Los casos de prueba de la ingesta: la sección anterior y la guía de anotación del Anexo L.
+* Los casos de prueba de la ingesta: la sección anterior, la guía de anotación del Anexo L y el protocolo de revisión de la anotación, en el repositorio.
 
 La Tabla 23 cierra la verificación: por cada atributo de calidad, las decisiones que lo atienden, los componentes y reglas que lo implementan y la prueba o medida con que se comprobará en R4.
 
@@ -1422,7 +1422,7 @@ Segundo, varias garantías dependen de condiciones de operación que el sistema 
 
 Tercero, dos decisiones de la ingesta valen solo para el piloto. El rechazo es de todo o nada por documento, lo que castiga más a los sílabos largos (ADR-010), y el extractor recibe el vocabulario completo del grafo en cada corrida, lo que es viable con 13 sílabos, pero no con el catálogo completo de la carrera (ADR-011).
 
-Cuarto, la anotación de referencia la produjo un modelo de lenguaje, un sílabo por sesión, y el autor adjudicó solo las decisiones que la guía no resolvía. Una persona independiente la revisa en dos sílabos, pero no hay un segundo anotador ni una medida de acuerdo sobre los trece. El emparejamiento exige coincidencia de nombres, por lo que la precisión y la exhaustividad son cotas inferiores. Y repetir un sílabo rechazado, hasta tres veces, conserva la primera corrida que el sistema acepta; como la validación comprueba la forma y no la veracidad, esa selección no eleva la precisión de forma directa, y la precisión de los intentos rechazados se reporta para comprobarlo.
+Cuarto, la anotación de referencia la produjo un modelo de lenguaje, un sílabo por sesión, y el autor adjudicó solo las decisiones que la guía no resolvía. Una persona independiente extrae dos sílabos por su cuenta, sin la guía, y su extracción se contrasta con la anotación. Es un solo revisor, el contraste cubre el 17 % de las entradas y no es concluyente, y no examina los nombres alternativos de la anotación, que producen aciertos espurios si son demasiado generales. No hay un segundo anotador que siga la guía ni una medida de acuerdo sobre los trece. El emparejamiento exige coincidencia de nombres, por lo que la precisión y la exhaustividad son cotas inferiores. Y repetir un sílabo rechazado, hasta tres veces, conserva la primera corrida que el sistema acepta; como la validación comprueba la forma y no la veracidad, esa selección no eleva la precisión de forma directa, y la precisión de los intentos rechazados se reporta para comprobarlo.
 
 Quinto, las relaciones se evalúan por juicio del autor sobre la salida, sin anotación previa. CP-15 cubre todos los enlaces con CS2023, pero CP-16 solo una muestra de las relaciones entre conceptos, y ninguno de los dos puede medir qué relaciones correctas dejó de establecer el pipeline.
 
@@ -1803,6 +1803,10 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 # **Anexo M: Constancia de validación experta del Resultado 3**
 
 [https\://docs.google.com/document/d/193MHBTOlNBeFatEnz5Z-\_LPeSHaMczmdDygtr5KEmsA/edit?tab=t.0\#heading=h.fa5bf78t35tm](https://docs.google.com/document/d/193MHBTOlNBeFatEnz5Z-_LPeSHaMczmdDygtr5KEmsA/edit?tab=t.0#heading=h.fa5bf78t35tm) 
+
+# **Anexo N: Constancia y extracción de la revisión independiente de la anotación**
+
+[Enlace pendiente: constancia firmada, consigna, extracción de 1INF37 y 1INF27 y tabla resumen de la comparación.]
 
 [^1]:  Recuperado el 18 de junio del 2026 a las 20:40 h (UTC-5) de [https\://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee\_INFORMATICA-2026-1.pdf](https://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee_INFORMATICA-2026-1.pdf)y visible en el anexo F.
 

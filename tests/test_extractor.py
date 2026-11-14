@@ -7,9 +7,13 @@ import copy
 import json
 from itertools import count
 
+import httpx
 import pytest
+from openai import AsyncOpenAI
 from pydantic import ValidationError
 from pydantic_ai import models
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelResponse, TextPart
 from pydantic_ai.models.function import FunctionModel
@@ -362,6 +366,29 @@ def scripted(*answers):
 def extractor(model):
     return LanguageModelExtractor(model, model_settings={}, settings_record={"reasoning_effort": "low"},
                                   reader=lambda path: "SÍLABO", new_key=keys())
+
+
+def test_the_output_schema_is_sent_strict_to_an_openai_compatible_server(tmp_path):
+    # Without strict=True PydanticAI sends this schema with strict false, because
+    # of its defaulted fields, and the provider would not enforce it (ADR-015).
+    sent = []
+
+    def server(request):
+        sent.append(json.loads(request.content))
+        return httpx.Response(200, json={
+            "id": "x", "object": "chat.completion", "created": 0, "model": "served-model",
+            "choices": [{"index": 0, "finish_reason": "stop",
+                         "message": {"role": "assistant", "content": json.dumps(VALID)}}],
+            "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+        })
+
+    client = AsyncOpenAI(api_key="test", http_client=httpx.AsyncClient(transport=httpx.MockTransport(server)))
+    model = OpenAIChatModel("any-model", provider=OpenAIProvider(openai_client=client))
+    with models.override_allow_model_requests(True):
+        extractor(model).extract(tmp_path / "doc.pdf", SNAPSHOT)
+    response_format = sent[0]["response_format"]
+    assert response_format["type"] == "json_schema"
+    assert response_format["json_schema"]["strict"] is True
 
 
 def test_a_conforming_output_yields_facts_and_records_how_it_was_asked(tmp_path):

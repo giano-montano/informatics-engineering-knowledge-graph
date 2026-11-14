@@ -454,8 +454,11 @@ class LanguageModelExtractor:
         reader: Callable[[Path], str] = read_document,
         new_key: Callable[[], str] = lambda: str(uuid4()),
     ) -> None:
+        # strict=True: the schema has defaulted fields, so without it PydanticAI
+        # would send it non-strict and the provider would not enforce it (ADR-015).
         self._agent = Agent(
-            model, output_type=NativeOutput(SyllabusOutput), instructions=INSTRUCTIONS, model_settings=model_settings
+            model, output_type=NativeOutput(SyllabusOutput, strict=True), instructions=INSTRUCTIONS,
+            model_settings=model_settings,
         )
         self._model_name = model.model_name
         self._settings_record = settings_record

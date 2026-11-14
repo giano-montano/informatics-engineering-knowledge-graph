@@ -400,7 +400,7 @@ Diseñar e implementar un sistema de gestión de conocimiento basado en grafos d
 | :---- | :---- | :---- |
 | **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
 | R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Reporte técnico del mecanismo de navegación | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
-| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | \- Pasa exitosamente el 100% de las pruebas de aceptación (con **asesor de tesis**), donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. \- Pasa exitosamente pruebas de aceptación con al menos 3 usuarios reales para validar la construcción del grafo de conocimiento. |
+| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | \- Pasa exitosamente el 100% de las pruebas de aceptación (con **asesor de tesis**), donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. \- Pasa exitosamente el 100% de las pruebas de aceptación con al menos 3 usuarios reales para validar la construcción del grafo de conocimiento. |
 
 3. ## **Métodos, procedimientos y herramientas** {#métodos,-procedimientos-y-herramientas}
 
@@ -539,7 +539,7 @@ Se implementa el mecanismo como una aplicación web que consume los endpoints de
 
 **Fase 2 \- Pruebas de aceptación**
 
-Las funcionalidades del prototipo se verifican mediante un plan de pruebas de aceptación ejecutado con el asesor de tesis. Cada caso de prueba especifica la entrada, la acción esperada y el criterio de aceptación, comprobando que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El resultado se da por cumplido si se aprueba el 100 % de los casos. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados y sus resultados.
+Las funcionalidades del prototipo se verifican mediante un plan de pruebas de aceptación ejecutado con el asesor de tesis. Cada caso de prueba especifica la entrada, la acción esperada y el criterio de aceptación, comprobando que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El criterio de aceptación es que se apruebe el 100 % de los casos. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados y sus resultados.
 
 2. ### **Herramientas** {#herramientas}
 

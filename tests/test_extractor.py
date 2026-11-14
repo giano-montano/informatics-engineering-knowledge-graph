@@ -3,6 +3,7 @@
 The model is PydanticAI's ``FunctionModel``, which answers what each test says.
 """
 
+import copy
 import json
 from itertools import count
 
@@ -58,9 +59,29 @@ def keys():
     return lambda: f"new-{next(numbers)}"
 
 
+def filled(data):
+    """``data`` with an evidence for every mention and a rationale for every relation that lacks one.
+
+    The evidence differs from the name, so a test sees it if it leaks into a fact.
+    """
+    data = copy.deepcopy(data)
+    for topic in data.get("topics", []):
+        topic.setdefault("evidence", f"{topic.get('name')} (cita)")
+        for concept in topic.get("concepts", []):
+            concept.setdefault("evidence", f"{concept.get('name')} (cita)")
+    for kind in ("required_concepts", "prerequisites", "specializations"):
+        for relation in data.get(kind, []):
+            relation.setdefault("rationale", "Una frase.")
+    return data
+
+
+def syllabus(data):
+    return SyllabusOutput.model_validate(filled(data))
+
+
 def output(**fields):
-    return SyllabusOutput.model_validate({"topics": [{"name": "Búsqueda heurística", "knowledge_unit": "K-001",
-                                                      "concepts": [{"name": "A*"}]}], **fields})
+    return syllabus({"topics": [{"name": "Búsqueda heurística", "knowledge_unit": "K-001",
+                                 "concepts": [{"name": "A*"}]}], **fields})
 
 
 def link(out):
@@ -144,7 +165,7 @@ def test_new_mentions_get_new_keys_and_their_partonomy():
 
 
 def test_a_referenced_node_keeps_its_key_and_its_graph_name_and_a_topic_gets_no_new_unit():
-    facts = link(SyllabusOutput.model_validate({"topics": [
+    facts = link(syllabus({"topics": [
         {"name": "Teoría de grafos", "existing": "T-001", "knowledge_unit": "K-001",
          "concepts": [{"name": "MST", "existing": "C-001"}]},
     ]}))
@@ -156,7 +177,7 @@ def test_a_referenced_node_keeps_its_key_and_its_graph_name_and_a_topic_gets_no_
 
 
 def test_a_mention_marked_new_links_by_label_to_a_node_of_the_same_class():
-    facts = link(SyllabusOutput.model_validate({"topics": [
+    facts = link(syllabus({"topics": [
         {"name": "GRAFOS", "knowledge_unit": "K-001", "concepts": [{"name": "Spanning trees"}, {"name": "Grafos"}]},
     ]}))
     keys_by_label = {node.label: node.key for node in facts.nodes if node.key in SNAPSHOT.nodes}
@@ -166,7 +187,7 @@ def test_a_mention_marked_new_links_by_label_to_a_node_of_the_same_class():
 
 
 def test_repeated_mentions_merge_into_one_node_and_one_edge():
-    facts = link(SyllabusOutput.model_validate({"topics": [
+    facts = link(syllabus({"topics": [
         {"name": "Búsqueda", "knowledge_unit": "K-001", "concepts": [{"name": "A*"}]},
         {"name": "búsquedas", "knowledge_unit": "K-001", "concepts": [{"name": "a*"}]},
     ]}))
@@ -181,7 +202,7 @@ def test_required_concepts_are_existing_ones_and_add_no_partonomy():
 
 
 def test_a_required_concept_the_course_also_teaches_is_only_taught():
-    facts = link(SyllabusOutput.model_validate({
+    facts = link(syllabus({
         "topics": [{"name": "Grafos", "existing": "T-001", "concepts": [{"name": "MST", "existing": "C-001"}]}],
         "required_concepts": [{"name": "MST", "existing": "C-001"}],
     }))
@@ -204,7 +225,7 @@ TAUGHT_ELSEWHERE = Snapshot(
 def link_requiring(topics, *required):
     vocabulary = build_vocabulary(TAUGHT_ELSEWHERE)
     ref = {key: ref for ref, key in vocabulary.refs.items()}
-    out = SyllabusOutput.model_validate({
+    out = syllabus({
         "topics": [{"name": name, "knowledge_unit": "K-001", "concepts": []} for name in topics],
         "required_concepts": [{"name": name, "existing": ref[key]} for name, key in required],
     })
@@ -242,12 +263,16 @@ def test_a_required_concept_only_inside_a_segment_stays_required(topic, required
     assert not [edge for edge in facts.edges if edge.source == required[1]]
 
 
+RELATED = {
+    "topics": [{"name": "Búsqueda heurística", "knowledge_unit": "K-001", "concepts": [{"name": "A*"}]}],
+    "required_concepts": [{"name": "Spanning tree", "existing": "C-001"}],
+    "prerequisites": [{"concept": "A*", "prerequisite": "spanning trees"}],
+    "specializations": [{"concept": "A*", "generalization": "C-001"}],
+}
+
+
 def test_relations_join_concepts_of_the_output_and_existing_ones():
-    facts = link(output(
-        required_concepts=[{"name": "Spanning tree", "existing": "C-001"}],
-        prerequisites=[{"concept": "A*", "prerequisite": "spanning trees"}],
-        specializations=[{"concept": "A*", "generalization": "C-001"}],
-    ))
+    facts = link(syllabus(RELATED))
     assert EdgeFact(HAS_PREREQUISITE, "new-2", "concept") in facts.edges
     assert EdgeFact(SPECIALIZES, "new-2", "concept") in facts.edges
 
@@ -296,11 +321,25 @@ def test_what_the_output_schema_refuses_is_ex_01(fields, message):
         output(**fields)
 
 
+@pytest.mark.parametrize("item, field", [
+    (lambda data: data["topics"][0], "evidence"),
+    (lambda data: data["topics"][0]["concepts"][0], "evidence"),
+    (lambda data: data["required_concepts"][0], "rationale"),
+    (lambda data: data["prerequisites"][0], "rationale"),
+    (lambda data: data["specializations"][0], "rationale"),
+])
+def test_a_mention_without_evidence_or_a_relation_without_rationale_is_ex_01(item, field):
+    data = filled(RELATED)
+    del item(data)[field]
+    with pytest.raises(ValidationError, match=f"{field}\n  Field required"):
+        SyllabusOutput.model_validate(data)
+
+
 # --- The model run and the content retry ------------------------------------------------
 
 VALID = output().model_dump()
-UNKNOWN_UNIT = {"topics": [{"name": "X", "knowledge_unit": "K-999", "concepts": []}]}
-NO_UNIT = {"topics": [{"name": "X", "concepts": []}]}
+UNKNOWN_UNIT = filled({"topics": [{"name": "X", "knowledge_unit": "K-999", "concepts": []}]})
+NO_UNIT = filled({"topics": [{"name": "X", "concepts": []}]})
 # What each scripted response reports it consumed.
 USAGE = RequestUsage(input_tokens=30_000, output_tokens=2_000)
 

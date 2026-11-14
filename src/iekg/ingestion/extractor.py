@@ -44,15 +44,23 @@ from iekg.operational_store import Discard, Extraction
 # --- Output schema --------------------------------------------------------------
 
 _EXISTING = "Reference of the existing {kind} it is the same knowledge as, or null if it is new."
+_EVIDENCE = "The fragment of the syllabus that supports it, copied character for character."
+_RATIONALE = "One sentence, in the language of the syllabus: {why}"
+
+# Evidence and rationale are for whoever reviews an extraction: neither reaches
+# the batch nor the graph, only the operational store, and no fact is discarded
+# for what they say.
 
 
 class ConceptMention(BaseModel):
     name: str = Field(description="The concept as the syllabus names it, in its language.")
+    evidence: str = Field(description=_EVIDENCE)
     existing: str | None = Field(None, description=_EXISTING.format(kind="concept (C-…)"))
 
 
 class TopicMention(BaseModel):
     name: str = Field(description="The topic as the syllabus names it, without numbering, chapter word or hours.")
+    evidence: str = Field(description=_EVIDENCE)
     existing: str | None = Field(None, description=_EXISTING.format(kind="topic (T-…)"))
     knowledge_unit: str | None = Field(
         None, description="For a new topic, the reference (K-…) of the one knowledge unit it belongs to."
@@ -65,16 +73,19 @@ class RequiredConcept(BaseModel):
     # course teaches and another requires, and a new concept no course teaches.
     name: str = Field(description="A concept the course needs and does not teach.")
     existing: str = Field(description="Reference of the existing concept (C-…) it is.")
+    rationale: str = Field(description=_RATIONALE.format(why="what in the contents builds on it."))
 
 
 class Prerequisite(BaseModel):
     concept: str = Field(description="A concept of this output, or an existing concept (C-…).")
     prerequisite: str = Field(description="The concept that must be learnt before it, named the same way.")
+    rationale: str = Field(description=_RATIONALE.format(why="why the concept cannot be understood without it."))
 
 
 class Specialization(BaseModel):
     concept: str = Field(description="A concept of this output, or an existing concept (C-…).")
     generalization: str = Field(description="The more general concept it specializes, named the same way.")
+    rationale: str = Field(description=_RATIONALE.format(why="why the concept is a kind of it."))
 
 
 class SyllabusOutput(BaseModel):
@@ -196,6 +207,13 @@ kinds of the same thing are siblings, and neither specializes the other. A part,
 related idea is not a kind.
 - Prerequisites must not form a cycle, and neither must specializations, counting the existing ones the \
 vocabulary lists.
+
+## Evidence and rationale
+- The evidence of a topic or a concept is the fragment of the syllabus it comes from: the heading, the item \
+or the phrase of the summary, a line at most. Copy it character for character from the syllabus as given, \
+numbering and accents included: do not fix, reword, translate or join pieces from different places.
+- The rationale of a required concept, a prerequisite or a specialization is one short sentence, in the \
+language of the syllabus, that says why the relation holds.
 """
 
 

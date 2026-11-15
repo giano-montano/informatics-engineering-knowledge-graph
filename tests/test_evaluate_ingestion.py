@@ -6,7 +6,6 @@ import pytest
 from conftest import BACKBONE, ROOT
 
 from evaluate_ingestion import (
-    COMPARISON_COLUMNS,
     COMPOUND_HEADINGS,
     GOLD,
     REVIEW_DIR,
@@ -16,7 +15,10 @@ from evaluate_ingestion import (
     Item,
     ReviewRow,
     UnknownEndpoint,
+    agreement,
+    closest,
     compare_review,
+    compare_reviewers,
     comparison_path,
     comparison_rows,
     evaluate,
@@ -30,13 +32,15 @@ from evaluate_ingestion import (
     measure,
     most_hits,
     pipeline_against_review,
+    pipeline_comparison_path,
     pipeline_comparison_rows,
+    read_adjudication,
     read_reference,
     read_review,
-    read_tsv,
     review,
     total,
-    write_tsv,
+    write_comparison,
+    write_pipeline_comparison,
 )
 
 from iekg.core.batch import Batch, EdgeFact, NodeFact
@@ -508,13 +512,16 @@ def test_the_workbook_is_exported_once_and_the_files_to_adjudicate_come_back_as_
 
     report = review(GOLD_REVIEWED, rows_of, [accepted(1, "S1", concept("Recursión"), concept("Grafos", key="g"))], {})
     (compared,) = report["syllabi"]
-    write_tsv(comparison_path(tmp_path, "S1"), COMPARISON_COLUMNS, comparison_rows(compared))
-    lines = read_tsv(comparison_path(tmp_path, "S1"))
+    write_comparison(comparison_path(tmp_path, "S1"), GOLD_REVIEWED, compared)
+    lines = read_adjudication(comparison_path(tmp_path, "S1"))
     assert [(line["lado"], line["nombre"], line["id_global"]) for line in lines] == [
         ("revisor", "Colas", ""), ("anotacion", "Grafos", "G2"), ("anotacion", "Pilas", "G3"),
         ("anotacion", "Montículos", "G4")]
     assert compare_review(GOLD_REVIEWED, "S1", rows_of["S1"], lines)["adjudicated"]["pending"] == 4
-    assert pipeline_comparison_rows(compared["pipeline"]) == [["g", CONCEPT, "Grafos", "", ""]]
+    # The author's work is never written over.
+    with pytest.raises(FileExistsError):
+        write_comparison(comparison_path(tmp_path, "S1"), GOLD_REVIEWED, compared)
+    assert pipeline_comparison_rows(compared["pipeline"], rows_of["S1"]) == [["g", CONCEPT, "Grafos", "", "", ""]]
 
 
 def test_the_review_totals_wait_for_what_every_syllabus_has():
@@ -584,3 +591,57 @@ def test_a_batch_built_from_the_labels_of_the_annotation_scores_a_hundred_percen
     assert report["passes"] is True
     # One node per entry: nothing was merged, so no node holds two notions.
     assert report["fusion"]["wrong_fusions"] == 0
+
+
+def test_the_candidates_are_the_most_alike_names_and_never_the_unlike_ones():
+    options = {"G1 · Pilas": {"pila"}, "G2 · Pila de llamadas": {"pila de llamada"}, "G3 · Grafos": {"grafo"}}
+    assert closest("Pilas", options) == ["G1 · Pilas", "G2 · Pila de llamadas"]
+    assert closest("Montículos", options) == []
+
+
+def test_the_comparison_workbook_offers_the_categories_of_each_side_and_the_notions_of_the_syllabus(tmp_path):
+    from openpyxl import load_workbook
+
+    compared = compare_review(GOLD_REVIEWED, "S1", REVIEWED)
+    path = comparison_path(tmp_path, "S1")
+    write_comparison(path, GOLD_REVIEWED, compared)
+    workbook = load_workbook(path)
+    sheet = workbook["Adjudicación"]
+    lists = {str(v.sqref): v.formula1 for v in sheet.data_validations.dataValidation}
+    # Two rows of the reviewer (2-3), then two notions (4-5); categoria is column H.
+    assert lists["H2:H3"] == '"misma_nocion,omision,criterio,no_sustentada"'
+    assert lists["H4:H5"] == '"misma_nocion,no_extraida,inclusion_indebida,criterio"'
+    assert lists["I2:I5"] == "'Nociones'!$A$2:$A$5"
+    assert [row[0] for row in workbook["Nociones"].iter_rows(min_row=2, values_only=True)] == [
+        "G1 · Recursión", "G2 · Grafos", "G3 · Pilas", "G4 · Montículos"]
+
+    # The author's pick from the list counts as the identifier of the notion.
+    line = {"lado": "revisor", "nombre": "Stacks", "categoria": "misma_nocion", "nocion": "G3 · Pilas"}
+    assert compare_review(GOLD_REVIEWED, "S1", REVIEWED, [line])["adjudicated"]["notions_extracted"]["count"] == 3
+
+
+def test_the_pipeline_workbook_offers_the_rows_of_the_reviewer(tmp_path):
+    from openpyxl import load_workbook
+
+    rows = [ReviewRow("Pilas"), ReviewRow("pilas"), ReviewRow("Recursión")]
+    compared = pipeline_against_review([concept("Recursividad", key="r")], rows)
+    path = pipeline_comparison_path(tmp_path, "S1")
+    write_pipeline_comparison(path, compared, rows)
+    assert [row[0] for row in load_workbook(path)["Filas del revisor"].iter_rows(min_row=2, values_only=True)] == [
+        "Pilas", "pilas", "Recursión"]
+    (line,) = read_adjudication(path)
+    assert (line["clave"], line["candidatos"], line["fila_del_revisor"]) == ("r", "Recursión", "")
+
+
+def test_two_reviewers_are_compared_both_ways_by_normalized_name():
+    first = [ReviewRow("Pilas"), ReviewRow("pila"), ReviewRow("Colas"), ReviewRow("Grafos")]
+    second = [ReviewRow("Grafos "), ReviewRow("Recursión")]
+    compared = compare_reviewers(first, second)
+    # "Pilas" and "pila" are one name.
+    assert (compared["names"], compared["other_names"], compared["shared"]) == (3, 2, 1)
+    assert compared["other_has"] == {"count": 1, "of": 3, "proportion": 1 / 3}
+    assert compared["has_of_other"] == {"count": 1, "of": 2, "proportion": 0.5}
+
+    report = agreement({"S1": first, "S2": second}, {"S1": second, "S2": second})
+    assert [s["syllabus"] for s in report["syllabi"]] == ["S1", "S2"]
+    assert report["totals"]["other_has"] == {"count": 3, "of": 5, "proportion": 0.6}

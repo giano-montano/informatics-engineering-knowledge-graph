@@ -84,7 +84,7 @@ de aquí:
   repetidas se toma el tipo de la primera. Las filas sin tipo no entran.
 - *Dónde se adjudica el pipeline contra el revisor.* El protocolo dice que un
   ítem acierta también si el autor adjudica que nombra lo mismo que una fila,
-  pero no dice en qué archivo. Se usa `comparacion_pipeline_<sílabo>.tsv`, que
+  pero no dice en qué archivo. Se usa `comparacion_pipeline_<sílabo>.xlsx`, que
   el protocolo no lista todavía.
 
 **Elección 7. La lista de encabezados que nombran más de un
@@ -279,7 +279,7 @@ denominador es menor que las entradas del sílabo: 39 nociones en 1INF27 y 85
 en 1INF37 (89 entradas), 124 en total frente a las 128 entradas que cita la
 tesis.
 
-**Adjudicación.** El evaluador escribe `comparacion_<sílabo>.tsv` con una fila
+**Adjudicación.** El evaluador escribe `comparacion_<sílabo>.xlsx` con una fila
 por discrepancia: las filas del revisor sin noción (`lado=revisor`) y las
 nociones sin fila (`lado=anotacion`). Las columnas `categoria`, `nocion`,
 `alias_faltante`, `justificacion` y `regla` salen vacías y las llena el autor.
@@ -293,6 +293,18 @@ El archivo se escribe una sola vez; en las corridas siguientes solo se lee.
   `misma_nocion` sola; no hace falta llenar su fila.
 - `alias_faltante`: cualquier marca distinta de vacío o «no».
 
+Desde el 2026-11-15 el archivo es un Excel, para adjudicar más rápido:
+
+- `categoria` y `alias_faltante` tienen listas desplegables, con las
+  categorías del lado de cada fila.
+- `nocion` se elige de la hoja «Nociones», con las del sílabo en la forma
+  `G-0001 · etiqueta`. El evaluador toma lo que va antes del ` · `.
+- `candidatos` muestra hasta tres nombres parecidos del otro lado: nociones,
+  para una fila del revisor; filas del revisor sin emparejar, para una
+  noción. El parecido se calcula por caracteres en común, o por las palabras
+  del nombre corto presentes en el largo, después de normalizar. Es solo una
+  pista para encontrar un par: **la categoría la elige siempre el autor.**
+
 Con el archivo lleno se reportan, además de lo automático: las dos
 proporciones después de la adjudicación (lo automático más los pares
 `misma_nocion`), el conteo de cada categoría por lado, los alias faltantes y
@@ -305,9 +317,19 @@ apuntando a la versión anterior.
 **Pipeline contra revisor.** Para el lote aceptado de cada uno de los dos
 sílabos, en la cadena: ítems cuyo nombre normalizado es el de una fila del
 revisor, entre los ítems del lote. Los que no coinciden se escriben en
-`comparacion_pipeline_<sílabo>.tsv`; el autor anota en `fila_del_revisor` la
+`comparacion_pipeline_<sílabo>.xlsx`; el autor anota en `fila_del_revisor` la
 fila que nombra lo mismo, si la hay, y esos ítems se suman en la cifra
 adjudicada. Un nombre que no es una fila del revisor detiene el evaluador.
+La columna se llena desde la hoja «Filas del revisor», y `candidatos` sugiere
+las parecidas, igual que arriba.
+
+**Dos revisores.** Cada uno tiene su carpeta (`revision/revisor-1/`,
+`revision/revisor-2/`), que se pasa con `--review-dir`. El comando
+`agreement --review-dir A --other-review-dir B` compara las dos extracciones
+entre sí, por nombre normalizado y sin la anotación: cuántos nombres de A
+tiene B, y al revés. Las filas que normalizan igual cuentan una vez. No se
+adjudica: es una cota inferior del acuerdo, porque dos redacciones de lo
+mismo cuentan como desacuerdo.
 
 El tiempo del revisor, sus preguntas y las clases no pasan por el evaluador:
 van en el registro de la revisión.
@@ -320,7 +342,7 @@ el detalle y, por consola, las tablas en Markdown.
 - `cp-extraction-<fecha-hora>.json`: modo, ventana de corridas, anotación
   usada (ruta y su línea de metadatos), casos, totales, intentos rechazados,
   CP-14 y advertencias.
-- `review-<fecha-hora>.json`. Los archivos de la adjudicación no van aquí,
+- `review-<fecha-hora>.json` y `agreement-<fecha-hora>.json`. Los archivos de la adjudicación no van aquí,
   sino en `casos-de-prueba/revision/`, que se versiona.
 
 Código de salida de la primera parte: 0 si el indicador se aprueba o si no

@@ -9,6 +9,7 @@ thesis leaves open, is in casos-de-prueba/calculo-de-las-medidas-del-evaluador.m
     uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out
     uv run python scripts/evaluate_ingestion.py review --workbook FILLED.xlsx
     uv run python scripts/evaluate_ingestion.py review --from-run 5
+    uv run python scripts/evaluate_ingestion.py agreement --review-dir A --other-review-dir B
 
 Reports go to var/measurements/, with Markdown tables on the console.
 """
@@ -22,6 +23,7 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
+from difflib import SequenceMatcher
 from functools import cached_property
 from pathlib import Path
 from typing import Any
@@ -495,9 +497,14 @@ CATEGORIES = {
     REVIEWER: (SAME_NOTION, "omision", "criterio", "no_sustentada"),
     ANNOTATION: (SAME_NOTION, "no_extraida", "inclusion_indebida", "criterio"),
 }
-COMPARISON_COLUMNS = ("lado", "nombre", "id_global", "nivel", "texto", "comentario",
+COMPARISON_COLUMNS = ("lado", "nombre", "id_global", "nivel", "texto", "comentario", "candidatos",
                       "categoria", "nocion", "alias_faltante", "justificacion", "regla")
-PIPELINE_COLUMNS = ("clave", "tipo", "nombre", "fila_del_revisor", "justificacion")
+PIPELINE_COLUMNS = ("clave", "tipo", "nombre", "candidatos", "fila_del_revisor", "justificacion")
+# A notion in the list the author picks from: its identifier, then its label.
+NOTION_SEPARATOR = " · "
+MISSING_ALIAS_CHOICES = ("sí", "no")
+CANDIDATES = 3
+_SIMILAR = 0.5
 
 
 @dataclass(frozen=True)
@@ -513,11 +520,11 @@ def extraction_path(directory: Path, syllabus: str) -> Path:
 
 
 def comparison_path(directory: Path, syllabus: str) -> Path:
-    return directory / f"comparacion_{syllabus}.tsv"
+    return directory / f"comparacion_{syllabus}.xlsx"
 
 
 def pipeline_comparison_path(directory: Path, syllabus: str) -> Path:
-    return directory / f"comparacion_pipeline_{syllabus}.tsv"
+    return directory / f"comparacion_pipeline_{syllabus}.xlsx"
 
 
 def _flat(value: Any) -> str:
@@ -536,6 +543,97 @@ def read_tsv(path: Path) -> list[dict[str, str]]:
     with open(path, encoding="utf-8", newline="") as file:
         return [{name: (value or "").strip() for name, value in row.items() if name}
                 for row in csv.DictReader(file, delimiter="\t", quoting=csv.QUOTE_NONE)]
+
+
+def write_adjudication(
+    path: Path, header: Sequence[str], rows: Sequence[Sequence[Any]],
+    choices: Mapping[str, Sequence[tuple[Sequence[str], Iterable[int]]]],
+    listed: tuple[str, str, Sequence[str]] | None = None,
+) -> None:
+    """The file the author fills, as a workbook with drop-down lists. ``choices``
+    gives, by column, each fixed list with the data rows (from 0) it applies
+    to; ``listed`` is a column whose values come from a sheet of their own.
+    Never over a file that exists, as with ``write_tsv``."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Alignment, Font
+    from openpyxl.worksheet.datavalidation import DataValidation
+
+    if path.exists():
+        raise FileExistsError(path)
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Adjudicación"
+    sheet.append(list(header))
+    for row in rows:
+        sheet.append([_flat(value) for value in row])
+    letter = {name: sheet.cell(row=1, column=index).column_letter for index, name in enumerate(header, start=1)}
+
+    def restrict(column: str, formula: str, lines: Iterable[int]) -> None:
+        # One range per run of consecutive lines.
+        runs: list[list[int]] = []
+        for line in sorted(lines):
+            if runs and line == runs[-1][1] + 1:
+                runs[-1][1] = line
+            else:
+                runs.append([line, line])
+        if runs:
+            validation = DataValidation(type="list", formula1=formula, allow_blank=True)
+            for first, last in runs:
+                validation.add(f"{letter[column]}{first}:{letter[column]}{last}")
+            sheet.add_data_validation(validation)
+
+    for column, lists in choices.items():
+        for values, data_rows in lists:
+            restrict(column, '"' + ",".join(values) + '"', (index + 2 for index in data_rows))
+    if listed:
+        column, title, values = listed
+        source = workbook.create_sheet(title)
+        source.append([column])
+        for value in values:
+            source.append([value])
+        source.column_dimensions["A"].width = 70
+        if values:
+            restrict(column, f"'{title}'!$A$2:$A${len(values) + 1}", range(2, len(rows) + 2))
+    for cell in sheet[1]:
+        cell.font = Font(bold=True)
+    for name, width in (("nombre", 40), ("texto", 50), ("candidatos", 45), ("nocion", 40),
+                        ("fila_del_revisor", 40), ("justificacion", 50)):
+        if name in letter:
+            sheet.column_dimensions[letter[name]].width = width
+    for line in sheet.iter_rows(min_row=2):
+        for cell in line:
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
+    sheet.freeze_panes = "C2"
+    workbook.save(path)
+
+
+def read_adjudication(path: Path) -> list[dict[str, str]]:
+    """The first sheet of the file the author filled, one mapping per row."""
+    from openpyxl import load_workbook
+
+    rows = load_workbook(path, read_only=True, data_only=True).worksheets[0].iter_rows(values_only=True)
+    header = [_flat(title) for title in next(rows, ())]
+    return [{name: _flat(value) for name, value in zip(header, row) if name}
+            for row in rows if any(_flat(value) for value in row)]
+
+
+def _likeness(name: str, other: str) -> float:
+    """Characters in common, or the words of the shorter name found in the
+    longer one: "pila" is like "pila de llamada". Short words do not count."""
+    words, other_words = ({word for word in n.split() if len(word) > 2} for n in (name, other))
+    shared = len(words & other_words) / min(len(words), len(other_words)) if words and other_words else 0.0
+    # Below a match of every character, so the same name still comes first.
+    return max(SequenceMatcher(None, name, other).ratio(), 0.9 * shared)
+
+
+def closest(name: str, options: Mapping[str, Iterable[str]]) -> list[str]:
+    """The options whose names look most like ``name``, by their characters
+    after normalizing. A hint to find a pair faster, never a category."""
+    wanted = normalize_label(name)
+    scored = [(max((_likeness(wanted, other) for other in names), default=0.0), option)
+              for option, names in options.items()]
+    scored.sort(key=lambda pair: -pair[0])
+    return [option for score, option in scored[:CANDIDATES] if score >= _SIMILAR]
 
 
 def export_review(workbook_path: Path, directory: Path, syllabi: Sequence[str]) -> list[Path]:
@@ -646,10 +744,12 @@ def compare_review(
         line = filled.get((REVIEWER, normalize_label(only["name"])), {})
         category = line.get("categoria", "")
         if category == SAME_NOTION:
-            if line["nocion"] not in notions:
+            # As the author picked it from the list, or the bare identifier.
+            notion = line["nocion"].split(NOTION_SEPARATOR)[0].strip()
+            if notion not in notions:
                 raise ValueError(f"{syllabus}: {only['name']!r} is the same as {line['nocion']!r}, "
                                  f"which is not a notion of the syllabus")
-            same.add(line["nocion"])
+            same.add(notion)
             missing_aliases += _is_marked(line.get("alias_faltante", ""))
         counts[REVIEWER][category] += 1
         pending += not category
@@ -670,14 +770,37 @@ def compare_review(
     return compared
 
 
-def comparison_rows(compared: Mapping[str, Any]) -> list[list[str]]:
-    """One row per discrepancy, with the columns of the adjudication left empty."""
+def notion_choices(gold: Gold, syllabus: str) -> dict[str, frozenset[str]]:
+    """The notions of ``syllabus`` as the author picks them, each with its names."""
+    choices: dict[str, frozenset[str]] = {}
+    for entry in gold.entries_of(syllabus):
+        choices.setdefault(f"{entry.global_id}{NOTION_SEPARATOR}{entry.label}", gold.names[entry.global_id])
+    return choices
+
+
+def comparison_rows(gold: Gold, compared: Mapping[str, Any]) -> list[list[str]]:
+    """One row per discrepancy, with the columns of the adjudication left empty.
+    A row of the reviewer lists the notions whose names look like it; a
+    notion, the unmatched rows of the reviewer that look like it."""
+    notions = notion_choices(gold, compared["syllabus"])
+    rows = {d["name"]: {normalize_label(d["name"])} for d in compared["reviewer_only"]}
     return [
-        *([REVIEWER, d["name"], "", "", d["text"], d["comment"], "", "", "", "", ""]
-          for d in compared["reviewer_only"]),
-        *([ANNOTATION, d["label"], d["global_id"], d["level"], d["evidence"], "", "", "", "", "", ""]
-          for d in compared["annotation_only"]),
+        *([REVIEWER, d["name"], "", "", d["text"], d["comment"], " | ".join(closest(d["name"], notions)),
+           "", "", "", "", ""] for d in compared["reviewer_only"]),
+        *([ANNOTATION, d["label"], d["global_id"], d["level"], d["evidence"], "",
+           " | ".join(closest(d["label"], rows)), "", "", "", "", ""] for d in compared["annotation_only"]),
     ]
+
+
+def write_comparison(path: Path, gold: Gold, compared: Mapping[str, Any]) -> None:
+    rows = comparison_rows(gold, compared)
+    write_adjudication(
+        path, COMPARISON_COLUMNS, rows,
+        {"categoria": [(categories, [i for i, row in enumerate(rows) if row[0] == side])
+                       for side, categories in CATEGORIES.items()],
+         "alias_faltante": [(MISSING_ALIAS_CHOICES, range(len(rows)))]},
+        ("nocion", "Nociones", list(notion_choices(gold, compared["syllabus"]))),
+    )
 
 
 def pipeline_against_review(
@@ -706,8 +829,39 @@ def pipeline_against_review(
     return compared
 
 
-def pipeline_comparison_rows(compared: Mapping[str, Any]) -> list[list[str]]:
-    return [[d["key"], d["label"], d["name"], "", ""] for d in compared["pipeline_only"]]
+def pipeline_comparison_rows(compared: Mapping[str, Any], rows: Sequence[ReviewRow]) -> list[list[str]]:
+    names = {row.name: {normalize_label(row.name)} for row in rows}
+    return [[d["key"], d["label"], d["name"], " | ".join(closest(d["name"], names)), "", ""]
+            for d in compared["pipeline_only"]]
+
+
+def write_pipeline_comparison(path: Path, compared: Mapping[str, Any], rows: Sequence[ReviewRow]) -> None:
+    write_adjudication(path, PIPELINE_COLUMNS, pipeline_comparison_rows(compared, rows), {},
+                       ("fila_del_revisor", "Filas del revisor", list(dict.fromkeys(row.name for row in rows))))
+
+
+def compare_reviewers(rows: Sequence[ReviewRow], others: Sequence[ReviewRow]) -> dict[str, Any]:
+    """Two reviewers of one syllabus by normalized name, both ways: no
+    annotation, no type, no adjudication. Rows that normalize alike count once."""
+    names = {normalize_label(row.name) for row in rows}
+    other = {normalize_label(row.name) for row in others}
+    shared = names & other
+    return {"names": len(names), "other_names": len(other), "shared": len(shared),
+            "other_has": _proportion(len(shared), len(names)),
+            "has_of_other": _proportion(len(shared), len(other))}
+
+
+def agreement(
+    rows_of: Mapping[str, Sequence[ReviewRow]], others_of: Mapping[str, Sequence[ReviewRow]]
+) -> dict[str, Any]:
+    syllabi = [{"syllabus": syllabus, **compare_reviewers(rows, others_of[syllabus])}
+               for syllabus, rows in rows_of.items() if syllabus in others_of]
+    return {
+        "measured_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+        "syllabi": syllabi,
+        "totals": {name: _proportion(sum(s[name]["count"] for s in syllabi), sum(s[name]["of"] for s in syllabi))
+                   for name in ("other_has", "has_of_other")},
+    }
 
 
 def review(
@@ -809,6 +963,18 @@ def markdown(report: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def agreement_markdown(report: Mapping[str, Any]) -> str:
+    def cells(part: Mapping[str, Any]) -> tuple:
+        return f"{part['count']} / {part['of']}", part["proportion"]
+
+    rows = [(s["syllabus"], s["names"], s["other_names"], s["shared"], *cells(s["other_has"]),
+             *cells(s["has_of_other"])) for s in report["syllabi"]]
+    t = report["totals"]
+    rows.append(("Total", None, None, None, *cells(t["other_has"]), *cells(t["has_of_other"])))
+    return "\n".join(_table(("Syllabus", "Names", "Other's names", "Shared", "Names the other has", "%",
+                              "Other's names this one has", "%"), rows))
+
+
 def review_markdown(report: Mapping[str, Any]) -> str:
     def cells(*parts: Mapping[str, Any] | None) -> tuple:
         return tuple(value for part in parts
@@ -883,7 +1049,7 @@ def _write(report: Mapping[str, Any], path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("command", choices=("cases", "review"))
+    parser.add_argument("command", choices=("cases", "review", "agreement"))
     parser.add_argument("--from-run", type=int, default=1, help="first run of the window (default: 1)")
     parser.add_argument("--to-run", type=int, help="last run of the window (default: the latest)")
     parser.add_argument("--isolated", action="store_true",
@@ -893,7 +1059,9 @@ def main() -> int:
     parser.add_argument("--gold", type=Path, default=GOLD)
     parser.add_argument("--compound-headings", type=Path, default=COMPOUND_HEADINGS)
     parser.add_argument("--review-dir", type=Path, default=REVIEW_DIR,
-                        help="review: where the extraction and the comparison files are")
+                        help="review, agreement: where the extraction and the comparison files are")
+    parser.add_argument("--other-review-dir", type=Path,
+                        help="agreement: where the other reviewer's extraction is")
     parser.add_argument("--workbook", type=Path,
                         help="review: the workbook the reviewer filled; exported once to the review directory")
     parser.add_argument("--facts-dir", type=Path, default=Path("var/facts"))
@@ -903,12 +1071,23 @@ def main() -> int:
     args = parser.parse_args()
 
     gold = load_gold(args.gold)
+    stamp = f"{datetime.now():%Y%m%d-%H%M%S}"
+    if args.command == "agreement":
+        if args.other_review_dir is None:
+            parser.error("agreement needs --other-review-dir")
+        report = {"review_dir": str(args.review_dir), "other_review_dir": str(args.other_review_dir),
+                  **agreement(read_review(args.review_dir, gold.syllabi),
+                              read_review(args.other_review_dir, gold.syllabi))}
+        output = args.output_dir / f"agreement-{stamp}.json"
+        _write(report, output)
+        print(agreement_markdown(report))
+        print(f"\nReport written to {output}")
+        return 0
     source = {"gold": str(args.gold), "gold_meta": gold.meta, "from_run": args.from_run, "to_run": args.to_run}
     # No store, no runs: the review still compares the reviewer with the annotation.
     attempts = (read_attempts(args.operational_db, args.facts_dir, args.from_run, args.to_run)
                 if args.operational_db.exists() else [])
     reference = read_reference(args.backbone)
-    stamp = f"{datetime.now():%Y%m%d-%H%M%S}"
 
     if args.command == "review":
         directory = args.review_dir
@@ -921,20 +1100,21 @@ def main() -> int:
             return 2
 
         def filled(path_of) -> dict[str, list[dict[str, str]]]:
-            return {s: read_tsv(path_of(directory, s)) for s in rows_of if path_of(directory, s).exists()}
+            return {s: read_adjudication(path_of(directory, s)) for s in rows_of if path_of(directory, s).exists()}
 
         report = {**source, **review(gold, rows_of, attempts, reference,
                                      filled(comparison_path), filled(pipeline_comparison_path))}
         # The files the author fills are written once and only read from then on.
         for compared in report["syllabi"]:
-            for path, header, rows in (
-                (comparison_path(directory, compared["syllabus"]), COMPARISON_COLUMNS, comparison_rows(compared)),
-                (pipeline_comparison_path(directory, compared["syllabus"]), PIPELINE_COLUMNS,
-                 compared["pipeline"] and pipeline_comparison_rows(compared["pipeline"])),
-            ):
-                if rows is not None and not path.exists():
-                    write_tsv(path, header, rows)
-                    print(f"To adjudicate: {path}")
+            syllabus = compared["syllabus"]
+            path = comparison_path(directory, syllabus)
+            if not path.exists():
+                write_comparison(path, gold, compared)
+                print(f"To adjudicate: {path}")
+            path = pipeline_comparison_path(directory, syllabus)
+            if compared["pipeline"] is not None and not path.exists():
+                write_pipeline_comparison(path, compared["pipeline"], rows_of[syllabus])
+                print(f"To adjudicate: {path}")
         output = args.output_dir / f"review-{stamp}.json"
         _write(report, output)
         print(review_markdown(report))

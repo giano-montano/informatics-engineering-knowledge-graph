@@ -219,8 +219,8 @@ En `casos-de-prueba/revision/`:
 |---|---|
 | `hoja-de-extraccion.xlsx` | La plantilla vacía, con la consigna. |
 | `extraccion_<sílabo>.tsv` | La extracción del revisor tal como la entregó, exportada sin cambios. El Excel original se guarda aparte. |
-| `comparacion_<sílabo>.tsv` | La salida del evaluador, con las columnas de adjudicación llenadas por el autor. |
-| `comparacion_pipeline_<sílabo>.tsv` | Tras la corrida final, el lote aceptado contra la extracción del revisor, con la adjudicación `misma_nocion` del autor. |
+| `comparacion_<sílabo>.xlsx` | La salida del evaluador, con las columnas de adjudicación llenadas por el autor. |
+| `comparacion_pipeline_<sílabo>.xlsx` | Tras la corrida final, el lote aceptado contra la extracción del revisor, con la adjudicación `misma_nocion` del autor. |
 | `registro-de-la-revision.md` | Fechas, las preguntas del revisor con sus respuestas, las clases (escritas antes de aplicarlas) y los cambios resultantes. |
 
 La constancia firmada **no se versiona**, porque lleva el nombre del revisor.

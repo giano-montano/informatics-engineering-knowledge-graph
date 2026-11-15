@@ -73,7 +73,7 @@ model {
     // ── Contenedores que ejecutan código ──────────────────────────────
 
     web = container 'Aplicación web' {
-      technology 'SPA'
+      technology 'SPA, Svelte 5'
       summary 'Única superficie del sistema: navegación del estudiante y panel del operador.'
       description '''
         Un solo desplegable con dos zonas. La navegación permite buscar,
@@ -82,9 +82,87 @@ model {
         estado de la corrida, revisar descartes y consultar el reporte de
         auditoría.
 
-        Se despliega aparte de la API (ADR-007). Se descompone en R5. El
-        panel del operador queda fuera de la prueba de aceptación de R6.
+        Se despliega aparte de la API (ADR-007). Se descompone en R5
+        (ADR-016 a ADR-019). Solo presenta: la lógica de navegación vive en
+        la API. El panel del operador queda fuera de la prueba de
+        aceptación de R6.
       '''
+
+      // Navegación del estudiante: un lienzo con un elemento en foco (ADR-016).
+
+      explorationState = component 'Estado de la exploración' {
+        technology 'Svelte 5 (runes)'
+        summary 'Foco, lente, «ver por», expansiones y rastro; los refleja en la URL.'
+        description '''
+          Única fuente del estado compartido entre el lienzo, la cabecera,
+          el panel y la línea de paradas. Al cambiar el foco o la lente,
+          pide el subgrafo y decide la disposición (ADR-016, ADR-017).
+        '''
+      }
+
+      apiClient = component 'Cliente de la API' {
+        technology 'fetch'
+        summary 'Única puerta a la API: codifica las claves y devuelve el subgrafo.'
+        description '''
+          Codifica las claves (IRI con «#») y devuelve cada respuesta con su
+          estado. Ningún otro componente de la navegación habla con la API.
+        '''
+      }
+
+      search = component 'Buscador' {
+        summary 'Punto de entrada por nombre, con teclado.'
+        description '''
+          Combobox con resultados por clase y por capa, y un estado vacío que
+          ofrece recorrer las áreas.
+        '''
+      }
+
+      home = component 'Inicio' {
+        summary 'Punto de entrada sin buscar: las 17 áreas y los cursos.'
+        description '''
+          Distingue las áreas que ya tienen temas de los sílabos. Pide una
+          ruta que la API todavía no ofrece.
+        '''
+      }
+
+      canvas = component 'Lienzo del grafo' {
+        technology 'D3, SVG'
+        summary 'Dibuja lo que responde la lente activa, con forma por capa y una disposición por lente.'
+        description '''
+          Recibe el subgrafo tal como llega y dibuja solo lo que responde la
+          pregunta en curso; lo que no cabe con nombre legible se resume.
+          Cada nodo es un botón con texto accesible (ADR-018). La capa se
+          distingue por forma: hexágono para CS2023, círculo para los
+          sílabos (ADR-019).
+        '''
+      }
+
+      contextHeader = component 'Cabecera de contexto' {
+        summary 'Ofrece las lentes que aplican al foco y responde la elegida en una frase.'
+      }
+
+      focusPanel = component 'Panel del foco' {
+        summary 'Ficha del foco: fuente, ubicación, contenido, prerrequisitos, material y conexiones.'
+        description '''
+          Lee el foco como texto y es la alternativa accesible al lienzo:
+          replica cada vecino y cada relación como lista. Muestra la fuente
+          de cada elemento y de cada relación, con su enlace (ADR-019).
+        '''
+      }
+
+      stopsLine = component 'Línea de paradas' {
+        summary 'Resume el camino hasta la meta en una línea, con el porqué de cada parada.'
+      }
+
+      // Operación.
+
+      operatorPanel = component 'Panel del operador' {
+        summary 'Token tecleado, carga de documentos, corridas, descartes y reporte.'
+        description '''
+          Común a la navegación elegida y a cualquier otra: solo comparte la
+          aplicación. Envía el token de ADR-013 en cada petición.
+        '''
+      }
     }
 
     api = container 'API' {
@@ -328,15 +406,39 @@ model {
   // ── Relaciones ──────────────────────────────────────────────────────
 
   // Actores y sistema externo
-  student -> kms.web 'Consulta y navega'
-  operator -> kms.web 'Sube documentos, sigue corridas, revisa descartes y el reporte'
+  // Las vistas de nivel 1 y 2 fijan el título de las relaciones derivadas.
+  student -> kms.web.search 'Busca por nombre'
+  student -> kms.web.home 'Elige por dónde empezar'
+  student -> kms.web.canvas 'Recorre el grafo de punto en punto'
+  student -> kms.web.contextHeader 'Elige qué preguntar del foco'
+  student -> kms.web.focusPanel 'Lee la ficha y abre el documento'
+  operator -> kms.web.operatorPanel 'Sube documentos, sigue corridas, revisa descartes y el reporte'
+
+  // Aplicación web
+  kms.web.search -> kms.web.explorationState 'Fija el foco'
+  kms.web.home -> kms.web.explorationState 'Fija el foco'
+  kms.web.canvas -> kms.web.explorationState 'Cambia el foco o agrega conexiones'
+  kms.web.contextHeader -> kms.web.explorationState 'Cambia la lente y el «ver por»'
+  kms.web.explorationState -> kms.web.canvas 'Subgrafo y disposición'
+  kms.web.explorationState -> kms.web.focusPanel 'Foco en curso'
+  kms.web.explorationState -> kms.web.stopsLine 'Respuesta de la lente'
+  kms.web.explorationState -> kms.web.apiClient 'Pide subgrafos'
+  kms.web.search -> kms.web.apiClient 'Busca por nombre'
+  kms.web.home -> kms.web.apiClient 'Pide las áreas y los cursos'
+  kms.web.focusPanel -> kms.web.apiClient 'Pide fuente, ubicación, prerrequisitos y material'
 
   // Aplicación web → API
-  kms.web -> kms.api.navRoutes 'Consultas y documentos' {
+  kms.web.apiClient -> kms.api.navRoutes 'Búsqueda, detalle, patrones de consulta e inicio' {
     technology 'HTTP/JSON'
   }
-  kms.web -> kms.api.opsRoutes 'Alta de corrida, estado, descartes y reporte' {
-    technology 'HTTP/JSON'
+  kms.web.focusPanel -> kms.api.navRoutes 'Abre el documento del sílabo' {
+    technology 'HTTP (PDF)'
+  }
+  kms.web.operatorPanel -> kms.api.opsRoutes 'Alta de corrida, estado, descartes y reporte' {
+    technology 'HTTP/JSON, Bearer'
+  }
+  kms.web.operatorPanel -> kms.api.navRoutes 'Abre el documento de la corrida' {
+    technology 'HTTP (PDF)'
   }
 
   // API

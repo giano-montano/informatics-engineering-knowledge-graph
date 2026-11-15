@@ -413,7 +413,7 @@ En esta sección se detallarán los métodos y procedimientos necesarios para ob
 | R1 \- Modelo ontológico | Protégé   OWL 2 HermiT | Metodología Ontology Development 101 (Noy & McGuinness, 2001), adaptada con validación dual (validación con experto y validación de consistencia con razonador HermiT), esquema de clases informado por Barron et al. (2026) y estándares internacionales de guías curriculares (CS2023) como referencia de vocabulario de dominio. |
 | R2 \- Capa de referencia | Protégé   OWL 2 HermiT | Paso 7 de OD101: instanciación curada desde CS2023 hasta nivel KU. |
 | R3 \- Documentación del módulo | Modelo C4 (Brown, 2018\) Git y Github  | Diseño arquitectónico iterativo Documentación con niveles 1-3 del Modelo C4 Registro de decisiones técnicas mediante Architecture Decision Records.  Diseño y documentación de los casos de prueba de la ingesta |
-| R4 \- Módulo KG y pipeline | Neo4j Python (FastAPI) PydanticAI LLM de OpenAI Git y Github Cypher (lenguaje de consulta de grafos) Git y Github  | Procedimiento de *Ontology Population* mediante extracción de información asistida por LLM y curación de contenido previa. |
+| R4 \- Módulo KG y pipeline | Neo4j Python (FastAPI) Docling PydanticAI LLM de OpenAI Git y Github Cypher (lenguaje de consulta de grafos) Git y Github  | Procedimiento de *Ontology Population* mediante extracción de información asistida por LLM y curación de contenido previa. |
 | R5 \- Documentación del mecanismo | Modelo C4 Git/GitHub | Diseño documentado con C4 (niveles 1-3) y ADRs; diseño de flujos de interacción y wireframes |
 | R6 \- Mecanismo de navegación | Librería de visualización de grafos (a definir según evaluación técnica) Framework frontend (a definir) Git y Github  | Prototipado iterativo; diseño de flujos de interacción; pruebas de aceptación de funcionalidades core. |
 
@@ -580,6 +580,8 @@ Para la exposición de la interfaz programática del módulo, se utilizará Fast
 Para automatizar la extracción de información desde sílabos y otros documentos extensos, se emplearán modelos de lenguaje de gran escala (LLMs como Gemini, GPT, etc.). Sin embargo, dado que el objetivo del módulo no es generar texto libre sino producir instancias, relaciones y restricciones compatibles con un esquema formal, la orquestación se implementará con PydanticAI. Este framework está concebido como un agente en Python orientado a aplicaciones de producción, con salidas tipadas, uso de herramientas y orquestación multiagente; posee ventajas como que cuando una salida no cumple el esquema, activa un mecanismo de reintento sobre la validación en lugar de aceptar silenciosamente un resultado inválido. A esto se suma que Pydantic genera y personaliza esquemas JSON directamente desde modelos, lo que permite fijar la forma de la salida del modelo de lenguaje: cada entidad y relación que propone llega tipada, y el pipeline la valida después contra las reglas del grafo [(Pydantic, 2024/2026)](https://www.zotero.org/google-docs/?ECK3fa).
 
 Esta elección resulta más adecuada que una aproximación más generalista con LangChain para el núcleo de poblamiento ontológico. LangChain ofrece una arquitectura de agente preconstruida e integraciones amplias; sin embargo, allí la salida estructurada es una capacidad dentro de un ecosistema más amplio, mientras que en PydanticAI la validación tipada y el control del esquema constituyen el centro del diseño (LangChain, s. f.; Pydantic, 2024/2026). Para un pipeline cuyo foco es la consistencia semántica, la normalización y la trazabilidad, esa diferencia es metodológicamente relevante.
+
+La conversión de los sílabos a texto se realizará con Docling (Livathinos et al., 2025), que convierte el PDF en Markdown y conserva sus encabezados y listas mediante modelos de análisis de diseño. La extracción depende de esa estructura, porque un tema es el encabezado que agrupa ítems. Se prefiere a los extractores de texto plano, que la pierden, y a los servicios en la nube, que envían el documento a un tercero: Docling corre localmente y su licencia es MIT.
 
 Extracción con LLM: Se prioriza el uso de modelos con alta capacidad de razonamiento para identificar relaciones complejas que no siempre son explícitas en el texto del sílabo.
 
@@ -1243,6 +1245,8 @@ Cada sílabo se mide sobre una sola ingesta aceptada, de modo que cada ingesta p
 
 El código del *pipeline* se congela antes del primer caso de prueba, y con él se registran la configuración del modelo de lenguaje (el nombre que devuelve el proveedor y los parámetros de generación) y la versión del prompt, que forma parte del código. Esos valores se reportan con los resultados. Lo que se mide es el sistema en su tarea, no solo el LLM, y el sistema incluye un reintento (interno) que ocurre dentro de una corrida (ADR-010). Una corrida **fallida** no produce contenido que juzgar, así que se repite sin contar como intento. Una corrida **rechazada** sí cuenta: el sílabo se vuelve a ingestar con el mismo código, hasta un máximo de tres intentos fijado antes de la medición, y se conserva la primera corrida que el sistema acepta, **sin juicio alguno sobre su contenido**. Cada caso reporta cuántos intentos necesitó, y la precisión de los intentos rechazados se reporta aparte, a partir del lote candidato que el sistema guarda (ADR-010), cuando ese lote es legible. Si un sílabo no obtiene un lote aceptado en tres intentos, queda fuera del grafo, los casos siguientes se ejecutan sin sus nodos y se reporta. Si una corrida queda detenida por auditoría, el error es de código: se corrige, se vuelve a cargar la capa de referencia y la medición se reinicia desde el primer caso de prueba.
 
+El prompt se ajusta antes de congelar el código, contra la anotación de referencia ya congelada y con 11 de los 13 sílabos, cada uno ingestado por separado sobre la capa de referencia sola. Los cambios de estructura se prueban con un modelo de desarrollo, y el ajuste fino, con el modelo de la medición, porque el rendimiento de un prompt se transfiere mal entre modelos (Sclar et al., 2024). Los otros dos sílabos, 1INF37 y 1INF27, son los que extrae el revisor independiente y no se ingestan hasta la medición: quedan como conjunto retenido, que ningún paso del ajuste usa (Hastie et al., 2009, p. 222). Antes de congelar, una sola ingesta en cadena de los 11, en el orden de la medición, comprueba el enlace con nodos existentes y los conceptos requeridos. Como el ajuste usa la anotación de esos 11 sílabos, la precisión sobre los 13, que es la del indicador, puede sobrestimar la que el pipeline obtendría con sílabos nuevos (Perez et al., 2021); por eso se reporta aparte la precisión de los dos retenidos.
+
 La unidad de evaluación es cada tema o concepto del lote de ingesta aceptado de un sílabo. El lote aceptado comprende los nodos que la ingesta crea y los nodos existentes que enlaza, una vez superada la validación previa a la escritura.
 
 El lote aceptado de cada ingesta se guarda tal cual y la evaluación se hace sobre él, no sobre el grafo. El motivo es que el grafo conserva una sola procedencia por nodo: si un sílabo posterior vuelve a afirmar un nodo existente, el grafo no lo registra.
@@ -1423,7 +1427,7 @@ Segundo, varias garantías dependen de condiciones de operación que el sistema 
 
 Tercero, dos decisiones de la ingesta valen solo para el piloto. El rechazo es de todo o nada por documento, lo que castiga más a los sílabos largos (ADR-010), y el extractor recibe el vocabulario completo del grafo en cada corrida, lo que es viable con 13 sílabos, pero no con el catálogo completo de la carrera (ADR-011).
 
-Cuarto, la anotación de referencia la produjo un modelo de lenguaje, un sílabo por sesión, y el autor adjudicó solo las decisiones que la guía no resolvía. Una persona independiente extrae dos sílabos por su cuenta, sin la guía, y su extracción se contrasta con la anotación. Es un solo revisor, el contraste cubre el 17 % de las entradas y no es concluyente, y no examina los nombres alternativos de la anotación, que producen aciertos espurios si son demasiado generales. No hay un segundo anotador que siga la guía ni una medida de acuerdo sobre los trece. El emparejamiento exige coincidencia de nombres, por lo que la precisión y la exhaustividad son cotas inferiores. Y repetir un sílabo rechazado, hasta tres veces, conserva la primera corrida que el sistema acepta; como la validación comprueba la forma y no la veracidad, esa selección no eleva la precisión de forma directa, y la precisión de los intentos rechazados se reporta para comprobarlo.
+Cuarto, la anotación de referencia la produjo un modelo de lenguaje, un sílabo por sesión, y el autor adjudicó solo las decisiones que la guía no resolvía. Una persona independiente extrae dos sílabos por su cuenta, sin la guía, y su extracción se contrasta con la anotación. Es un solo revisor, el contraste cubre el 17 % de las entradas y no es concluyente, y no examina los nombres alternativos de la anotación, que producen aciertos espurios si son demasiado generales. No hay un segundo anotador que siga la guía ni una medida de acuerdo sobre los trece. El prompt se ajustó con la anotación de 11 de los 13 sílabos, de modo que la precisión total es optimista respecto de sílabos nuevos; la de los dos retenidos es la lectura sin ese sesgo, pero son solo dos y no se eligieron al azar. El emparejamiento exige coincidencia de nombres, por lo que la precisión y la exhaustividad son cotas inferiores. Y repetir un sílabo rechazado, hasta tres veces, conserva la primera corrida que el sistema acepta; como la validación comprueba la forma y no la veracidad, esa selección no eleva la precisión de forma directa, y la precisión de los intentos rechazados se reporta para comprobarlo.
 
 Quinto, las relaciones se evalúan por juicio del autor sobre la salida, sin anotación previa. CP-15 cubre todos los enlaces con CS2023, pero CP-16 solo una muestra de las relaciones entre conceptos, y ninguno de los dos puede medir qué relaciones correctas dejó de establecer el pipeline.
 
@@ -1473,6 +1477,8 @@ Gruber, T. R. (1993). A translation approach to portable ontology specifications
 
 Gunarathne, W. K. T. M., Chootong, C., Sommool, W., Ochirbat, A., Chen, Y.-C., Reisman, S., & Shih, T. K. (2018). *Web-Based Learning Object Search Engine Solution Together with Data Visualization: The Case of MERLOT II*. *1*, 1026-1031. Scopus. [https\://doi.org/10.1109/COMPSAC.2018.00179](https://doi.org/10.1109/COMPSAC.2018.00179)
 
+Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The elements of statistical learning: Data mining, inference, and prediction* (2.ª ed.). Springer. [https\://doi.org/10.1007/978-0-387-84858-7](https://doi.org/10.1007/978-0-387-84858-7)
+
 Huang, J., Lai, F., Zheng, Z., Lai, R., Chen, X., Tian, J., & Zheng, Y. (2026). Design and Evaluation of a Question-Answering System Based on Knowledge Graph-Augmented Large Language Models in K–12 Artificial Intelligence Curriculum. *Applied Sciences*, *16*(7), 3552\. [https\://doi.org/10.3390/app16073552](https://doi.org/10.3390/app16073552)
 
 International Organization for Standardization & International Electrotechnical Commission. (2023). *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model* (ISO/IEC 25010:2023).
@@ -1501,6 +1507,8 @@ Liu, P., & Zhan, C. (2025). *Research on Visual Learning Platform for Database P
 
 Liu, Y., Zuo, Q., Zhang, S., Li, Y., Wang, C., Han, F., & Cheng, X. (2026). *Research on Triple Joint Extraction Method of Knowledge Graph for Education Domain*. 134-139. Scopus. [https\://doi.org/10.1145/3785987.3786009](https://doi.org/10.1145/3785987.3786009)
 
+Livathinos, N., Auer, C., Lysak, M., Nassar, A., Dolfi, M., Vagenas, P., Berrospi Ramis, C., Omenetti, M., Dinkla, K., Kim, Y., Gupta, S., Teixeira de Lima, R., Weber, V., Morin, L., Meijer, I., Kuropiatnyk, V., & Staar, P. W. J. (2025). *Docling: An efficient open-source toolkit for AI-driven document conversion*. AAAI 25 Workshop on Open-Source AI for Mainstream Use. [https\://arxiv.org/abs/2501.17887](https://arxiv.org/abs/2501.17887)
+
 Millman, K., & Aivazis, M. (2011). Python for Scientists and Engineers. *Computing in Science & Engineering*, *13*, 9-12. [https\://doi.org/10.1109/MCSE.2011.36](https://doi.org/10.1109/MCSE.2011.36)
 
 National Research Council. (2000). *How People Learn: Brain, Mind, Experience, and School: Expanded Edition*. National Academies Press.
@@ -1517,6 +1525,8 @@ Oprea, M. (2020). *An Educational Ontology for Formal Languages and Compilers*. 
 
 Pan, J., Liu, J., Wei, D., Zhuang, J., Qiu, S., & Du, J. (2023). *Knowledge Graph for University Course Construction Based on Gated Graph Attention Networks*. 60-65. Scopus. [https\://doi.org/10.1109/MLCR61158.2023.00021](https://doi.org/10.1109/MLCR61158.2023.00021)
 
+Perez, E., Kiela, D., & Cho, K. (2021). True few-shot learning with language models. En M. Ranzato, A. Beygelzimer, Y. Dauphin, P. S. Liang, & J. Wortman Vaughan (Eds.), *Advances in Neural Information Processing Systems* (Vol. 34, pp. 11054–11070). Curran Associates. [https\://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html](https://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html)
+
 *Protégé*. (s. f.). Recuperado 15 de mayo de 2026, de [https\://protege.stanford.edu/](https://protege.stanford.edu/)
 
 Pydantic. (2026). *Pydantic/pydantic-ai* \[Python\]. [https\://github.com/pydantic/pydantic-ai](https://github.com/pydantic/pydantic-ai) (Obra original publicada en 2024\)
@@ -1524,6 +1534,8 @@ Pydantic. (2026). *Pydantic/pydantic-ai* \[Python\]. [https\://github.com/pydant
 Ramírez, S. (s. f.). *FastAPI*. Recuperado 15 de mayo de 2026, de [https\://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
 
 *RDF 1.1 Concepts and Abstract Syntax*. (2014). [https\://www\.w3.org/TR/rdf11-concepts/](https://www.w3.org/TR/rdf11-concepts/)
+
+Sclar, M., Choi, Y., Tsvetkov, Y., & Suhr, A. (2024). Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. En *The Twelfth International Conference on Learning Representations (ICLR 2024)*. [https\://arxiv.org/abs/2310.11324](https://arxiv.org/abs/2310.11324)
 
 Singhal, A. (2012, mayo 16). *Introducing the Knowledge Graph: Things, not strings*. Google. [https\://blog.google/products-and-platforms/products/search/introducing-knowledge-graph-things-not/](https://blog.google/products-and-platforms/products/search/introducing-knowledge-graph-things-not/)
 
@@ -1768,7 +1780,7 @@ CS2023 (ACM/IEEE) como fuente de capa de referencia; OWL 2 y RDF/Turtle (W3C); M
 
 **Herramientas**
 
-Protégé, HermiT, OWL 2/Turtle (R1 y R2); Neo4j Community, Cypher (R3 y R4); Python, FastAPI, PydanticAI y LLM vía API de OpenAI (R4); Git y GitHub (R3–R6); Zotero y bases de datos académicas.
+Protégé, HermiT, OWL 2/Turtle (R1 y R2); Neo4j Community, Cypher (R3 y R4); Python, FastAPI, Docling, PydanticAI y LLM vía API de OpenAI (R4); Git y GitHub (R3–R6); Zotero y bases de datos académicas.
 
 **Equipamiento**
 

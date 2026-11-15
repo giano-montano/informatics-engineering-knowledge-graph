@@ -75,7 +75,7 @@ Antes de empezar, una sesión de unos 15 minutos con el autor:
   segundo lo conocía por conversaciones previas); si no lo conoce, no se le
   explica en la sesión. Nunca se le dice cómo extraer: nada de secciones,
   encabezados, literalidad ni tipos.
-- Desde el 2026-11-16, el participante no anota su tiempo: avisa al autor al
+- Desde el 2026-11-15, el participante no anota su tiempo: avisa al autor al
   empezar y al terminar cada sílabo, y el autor lo registra.
 - Se muestra la hoja y se llenan dos filas de práctica con un sílabo de
   `data/raw`, que no pertenece a los 13. La práctica es solo del formato: el

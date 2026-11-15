@@ -57,14 +57,14 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF29-057	concepto	obligatoria	Copias de respaldo (backups)	copia de respaldo|backup|backups	1INF29-049	contenidos	Copias de respaldo (backups)	
 1INF29-058	tema	obligatoria	SISTEMAS DE ARCHIVO (FILE SYSTEMS)	sistemas de archivos|sistema de archivos|file system|file systems		contenidos	CAPÍTULO 8 SISTEMAS DE ARCHIVO (FILE SYSTEMS)	
 1INF29-059	concepto	obligatoria	Archivos	archivo|files|file	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
-1INF29-060	concepto	obligatoria	datos	dato|data	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
+1INF29-060	concepto	obligatoria	Datos de archivos	dato de archivos|file data	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF29-061	concepto	obligatoria	metadatos	metadato|metadata	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
-1INF29-062	concepto	obligatoria	operaciones	operación	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
-1INF29-063	concepto	obligatoria	organización		1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
+1INF29-062	concepto	obligatoria	Operaciones sobre archivos	operación sobre archivos|operaciones con archivos|file operations	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF29-063	concepto	obligatoria	Organización de archivos	file organization	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF29-064	concepto	obligatoria	buferización	buffering	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
 1INF29-065	concepto	obligatoria	Directorios	directorio|directories|directory	1INF29-058	contenidos	Directorios: contenido y estructura.	
-1INF29-066	concepto	obligatoria	contenido	contenido de directorios|directory contents	1INF29-058	contenidos	Directorios: contenido y estructura.	
-1INF29-067	concepto	obligatoria	estructura	estructura de directorios|directory structure	1INF29-058	contenidos	Directorios: contenido y estructura.	
+1INF29-066	concepto	obligatoria	Contenido de directorios	directory contents	1INF29-058	contenidos	Directorios: contenido y estructura.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF29-067	concepto	obligatoria	Estructura de directorios	directory structure	1INF29-058	contenidos	Directorios: contenido y estructura.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF29-068	concepto	obligatoria	particionamiento	partitioning	1INF29-058	contenidos	Sistemas de archivos: particionamiento, montaje/desmontaje, sistemas de archivo virtuales.	
 1INF29-069	concepto	obligatoria	montaje	mounting|mount	1INF29-058	contenidos	montaje/desmontaje	
 1INF29-070	concepto	obligatoria	desmontaje	unmounting|unmount	1INF29-058	contenidos	montaje/desmontaje	

@@ -71,9 +71,9 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF30-069	tema	obligatoria	Diseño y generación de reportes	diseño de reportes|diseño de reporte|generación de reportes|generación de reporte|report design|report generation|diseño de informes|generación de informes		contenidos	DISEÑO Y GENERACIÓN DE REPORTES	
 1INF30-070	tema	obligatoria	Diseño de reportes en JasperSoft Studio	diseño de reportes con JasperSoft Studio		contenidos	Diseño de reportes en JasperSoft Studio: bandas, estilos, parámetros	Encabezado en línea tratado como tema; calificador conservado (distinto de 'diseño de reportes', alias de la unidad).
 1INF30-071	concepto	obligatoria	JasperSoft Studio	TIBCO Jaspersoft Studio	1INF30-070	contenidos	Diseño de reportes en JasperSoft Studio	Núcleo nombrado literal; también en Metodología.
-1INF30-072	concepto	obligatoria	Bandas	banda|bandas de reporte|banda de reporte|report bands	1INF30-070	contenidos	bandas, estilos	Etiquetas genéricas de reportes (bandas a consultas): alias contextual 'de reporte'. Riesgo de colisión en consolidación: revisar evidencia.
-1INF30-073	concepto	obligatoria	Estilos	estilo|estilos de reporte|report styles	1INF30-070	contenidos	bandas, estilos, parámetros	
-1INF30-074	concepto	obligatoria	Parámetros	parámetro|parámetros de reporte|report parameters	1INF30-070	contenidos	estilos, parámetros, campos	
+1INF30-072	concepto	obligatoria	Bandas de reporte	banda de reporte|report bands	1INF30-070	contenidos	bandas, estilos	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF30-073	concepto	obligatoria	Estilos de reporte	estilo de reporte|report styles	1INF30-070	contenidos	bandas, estilos, parámetros	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF30-074	concepto	obligatoria	Parámetros de reporte	parámetro de reporte|report parameters	1INF30-070	contenidos	estilos, parámetros, campos	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF30-075	concepto	obligatoria	Campos	campo|campos de reporte|report fields	1INF30-070	contenidos	parámetros, campos, variables	
 1INF30-076	concepto	obligatoria	Variables	variable|variables de reporte|report variables	1INF30-070	contenidos	campos, variables, consultas	
 1INF30-077	concepto	obligatoria	Consultas	consulta|consultas de reporte|report queries	1INF30-070	contenidos	variables, consultas y consumo de fuentes de datos	

@@ -21,8 +21,11 @@ Es un documento interno del repositorio, no un entregable. La tesis resume en
   proporción de aceptables (10 de 39). Se excluyen los cursos de proyecto
   (1INF47 y 1INF54) porque su sílabo describe sobre todo el proyecto del curso
   y nombra pocos saberes. Juntos suman 128 entradas, el 17 % del total.
-- **Revisor:** una persona ajena a la elaboración de la anotación, con los
-  cursos aprobados. Es una sola persona, y eso se declara como limitación.
+- **Revisores:** dos personas ajenas a la elaboración de la anotación, con
+  los cursos aprobados, que trabajan por separado y no hablan entre sí de la
+  tarea. Cada una tiene su carpeta (`revision/revisor-1/`,
+  `revision/revisor-2/`). Lo que este protocolo dice del revisor vale para
+  cada uno.
 - **Cuándo:** antes de ejecutar los casos de prueba y antes de cualquier ajuste
   del prompt contra la anotación. El revisor no ve las salidas del pipeline.
 
@@ -126,57 +129,18 @@ variante de uso común que nombra exactamente lo mismo) se marca además como
 **alias faltante**. Si no se marca, el pipeline podría acertar con esa
 redacción y el acierto contaría como falso positivo.
 
-## Corrección de lo sistemático
+## La anotación no se corrige
 
-Se corrige en la anotación solo un **error de aplicación sistemático**, es
-decir, un patrón que cumple las tres condiciones:
-
-1. Su categoría es `omision`, `inclusion_indebida` o alias faltante. Las
-   categorías `criterio`, `no_sustentada` y `no_extraida` nunca se corrigen.
-2. Aparece en los dos sílabos.
-3. Se enuncia como una sola regla de la guía v2.1 que la anotación no aplicó.
-
-Cada patrón que cumple las tres condiciones es una **clase**.
-
-Las clases se escriben en el registro, con su regla y sus instancias en los
-dos sílabos, **antes** de buscarlas en los otros once.
-
-**Tope:** como máximo **2 clases** y como máximo **75 entradas cambiadas** en
-total en los 13 sílabos (el 10 % de 745). Si se encuentran más clases, o si al
-aplicarlas se pasa de 75 entradas, no se corrige nada: todo se reporta y la
-limitación se declara.
-
-Dentro del tope, la corrección se hace así:
-
-1. El autor busca cada clase, a mano, en los 13 sílabos, aplicando solo la
-   regla escrita. Puede apoyarse en un modelo de lenguaje para listar
-   candidatos, pero cada cambio lo decide él.
-2. Cada cambio se registra en `gold/consolidacion_changelog.tsv`, con
-   `categoria=revision_independiente` y `motivo=clase C<n>: <regla>`. Una
-   entrada nueva recibe el siguiente identificador libre de su sílabo.
-3. Se vuelven a ejecutar los scripts de consolidación (`idglobal.py`,
-   `validate.py`), y los identificadores globales se asignan con las reglas
-   de la guía.
-4. Se actualizan la Tabla 22 y las cifras de §5.2.5.2: entradas, nociones y
-   nociones compartidas.
-
-Las discrepancias que no forman una clase no se corrigen en ningún sílabo, ni
-siquiera en los dos revisados. Así, ningún sílabo queda con un tratamiento
-distinto al de los demás.
-
-La guía no cambia: sigue en la v2.1. Lo que el revisor ve distinto de la guía
-cae en `criterio` y se reporta.
-
-**La anotación se congela con un tag de git** al terminar este paso, haya o
-no correcciones. Ese tag es la referencia de la medición de R4, y la
-anotación no cambia después de él.
+Decidido el 2026-11-15, antes de comparar ninguna extracción con la
+anotación. La anotación se congela con un tag de git **antes** de la
+comparación, y la revisión no cambia ninguna entrada: las discrepancias se
+reportan por categoría, y su efecto en la precisión se discute (ver abajo).
+Así la referencia de la medición de R4 queda fijada antes de cualquier
+contraste. La guía sigue en la v2.1.
 
 ## Qué se reporta
 
-Todas las medidas de acuerdo se calculan contra la anotación **anterior** a
-la corrección; si no, la comparación sería circular.
-
-Por sílabo y en total:
+Por sílabo y en total, para cada revisor:
 
 - La proporción de filas del revisor que coinciden con una noción de la
   anotación, antes y después de la adjudicación.
@@ -187,8 +151,10 @@ Por sílabo y en total:
   el revisor. Es descriptiva: el revisor no tiene la regla de tipo de la guía.
 - El tiempo que el revisor dedicó a cada sílabo.
 - Las preguntas del revisor.
-- Las clases encontradas, las entradas que cambió cada una o, si se superó el
-  tope, la razón por la que no se corrigió nada.
+
+Entre los dos revisores, el acuerdo por nombre normalizado, en las dos
+direcciones y sin adjudicar (`evaluate_ingestion.py agreement`): es la
+referencia para leer el acuerdo de cada revisor con la anotación.
 
 Después de la corrida final, la **precisión del pipeline contra la extracción
 del revisor** en los dos sílabos. Un ítem del lote aceptado acierta si su
@@ -197,8 +163,8 @@ adjudica que nombra lo mismo que una fila (`misma_nocion`, con el mismo
 criterio que la regla de alias de la guía). Esta medida no pasa por la
 anotación, así que ningún modelo de lenguaje evalúa a otro.
 
-No hay umbral. Es un indicador **no concluyente**: hay un solo revisor y dos
-sílabos, y el revisor no comparte el criterio de la guía. Un acuerdo alto no
+No hay umbral. Es un indicador **no concluyente**: hay dos revisores y dos
+sílabos, y los revisores no comparten el criterio de la guía. Un acuerdo alto no
 prueba que la anotación sea correcta; un acuerdo bajo se interpreta por
 categorías.
 
@@ -213,7 +179,7 @@ Para la discusión de R4, el efecto de cada categoría en la precisión:
 
 ## Registro
 
-En `casos-de-prueba/revision/`:
+En `casos-de-prueba/revision/`, y los archivos de cada revisor en su carpeta:
 
 | Archivo | Contenido |
 |---|---|
@@ -221,7 +187,7 @@ En `casos-de-prueba/revision/`:
 | `extraccion_<sílabo>.tsv` | La extracción del revisor tal como la entregó, exportada sin cambios. El Excel original se guarda aparte. |
 | `comparacion_<sílabo>.xlsx` | La salida del evaluador, con las columnas de adjudicación llenadas por el autor. |
 | `comparacion_pipeline_<sílabo>.xlsx` | Tras la corrida final, el lote aceptado contra la extracción del revisor, con la adjudicación `misma_nocion` del autor. |
-| `registro-de-la-revision.md` | Fechas, las preguntas del revisor con sus respuestas, las clases (escritas antes de aplicarlas) y los cambios resultantes. |
+| `registro-de-la-revision.md` | Fechas y tiempos de cada revisor. |
 
 La constancia firmada **no se versiona**, porque lleva el nombre del revisor.
 Va en el anexo de la tesis.
@@ -232,7 +198,8 @@ Texto propuesto, para el anexo:
 
 > Yo, [nombre], identificado con [código PUCP o DNI], estudiante de
 > Ingeniería Informática de la PUCP con los cursos Ingeniería de Software
-> (1INF37) y Algoritmia (1INF27) aprobados, dejo
+> (1INF37) y Algoritmia y Estructura de Datos (1INF27), o sus equivalentes
+> del plan anterior, aprobados, dejo
 > constancia de que el [fecha] extraje, por mi cuenta, los temas y conceptos
 > de los sílabos 2026-2 de esos dos cursos. Trabajé solo con los PDF de los
 > sílabos y la consigna adjunta. No conocía la guía de anotación ni la
@@ -241,5 +208,5 @@ Texto propuesto, para el anexo:
 >
 > [firma] · [fecha]
 
-El anexo lleva la constancia, la consigna, la extracción de los dos sílabos y
-la tabla resumen de la comparación.
+Un solo anexo lleva las dos constancias, la consigna, la extracción de cada
+revisor y la tabla resumen de la comparación.

@@ -310,9 +310,8 @@ proporciones después de la adjudicación (lo automático más los pares
 `misma_nocion`), el conteo de cada categoría por lado, los alias faltantes y
 cuántas discrepancias siguen sin categoría. Las cifras automáticas no cambian.
 
-Todo esto se calcula contra la anotación **anterior** a la corrección, como
-pide el protocolo: se corre antes de aplicar el parche, o con `--gold`
-apuntando a la versión anterior.
+Todo esto se calcula contra la anotación congelada: desde el 2026-11-15 la
+revisión no la corrige (protocolo, «La anotación no se corrige»).
 
 **Pipeline contra revisor.** Para el lote aceptado de cada uno de los dos
 sílabos, en la cadena: ítems cuyo nombre normalizado es el de una fila del
@@ -331,7 +330,7 @@ tiene B, y al revés. Las filas que normalizan igual cuentan una vez. No se
 adjudica: es una cota inferior del acuerdo, porque dos redacciones de lo
 mismo cuentan como desacuerdo.
 
-El tiempo del revisor, sus preguntas y las clases no pasan por el evaluador:
+El tiempo del revisor y sus preguntas no pasan por el evaluador:
 van en el registro de la revisión.
 
 ## 9. Salidas

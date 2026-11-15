@@ -143,7 +143,7 @@ silabo	id_global	id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF33	G-0138	1INF33-024	concepto	obligatoria	Fases del Diseño de una Base de Datos	fases del diseño de base de datos|fase del diseño de una base de datos		contenidos	Fases del Diseño de una Base de Datos	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
 1INF33	G-0139	1INF33-025	concepto	obligatoria	Modelo Entidad Relación	modelo entidad-relación|MER|ER model|entity relationship model		contenidos	El Modelo Entidad Relación	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
 1INF33	G-0140	1INF33-026	concepto	obligatoria	Modelo Relacional	modelo relacional|relational model		contenidos	El Modelo Relacional	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
-1INF33	G-0141	1INF33-027	concepto	obligatoria	Operaciones	operación		contenidos	El Modelo Relacional: Estructura y Operaciones	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
+1INF33	G-0141	1INF33-027	concepto	obligatoria	Operaciones del modelo relacional	operación del modelo relacional|relational model operations		contenidos	El Modelo Relacional: Estructura y Operaciones	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea. El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
 1INF33	G-0142	1INF33-028	concepto	obligatoria	Reglas de Integridad	regla de integridad		contenidos	Reglas de Integridad	El capítulo 1 tiene un encabezado genérico y no aporta un tema entidad; se deja vacío.
 1INF33	G-0143	1INF33-029	concepto	obligatoria	Tipos de datos en SQL	tipo de dato en SQL|SQL data types	1INF33-008	contenidos	Tipos de datos en SQL	
 1INF33	G-0144	1INF33-030	concepto	obligatoria	Barker	notación Barker|Barker notation	1INF33-008	contenidos	Metodología de modelamiento y convenciones: Barker e IDEF1X	
@@ -309,14 +309,14 @@ silabo	id_global	id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF29	G-0296	1INF29-057	concepto	obligatoria	Copias de respaldo (backups)	copia de respaldo|backup|backups	1INF29-049	contenidos	Copias de respaldo (backups)	
 1INF29	G-0245	1INF29-058	tema	obligatoria	SISTEMAS DE ARCHIVO (FILE SYSTEMS)	sistemas de archivos|sistema de archivos|file system|file systems		contenidos	CAPÍTULO 8 SISTEMAS DE ARCHIVO (FILE SYSTEMS)	
 1INF29	G-0297	1INF29-059	concepto	obligatoria	Archivos	archivo|files|file	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
-1INF29	G-0298	1INF29-060	concepto	obligatoria	datos	dato|data	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
+1INF29	G-0298	1INF29-060	concepto	obligatoria	Datos de archivos	dato de archivos|file data	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF29	G-0299	1INF29-061	concepto	obligatoria	metadatos	metadato|metadata	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
-1INF29	G-0300	1INF29-062	concepto	obligatoria	operaciones	operación	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
-1INF29	G-0301	1INF29-063	concepto	obligatoria	organización		1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
+1INF29	G-0300	1INF29-062	concepto	obligatoria	Operaciones sobre archivos	operación sobre archivos|operaciones con archivos|file operations	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF29	G-0301	1INF29-063	concepto	obligatoria	Organización de archivos	file organization	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF29	G-0302	1INF29-064	concepto	obligatoria	buferización	buffering	1INF29-058	contenidos	Archivos: datos, metadatos, operaciones, organización, buferización.	
 1INF29	G-0303	1INF29-065	concepto	obligatoria	Directorios	directorio|directories|directory	1INF29-058	contenidos	Directorios: contenido y estructura.	
-1INF29	G-0304	1INF29-066	concepto	obligatoria	contenido	contenido de directorios|directory contents	1INF29-058	contenidos	Directorios: contenido y estructura.	
-1INF29	G-0305	1INF29-067	concepto	obligatoria	estructura	estructura de directorios|directory structure	1INF29-058	contenidos	Directorios: contenido y estructura.	
+1INF29	G-0304	1INF29-066	concepto	obligatoria	Contenido de directorios	directory contents	1INF29-058	contenidos	Directorios: contenido y estructura.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF29	G-0305	1INF29-067	concepto	obligatoria	Estructura de directorios	directory structure	1INF29-058	contenidos	Directorios: contenido y estructura.	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF29	G-0306	1INF29-068	concepto	obligatoria	particionamiento	partitioning	1INF29-058	contenidos	Sistemas de archivos: particionamiento, montaje/desmontaje, sistemas de archivo virtuales.	
 1INF29	G-0307	1INF29-069	concepto	obligatoria	montaje	mounting|mount	1INF29-058	contenidos	montaje/desmontaje	
 1INF29	G-0308	1INF29-070	concepto	obligatoria	desmontaje	unmounting|unmount	1INF29-058	contenidos	montaje/desmontaje	
@@ -399,9 +399,9 @@ silabo	id_global	id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF30	G-0368	1INF30-069	tema	obligatoria	Diseño y generación de reportes	diseño de reportes|diseño de reporte|generación de reportes|generación de reporte|report design|report generation|diseño de informes|generación de informes		contenidos	DISEÑO Y GENERACIÓN DE REPORTES	
 1INF30	G-0369	1INF30-070	tema	obligatoria	Diseño de reportes en JasperSoft Studio	diseño de reportes con JasperSoft Studio		contenidos	Diseño de reportes en JasperSoft Studio: bandas, estilos, parámetros	Encabezado en línea tratado como tema; calificador conservado (distinto de 'diseño de reportes', alias de la unidad).
 1INF30	G-0370	1INF30-071	concepto	obligatoria	JasperSoft Studio	TIBCO Jaspersoft Studio	1INF30-070	contenidos	Diseño de reportes en JasperSoft Studio	Núcleo nombrado literal; también en Metodología.
-1INF30	G-0371	1INF30-072	concepto	obligatoria	Bandas	banda|bandas de reporte|banda de reporte|report bands	1INF30-070	contenidos	bandas, estilos	Etiquetas genéricas de reportes (bandas a consultas): alias contextual 'de reporte'. Riesgo de colisión en consolidación: revisar evidencia.
-1INF30	G-0372	1INF30-073	concepto	obligatoria	Estilos	estilo|estilos de reporte|report styles	1INF30-070	contenidos	bandas, estilos, parámetros	
-1INF30	G-0373	1INF30-074	concepto	obligatoria	Parámetros	parámetro|parámetros de reporte|report parameters	1INF30-070	contenidos	estilos, parámetros, campos	
+1INF30	G-0371	1INF30-072	concepto	obligatoria	Bandas de reporte	banda de reporte|report bands	1INF30-070	contenidos	bandas, estilos	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF30	G-0372	1INF30-073	concepto	obligatoria	Estilos de reporte	estilo de reporte|report styles	1INF30-070	contenidos	bandas, estilos, parámetros	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
+1INF30	G-0373	1INF30-074	concepto	obligatoria	Parámetros de reporte	parámetro de reporte|report parameters	1INF30-070	contenidos	estilos, parámetros, campos	Parte que no se nombra sola: etiqueta completada con el núcleo de la línea.
 1INF30	G-0374	1INF30-075	concepto	obligatoria	Campos	campo|campos de reporte|report fields	1INF30-070	contenidos	parámetros, campos, variables	
 1INF30	G-0375	1INF30-076	concepto	obligatoria	Variables	variable|variables de reporte|report variables	1INF30-070	contenidos	campos, variables, consultas	
 1INF30	G-0376	1INF30-077	concepto	obligatoria	Consultas	consulta|consultas de reporte|report queries	1INF30-070	contenidos	variables, consultas y consumo de fuentes de datos	

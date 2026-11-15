@@ -34,6 +34,7 @@ from iekg.graph_schema import (
     KEY,
     KNOWLEDGE_AREA,
     KNOWLEDGE_ELEMENT,
+    KNOWLEDGE_UNIT,
     LAYER,
     LEARNING_RESOURCE,
     NODE_CLASSES,
@@ -82,6 +83,10 @@ class GraphNode:
     depth: int | None = None
     score: float | None = None
     more_neighbors: bool | None = None
+    # Only an area of the overview: how many units, topics and concepts lie under it.
+    units: int | None = None
+    topics: int | None = None
+    concepts: int | None = None
     # Only the node a detail is about carries it.
     has_description: bool = False
     description: str | None = None
@@ -359,6 +364,37 @@ def node_detail(key: str) -> Query:
     return Query(_DETAIL, {"key": key})
 
 
+# --- Overview: where to start without a name ---------------------------------
+
+# The counts are of the nodes that exist under each area; no edge is derived.
+_OVERVIEW = _with_tail(
+    f"""CALL () {{
+    MATCH (a:{KNOWLEDGE_AREA})
+    CALL (a) {{
+        OPTIONAL MATCH (p)-[:{PART_OF}*1..{MAX_DEPTH}]->(a)
+        WITH DISTINCT p
+        RETURN count(CASE WHEN p:{KNOWLEDGE_UNIT} THEN 1 END) AS units,
+               count(CASE WHEN p:{TOPIC} THEN 1 END) AS topics,
+               count(CASE WHEN p:{CONCEPT} THEN 1 END) AS concepts
+    }}
+    WITH a, units, topics, concepts ORDER BY a.{PREF_LABEL_ES}, a.{KEY}
+    RETURN collect({{node: a, units: units, topics: topics, concepts: concepts}}) AS areas
+}}
+WITH areas + COLLECT {{
+    MATCH (c:{COURSE}) RETURN {{node: c}} ORDER BY c.{COURSE_CODE}, c.{KEY}
+}} AS found
+""",
+    # Areas and courses stand alone, like search results.
+    None,
+)
+
+
+def overview() -> Query:
+    """Every knowledge area, with how many units, topics and concepts are part
+    of it, and every course: where a student starts without a name."""
+    return Query(_OVERVIEW)
+
+
 # --- RF-18: search by name ---------------------------------------------------
 
 _SEARCH = _with_tail(
@@ -459,6 +495,9 @@ def _graph_node(projected: Mapping, about: Mapping) -> GraphNode:
         depth=about.get("depth"),
         score=about.get("score"),
         more_neighbors=about.get("more_neighbors"),
+        units=about.get("units"),
+        topics=about.get("topics"),
+        concepts=about.get("concepts"),
         has_description="description" in about,
         description=about.get("description"),
     )

@@ -186,6 +186,36 @@ def depths(subgraph: Subgraph) -> dict[str, int]:
     return {n.key: n.depth for n in subgraph.nodes if n.depth is not None}
 
 
+# --- Overview -------------------------------------------------------------------
+
+
+def counts(subgraph: Subgraph) -> dict[str, tuple[int | None, int | None, int | None]]:
+    return {n.key: (n.units, n.topics, n.concepts) for n in subgraph.nodes}
+
+
+@pytest.mark.neo4j
+def test_the_overview_counts_what_is_part_of_each_area_and_lists_the_courses(tx, g):
+    found = fetch(tx, navigation.overview())
+    assert counts(found)[g.area] == (2, 2, 6)
+    assert {g.z, g.x} <= nodes(found, COURSE)
+    assert counts(found)[g.z] == (None, None, None)
+    # Nothing under an area, and no edge between what the overview lists.
+    assert not nodes(found, KNOWLEDGE_UNIT, TOPIC, CONCEPT)
+    assert edges(found) == edges(found, WAS_DERIVED_FROM)
+    assert {g.cs2023, g.syllabus1} <= nodes(found, LEARNING_RESOURCE)
+
+
+@pytest.mark.neo4j
+def test_an_area_no_syllabus_reaches_counts_only_its_units(tx, new_key):
+    area, unit, empty = new_key(), new_key(), new_key()
+    _write(tx, [_named(area, KNOWLEDGE_AREA, "Área"), _named(unit, KNOWLEDGE_UNIT, "Unidad"),
+                _named(empty, KNOWLEDGE_AREA, "Área vacía")],
+           [EdgeFact(PART_OF, unit, area)], layer=REFERENCE)
+    found = counts(fetch(tx, navigation.overview()))
+    assert found[area] == (1, 0, 0)
+    assert found[empty] == (0, 0, 0)
+
+
 # --- RF-11 --------------------------------------------------------------------
 
 

@@ -160,6 +160,9 @@ class NodeView(BaseModel):
     depth: int | None = Field(None, description="Where the pattern measures it: the distance from the starting node.")
     score: float | None = Field(None, description="Only in a search: the relevance of the match.")
     more_neighbors: bool | None = Field(None, description="Only in a detail: whether the node has neighbors left out.")
+    units: int | None = Field(None, description="Only on an area of the overview: the units that are part of it.")
+    topics: int | None = Field(None, description="Only on an area of the overview: the topics under its units.")
+    concepts: int | None = Field(None, description="Only on an area of the overview: the concepts under those topics.")
 
     @classmethod
     def of(cls, node: GraphNode) -> "NodeView":
@@ -172,7 +175,7 @@ class NodeView(BaseModel):
             fields["locator"] = node.locator
         if node.has_description:
             fields["description"] = node.description
-        for name in ("depth", "score", "more_neighbors"):
+        for name in ("depth", "score", "more_neighbors", "units", "topics", "concepts"):
             if getattr(node, name) is not None:
                 fields[name] = getattr(node, name)
         return cls(**fields)

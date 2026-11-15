@@ -16,6 +16,10 @@
       event.preventDefault();
       if (exploration.view !== 'explore') exploration.goHome();
       search?.focusInput();
+    } else if (event.altKey && event.key === 'ArrowLeft' && exploration.view === 'explore') {
+      // The browser's own shortcut, kept working where the page has the keyboard.
+      event.preventDefault();
+      exploration.back();
     } else if (event.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName) && exploration.view === 'explore') {
       event.preventDefault();
       search?.focusInput();

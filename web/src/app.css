@@ -333,7 +333,6 @@ svg.graph:active {
   stroke: var(--ground);
   stroke-width: 4px;
   stroke-linejoin: round;
-  pointer-events: none;
 }
 
 .graph .node-focus .label .name {

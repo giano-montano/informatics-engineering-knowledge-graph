@@ -113,7 +113,7 @@ panel-operador/   index.html, panel.js, panel.css, README.md
 Cada README de propuesta cierra con su **costo documental**: qué pasa a la Fase 1 y a la Fase 2 de
 R5, el bloque `likec4` que extiende `kms.web` y las filas de la Tabla 20. Los ADR llevan prefijo
 provisional (`P1-`, `P2-`, `P3-`); los de la propuesta elegida pasan a `docs/decisiones/` desde el
-0015.
+0016 (el 0015 es el del modelo de lenguaje de la corrida final).
 
 > **Nota (2026-11-14):** el 0015 lo tomó ADR-015 (modelo de lenguaje de la corrida final). Los ADR
 > de R5 pasan desde el **0016**; los prefijos y números provisionales de las propuestas no se

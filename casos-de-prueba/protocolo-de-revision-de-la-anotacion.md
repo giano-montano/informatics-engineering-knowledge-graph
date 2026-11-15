@@ -105,6 +105,12 @@ emparejamiento automático no unió. Lo hace con una de las categorías de
 abajo, que quedan fijadas aquí. Cada clasificación lleva una frase que la
 justifica y, cuando corresponde, la regla de la guía v2.1 que aplica.
 
+Se adjudica la extracción del segundo revisor (decidido el 2026-11-15, antes
+de comparar). La del primero se reporta solo con el emparejamiento
+automático, como cota inferior del acuerdo. La adjudicación se termina antes
+de ingestar 1INF37 y 1INF27 en la medición, para que la salida del pipeline
+no influya en las categorías.
+
 **Filas del revisor sin noción de la anotación:**
 
 | Categoría | Significado |

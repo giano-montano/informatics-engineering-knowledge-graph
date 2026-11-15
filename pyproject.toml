@@ -39,6 +39,8 @@ dev = [
     # Lo usa el TestClient de FastAPI en las pruebas de la API.
     "httpx>=0.28,<0.29",
     "pytest>=8.3",
+    # Lee la hoja de extraccion del revisor en scripts/evaluate_ingestion.py.
+    "openpyxl>=3.1,<4",
 ]
 
 [project.scripts]

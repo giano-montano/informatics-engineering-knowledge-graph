@@ -2,13 +2,14 @@
 
 **Estado:** Aceptada
 **Fecha:** 2026-11
-**Atributos:** ninguno de AC-01 a AC-05. Lo motivan el enfoque de ADR-016 y el despliegue de ADR-007.
+**Atributos:** AN-01 (principal)
 
 ## Contexto
 
 La aplicación web es una SPA que se sirve aparte, con nginx (ADR-007), y solo presenta: la lógica
 de navegación vive en la API. El estado que maneja es pequeño, pero lo comparten el lienzo, el
-panel, la cabecera y el rastro: foco, lente, grano y expansiones. El lienzo es de D3 (ADR-018), que
+panel, la cabecera y el rastro: foco, lente, grano y expansiones. De que ese estado sea uno solo depende que todas las
+preguntas se respondan desde el mismo lugar (AN-01). El lienzo es de D3 (ADR-018), que
 necesita controlar su propio SVG.
 
 La tesis deja el framework «a definir» en la Tabla 5, en la fila de R6.

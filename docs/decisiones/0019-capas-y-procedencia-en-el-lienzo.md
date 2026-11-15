@@ -2,13 +2,13 @@
 
 **Estado:** Aceptada
 **Fecha:** 2026-11
-**Atributos:** AC-03 (principal)
+**Atributos:** AC-03 (principal), AN-02
 
 ## Contexto
 
-RF-22 pide distinguir la capa de referencia (CS2023) de la institucional (los sílabos) de forma
-perceptible, y no solo por color. RF-21 pide llegar al documento del que procede cada afirmación
-institucional (CU-10). Los dos derivan de AC-03, y la Tabla 23 de la tesis cierra AC-03 en R6 con
+El estudiante tiene que distinguir la capa de referencia (CS2023) de la institucional (los
+sílabos) de forma perceptible, y no solo por color (AN-02), y llegar al documento del que procede
+cada afirmación institucional (CU-10). Las dos cosas derivan de AC-03, y la Tabla 23 de la tesis cierra AC-03 en R6 con
 una prueba de aceptación que abre ese documento.
 
 Toda respuesta de la API trae aristas `WAS_DERIVED_FROM`. Dibujarlas todas haría de cada sílabo un
@@ -29,13 +29,13 @@ erizo que tapa el resto.
 
 | Alternativa | Motivo del descarte |
 |---|---|
-| Capa solo por color | No cumple RF-22 y falla con daltonismo. |
+| Capa solo por color | Depende de un solo canal (AN-02) y falla con daltonismo. |
 | Dos lienzos o dos bandas, uno por capa | Parten lo que interesa ver junto: un tema de un sílabo dentro de su unidad de CS2023. |
 | Fuentes siempre dibujadas | El sílabo concentra decenas de aristas y oculta la estructura. |
 
 ## Consecuencias
 
-- RF-21 y RF-22 se ven en todas las pantallas, sin depender de una lente.
+- La capa y la fuente se ven en todas las pantallas, sin depender de una lente.
 - El documento de un sílabo se abre en `/resources/{clave}`, la dirección que guarda su
   localizador (ADR-009). El de CS2023 abre la publicación de ACM.
 - Negativa: la fuente de una arista pide pasar el cursor, hacer clic o tocarla. En pantalla

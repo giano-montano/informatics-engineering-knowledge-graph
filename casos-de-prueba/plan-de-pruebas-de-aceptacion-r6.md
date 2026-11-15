@@ -13,7 +13,8 @@ especifica la entrada, la acción esperada y el criterio de aceptación.
   `docs/r5/p1-lienzo/README.md` §2.
 - **El mismo plan con el asesor y con los 3 usuarios.** La tarea se lee tal cual, sin nombrar
   botones ni vistas. El evaluador sigue los pasos esperados para observar, no para dictarlos.
-- **Criterio global:** el 100 % de los casos aprobados, en cada sesión.
+- **Criterio global:** el 100 % de los casos CA-01 a CA-10 aprobados, en cada sesión. CA-11 no
+  cuenta para ese 100 %.
 
 ## Ejemplos: se fijan con el grafo final
 
@@ -37,7 +38,6 @@ cambia entre sesiones.
 - La API sirve los PDF de los sílabos (`/resources/{clave}`): CA-07 y CA-10 abren uno.
 - Navegador de escritorio, con la ventana de al menos 1366 × 768.
 - Cada sesión empieza en el inicio de la aplicación, sin historial.
-- Para CA-11, el token del operador y un sílabo en PDF para subir (ver ese caso).
 
 ## Qué cuenta como aprobado
 
@@ -52,17 +52,7 @@ más, una fuente equivocada, un enlace que no abre) o si falla (un error, una pa
 ## Cobertura
 
 La tesis pide al menos un caso de exploración por nodo y uno de acceso a recursos asociados
-(§1.3.1.6). Cada clase de nodo es el foco de al menos un caso; el acceso a recursos son CA-07 y
-CA-10.
-
-| Clase | Casos en que es el foco |
-|---|---|
-| Área | CA-01, CA-06, CA-07 |
-| Unidad | CA-05 |
-| Tema | CA-01, CA-02, CA-06, CA-07 |
-| Concepto | CA-02, CA-03, CA-05, CA-08, CA-09, CA-10 |
-| Curso | CA-04, CA-08 |
-| Recurso (sílabo, CS2023) | CA-07, CA-10 |
+(§1.3.1.6). La exploración de nodo en nodo es CA-02; el acceso a recursos, CA-07 y CA-10.
 
 ---
 
@@ -132,17 +122,15 @@ como evidencia.
 
 ## CA-05 · Ubicar un concepto o tema dentro de la carrera (CU-5)
 
-**Tarea.** «Averigua en qué parte de la carrera está Contradicción, y abre la unidad a la que
-pertenece.»
+**Tarea.** «Averigua en qué parte de la carrera está Contradicción.»
 
 **Entrada.** Concepto «Contradicción» [SFG].
 
 | # | Paso | Resultado esperado |
 |---|---|---|
 | 1 | Con «Contradicción» en foco, pregunta dónde está. | La cadena área › unidad › tema: «Fundamentos Matemáticos y Estadísticos › Matemática Discreta › Lógica proposicional» [SFG]. |
-| 2 | Elige la unidad. | «Matemática Discreta» [SFG] queda en foco, con su ficha. |
 
-**Criterio.** Los dos resultados se cumplen, y cada eslabón muestra su capa: el área y la unidad
+**Criterio.** El resultado se cumple, y cada eslabón muestra su capa: el área y la unidad
 como CS2023, el tema y el concepto como sílabo.
 
 ## CA-06 · Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo (CU-6)
@@ -232,13 +220,14 @@ en R6 (Tabla 23 de la tesis).
 
 ## CA-11 · Cargar un documento y revisar su ingesta (CU-11)
 
-**RF-23 está hoy fuera de la prueba de aceptación de R6:** lo dicen
-`docs/requisitos-funcionales-de-referencia.md` §5 y la descripción de `kms.web` en
-`docs/architecture/model.c4`. Este caso se incluye en el plan; falta decidir si cuenta para el
-100 % y con quién se ejecuta.
+**Fuera del 100 %.** La prueba de aceptación de R6 evalúa la exploración y el acceso a recursos
+del estudiante. Este caso se ejecuta solo con el asesor, como demostración del panel del operador,
+y se registra aparte.
 
-**Condición propia.** Una carga escribe en el grafo. Se ejecuta en un entorno de ensayo, no sobre
-el grafo de la corrida final que usan los demás casos.
+**Condiciones propias.** Una carga escribe en el grafo: se ejecuta en un entorno de ensayo, no
+sobre el grafo de la corrida final que usan los demás casos. El caso verifica el panel, no la
+extracción, así que el proveedor del modelo de lenguaje puede ir simulado. Hacen falta el token
+del operador y un sílabo en PDF para subir.
 
 **Tarea.** «Eres el operador. Entra con tu token, sube este sílabo y comprueba cómo terminó su
 ingesta.»
@@ -274,5 +263,5 @@ Se llena uno por sesión, con el asesor o con cada usuario.
 | CA-01 | aprobado / reprobado | ninguna / indicación | |
 | … | | | |
 
-**Aprobados:** n de N (…%)
+**Aprobados:** n de 10 (…%), sin contar CA-11
 ```

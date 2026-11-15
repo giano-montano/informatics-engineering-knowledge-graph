@@ -2,15 +2,15 @@
 
 **Estado:** Aceptada
 **Fecha:** 2026-11
-**Atributos:** ninguno de AC-01 a AC-05. Lo motivan RF-19 y RF-22.
+**Atributos:** AN-01 (principal), AN-02
 
 ## Contexto
 
 El lienzo dibuja lo que devuelven las rutas, no el grafo entero. Medido sobre los datos de
 desarrollo: `/api/nodes` trae a lo sumo 84 nodos; la ubicación del área de Redes y Comunicación,
 158, y los cursos previos de Redes de Computadoras, 142. Cada lente pide una disposición distinta
-(columnas por profundidad, árbol, dos alas alrededor del foco), y RF-22 pide forma por capa:
-hexágono y círculo.
+(columnas por profundidad, árbol, dos alas alrededor del foco), y la capa se distingue por forma: hexágono
+y círculo (ADR-019).
 
 La tesis deja la librería «a definir según evaluación técnica» en la Tabla 5, en la fila de R6, y
 §1.3.1.5 nombra entre los criterios la escalabilidad de nodos y la interacción de tipo
@@ -38,7 +38,7 @@ La tesis deja la librería «a definir según evaluación técnica» en la Tabla
 
 ## Consecuencias
 
-- Control total de forma, color, texto y transición: RF-22 y la estética se cumplen sin pelear con
+- Control total de forma, color, texto y transición: la forma por capa y la estética se cumplen sin pelear con
   la librería.
 - El SVG queda en el DOM, así que el lienzo se puede recorrer con teclado y leer con un lector de
   pantalla. No se ha comprobado con uno real.

@@ -2,12 +2,13 @@
 
 **Estado:** Aceptada
 **Fecha:** 2026-11
-**Atributos:** ninguno de AC-01 a AC-05. Lo motivan RF-19, RF-20 y las necesidades de E16.
+**Atributos:** AN-01 (principal), AN-02
 
 ## Contexto
 
-R5 tiene que permitir explorar el grafo de vecino en vecino (RF-19) y mostrar, para el elemento en
-foco, sus prerrequisitos, su ubicación y sus recursos (RF-20). Los once casos de uso de
+El mecanismo de navegación tiene que permitir explorar el grafo de vecino en vecino y mostrar,
+para el elemento en foco, sus prerrequisitos, su ubicación y sus recursos (AN-01, definido en
+`docs/r5/atributos-de-calidad.md`). Los once casos de uso de
 `docs/r5/casos-de-uso.md`, diez del estudiante y uno del operador, son comunes a las tres
 propuestas que se evaluaron en la Fase 1 de R5. En la pregunta E16 de la encuesta, el 83,1 %
 quiere ver qué conceptos previos necesita; el 72,1 %, encontrar recursos de estudio; el 61 %,
@@ -43,7 +44,7 @@ Cómo resuelve esta interfaz cada caso de uso, con sus pantallas, está en
 
 | Alternativa | Motivo del descarte |
 |---|---|
-| **P2 · Catálogo de fichas**, con URL propia y el grafo como mini mapa secundario (`docs/r5/p2-catalogo/`) | Era la más barata de construir y la más accesible, y responde mejor la necesidad de encontrar recursos. Pero deja el grafo en segundo plano: la exploración visual de RF-19 recae en un mapa acotado a 25 vecinos, y la expansión a pedido (CU-2) solo existe en el mapa agrandado. Responde «qué hay sobre esto», no «cómo se conecta con lo demás». |
+| **P2 · Catálogo de fichas**, con URL propia y el grafo como mini mapa secundario (`docs/r5/p2-catalogo/`) | Era la más barata de construir y la más accesible, y responde mejor la necesidad de encontrar recursos. Pero deja el grafo en segundo plano: la exploración visual del grafo recae en un mapa acotado a 25 vecinos, y la expansión a pedido (CU-2) solo existe en el mapa agrandado. Responde «qué hay sobre esto», no «cómo se conecta con lo demás». |
 | **P3 · Itinerario**: la meta como entrada y el camino hasta ella como mapa de metro (`docs/r5/p3-rutas/`) | Responde en una pantalla la necesidad más votada (83,1 %). Pero su pantalla principal depende de que haya rutas, y con los datos de desarrollo solo 35 de 485 metas tienen una, de profundidad 2 como máximo; en las demás sale vacía. La exploración libre de vecinos queda dentro de una ficha, sin vecinos de segundo nivel. |
 | Lienzo sin foco, con todo el grafo de una vez | Con 491 nodos no se lee nada, y la API está acotada a propósito: 25 vecinos directos y 5 de segundo nivel por cada uno. |
 | Una pantalla por caso de uso | Rompe la continuidad entre preguntas sobre el mismo elemento, que es lo que contesta «¿cómo se conecta esto?». |

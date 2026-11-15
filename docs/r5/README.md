@@ -1,6 +1,14 @@
 # R5: propuestas del mecanismo de navegación
 
-**Estado:** tres propuestas alternativas; ninguna elegida todavía.
+**Estado:** **P1 (Constelación) elegida** el 2026-11-15, con el visto bueno preliminar del asesor.
+P2 y P3 quedan como **alternativas evaluadas**: no se siguen desarrollando y se conservan como
+registro de la evaluación, descartadas en [ADR-016](../decisiones/0016-enfoque-de-navegacion-lienzo-con-foco-y-lentes.md).
+
+- Decisiones de la propuesta elegida: [ADR-016 a ADR-019](../decisiones/).
+- Componentes de la aplicación web (C4, nivel 3): vista `webComponents` de `docs/architecture/`.
+- Wireframes: [`p1-lienzo/capturas/`](p1-lienzo/capturas/), con su índice en el README de P1, §3.
+- Plan de pruebas de aceptación de R6:
+  [`casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md`](../../casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md).
 
 Tres propuestas del mecanismo de navegación, cada una con un enfoque de navegación distinto, más
 un panel del operador común. Todas usan datos **reales** del grafo de desarrollo (backbone CS2023 y
@@ -13,10 +21,10 @@ uso, que son los pasos con que esa interfaz resuelve cada uno.
 
 | | Carpeta | Nombre en pantalla | Enfoque de navegación |
 |---|---|---|---|
-| P1 | [`p1-lienzo/`](p1-lienzo/README.md) | Constelación | El lienzo del grafo es el protagonista: un foco, lo que lo rodea y **lentes** (una por patrón, ofrecidas como preguntas sobre el foco) sobre el mismo lienzo. |
-| P2 | [`p2-catalogo/`](p2-catalogo/README.md) | Catálogo del conocimiento | Enciclopedia de **fichas** con URL propia; el grafo es un mini mapa secundario. |
-| P3 | [`p3-rutas/`](p3-rutas/README.md) | Itinerario | Se elige una **meta** y se ve el camino hasta ella como mapa de metro, agrupado por tema, curso o área a elección. |
-| — | [`panel-operador/`](panel-operador/README.md) | Panel del operador | Una pantalla sobria para RF-23, integrable en cualquiera de las tres. |
+| P1 · **elegida** | [`p1-lienzo/`](p1-lienzo/README.md) | Constelación | El lienzo del grafo es el protagonista: un foco, lo que lo rodea y **lentes** (una por patrón, ofrecidas como preguntas sobre el foco) sobre el mismo lienzo. |
+| P2 · evaluada | [`p2-catalogo/`](p2-catalogo/README.md) | Catálogo del conocimiento | Enciclopedia de **fichas** con URL propia; el grafo es un mini mapa secundario. |
+| P3 · evaluada | [`p3-rutas/`](p3-rutas/README.md) | Itinerario | Se elige una **meta** y se ve el camino hasta ella como mapa de metro, agrupado por tema, curso o área a elección. |
+| — | [`panel-operador/`](panel-operador/README.md) | Panel del operador | Una pantalla sobria para RF-23, integrable en cualquiera de las tres; en R6, en P1. |
 
 ## Cómo abrirlas
 
@@ -31,8 +39,8 @@ uso, que son los pasos con que esa interfaz resuelve cada uno.
 - **PDF de los sílabos (RF-21):** los enlaces apuntan a `http://localhost:8000/resources/<clave>`,
   el localizador guardado en el grafo. Abren con la API levantada en el puerto por omisión:
   `docker compose up -d` y `uv run iekg-api`. El de CS2023 abre la página de la ACM.
-- Las capturas de P3 (`p3-rutas/capturas/`) son sus wireframes de la Fase 1. Las de P1 y P2 se
-  rehacen al cerrar la propuesta.
+- Las capturas de P1 (`p1-lienzo/capturas/`, 2026-11-15) son los wireframes de la Fase 1. Las de
+  P3 (`p3-rutas/capturas/`) se conservan como registro de una alternativa; P2 no tiene.
 - Las librerías y las fuentes vienen de jsDelivr y Google Fonts, así que hace falta conexión.
 
 ## Recorrido sugerido
@@ -84,8 +92,9 @@ Las tres distinguen la capa (RF-22) por **forma y etiqueta de texto**, no solo p
 hexágono y círculo; P2 y P3, cuadrado y círculo, con las insignias «CS2023» y «Sílabo». Las tres
 encapsulan los datos en `api(ruta, params)`: en R6 esa función se cambia por un `fetch`.
 
-Las versiones se verificaron en el registro de npm el 2026-10-29. D3 7.9.0 es común a las tres (es
-la última estable).
+Las versiones de esta tabla se verificaron en el registro de npm el 2026-10-29, cuando D3 7.9.0 era
+la última estable. Las de P1 se volvieron a verificar el 2026-11-15, en ADR-017 y ADR-018: Svelte
+5.57.3, Vite 8.3.8 y D3 7.9.2.
 
 ## Datos que condicionan las propuestas
 
@@ -104,17 +113,14 @@ la última estable).
 ```
 casos-de-uso.md   los once casos de uso, comunes a las tres propuestas
 datos/            datos.js, operacion.json, simulado.json y LEEME.md (forma de cada respuesta)
-p1-lienzo/        index.html, js/, estilos.css, README.md, adr/P1-0015…0018
+p1-lienzo/        index.html, js/, estilos.css, README.md, capturas/ (sus ADR, en docs/decisiones/)
 p2-catalogo/      index.html, *.js, estilos.css, README.md, adr/P2-0015…0018
 p3-rutas/         index.html, js/, estilos.css, README.md, adr/P3-0015…0018, capturas/
 panel-operador/   index.html, panel.js, panel.css, README.md
 ```
 
-Cada README de propuesta cierra con su **costo documental**: qué pasa a la Fase 1 y a la Fase 2 de
-R5, el bloque `likec4` que extiende `kms.web` y las filas de la Tabla 20. Los ADR llevan prefijo
-provisional (`P1-`, `P2-`, `P3-`); los de la propuesta elegida pasan a `docs/decisiones/` desde el
-0016 (el 0015 es el del modelo de lenguaje de la corrida final).
-
-> **Nota (2026-11-14):** el 0015 lo tomó ADR-015 (modelo de lenguaje de la corrida final). Los ADR
-> de R5 pasan desde el **0016**; los prefijos y números provisionales de las propuestas no se
-> renombran, se corrigen al moverlos.
+Cada README de propuesta cierra con su **costo documental**: qué pasaría a la Fase 1 y a la Fase 2
+de R5 si se elegía. El de P1 dice ahora qué se hizo al elegirla. Los ADR de P1 están en
+`docs/decisiones/` como ADR-016 a ADR-019 (el 0015 es el del modelo de lenguaje de la corrida
+final). Los de P2 y P3 conservan su prefijo provisional (`P2-`, `P3-`): registran las alternativas,
+no son decisiones del sistema.

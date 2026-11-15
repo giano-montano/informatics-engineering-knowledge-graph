@@ -1,8 +1,8 @@
 # Cómo calcula el evaluador cada medida
 
 **Fecha:** 2026-11-14. **Estado:** escrito antes del código e implementado
-el mismo día. Las elecciones de la sección 1 siguen pendientes de la revisión
-de Giano: cambiar una es cambiar pocas líneas y su prueba.
+el mismo día. Giano aceptó las elecciones de la sección 1 el 2026-11-14,
+incluida la de leer la lista de encabezados compuestos desde `idglobal.py`.
 
 Documentación interna del repositorio. Dice cómo `scripts/evaluate_ingestion.py`
 aplica las reglas de la sección «Casos de prueba de la ingesta automatizada» de
@@ -12,7 +12,7 @@ como **elección**: son los puntos que hay que revisar.
 
 **Costo documental:** ninguna edición de entregables. Todo lo de abajo es la
 salida 1 de `CLAUDE.md` §8 (el código cumple lo escrito) o un matiz declarado
-en este archivo (salida 2). Las elecciones 1 a 6 no contradicen la tesis ni el
+en este archivo (salida 2). Las elecciones 1 a 7 no contradicen la tesis ni el
 protocolo de revisión; los precisan.
 
 ## 1. Lo que la tesis no fija
@@ -87,7 +87,7 @@ de aquí:
   pero no dice en qué archivo. Se usa `comparacion_pipeline_<sílabo>.tsv`, que
   el protocolo no lista todavía.
 
-**Hueco que no se resuelve aquí: la lista de encabezados que nombran más de un
+**Elección 7. La lista de encabezados que nombran más de un
 saber.** La excepción de las medidas de fusión la necesita, y hoy vive solo
 como constante (`COMPUESTOS`, 27 entradas, todas temas) dentro de
 `gold/scripts_consolidacion/idglobal.py`. La anotación no la trae como
@@ -95,8 +95,9 @@ columna. El evaluador la lee de ese archivo, que es el que asignó los
 identificadores globales: así hay una sola lista. Alternativa descartada por
 ahora: copiarla a un archivo de datos, que duplica; o deducirla de la
 estructura (alias que también es noción propia), que puede no dar las mismas
-27. **Pregunta:** ¿se queda así, o la lista pasa a un archivo de datos de
-`gold/` que lean los dos?
+27. Se queda así al menos hasta el tag de la anotación congelada; si el script
+de consolidación se vuelve a tocar, la lista puede pasar a un archivo de
+datos de `gold/` que lean los dos.
 
 ## 2. Entradas
 

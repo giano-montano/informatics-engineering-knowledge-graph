@@ -10,14 +10,28 @@ views {
   view index {
     title 'Nivel 1: Contexto'
     include student, operator, kms, llm
+    // Varias relaciones de los actores con componentes de la aplicación web.
+    include student -> kms with {
+      title 'Consulta y navega'
+    }
+    include operator -> kms with {
+      title 'Sube documentos, sigue corridas, revisa descartes y el reporte'
+    }
   }
 
   view containers of kms {
     title 'Nivel 2: Contenedores'
     include *
     // Cada par agrupa varias relaciones de componentes; se les da un título.
+    include student -> kms.web with {
+      title 'Consulta y navega'
+    }
+    include operator -> kms.web with {
+      title 'Sube documentos, sigue corridas, revisa descartes y el reporte'
+    }
     include kms.web -> kms.api with {
       title 'Consultas, operación y documentos'
+      technology 'HTTP/JSON'
     }
     include kms.api -> kms.documentStore with {
       title 'Guarda al subir, lee al servir'
@@ -33,6 +47,24 @@ views {
   view apiComponents of kms.api {
     title 'Nivel 3: Componentes de la API'
     include *
+    // Las relaciones salen de componentes de la aplicación web.
+    include kms.web -> kms.api.navRoutes with {
+      title 'Consultas y documentos'
+      technology 'HTTP/JSON'
+    }
+    include kms.web -> kms.api.opsRoutes with {
+      title 'Alta de corrida, estado, descartes y reporte'
+      technology 'HTTP/JSON'
+    }
+  }
+
+  view webComponents of kms.web {
+    title 'Nivel 3: Componentes de la aplicación web'
+    include *
+    include kms.web.operatorPanel -> kms.api with {
+      title 'Operación, con token, y documentos'
+      technology 'HTTP/JSON, Bearer'
+    }
   }
 
   view workerComponents of kms.worker {

@@ -62,6 +62,11 @@ implementar, entra en la tesis. Al aceptarlo se actualizan en ella:
 
 Una enmienda solo toca la tesis si cambia algo de lo que la Tabla 20 resume.
 
+**Los ADR de R5 (ADR-016 a ADR-019) no van en la Tabla 20**, que resume la arquitectura del módulo
+del grafo (O2). Van en una tabla propia del capítulo de O3, con decisión, alternativa principal
+descartada y atributo, y no cambian los conteos de arriba. Sus atributos son AN-01 y AN-02, los
+del mecanismo de navegación (`docs/r5/atributos-de-calidad.md`), además de AC-03.
+
 ## Estado
 
 | Estado | Cuándo |

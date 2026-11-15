@@ -196,7 +196,8 @@ están bien guardados y el Browser los muestra correctamente.
 
 Cinco grupos de documentos no son documentación interna del repositorio:
 `docs/tesis.md`, `anexo-guía-de-anotación-de-referencia`, el anexo de transición al grafo de propiedades,
-`docs/decisiones/` (solo materialziados en la tabla resumen de la sección de "Arquitectura del módulo...") 
+`docs/decisiones/` (solo materializados en la tabla resumen de la sección de "Arquitectura del módulo...";
+los de R5, ADR-016 a ADR-019, en una tabla propia del capítulo de O3) 
 y `docs/architecture/`. Salen del razonamiento de la tesis y
 se plasman como entregables o anexos en los documentos oficiales, que viven
 fuera del repositorio (Google Docs). Cambiar uno de ellos obliga a replicar el

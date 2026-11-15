@@ -4,7 +4,7 @@
 **Recorrido sugerido:** en el inicio, el panel de la derecha lista los 6 pasos comunes a las tres propuestas. Al seguir uno queda una barra de un renglón sobre el mapa, con «Siguiente» y una × para salir. Cada paso se abre directo con `index.html#paso=N` (N de 1 a 6).
 **Sin códigos en pantalla:** la interfaz no muestra códigos de caso de uso, pregunta de competencia ni requisito, y ya no tiene el interruptor «Ver trazabilidad». En su lugar, sobre el mapa hay siempre una frase que dice qué se está viendo y otra que dice cómo leerlo. Qué vista responde a qué caso de uso está en la sección 3; la pregunta de competencia y los requisitos de cada caso de uso, en [`../casos-de-uso.md`](../casos-de-uso.md).
 **PDF de los sílabos:** los enlaces van a `http://localhost:8000/resources/<clave>` y solo abren con la API de R4 corriendo en el puerto por omisión (`uv run iekg-api`). Los de CS2023 van a la biblioteca digital de ACM.
-**Maqueta sin framework:** JS sin compilación. R6 sería Svelte 5 (P1-0016). La función `api(ruta, params)` de `js/api.js` es la única puerta a los datos; en R6 se cambia su cuerpo por el `fetch` que ya está comentado ahí.
+**Maqueta sin framework:** JS sin compilación. R6 es Svelte 5 ([ADR-017](../../decisiones/0017-framework-de-la-aplicacion-web-svelte.md)). La función `api(ruta, params)` de `js/api.js` es la única puerta a los datos; en R6 se cambia su cuerpo por el `fetch` que ya está comentado ahí.
 **Operador:** el enlace «Operador» de la barra superior lleva al panel común, `../panel-operador/index.html`.
 
 ---
@@ -104,6 +104,26 @@ Pantallas:
 - **E · Panel del foco:** la ficha (fuente, ubicación, contenido y orden, lo que necesitas antes, cursos, tipos, material de estudio y conexiones).
 - **F · Relación seleccionada:** la tarjeta en el panel con la fuente de una línea.
 
+Capturas de la maqueta a 1440 × 900, que son los wireframes de la Fase 1 de R5. Se tomaron el 2026-11-15 con Chromium, sobre los datos de desarrollo:
+
+| Captura | Pantalla | Qué muestra | Caso de uso |
+|---|---|---|---|
+| [`A-inicio`](capturas/A-inicio.png) | A | Las 17 áreas y los 4 cursos, sin buscar | CU-1 |
+| [`B1-busqueda-logica`](capturas/B1-busqueda-logica.png) | B | «lógica»: 9 resultados con clase y forma de origen | CU-1 |
+| [`B2-busqueda-sin-resultados`](capturas/B2-busqueda-sin-resultados.png) | B | «árbol»: el estado vacío, con «Ver las áreas» | CU-1 |
+| [`C-foco-lo-que-lo-rodea`](capturas/C-foco-lo-que-lo-rodea.png) | C, E | «Lógica proposicional» con sus 12 vecinos en dos alas | CU-2 |
+| [`D1-que-contiene-tema`](capturas/D1-que-contiene-tema.png) | D | Sus 10 conceptos en 3 pasos | CU-6 |
+| [`D2-que-necesitas-antes`](capturas/D2-que-necesitas-antes.png) | D | «Contradicción»: 4 conceptos en 2 columnas | CU-3 |
+| [`D3-donde-esta-en-la-carrera`](capturas/D3-donde-esta-en-la-carrera.png) | D | La cadena área › unidad › tema › concepto | CU-5 |
+| [`D4-camino-hasta-aqui-por-curso`](capturas/D4-camino-hasta-aqui-por-curso.png) | D | «Entrada y salida de datos desde archivos», por curso, con la línea de paradas | CU-8 |
+| [`D5-cursos-que-conviene-llevar-antes`](capturas/D5-cursos-que-conviene-llevar-antes.png) | D | «Técnicas de Programación»: el curso previo, lo que pide y lo que enseña | CU-4 |
+| [`D6-que-contiene-area`](capturas/D6-que-contiene-area.png) | D | «Redes y Comunicación» como árbol hasta los temas | CU-6 |
+| [`D7-material-de-estudio`](capturas/D7-material-de-estudio.png) | D | Los sílabos que tratan sobre el área y por qué tema llega cada uno | CU-7 |
+| [`D8-tipos`](capturas/D8-tipos.png) | D | «Ethernet IEEE 802.3» y sus 3 tipos | CU-9 |
+| [`E-panel-del-foco`](capturas/E-panel-del-foco.png) | E | La ficha completa de «Lógica proposicional» | CU-5 a CU-7, CU-10 |
+| [`F1-relacion-seleccionada`](capturas/F1-relacion-seleccionada.png) | F | «Contradicción necesita antes Tabla de verdad», con su sílabo | CU-10 |
+| [`F2-por-que-de-una-parada`](capturas/F2-por-que-de-una-parada.png) | D, F | El «¿Por qué?» de una parada del camino, con sus relaciones y fuentes | CU-8, CU-10 |
+
 | Caso de uso | Pantallas | Cómo |
 |---|---|---|
 | CU-1 · Encontrar por dónde empezar | A, B | Áreas y cursos sin buscar; buscador con estado vacío y «Ver las áreas» |
@@ -119,7 +139,7 @@ Pantallas:
 
 **RF-22, en todas las pantallas:** CS2023 es un hexágono con contorno y lo de los sílabos, un círculo relleno, con su nombre escrito en el panel («CS2023», «Sílabo PUCP»), en la leyenda de un renglón que acompaña a cada vista, en la leyenda completa y en el texto accesible de cada punto. No depende del color.
 
-## 4. Componentes de la aplicación web (esbozo de C4, nivel 3)
+## 4. Componentes de la aplicación web (C4, nivel 3)
 
 | Componente | Responsabilidad | Rutas que consume |
 |---|---|---|
@@ -134,71 +154,8 @@ Pantallas:
 | Rastro, leyenda y recorrido | Historial de focos, leyenda de un renglón con lo que hay en pantalla, leyenda completa de formas, colores y líneas, y los 6 pasos comunes | — |
 | Panel del operador | Común a las tres propuestas (`../panel-operador/`); aquí solo se enlaza | `/api/runs`, `/api/runs/{id}`, `/api/runs/{id}/discards`, `/api/audit-reports/latest` |
 
-```likec4
-// Borrador: se agregaría a docs/architecture/model.c4 y views.c4. Sin validar.
-model {
-  extend kms.web {
-    exploracion = component 'Estado de la exploración' {
-      technology 'Svelte 5 (runes)'
-      summary 'Foco, lente, «ver por», expansiones y rastro; los refleja en la URL.'
-    }
-    cliente = component 'Cliente de la API' {
-      technology 'fetch'
-      summary 'Única puerta a R4: codifica las claves y devuelve el subgrafo {nodes, edges}.'
-    }
-    buscador = component 'Buscador' {
-      summary 'Punto de entrada por nombre, con teclado.'
-    }
-    portada = component 'Portada' {
-      summary 'Inicio: las 17 áreas y los cursos, sin buscar.'
-    }
-    lienzo = component 'Lienzo del grafo' {
-      technology 'D3 7.9.0 (d3-force, d3-hierarchy, d3-zoom), SVG'
-      summary 'Dibuja lo que responde la lente activa, con forma por origen y una disposición por lente.'
-    }
-    lentes = component 'Cabecera de contexto' {
-      summary 'Ofrece las lentes que aplican al foco, pide el subgrafo de la elegida y la responde en una frase.'
-    }
-    panelFoco = component 'Panel del foco' {
-      summary 'Ficha del foco: fuente, ubicación, contenido y orden, prerrequisitos, material y conexiones.'
-    }
-    franja = component 'Línea de paradas' {
-      summary 'Resume el camino hasta la meta en una línea, con el porqué de cada parada.'
-    }
-    panelOperador = component 'Panel del operador' {
-      summary 'Común a las propuestas: token tecleado, carga de documentos, corridas, descartes y reporte.'
-    }
-  }
+Los componentes, con sus relaciones, están en `docs/architecture/model.c4`, dentro de `kms.web`, y su vista de nivel 3 es `webComponents` en `views.c4` (`npm run arch:serve`). Al pasarlos al modelo, los identificadores quedaron en inglés, como pide `specification.c4`; «Rastro, leyenda y recorrido» no se modela, porque no habla con la API ni con otro componente.
 
-  kms.web.buscador -> kms.web.exploracion 'Fija el foco'
-  kms.web.portada -> kms.web.exploracion 'Fija el foco'
-  kms.web.lienzo -> kms.web.exploracion 'Cambia el foco o agrega conexiones'
-  kms.web.lentes -> kms.web.exploracion 'Cambia la lente y el «ver por»'
-  kms.web.exploracion -> kms.web.lienzo 'Subgrafo y disposición'
-  kms.web.exploracion -> kms.web.panelFoco 'Foco en curso'
-  kms.web.exploracion -> kms.web.franja 'Respuesta de la lente'
-  kms.web.exploracion -> kms.web.cliente 'Pide subgrafos'
-  kms.web.buscador -> kms.web.cliente 'Busca por nombre'
-  kms.web.panelFoco -> kms.web.cliente 'Pide fuente, ubicación, prerrequisitos y material'
-
-  kms.web.cliente -> kms.api.navRoutes 'Búsqueda, detalle, siete patrones y portada' {
-    technology 'HTTP/JSON'
-  }
-  kms.web.panelFoco -> kms.api.navRoutes 'Abre el documento del sílabo' {
-    technology 'HTTP (PDF)'
-  }
-  kms.web.panelOperador -> kms.api.opsRoutes 'Alta de corrida, estado, descartes y reporte' {
-    technology 'HTTP/JSON, Bearer'
-  }
-}
-
-views {
-  view webComponentes of kms.web {
-    title 'Aplicación web: componentes (P1)'
-    include *
-  }
-}
-```
 
 ## 5. Rutas
 
@@ -228,9 +185,9 @@ Los conteos son de la composición bajo cada área (solo nodos que existen, sin 
 - **Accesibilidad.** Cada punto es un botón con texto accesible (clase, nombre y origen), se recorre con Tab, Enter lo pone en foco y + trae más conexiones. El panel replica todo vecino y toda relación como lista con botones, que es la alternativa en texto; los puntos sin nombre de un recuadro dependen de esa lista. Se respeta `prefers-reduced-motion`. Falta un recorrido con un lector de pantalla real.
 - **Datos pobres.** `description` casi no existe, así que la ficha no depende de ella. Solo hay 6 relaciones de tipo: la vista «Tipos» lo dice cuando no hay.
 
-## 7. Costo documental si se elige
+## 7. Lo que se hizo al elegirla (2026-11-15)
 
-- **Fase 1 de R5 (tesis):** el catálogo común de casos de uso (`../casos-de-uso.md`), los 10 flujos de la sección 2 y las capturas de la maqueta como wireframes. Todavía no hay carpeta `capturas/`: se hacen al cerrar la propuesta.
-- **Fase 2 de R5:** el bloque `likec4` de §4 pasa a `docs/architecture/model.c4` (componentes de `kms.web`) y a una vista de nivel 3 en `views.c4`, que se valida con `npm run arch:validate`.
-- **ADR:** los 4 de `adr/` pasan a `docs/decisiones/` como 0015 a 0018: `P1-0015-enfoque-de-navegacion-lienzo.md`, `P1-0016-framework-svelte.md`, `P1-0017-visualizacion-d3-svg.md` y `P1-0018-capas-y-procedencia-en-el-lienzo.md`. Cada uno suma su fila en la Tabla 20 de la tesis (la línea «Fila para la Tabla 20» ya está escrita).
-- **R4:** una ruta nueva, `GET /api/overview`, con su prueba y su línea en `docs/diseño-de-las-rutas-de-navegación.md` §5. El resto usa rutas existentes.
+- **Fase 1 de R5:** el catálogo común de casos de uso (`../casos-de-uso.md`), los 10 flujos de la sección 2 y las capturas de las pantallas A a F como wireframes, en [`capturas/`](capturas/).
+- **Fase 2 de R5:** los componentes de §4 pasaron a `docs/architecture/model.c4` y a la vista de nivel 3 `webComponents` de `views.c4`, validados con `npm run arch:validate`.
+- **ADR:** los 4 de la propuesta pasaron a `docs/decisiones/` como [ADR-016](../../decisiones/0016-enfoque-de-navegacion-lienzo-con-foco-y-lentes.md) a [ADR-019](../../decisiones/0019-capas-y-procedencia-en-el-lienzo.md), con el formato del repositorio y las versiones verificadas de nuevo el 2026-11-15. ADR-016 suma P2 y P3 como alternativas descartadas. En la tesis van en una tabla propia del capítulo de O3, no en la Tabla 20.
+- **R4:** queda pendiente una ruta nueva, `GET /api/overview`, con su prueba y su línea en `docs/diseño-de-las-rutas-de-navegación.md` §5. El resto usa rutas existentes.

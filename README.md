@@ -2,32 +2,36 @@
 
 Módulo de grafo de conocimiento de una tesis de Ingeniería Informática (PUCP).
 Representa en Neo4j las áreas y unidades de conocimiento del estándar CS2023
-y, más adelante, el contenido extraído de los sílabos de la carrera.
+y el contenido extraído de los sílabos de la carrera, y lo ofrece para navegar
+en **InfoKnows**, su aplicación web ([`web/`](web/README.md)).
 
 ## Estado actual
 
 | Funciona | Todavía no existe |
 |---|---|
-| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | Aplicación web |
-| Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | Imagen de Docker del sistema |
+| Carga del backbone CS2023 en Neo4j, desde la ontología en Turtle | |
+| Auditoría de integridad del grafo (15 reglas) al cerrar cada escritura | |
 | Ingesta de sílabos con modelo de lenguaje: worker, corridas, descartes y hechos | |
 | Reaplicación de los hechos guardados después de una carga | |
 | Registro de corridas, descartes y reportes de auditoría en SQLite | |
 | API de operación (subir, corridas, descartes, auditoría) y entrega de documentos | |
 | API de navegación: búsqueda, detalle de un nodo y las consultas derivadas | |
 | Medición de los patrones de consulta (AC-05) | |
+| InfoKnows, la aplicación web de navegación, con el panel del operador | |
+| Despliegue con Docker Compose: base, API con su worker, y web detrás de nginx | |
 
 ## Requisitos
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/), con Docker Compose.
 - [uv](https://docs.astral.sh/uv/), que instala Python 3.11 o superior si hace falta.
-- Node.js, solo para ver los diagramas de arquitectura (opcional).
+- Node.js 20.19, 22.12 o 24 en adelante, para desarrollar la aplicación web y
+  para ver los diagramas de arquitectura. Para desplegar con Docker no hace falta.
 
 ## Puesta en marcha
 
 ```powershell
 cp .env.example .env        # y cambia NEO4J_PASSWORD (mínimo 8 caracteres)
-docker compose up -d        # Neo4j 5.26; tarda uno o dos minutos en estar listo
+docker compose up -d neo4j  # solo Neo4j 5.26; tarda uno o dos minutos en estar listo
 docker compose ps           # esperar a ver "(healthy)"
 uv sync                     # dependencias de Python en .venv
 uv run iekg-build load      # carga el backbone en Neo4j
@@ -35,6 +39,11 @@ uv run iekg-build load      # carga el backbone en Neo4j
 
 Neo4j Browser queda en <http://localhost:7474>, con el usuario `neo4j` y la
 contraseña de `.env`.
+
+`docker compose up -d`, sin nombrar un servicio, levanta el sistema completo en
+contenedores (ver «Desplegar con Docker»). Para desarrollar con `uv run` se
+levanta solo `neo4j`: una API en un contenedor y otra con `uv run` serían dos
+escritores sobre el mismo grafo.
 
 ## Cargar el backbone
 
@@ -197,6 +206,73 @@ abierta, la API lanza otro. Hace lo mismo al arrancar, y así recoge lo que
 quedó pendiente durante una carga o una reaplicación. Detener la API
 interrumpe al worker (ADR-007).
 
+## InfoKnows, la aplicación web
+
+La aplicación de navegación está en [`web/`](web/README.md). Con la API
+corriendo (`uv run iekg-api`):
+
+```powershell
+cd web
+npm ci
+npm run dev                 # http://localhost:5173
+```
+
+El inicio pide `GET /api/overview`: las áreas, con cuántas unidades, temas y
+conceptos son parte de cada una, y los cursos. El panel del operador se abre
+con el botón «Operador» y pide el token de `.env`.
+
+## Desplegar con Docker
+
+`docker-compose.yml` levanta el sistema completo en un host, configurado solo
+por `.env` (ADR-007 y ADR-013):
+
+| Servicio | Qué es |
+|---|---|
+| `neo4j` | La base de grafos, en un volumen administrado por Docker |
+| `api` | La imagen de la aplicación (`Dockerfile`): la API, que lanza el worker como proceso hijo |
+| `web` | nginx (`web/Dockerfile`): sirve InfoKnows y reenvía `/api` y `/resources` a la API |
+| `build` | La misma imagen con los procesos de construcción; no arranca con `up` |
+
+```powershell
+cp .env.example .env        # contraseña, token y dirección pública
+docker compose up -d --build
+docker compose ps           # neo4j y api "(healthy)", web "Up"
+```
+
+La aplicación queda en `http://<host>:8080` (o en el puerto de `IEKG_WEB_PORT`).
+La primera construcción tarda: la imagen de la aplicación instala las
+dependencias de lectura de PDF, que pesan varios gigabytes.
+
+Los procesos de construcción se ejecutan a demanda, con la API detenida
+(ADR-007):
+
+```powershell
+docker compose stop api
+docker compose run --rm build load        # vacía la base y carga el backbone
+docker compose run --rm build reapply     # reescribe la capa institucional
+docker compose start api
+```
+
+Lo que hay que poner en `.env` en cada máquina:
+
+- `NEO4J_PASSWORD` e `IEKG_OPERATOR_TOKEN`.
+- `IEKG_PUBLIC_BASE_URL`: la dirección por la que los estudiantes llegan a la
+  web, por ejemplo `http://<IP fija>:8080`. Queda escrita en el localizador de
+  cada documento que se suba (ADR-009), así que se fija **antes** de ingestar.
+  InfoKnows abre los documentos por su ruta, de modo que los enlaces siguen
+  funcionando aunque esa dirección cambie; el localizador guardado, no.
+- `IEKG_WEB_PORT`, si la web no va en el 8080.
+- El proveedor del modelo de lenguaje (`IEKG_LLM_*`), solo si se va a ingestar.
+  Si el proveedor corre en el propio host, dentro del contenedor se llega a él
+  con `IEKG_LLM_BASE_URL_IN_CONTAINER=http://host.docker.internal:8765/v1`.
+- En una máquina con poca memoria, `NEO4J_HEAP_INITIAL`, `NEO4J_HEAP_MAX` y
+  `NEO4J_PAGECACHE` (por omisión 2G, 4G y 2G).
+
+Los tres almacenes de archivos —operacional, de documentos y de hechos— son la
+carpeta `var/` del host (`IEKG_DATA_DIR`), montada en `api` y en `build`:
+respaldar el sistema es copiar esa carpeta (ADR-013). Para llevar un grafo ya
+ingestado a otra máquina se copia `var/` y se ejecutan `load` y `reapply`.
+
 ## Ingestar un sílabo
 
 Por la API (arriba), o sin ella con un script de desarrollo que llama a la
@@ -305,6 +381,19 @@ Todo se lee del entorno o de `.env`.
 | `IEKG_LLM_MAX_RETRIES` | `3` | Reintentos ante errores transitorios del proveedor |
 | `IEKG_LLM_TIMEOUT_SECONDS` | `900` | Tiempo máximo por llamada |
 
+Solo las lee `docker-compose.yml`:
+
+| Variable | Por defecto | Uso |
+|---|---|---|
+| `IEKG_WEB_PORT` | `8080` | Puerto del host en que nginx publica la web |
+| `IEKG_DATA_DIR` | `./var` | Carpeta del host con los tres almacenes de archivos |
+| `IEKG_LLM_BASE_URL_IN_CONTAINER` | la de `IEKG_LLM_BASE_URL` | Dirección del proveedor vista desde el contenedor |
+| `NEO4J_IMAGE` | `neo4j:5.26.28-enterprise` | Imagen de Neo4j |
+| `NEO4J_HEAP_INITIAL`, `NEO4J_HEAP_MAX`, `NEO4J_PAGECACHE` | `2G`, `4G`, `2G` | Memoria de Neo4j |
+
+En los contenedores, `IEKG_PUBLIC_BASE_URL` vale por omisión
+`http://localhost:8080`, la dirección de la web.
+
 Las rutas relativas se resuelven desde el directorio actual: corre los
 comandos desde la raíz del repositorio.
 
@@ -334,8 +423,10 @@ ontology/            Ontología (esquema) y backbone CS2023, en Turtle
 src/iekg/            Código: esquema del grafo, núcleo, carga, ingesta, API, SQLite
 scripts/             Ayudas de desarrollo (no son puntos de entrada del sistema)
 tests/               Pruebas
+web/                 InfoKnows, la aplicación web (Svelte, Vite y D3), con su Dockerfile y su nginx
 docs/                Tesis, decisiones de arquitectura (ADR) y modelo C4
-docker-compose.yml   Neo4j para desarrollo
+Dockerfile           Imagen única de la aplicación: API, worker y procesos de construcción
+docker-compose.yml   El sistema completo: Neo4j, API, web y procesos de construcción
 var/                 Datos locales del sistema (no se versiona)
 ```
 

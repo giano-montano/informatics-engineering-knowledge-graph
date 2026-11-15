@@ -1,4 +1,18 @@
-# Neo4j del sistema: version pineada y sin plugins; el codigo no usa ninguno.
+# Todo el sistema en un host, configurado solo por .env (ADR-007, ADR-013):
+#
+#   neo4j   la base de grafos, en un volumen administrado
+#   api     la imagen de la aplicacion; la API lanza el worker como proceso hijo
+#   web     nginx: sirve InfoKnows y reenvia /api y /resources a la API
+#   build   la misma imagen con los procesos de construccion; no arranca con
+#           `up`, se ejecuta a demanda y con la API detenida:
+#             docker compose stop api
+#             docker compose run --rm build load
+#             docker compose run --rm build reapply
+#             docker compose start api
+#
+# Para desarrollar con `uv run`, basta la base: `docker compose up -d neo4j`.
+#
+# Neo4j: version pineada y sin plugins; el codigo no usa ninguno.
 #
 # Por que 5.26 LTS y no la 2026.06 actual:
 #   - 5.26 es la ultima LTS, con soporte oficial hasta junio 2028, o sea que
@@ -18,7 +32,7 @@ name: iekg
 
 services:
   neo4j:
-    image: neo4j:5.26.28-enterprise
+    image: ${NEO4J_IMAGE:-neo4j:5.26.28-enterprise}
     container_name: iekg-neo4j
     restart: unless-stopped
     ports:
@@ -30,9 +44,10 @@ services:
 
       # 32 GB fisicos: heap holgado y pagecache suficiente para un grafo que
       # hoy son 180 nodos y no va a pasar de unos pocos miles.
-      NEO4J_server_memory_heap_initial__size: "2G"
-      NEO4J_server_memory_heap_max__size: "4G"
-      NEO4J_server_memory_pagecache_size: "2G"
+      # Una maquina mas chica los baja desde .env.
+      NEO4J_server_memory_heap_initial__size: "${NEO4J_HEAP_INITIAL:-2G}"
+      NEO4J_server_memory_heap_max__size: "${NEO4J_HEAP_MAX:-4G}"
+      NEO4J_server_memory_pagecache_size: "${NEO4J_PAGECACHE:-2G}"
 
       # Usada solo por el healthcheck. Sin prefijo NEO4J_ a proposito: cualquier
       # NEO4J_* desconocida hace fallar el arranque por strict validation.
@@ -48,6 +63,70 @@ services:
       retries: 20
       start_period: 90s
 
+  api:
+    build: .
+    image: iekg-app:local
+    container_name: iekg-api
+    restart: unless-stopped
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    environment: &app-environment
+      NEO4J_URI: "bolt://neo4j:7687"
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD}"
+      IEKG_API_HOST: "0.0.0.0"
+      IEKG_API_PORT: "8000"
+      # Sin el token la API no arranca (ADR-013).
+      IEKG_OPERATOR_TOKEN: "${IEKG_OPERATOR_TOKEN:-}"
+      # La direccion por la que los estudiantes llegan al sistema: queda
+      # escrita en los localizadores de los documentos subidos (ADR-009).
+      IEKG_PUBLIC_BASE_URL: "${IEKG_PUBLIC_BASE_URL:-http://localhost:8080}"
+      # Proveedor del modelo de lenguaje; solo lo lee el worker.
+      IEKG_LLM_MODEL: "${IEKG_LLM_MODEL:-}"
+      IEKG_LLM_API_KEY: "${IEKG_LLM_API_KEY:-}"
+      IEKG_LLM_BASE_URL: "${IEKG_LLM_BASE_URL_IN_CONTAINER:-${IEKG_LLM_BASE_URL:-}}"
+      IEKG_LLM_REASONING_EFFORT: "${IEKG_LLM_REASONING_EFFORT:-}"
+      IEKG_LLM_TEMPERATURE: "${IEKG_LLM_TEMPERATURE:-}"
+      IEKG_LLM_MAX_RETRIES: "${IEKG_LLM_MAX_RETRIES:-3}"
+      IEKG_LLM_TIMEOUT_SECONDS: "${IEKG_LLM_TIMEOUT_SECONDS:-900}"
+    volumes: &app-volumes
+      # Los tres almacenes de archivos son carpetas del host (ADR-013):
+      # operational.sqlite, documents/ y facts/ dentro de esta.
+      - "${IEKG_DATA_DIR:-./var}:/app/var"
+      # Los modelos que descarga la lectura de PDF en la primera corrida.
+      - model_cache:/root/.cache
+    extra_hosts:
+      # Para un proveedor que corre en el propio host (servidor local de pruebas).
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/overview', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 30s
+
+  web:
+    build: ./web
+    image: infoknows-web:local
+    container_name: iekg-web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${IEKG_WEB_PORT:-8080}:80"
+
+  build:
+    image: iekg-app:local
+    profiles: ["build"]
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    entrypoint: ["iekg-build"]
+    environment: *app-environment
+    volumes: *app-volumes
+
 volumes:
   neo4j_data:
   neo4j_logs:
+  model_cache:

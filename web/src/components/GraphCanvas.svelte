@@ -264,22 +264,22 @@
     margin-top: 14px;
   }
 
+  /* Over the trail, where no layout draws: the fit keeps that strip clear. */
   .notice {
     position: absolute;
     z-index: 6;
-    top: 14px;
-    left: 50%;
+    left: 16px;
+    bottom: 64px;
     display: flex;
     align-items: center;
     gap: 12px;
-    max-width: min(640px, calc(100% - 48px));
+    max-width: min(560px, calc(100% - 32px));
     padding: 9px 10px 9px 14px;
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-small);
     background: var(--raised);
     box-shadow: var(--shadow);
-    transform: translateX(-50%);
-    animation: drop 320ms var(--ease);
+    animation: rise 320ms var(--ease);
   }
 
   .notice button {
@@ -293,10 +293,10 @@
     background: var(--hover);
   }
 
-  @keyframes drop {
+  @keyframes rise {
     from {
       opacity: 0;
-      transform: translate(-50%, -8px);
+      transform: translateY(8px);
     }
   }
 

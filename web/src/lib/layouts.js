@@ -269,18 +269,18 @@ export function layoutNeighborhood(detail, focusKey, expansions = new Map()) {
       .filter((item) => item.node.key !== focusKey && !direct.has(item.node.key) && !scene.has(item.node.key));
     if (!fresh.length) continue;
     const perRow = 6;
-    const gapX = 172;
+    const gapX = 184;
     const origin = scene.at(key);
     scene.caption(0, bandY - 44, `Conexiones de «${origin.node.name_es}» · ${fresh.length}`, { kind: 'row' });
     fresh.forEach((item, index) => {
       const row = Math.floor(index / perRow);
       const inRow = Math.min(perRow, fresh.length - row * perRow);
       const x = ((index % perRow) - (inRow - 1) / 2) * gapX;
-      scene.put(item.node, x, bandY + row * 92, { side: 'below', width: 20 });
+      scene.put(item.node, x, bandY + row * 104, { side: 'below', width: 22, lines: 3 });
       scene.link(item.edge, key, item.node.key, { subgraph: response, tone: 'far' });
       brought.push({ node: item.node, edge: item.edge, through: origin.node, title: item.group.title, subgraph: response });
     });
-    bandY += Math.ceil(fresh.length / perRow) * 92 + 80;
+    bandY += Math.ceil(fresh.length / perRow) * 104 + 80;
   }
 
   // Some neighbors of the neighbors, dimmed, above.

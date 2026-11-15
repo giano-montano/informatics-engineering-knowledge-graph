@@ -94,7 +94,11 @@ docs/referencias/              Notas sobre herramientas de terceros, con
                                fuentes verificadas y fechadas (docling.md).
 docs/architecture/             Modelo C4 en LikeC4 (*.c4).
 ontology/*.ttl                 R1 (esquema OWL) y R2 (backbone CS2023).
-docker-compose.yml             Neo4j 5.26 LTS.
+docker-compose.yml             El sistema completo: Neo4j 5.26 LTS, la API con
+                               su worker, la web detrás de nginx y los
+                               procesos de construcción (perfil `build`).
+Dockerfile                     Imagen única de la aplicación, con tres puntos
+                               de entrada (ADR-007).
 src/iekg/graph_schema.py       Esquema del grafo: la declaración única (ADR-008).
 src/iekg/core/                 Núcleo (#nucleo del C4): validador, repositorio,
                                auditor, lote e instantánea, códigos de regla.
@@ -106,7 +110,8 @@ src/iekg/ingestion/            Ingesta (#worker del C4): envío, orquestador,
 src/iekg/api/                  API (#api del C4): rutas de operación bajo
                                `/api`, con token; rutas de navegación bajo
                                `/api`, públicas, con sus consultas y cotas en
-                               `navigation.py`; `/resources/{clave}`; punto
+                               `navigation.py`, entre ellas `/api/overview`,
+                               el inicio de R6; `/resources/{clave}`; punto
                                de entrada `iekg-api`.
 src/iekg/operational_store.py  Almacén operacional (SQLite): corridas,
                                descartes, salida del modelo de cada corrida
@@ -127,17 +132,32 @@ scripts/evaluate_ingestion.py  Ayuda de desarrollo: mide CP-01 a CP-14 desde el
                                `casos-de-prueba/calculo-de-las-medidas-del-evaluador.md`.
 tests/                         Pruebas; una negativa por cada forma de violar
                                cada regla o código EX.
+web/                           R6: InfoKnows, la aplicación web (#web del C4).
+                               Svelte 5, Vite y D3 (ADR-017, ADR-018). Un
+                               archivo por componente de la vista
+                               `webComponents`; la tabla está en
+                               `web/README.md`. `web/Dockerfile` y
+                               `web/nginx.conf` son el contenedor web.
+                               `web/tests/` tiene los recorridos técnicos de
+                               CA-01 a CA-11 con Playwright.
+docs/r6/                       Capturas de R6 y el resultado del recorrido
+                               técnico previo a la prueba de aceptación.
 var/                           Almacenes locales del sistema. Ignorado por git.
 ```
 
-Lo que **no** hay todavía: la aplicación web y la imagen de Docker propia. El
-diseño de la navegación y el protocolo de medición de AC-05 (sección 8) están
-en `docs/diseño-de-las-rutas-de-navegación.md`.
+El diseño de la navegación y el protocolo de medición de AC-05 (sección 8)
+están en `docs/diseño-de-las-rutas-de-navegación.md`. El nombre del producto
+es **InfoKnows**: va en la interfaz y en los README. «Constelación» es el
+nombre de la propuesta en los documentos de R5, que no se renombran; InfoKnows
+no va en los ADR ni en el modelo C4.
+
+Lo que **no** está decidido del despliegue: la edición de Neo4j y qué puertos
+se publican. El compose deja las dos cosas como estaban y parametrizadas.
 
 ## 7. Comandos
 
 ```powershell
-docker compose up -d
+docker compose up -d neo4j               # desarrollo: solo la base
 uv sync
 uv run pytest tests/ -q                  # las marcadas neo4j se saltan si la base no responde
 uv run pytest tests/ -q -m "not neo4j"   # solo las que no necesitan Neo4j
@@ -153,11 +173,26 @@ uv run python scripts/evaluate_ingestion.py review --workbook LLENO.xlsx   # una
 uv run python scripts/evaluate_ingestion.py review --from-run N  # revisor contra anotación y pipeline
 start http://localhost:7474
 
+cd web; npm ci            # una vez: Svelte, Vite, D3 y Playwright, fijados
+npm run dev               # InfoKnows en :5173; reenvía /api y /resources a :8000
+npm run build             # compilado estático en web/dist/
+npm run walkthrough       # CA-01 a CA-10 con puntero y con teclado; solo lee
+cd ..
+
+docker compose up -d --build              # todo en contenedores; la web en :8080
+docker compose stop api                   # antes de un proceso de construcción
+docker compose run --rm build load        # y `reapply`; después, `start api`
+
 npm install               # una vez: LikeC4 fijado en package.json
 npm run arch:validate     # sintaxis y referencias del modelo C4
 npm run arch:export       # PNG en docs/architecture/images/, solo en hitos
 npm run arch:serve        # vista previa en el navegador
 ```
+
+`docker compose up -d` sin nombrar servicio levanta también la API en un
+contenedor: no se combina con `uv run iekg-api`, porque serían dos escritores
+sobre el mismo grafo (ADR-007). `web/tests/operator-walkthrough.mjs` (CA-11)
+sube un documento y **escribe en el grafo**: después, `load` y `reapply`.
 
 La contraseña vive en `.env`, ignorado por git. Si falta: copiar `.env.example`,
 poner una, `docker compose down -v` y volver a levantar.

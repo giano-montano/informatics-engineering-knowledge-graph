@@ -120,8 +120,9 @@ model {
       home = component 'Inicio' {
         summary 'Punto de entrada sin buscar: las 17 áreas y los cursos.'
         description '''
-          Distingue las áreas que ya tienen temas de los sílabos. Pide una
-          ruta que la API todavía no ofrece.
+          Distingue las áreas que ya tienen temas de los sílabos, y las
+          lista también como texto. Pide las áreas, con sus conteos, y los
+          cursos a la ruta de inicio de la API.
         '''
       }
 
@@ -419,6 +420,8 @@ model {
   kms.web.home -> kms.web.explorationState 'Fija el foco'
   kms.web.canvas -> kms.web.explorationState 'Cambia el foco o agrega conexiones'
   kms.web.contextHeader -> kms.web.explorationState 'Cambia la lente y el «ver por»'
+  kms.web.focusPanel -> kms.web.explorationState 'Cambia el foco o la lente, o fija una relación'
+  kms.web.stopsLine -> kms.web.explorationState 'Abre el porqué de una parada o cambia el foco'
   kms.web.explorationState -> kms.web.canvas 'Subgrafo y disposición'
   kms.web.explorationState -> kms.web.focusPanel 'Foco en curso'
   kms.web.explorationState -> kms.web.stopsLine 'Respuesta de la lente'

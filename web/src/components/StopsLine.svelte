@@ -24,7 +24,7 @@
 
 <ol class="stops" aria-label="Paradas del camino, de la más lejana a la meta">
   {#each groups as group, index (group.depth)}
-    {#if index > 0}<li class="arrow" aria-hidden="true"></li>{/if}
+    {#if index > 0}<li class="arrow" aria-hidden="true"><svg width="28" height="10" viewBox="0 0 28 10"><path class="shaft" d="M0 5h21" /><path d="M20 1.4 27 5l-7 3.6Z" /></svg></li>{/if}
     <li class="group">
       {#each group.items as stop (stop.key)}
         {@const own = containsTarget(exploration.response, stop.key, exploration.focusKey)}
@@ -47,7 +47,7 @@
       {/each}
     </li>
   {/each}
-  <li class="arrow" aria-hidden="true"></li>
+  <li class="arrow" aria-hidden="true"><svg width="28" height="10" viewBox="0 0 28 10"><path class="shaft" d="M0 5h21" /><path d="M20 1.4 27 5l-7 3.6Z" /></svg></li>
   <li class="goal">y de ahí a la meta</li>
 </ol>
 
@@ -126,21 +126,17 @@
   }
 
   .arrow {
-    width: 26px;
-    height: 10px;
-    background:
-      linear-gradient(var(--r-prerequisite), var(--r-prerequisite)) left center / calc(100% - 4px) 1.5px no-repeat;
-    clip-path: polygon(0 0, calc(100% - 7px) 0, calc(100% - 7px) 15%, 100% 50%, calc(100% - 7px) 85%, calc(100% - 7px) 100%, 0 100%);
-    position: relative;
+    display: flex;
   }
 
-  .arrow::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 1.5px;
-    border-left: 7px solid var(--r-prerequisite);
-    border-block: 3.5px solid transparent;
+  .arrow path {
+    fill: var(--r-prerequisite);
+  }
+
+  .arrow .shaft {
+    fill: none;
+    stroke: var(--r-prerequisite);
+    stroke-width: 1.5;
   }
 
   .goal {

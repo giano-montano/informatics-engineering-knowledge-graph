@@ -125,6 +125,11 @@ scripts/evaluate_ingestion.py  Ayuda de desarrollo: mide CP-01 a CP-14 desde el
                                la extracción del revisor; reporte en
                                `var/measurements/`. Cómo calcula cada medida:
                                `casos-de-prueba/calculo-de-las-medidas-del-evaluador.md`.
+scripts/tune_prompt.py         Ayuda de desarrollo para el ajuste del prompt:
+                               ingesta cada sílabo por separado sobre la capa
+                               de referencia, sin escribir en Neo4j, con sus
+                               almacenes en `var/tuning/`. Rechaza 1INF27 y
+                               1INF37, y cuenta con tope los llamados pagados.
 tests/                         Pruebas; una negativa por cada forma de violar
                                cada regla o código EX.
 var/                           Almacenes locales del sistema. Ignorado por git.
@@ -149,6 +154,8 @@ uv run iekg-api                          # la API en :8000; exige IEKG_OPERATOR_
 uv run python scripts/measure_navigation.py   # AC-05; solo lee, reporte en var/measurements/
 uv run python scripts/evaluate_ingestion.py cases --from-run N   # CP-01 a CP-14, la cadena desde la corrida N
 uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out   # corridas sueltas del ajuste
+uv run python scripts/tune_prompt.py --all   # ajuste: los 11 por separado, a var/tuning/
+uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out --operational-db var/tuning/operational.sqlite --facts-dir var/tuning/facts
 uv run python scripts/evaluate_ingestion.py review --workbook LLENO.xlsx   # una vez: exporta la extracción y compara
 uv run python scripts/evaluate_ingestion.py review --from-run N  # revisor contra anotación y pipeline
 start http://localhost:7474

@@ -2,8 +2,8 @@
 
 For the adjustment of the prompt (thesis, "Casos de prueba de la ingesta
 automatizada"): each syllabus runs through the real orchestrator, extractor and
-validator, on the snapshot of a base that holds only the reference layer, and
-nothing is written to Neo4j. Runs and facts go to their own stores under
+validator, on a snapshot with the reference layer of the base and nothing
+else, and nothing is written to Neo4j. Runs and facts go to their own stores under
 ``var/tuning/``, so the evaluator measures them with::
 
     uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out \
@@ -121,12 +121,13 @@ def read_snapshot(settings: Settings) -> Snapshot:
 
 
 def read_reference_snapshot(settings: Settings) -> Snapshot:
+    """The reference layer alone, whatever else the base holds: ingestion never changes it (RM-02)."""
     snapshot = read_snapshot(settings)
-    foreign = [key for key, node in snapshot.nodes.items() if node.layer != REFERENCE]
-    if foreign or not snapshot.nodes:
-        raise SystemExit(f"error: the base must hold the reference layer alone ({len(snapshot.nodes)} nodes, "
-                         f"{len(foreign)} of another layer); run `iekg-build load` first")
-    return snapshot
+    nodes = {key: node for key, node in snapshot.nodes.items() if node.layer == REFERENCE}
+    if not nodes:
+        raise SystemExit("error: the base holds no reference layer; run `iekg-build load` first")
+    edges = tuple(edge for edge in snapshot.edges if edge.source in nodes and edge.target in nodes)
+    return Snapshot(nodes=nodes, edges=edges)
 
 
 def snapshot_before(snapshot: Snapshot, chain: Path, code: str) -> Snapshot:

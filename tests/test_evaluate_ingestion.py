@@ -30,7 +30,7 @@ from evaluate_ingestion import (
     load_gold,
     match,
     measure,
-    outside_of,
+    related_of,
     most_hits,
     pipeline_against_review,
     pipeline_comparison_path,
@@ -222,16 +222,41 @@ def test_the_type_does_not_take_part_in_the_match_and_is_reported_apart():
 # --- The items of a batch -------------------------------------------------------
 
 
-def test_an_existing_node_the_batch_links_is_an_item_with_the_label_of_its_batch():
+def test_an_existing_node_the_batch_places_is_an_item_with_the_label_of_its_batch():
     known = {"old": (CONCEPT, "Recursión"), "ku": (KNOWLEDGE_UNIT, "Algoritmos")}
-    new, course = concept("Grafos", key="new"), Item("course", COURSE, "Algoritmia")
+    new, course = topic("Grafos", key="new"), Item("course", COURSE, "Algoritmia")
     linking = Batch((node(new), node(course)), (
-        EdgeFact(HAS_PREREQUISITE, "new", "old"),
+        EdgeFact(PART_OF, "old", "new"),
         EdgeFact(REQUIRES_CONCEPT, "course", "old"),
         EdgeFact(PART_OF, "new", "ku"),
     ))
     # Once, though two edges reach it; the course and the knowledge unit are not items.
     assert items_of(linking, known) == [new, Item("old", CONCEPT, "Recursión")]
+    assert related_of(linking, known) == []
+
+
+def test_an_existing_concept_the_batch_only_requires_or_relates_is_not_an_item():
+    gold = Gold([entry(1, "G-1", "Grafos"), entry(2, "G-2", "Pilas")])
+    known = {"old": (CONCEPT, "Recursión"), "other": (CONCEPT, "Pilas"), "ku": (KNOWLEDGE_UNIT, "Algoritmos")}
+    new, course = concept("Grafos", key="new"), Item("course", COURSE, "Algoritmia")
+    linking = Batch((node(new), node(course)), (
+        EdgeFact(PART_OF, "new", "ku"),
+        EdgeFact(REQUIRES_CONCEPT, "course", "old"),
+        EdgeFact(HAS_PREREQUISITE, "new", "other"),
+    ))
+    assert items_of(linking, known) == [new]
+    related = related_of(linking, known)
+    assert related == [Item("old", CONCEPT, "Recursión"), Item("other", CONCEPT, "Pilas")]
+    # The same when the batch names the existing concept as a node, as the ingestion does.
+    naming = Batch((*linking.nodes, node(Item("old", CONCEPT, "Recursión"))), linking.edges)
+    assert items_of(naming, known) == [new] and len(related_of(naming, known)) == 2
+    measured = measure(match(items_of(linking, known), gold, "S1"), gold, "S1", related)
+    # The indicator counts the item the syllabus places; the diagnostic says what the two others would add.
+    assert (measured["items"], measured["hits"], measured["precision"]) == (1, 1, 1.0)
+    assert (measured["related"], measured["related_hits"]) == (2, 1)
+    assert measured["precision_with_related"] == pytest.approx(2 / 3)
+    # A related concept does not recover a notion either.
+    assert measured["recovered"] == 1
 
 
 def test_an_endpoint_in_no_earlier_batch_stops_the_evaluation():
@@ -256,11 +281,11 @@ def test_a_chain_measures_the_first_accepted_batch_and_counts_the_rejected_attem
         rejected(2, "S1", readable=False),
         accepted(3, "S1", concept("Recursión", key="r"), concept("Grafos")),
         accepted(4, "S1", concept("Recursión", key="again")),
-        accepted(5, "S2", concept("Pilas", key="p"), edges=[EdgeFact(HAS_PREREQUISITE, "p", "r")]),
+        accepted(5, "S2", concept("Pilas", key="p"), edges=[EdgeFact(PART_OF, "r", "p")]),
     ], {})
     first, second = report["cases"]
     assert (first["case"], first["run_id"], first["attempts"], first["precision"]) == ("CP-01", 3, 3, 1)
-    # The linked node counts in the second case, by the label its own batch gave it.
+    # The node the second batch places counts in its case, by the label its own batch gave it.
     assert (second["case"], second["attempts"], second["items"], second["hits"]) == ("CP-02", 1, 2, 2)
     assert [(r["run_id"], r["readable"], r.get("precision")) for r in report["rejected_attempts"]] == [
         (1, True, 0.5), (2, False, None)]
@@ -333,7 +358,7 @@ def test_an_isolated_run_sees_the_reference_layer_alone():
     assert report["totals"]["all"]["hits"] == 3
     assert (report["mode"], report["passes"], report["fusion"]) == ("isolated", None, None)
 
-    chained = accepted(4, "S2", concept("Pilas", key="p"), edges=[EdgeFact(HAS_PREREQUISITE, "p", "r")])
+    chained = accepted(4, "S2", concept("Pilas", key="p"), edges=[EdgeFact(PART_OF, "r", "p")])
     with pytest.raises(UnknownEndpoint):
         evaluate(GOLD_OF_TWO, [accepted(1, "S1", concept("Recursión", key="r")), chained], reference, isolated=True)
 
@@ -387,7 +412,7 @@ def test_the_chain_reports_the_fusion_with_the_compound_headings_of_the_annotati
     ))
     report = evaluate(gold, [
         accepted(1, "S1", concept("Validación", key="v")),
-        accepted(2, "S2", concept("Pilas", key="p"), edges=[EdgeFact(HAS_PREREQUISITE, "p", "v")]),
+        accepted(2, "S2", concept("Pilas", key="p"), edges=[EdgeFact(PART_OF, "v", "p")]),
     ], {}, compound_headings=frozenset({"S1-001"}))
     assert (report["fusion"]["wrong_fusions"], report["fusion"]["excepted_fusions"]) == (0, 1)
 
@@ -396,18 +421,21 @@ def test_the_fusions_with_a_node_of_a_held_out_syllabus_are_counted_apart():
     gold = Gold((
         entry(1, "G1", "Pilas", syllabus="S1"), entry(1, "G1", "Pilas", syllabus="H"),
         entry(1, "G1", "Pilas", syllabus="S2"), entry(2, "G2", "Colas", syllabus="S2"),
-        entry(2, "G3", "Colas", syllabus="H"),
+        entry(2, "G3", "Colas", syllabus="H"), entry(1, "G4", "Pilas", syllabus="H2"),
     ))
     report = evaluate(gold, [
         accepted(1, "S1", concept("Pilas", key="a")),
         # The held-out syllabus repeats a node and creates another.
         accepted(2, "H", concept("Pilas", key="b"), concept("Colas", key="c")),
-        accepted(3, "S2", concept("Pilas", key="d"), edges=[EdgeFact(HAS_PREREQUISITE, "d", "c")]),
-    ], {}, held_out=("H",))
+        # A batch names as nodes the existing ones it links: "a" is not of the held-out syllabus for that.
+        accepted(3, "S2", concept("Pilas", key="d"), edges=[EdgeFact(PART_OF, "c", "d")]),
+        accepted(4, "H2", concept("Pilas", key="a"), concept("Grafos", key="g")),
+    ], {}, held_out=("H", "H2"))
     measured = report["fusion"]
     assert (measured["duplicated_notions"], measured["duplicated_notions_with_held_out"]) == (1, 1)
     # "c" took G3 in H and G2 in S2: a wrong fusion on a node the held-out syllabus created.
-    assert (measured["wrong_fusions"], measured["wrong_fusions_with_held_out"]) == (1, 1)
+    # "a" took G1 in S1 and G4 in H2, which only links it: wrong, but not on a node of a held-out syllabus.
+    assert (measured["wrong_fusions"], measured["wrong_fusions_with_held_out"]) == (2, 1)
     without = fusion([hit(concept("Pilas", key="a"), "G1"), hit(concept("Pilas", key="b"), "G1")])
     assert (without["duplicated_notions"], without["duplicated_notions_with_held_out"]) == (1, 0)
 
@@ -666,22 +694,3 @@ def test_two_reviewers_are_compared_both_ways_by_normalized_name():
     report = agreement({"S1": first, "S2": second}, {"S1": second, "S2": second})
     assert [s["syllabus"] for s in report["syllabi"]] == ["S1", "S2"]
     assert report["totals"]["other_has"] == {"count": 3, "of": 5, "proportion": 0.6}
-
-
-# --- Diagnostic: the items a batch does not place ---------------------------------
-
-
-def test_a_concept_the_batch_only_requires_or_relates_is_set_apart_in_the_placed_precision():
-    gold = Gold([entry(1, "G-1", "Grafos")])
-    known = {"old": (CONCEPT, "Recursión"), "other": (CONCEPT, "Pilas"), "ku": (KNOWLEDGE_UNIT, "Algoritmos")}
-    new, course = concept("Grafos", key="new"), Item("course", COURSE, "Algoritmia")
-    linking = Batch((node(new), node(course)), (
-        EdgeFact(PART_OF, "new", "ku"),
-        EdgeFact(REQUIRES_CONCEPT, "course", "old"),
-        EdgeFact(HAS_PREREQUISITE, "new", "other"),
-    ))
-    assert outside_of(linking) >= {"old", "other"} and "new" not in outside_of(linking)
-    measured = measure(match(items_of(linking, known), gold, "S1"), gold, "S1", outside_of(linking))
-    # The indicator counts the three items; the diagnostic, the one the syllabus places.
-    assert (measured["items"], measured["hits"], measured["outside_items"], measured["outside_hits"]) == (3, 1, 2, 0)
-    assert measured["precision"] == pytest.approx(1 / 3) and measured["placed_precision"] == 1.0

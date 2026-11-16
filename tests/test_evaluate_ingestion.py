@@ -604,7 +604,7 @@ def gold():
 
 
 def test_the_consolidated_annotation_holds_the_entries_of_the_thirteen_case_files(gold):
-    assert (len(gold.entries), len(gold.names), len(gold.syllabi)) == (745, 664, 13)
+    assert (len(gold.entries), len(gold.names), len(gold.syllabi)) == (744, 663, 13)
     for syllabus in gold.syllabi:
         (path,) = (ROOT / GOLD).parent.glob(f"{gold.case_of(syllabus)}-gold_{syllabus}.tsv")
         lines = path.read_text(encoding="utf-8").rstrip("\n").split("\n")[2:]
@@ -635,8 +635,8 @@ def test_a_batch_built_from_the_labels_of_the_annotation_scores_a_hundred_percen
         assert (case["precision"], case["recall"], case["f1"], case["type_agreement"]) == (1, 1, 1, 1), case["case"]
         assert case["most_hits"] == case["hits"] == len(gold.entries_of(case["syllabus"]))
     everything = report["totals"]["all"]
-    assert (everything["items"], everything["hits"], everything["precision"], everything["recall"]) == (745, 745, 1, 1)
-    assert report["totals"]["held_out"]["items"] == 39 + 89
+    assert (everything["items"], everything["hits"], everything["precision"], everything["recall"]) == (744, 744, 1, 1)
+    assert report["totals"]["held_out"]["items"] == 38 + 89
     assert report["passes"] is True
     # One node per entry: nothing was merged, so no node holds two notions.
     assert report["fusion"]["wrong_fusions"] == 0

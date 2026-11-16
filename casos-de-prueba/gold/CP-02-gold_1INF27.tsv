@@ -32,7 +32,6 @@ id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
 1INF27-030	concepto	obligatoria	Análisis de la eficiencia de algoritmos	análisis de eficiencia de algoritmos|análisis de la eficiencia algorítmica	1INF27-029	sumilla	fundamentos del análisis de la eficiencia de algoritmos	No coincide con ninguna mitad del encabezado 029 (es el análisis, no la eficiencia); va como concepto aparte.
 1INF27-031	concepto	obligatoria	Soporte matemático		1INF27-029	contenidos	Soporte matemático	
 1INF27-032	concepto	obligatoria	Medidas asintóticas	notación asintótica|asymptotic notation|medida asintótica	1INF27-029	contenidos	Medidas asintóticas	
-1INF27-033	concepto	aceptable	Notación O grande	O grande|notación Big O|Big O	1INF27-029	contenidos	Medidas asintóticas	
 1INF27-034	concepto	obligatoria	Cálculo del tiempo de ejecución	tiempo de ejecución|running time	1INF27-029	contenidos	Cálculo del tiempo de ejecución	
 1INF27-035	tema	obligatoria	Hashing	dispersión|técnicas de dispersión		contenidos	HASHING	
 1INF27-036	concepto	obligatoria	Funciones hash	función hash|funciones de dispersión|función de dispersión|hash functions	1INF27-035	contenidos	Funciones hash	

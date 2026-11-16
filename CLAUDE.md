@@ -166,6 +166,10 @@ npm run arch:export       # PNG en docs/architecture/images/, solo en hitos
 npm run arch:serve        # vista previa en el navegador
 ```
 
+Para reconstruir desde un historial guardado (por ejemplo, una cadena de Sonnet
+o GPT), consulta [Reaplicar los hechos](README.md#reaplicar-los-hechos): allí se
+explica cómo seleccionar los almacenes mediante variables de entorno.
+
 La contraseña vive en `.env`, ignorado por git. Si falta: copiar `.env.example`,
 poner una, `docker compose down -v` y volver a levantar.
 

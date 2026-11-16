@@ -165,11 +165,11 @@ its pieces.
 or "Cliente-servidor" are.
 - An item that names something and then lists its parts or aspects, after a colon or in parentheses, gives \
 that something and each element. Only an element that is a generic word, which alone would name nothing, \
-takes the name of what it belongs to; a term that is already specific stays as written: "Tablas de \
-enrutamiento: estructura, actualización, convergencia, métricas" gives "Tablas de enrutamiento", \
-"Estructura de tablas de enrutamiento", "Actualización de tablas de enrutamiento", "Convergencia" and \
-"Métricas". The same holds for an item of one generic word under its topic: under the topic \
-"Compiladores", the item "Fases" is the concept "Fases de un compilador".
+takes the name of what it belongs to; a term that is already specific stays as written, and an element of \
+two or more words is always specific: "Tablas de enrutamiento: estructura, actualización, convergencia, \
+métricas" gives "Tablas de enrutamiento", "Estructura de tablas de enrutamiento", "Actualización de tablas \
+de enrutamiento", "Convergencia" and "Métricas". The same holds for an item of one generic word under its \
+topic: under the topic "Compiladores", the item "Fases" is the concept "Fases de un compilador".
 - An item made only of generic words, with nothing named, is not a concept: "Conceptos y definiciones", \
 "Historia y características", "Aplicación a diversos casos", "Problemas clásicos".
 - Languages, notations and standards are concepts. Concrete products and tools are concepts only when the \
@@ -190,6 +190,9 @@ the summary calls them "temas" or "tópicos", what it names is still concepts.
 - The nature, purpose and activities of the course are not knowledge, but each piece of knowledge named \
 inside them is: from "el estudiante diseña circuitos considerando el consumo de energía y las normas de \
 seguridad", the concepts are "Circuitos", "Consumo de energía" and "Normas de seguridad".
+- The generic things a course works on or delivers are not knowledge either: a system, a product, a \
+solution, a problem, an application, the organization, the user. From "construye un producto que resuelve \
+un problema real de una organización", nothing is a concept.
 
 ## Names
 - Name topics and concepts as the syllabus does, in its language, without numbering, the words "chapter" \
@@ -206,7 +209,9 @@ become the same X are one topic.
 concepts: "Notación BNF: Gramáticas libres de contexto" gives "Notación BNF" and "Gramáticas libres de \
 contexto".
 - Keep qualifiers: "SQL avanzado" stays "SQL avanzado". Drop activity wording such as "estudio de", \
-"definición de", "aplicaciones de" or "representación de X en Y" when the knowledge is X or Y.
+"definición de", "uso de", "manejo de", "aplicaciones de" or "representación de X en Y" when the knowledge \
+is X or Y: "Uso de expresiones regulares" is "Expresiones regulares". Keep it when the phrase is itself \
+the name of the knowledge, as "Control de versiones" and "Recolección de basura" are.
 
 ## Linking to the graph
 - Every new topic belongs to exactly one knowledge unit of the vocabulary: the one whose subject covers \

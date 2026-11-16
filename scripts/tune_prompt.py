@@ -75,8 +75,8 @@ COURSES = {
 # Paid providers: where they are, the variable with their key and the cap of
 # calls for the whole adjustment session.
 PAID = {
-    # 2 probes, and the 11 of the fine adjustment round authorized on 2026-11-16.
-    "openai": (None, "OPEN_AI_API_KEY", 13),
+    # 2 probes, and the two fine adjustment rounds of 11 authorized on 2026-11-16.
+    "openai": (None, "OPEN_AI_API_KEY", 24),
     "deepseek": ("https://api.deepseek.com", "DEEPSEEK_API_KEY", 4),
 }
 

@@ -240,8 +240,11 @@ docker compose ps           # neo4j y api "(healthy)", web "Up"
 ```
 
 La aplicación queda en `http://<host>:8080` (o en el puerto de `IEKG_WEB_PORT`).
-La primera construcción tarda: la imagen de la aplicación instala las
-dependencias de lectura de PDF, que pesan varios gigabytes.
+La primera construcción tarda unos minutos. La imagen de la aplicación instala
+las dependencias en las versiones de `uv.lock`, con PyTorch en su compilado
+solo para CPU y sin las bibliotecas de CUDA: queda en unos 2,5 GB. Para
+instalar el bloqueo tal cual, que pesa varias veces más y solo sirve en un
+host con GPU: `docker compose build --build-arg IEKG_TORCH=locked api`.
 
 Los procesos de construcción se ejecutan a demanda, con la API detenida
 (ADR-007):

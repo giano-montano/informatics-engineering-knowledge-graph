@@ -310,7 +310,7 @@
           <div>
             <h2>Compuerta de auditoría: {gate.state === 'open' ? 'abierta' : 'cerrada'} <code>{gate.state}</code></h2>
             {#if gate.state === 'open'}
-              <p>El worker toma las corridas pendientes.{#if latest.report} El último reporte ({ORIGINS[latest.report.origin] ?? latest.report.origin}, {when(latest.report.created_at)}) no tiene violaciones.{/if}</p>
+              <p>El worker toma las corridas pendientes.{#if latest.report}{' '}El último reporte ({ORIGINS[latest.report.origin] ?? latest.report.origin}, {when(latest.report.created_at)}) no tiene violaciones.{/if}</p>
             {:else}
               <p>{GATE_REASONS[gate.reason] ?? gate.reason} Las corridas nuevas quedan pendientes hasta que una carga o una reaplicación deje un reporte limpio.</p>
             {/if}
@@ -823,6 +823,7 @@
 
   .detail .close {
     margin-left: auto;
+    font-size: var(--step-0);
   }
 
   .tabs {

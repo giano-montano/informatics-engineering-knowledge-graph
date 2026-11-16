@@ -47,7 +47,6 @@
         <Icon name="key" /> Operador
       </button>
     {:else}
-      <span class="where">Panel del operador</span>
       <button class="button" type="button" onclick={() => exploration.goHome()}>
         <Icon name="back" /> Volver al mapa
       </button>
@@ -133,14 +132,6 @@
     font-size: 0.75rem;
     line-height: 1.2;
     white-space: nowrap;
-  }
-
-  .where {
-    margin-right: auto;
-    padding-left: 24px;
-    border-left: 1px solid var(--line-strong);
-    font-size: var(--step-1);
-    font-weight: 600;
   }
 
   .explore {

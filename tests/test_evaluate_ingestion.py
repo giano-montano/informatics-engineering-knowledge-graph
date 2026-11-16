@@ -30,6 +30,7 @@ from evaluate_ingestion import (
     load_gold,
     match,
     measure,
+    outside_of,
     most_hits,
     pipeline_against_review,
     pipeline_comparison_path,
@@ -645,3 +646,22 @@ def test_two_reviewers_are_compared_both_ways_by_normalized_name():
     report = agreement({"S1": first, "S2": second}, {"S1": second, "S2": second})
     assert [s["syllabus"] for s in report["syllabi"]] == ["S1", "S2"]
     assert report["totals"]["other_has"] == {"count": 3, "of": 5, "proportion": 0.6}
+
+
+# --- Diagnostic: the items a batch does not place ---------------------------------
+
+
+def test_a_concept_the_batch_only_requires_or_relates_is_set_apart_in_the_placed_precision():
+    gold = Gold([entry(1, "G-1", "Grafos")])
+    known = {"old": (CONCEPT, "Recursión"), "other": (CONCEPT, "Pilas"), "ku": (KNOWLEDGE_UNIT, "Algoritmos")}
+    new, course = concept("Grafos", key="new"), Item("course", COURSE, "Algoritmia")
+    linking = Batch((node(new), node(course)), (
+        EdgeFact(PART_OF, "new", "ku"),
+        EdgeFact(REQUIRES_CONCEPT, "course", "old"),
+        EdgeFact(HAS_PREREQUISITE, "new", "other"),
+    ))
+    assert outside_of(linking) >= {"old", "other"} and "new" not in outside_of(linking)
+    measured = measure(match(items_of(linking, known), gold, "S1"), gold, "S1", outside_of(linking))
+    # The indicator counts the three items; the diagnostic, the one the syllabus places.
+    assert (measured["items"], measured["hits"], measured["outside_items"], measured["outside_hits"]) == (3, 1, 2, 0)
+    assert measured["precision"] == pytest.approx(1 / 3) and measured["placed_precision"] == 1.0

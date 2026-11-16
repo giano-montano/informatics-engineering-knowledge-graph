@@ -218,6 +218,20 @@ El reporte lista cada falso positivo (nombre y tipo) y cada noción
 obligatoria no recuperada, por caso: son lo que se lee para entender una
 cifra.
 
+**Diagnóstico: ítems que el lote no ubica (agregado el 2026-11-16).** Un lote
+puede alcanzar un concepto sin colgarlo de ningún tema del sílabo: el concepto
+que el curso requiere, o el que solo es extremo de un prerrequisito o de una
+especialización. Son ítems, según la sección 2, y cuentan en la precisión del
+indicador. Pero la anotación registra lo que el sílabo contiene, y un concepto
+requerido es, por definición, uno que el sílabo no enseña: casi siempre es
+falso positivo, aunque la relación sea correcta (eso lo juzga CP-16). Para
+ver cuánto pesa, cada caso y cada total traen `outside_items`, `outside_hits`
+y `placed_precision`, que es la precisión sin esos ítems. Un ítem está ubicado
+si es extremo de alguna arista `PART_OF` del lote. El emparejamiento no
+cambia: se hace con todos los ítems y el diagnóstico solo resta. **No es el
+indicador ni lo reemplaza**; si debe cambiar la definición de ítem es una
+decisión abierta, que tocaría la tesis.
+
 ## 6. Intentos rechazados
 
 De cada corrida rechazada de la cadena se lee el lote candidato que guarda el

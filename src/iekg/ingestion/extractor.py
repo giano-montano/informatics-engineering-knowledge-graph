@@ -417,7 +417,10 @@ class _Linker:
                     else concepts.get(normalize_label(end))
                     for end in _ends(relation)
                 ]
-                if None not in ends:
+                # Two mentions the linker resolved to one node state nothing: the
+                # model named them apart ("Hilos" and an existing "Hilo"), and as an
+                # edge they would be a cycle of one node (RM-04).
+                if None not in ends and ends[0] != ends[1]:
                     self.edges.append(EdgeFact(edge_type, ends[0], ends[1]))
 
         if self.discards:

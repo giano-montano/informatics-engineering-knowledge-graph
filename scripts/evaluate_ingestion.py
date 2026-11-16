@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from iekg.core.batch import Batch
-from iekg.graph_schema import CONCEPT, PREF_LABEL_ES, TOPIC
+from iekg.graph_schema import CONCEPT, PART_OF, PREF_LABEL_ES, TOPIC
 from iekg.ingestion.normalization import normalize_label
 from iekg.operational_store import REJECTED
 
@@ -205,6 +205,15 @@ def items_of(batch: Batch, known: Mapping[str, tuple[str, str]]) -> list[Item]:
     return items
 
 
+def outside_of(batch: Batch) -> frozenset[str]:
+    """The nodes the batch reaches without placing them in the partonomy of its
+    syllabus: a concept the course requires, or one that is only the end of a
+    prerequisite or a specialization. A diagnostic; they are items all the same."""
+    placed = {key for edge in batch.edges if edge.type == PART_OF for key in (edge.source, edge.target)}
+    reached = set(batch.nodes_by_key) | {key for edge in batch.edges for key in (edge.source, edge.target)}
+    return frozenset(reached - placed)
+
+
 # --- Matching (thesis, 5.2.5.4) ----------------------------------------------
 
 
@@ -263,6 +272,7 @@ def _f1(precision: float | None, recall: float | None) -> float | None:
 
 
 def _with_ratios(counts: dict[str, Any]) -> dict[str, Any]:
+    counts = {"outside_items": 0, "outside_hits": 0, **counts}
     precision = _ratio(counts["hits"], counts["items"])
     recall = _ratio(counts["recovered"], counts["mandatory_notions"])
     return {
@@ -272,10 +282,15 @@ def _with_ratios(counts: dict[str, Any]) -> dict[str, Any]:
         "recall": recall,
         "f1": _f1(precision, recall),
         "type_agreement": _ratio(counts["type_matches"], counts["hits"]),
+        # Diagnostic, never the indicator: the precision of the items the syllabus places.
+        "placed_precision": _ratio(counts["hits"] - counts["outside_hits"],
+                                   counts["items"] - counts["outside_items"]),
     }
 
 
-def measure(matches: Sequence[Match], gold: Gold, syllabus: str) -> dict[str, Any]:
+def measure(
+    matches: Sequence[Match], gold: Gold, syllabus: str, outside: frozenset[str] = frozenset()
+) -> dict[str, Any]:
     hits = [m for m in matches if m.entry is not None]
     consumed = {m.entry.id for m in hits}
     mandatory = gold.mandatory_notions_of(syllabus)
@@ -288,10 +303,13 @@ def measure(matches: Sequence[Match], gold: Gold, syllabus: str) -> dict[str, An
             "mandatory_notions": len(mandatory),
             "recovered": len(recovered),
             "type_matches": sum(KIND_OF[m.item.label] == m.entry.kind for m in hits),
+            "outside_items": sum(m.item.key in outside for m in matches),
+            "outside_hits": sum(m.item.key in outside for m in hits),
         }),
         "most_hits": most_hits([m.item for m in matches], gold, syllabus),
         "false_positive_items": [
-            {"key": m.item.key, "label": m.item.label, "name": m.item.name} for m in matches if m.entry is None
+            {"key": m.item.key, "label": m.item.label, "name": m.item.name, "outside": m.item.key in outside}
+            for m in matches if m.entry is None
         ],
         "missed_notions": [
             {"global_id": global_id, "entry": entry.id, "label": entry.label}
@@ -300,7 +318,7 @@ def measure(matches: Sequence[Match], gold: Gold, syllabus: str) -> dict[str, An
     }
 
 
-_SUMMED = ("items", "hits", "mandatory_notions", "recovered", "type_matches")
+_SUMMED = ("items", "hits", "mandatory_notions", "recovered", "type_matches", "outside_items", "outside_hits")
 
 
 def total(cases: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
@@ -447,7 +465,8 @@ def evaluate(
         if attempts_needed and attempts_needed > MAX_ATTEMPTS:
             warnings.append(f"{syllabus} needed {attempts_needed} attempts; the protocol allows {MAX_ATTEMPTS}")
         cases.append({"case": gold.case_of(syllabus), "syllabus": syllabus, **_run_fields(attempt),
-                      "attempts": attempts_needed, "accepted": True, **measure(matches, gold, syllabus)})
+                      "attempts": attempts_needed, "accepted": True,
+                      **measure(matches, gold, syllabus, outside_of(attempt.batch))})
 
     if not isolated:
         # Rejected every time: out of the graph, and its mandatory notions were not recovered.
@@ -942,6 +961,12 @@ def markdown(report: Mapping[str, Any]) -> str:
     rows += [(f"Total: {name}", f"{t['cases']} cases", None, None, *(t[m] for m in _MEASURES), None)
              for name, t in report["totals"].items() if t["cases"]]
     lines = [f"Mode: {report['mode']}.", "", *_table(header, rows), ""]
+    everything = report["totals"]["all"]
+    if everything["outside_items"]:
+        lines.append(
+            f"Diagnostic: {everything['outside_items']} items are concepts the batches only require or relate "
+            f"({everything['outside_hits']} hits); without them the precision is "
+            f"{_cell(everything['placed_precision'])}.")
     if report["hidden"]:
         lines.append(f"Hidden, not evaluated: {', '.join(report['hidden'])}.")
     if report["not_run"]:

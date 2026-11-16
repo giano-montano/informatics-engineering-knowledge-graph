@@ -9,6 +9,11 @@ nothing is written to Neo4j. Runs and facts go to their own stores under
     uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out \
         --operational-db var/tuning/operational.sqlite --facts-dir var/tuning/facts
 
+With ``--chain DIR --before CODE`` the snapshot is, instead, the graph a chain
+left before it ingested CODE: the base as it is now, less what the runs of DIR
+wrote from CODE on. It shows how a syllabus links to existing nodes without
+running the chain again. Still nothing is written.
+
 The two held-out syllabi are refused. Calls to a paid provider are counted in
 ``var/tuning/paid-calls.json`` before they are made, against a fixed cap, and
 go without retries of any kind.
@@ -32,14 +37,17 @@ os.environ.setdefault("PYDANTIC_AI_NO_BANNER", "1")
 from neo4j import GraphDatabase
 
 from iekg.core.auditor import AuditReport
-from iekg.core.batch import Batch, Snapshot
+from pydantic_ai import Agent, PromptedOutput
+from pydantic_ai.messages import ModelRequest, RetryPromptPart, UserPromptPart
+
+from iekg.core.batch import Batch, EdgeFact, Snapshot
 from iekg.core.repository import GraphRepository, WriteResult
 from iekg.fact_store import FactStore
 from iekg.graph_schema import REFERENCE
 from iekg.ingestion import extractor as extractor_module
 from iekg.ingestion import worker
 from iekg.ingestion.declared import SYLLABUS
-from iekg.ingestion.extractor import prompt_version, read_document
+from iekg.ingestion.extractor import INSTRUCTIONS, SyllabusOutput, prompt_version, read_document
 from iekg.ingestion.orchestrator import Orchestrator
 from iekg.ingestion.submission import submit_document
 from iekg.operational_store import LOAD, OperationalStore
@@ -107,14 +115,56 @@ class ReferenceGraph:
         return AuditReport(())
 
 
-def read_reference_snapshot(settings: Settings) -> Snapshot:
+def read_snapshot(settings: Settings) -> Snapshot:
     with GraphDatabase.driver(settings.neo4j_uri, auth=(settings.neo4j_user, settings.neo4j_password)) as driver:
-        snapshot = GraphRepository(driver, settings.neo4j_database).read_snapshot()
+        return GraphRepository(driver, settings.neo4j_database).read_snapshot()
+
+
+def read_reference_snapshot(settings: Settings) -> Snapshot:
+    snapshot = read_snapshot(settings)
     foreign = [key for key, node in snapshot.nodes.items() if node.layer != REFERENCE]
     if foreign or not snapshot.nodes:
         raise SystemExit(f"error: the base must hold the reference layer alone ({len(snapshot.nodes)} nodes, "
                          f"{len(foreign)} of another layer); run `iekg-build load` first")
     return snapshot
+
+
+def snapshot_before(snapshot: Snapshot, chain: Path, code: str) -> Snapshot:
+    """``snapshot`` less the nodes and edges the runs of ``chain`` wrote from the syllabus ``code`` on."""
+    facts = FactStore(chain / "facts")
+    with OperationalStore(chain / "operational.sqlite") as store:
+        course_of = {run.id: run.course_code for run in store.list_runs()}
+    order = list(COURSES)
+    earlier_nodes: set[str] = set()
+    earlier_edges: set[EdgeFact] = set()
+    later_nodes: set[str] = set()
+    later_edges: set[EdgeFact] = set()
+    for run_id in sorted(facts.run_ids()):
+        batch = facts.load(run_id).batch
+        before = order.index(course_of[run_id]) < order.index(code)
+        (earlier_nodes if before else later_nodes).update(batch.nodes_by_key)
+        (earlier_edges if before else later_edges).update(batch.edges)
+    dropped = later_nodes - earlier_nodes
+    nodes = {key: node for key, node in snapshot.nodes.items() if key not in dropped}
+    edges = tuple(edge for edge in snapshot.edges
+                  if edge.source in nodes and edge.target in nodes and edge not in later_edges - earlier_edges)
+    print(f"Snapshot before {code}: {len(nodes)} of {len(snapshot.nodes)} nodes, "
+          f"{len(edges)} of {len(snapshot.edges)} edges")
+    return Snapshot(nodes=nodes, edges=edges)
+
+
+def record_retries(extractor) -> list[str]:
+    """Keep what each content retry told the model: the stores do not record it."""
+    told: list[str] = []
+    inner = extractor._extraction
+
+    def extraction(history, retries, output=None):
+        told[:] = [str(part.content)[:2000] for message in history if isinstance(message, ModelRequest)
+                   for part in message.parts if isinstance(part, (RetryPromptPart, UserPromptPart))][1:]
+        return inner(history, retries, output)
+
+    extractor._extraction = extraction
+    return told
 
 
 def spend_paid_call(provider: str, note: str) -> None:
@@ -139,9 +189,18 @@ def provider_settings(args: argparse.Namespace) -> ProviderSettings:
                                 base.timeout_seconds)
     base_url, key_variable, _ = PAID[args.provider]
     if not args.model or not args.effort:
-        raise SystemExit("error: a paid call names its --model and its --effort")
+        raise SystemExit("error: a paid call names its --model and its --effort ('default' sends none)")
     # No retries of any kind: one run is one request.
-    return ProviderSettings(args.model, os.environ[key_variable], base_url, args.effort, None, 0, 1800.0)
+    effort = None if args.effort == "default" else args.effort
+    return ProviderSettings(args.model, os.environ[key_variable], base_url, effort, None, 0, 1800.0)
+
+
+def ask_by_prompt(extractor) -> None:
+    """For a provider without schema-bound output (DeepSeek, ADR-015): the schema goes in
+    the prompt and the answer comes as a JSON object. A probe of the prompt, not the system."""
+    agent = extractor._agent
+    extractor._agent = Agent(agent.model, output_type=PromptedOutput(SyllabusOutput), instructions=INSTRUCTIONS,
+                             model_settings=agent.model_settings)
 
 
 def main() -> int:
@@ -154,6 +213,8 @@ def main() -> int:
     parser.add_argument("--content-retries", type=int,
                         help="override the content retries of the extractor (a paid call goes with 0)")
     parser.add_argument("--note", default="", help="why these runs, for the log")
+    parser.add_argument("--chain", type=Path, help="the stores of a chain whose graph is in the base")
+    parser.add_argument("--before", help="with --chain: the syllabus the snapshot stops before")
     args = parser.parse_args()
 
     courses = [code for code in COURSES if code not in HELD_OUT] if args.all else [c.upper() for c in args.courses]
@@ -174,8 +235,16 @@ def main() -> int:
         extractor_module.CONTENT_RETRIES = 0
     if args.content_retries is not None:
         extractor_module.CONTENT_RETRIES = args.content_retries
-    graph = ReferenceGraph(read_reference_snapshot(settings))
+    if args.chain:
+        if courses != [args.before]:
+            raise SystemExit("error: with --chain, the one course is the one named by --before")
+        graph = ReferenceGraph(snapshot_before(read_snapshot(settings), args.chain, args.before))
+    else:
+        graph = ReferenceGraph(read_reference_snapshot(settings))
     extractor = worker.build_extractor(provider, reader=cached_reader)
+    if args.provider == "deepseek":
+        ask_by_prompt(extractor)
+    told = record_retries(extractor)
     log = TUNING / "runs.jsonl"
 
     with OperationalStore(TUNING / "operational.sqlite") as store:
@@ -193,6 +262,7 @@ def main() -> int:
                 run_id = submit_document(store, TUNING / "documents", content, file_name=path.name,
                                          resource_type=SYLLABUS, course_code=code, course_name=COURSES[code])
             started = time.monotonic()
+            told.clear()
             orchestrator.process(store.take_pending_run())
             run = store.get_run(run_id)
             record = {
@@ -201,6 +271,8 @@ def main() -> int:
                 "prompt_version": prompt_version(), "content_retries": run.content_retries,
                 "input_tokens": run.input_tokens, "output_tokens": run.output_tokens,
                 "seconds": round(time.monotonic() - started, 1), "error": run.error, "note": args.note,
+                "chain": str(args.chain) if args.chain else None, "retries_told": list(told),
+                "discards": [[d.rule, d.fact, d.message] for d in store.discards_of(run_id)],
                 "at": datetime.now().astimezone().isoformat(timespec="seconds"),
             }
             with log.open("a", encoding="utf-8") as file:

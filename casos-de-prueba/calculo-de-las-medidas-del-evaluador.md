@@ -22,9 +22,9 @@ Se empieza por aquí porque es lo que puede mover una cifra.
 **Elección 1. El orden en que se recorren los ítems.** La regla de uno a uno
 hace que el resultado dependa del orden: si dos ítems pueden consumir la misma
 entrada, el primero la toma y el segundo queda como falso positivo o toma
-otra. La tesis no dice en qué orden van. Se usa el del lote: primero los nodos
-que crea, en el orden del archivo, y después los nodos existentes que enlaza,
-en el orden en que aparecen por primera vez en las aristas. El orden del
+otra. La tesis no dice en qué orden van. Se usa el del lote: primero sus nodos,
+en el orden del archivo, y después los que solo nombran sus aristas, en el
+orden en que aparecen por primera vez en ellas. El orden del
 archivo es el de la salida del modelo y no se reordena.
 
 Para saber si el orden importó, el evaluador calcula además, por caso, el
@@ -135,8 +135,8 @@ cadena: 34 de 301 ítems entraban solo así, y ninguno acertaba. Esas aristas
 se juzgan en CP-16. Ningún nodo queda sin evaluar como entidad: el esquema de
 salida solo deja crear conceptos bajo un tema, de modo que todo nodo fue ítem
 en el caso del sílabo que lo creó. **Costo documental:** cambia la unidad de
-evaluación de la tesis (§5.2.5.1) y precisa la frase de la guía de anotación
-sobre cómo se calcula la precisión; ambos se replican en Google Docs.
+evaluación de la tesis (§5.2.5.1), que se replica en Google Docs. El anexo de
+la guía de anotación no dice cómo se calcula la precisión y no cambia.
 
 **La etiqueta de un nodo existente.** El lote no la trae. Se toma de un índice
 de claves que se arma con la capa de referencia (la misma proyección del

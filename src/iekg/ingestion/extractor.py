@@ -139,43 +139,32 @@ bibliography give none.
 codes, and generic headings such as "Introducción", "Unidad I" or "Sesión 3".
 
 ## Topics
-- Each heading of the contents that groups items is one topic. Keep every such heading, in its order and \
-with its own words: never merge two headings into one, split one, reword it or add a topic that is not a \
-heading. Two headings with the same words are one topic.
-- With two levels of headings, the topic is the one that directly contains the items; leave out the upper \
-level.
+- Each heading of the contents that groups items is one topic. Keep every such heading, in its order and with its own words: never merge two headings into one, split one, reword it or add a topic that is not a heading. Two headings with the same words are one topic.
+- With two levels of headings, the topic is the one that directly contains the items; leave out the upper level. But a heading that only numbers or orders, such as "Capítulo 2 (2 horas):", "Semana 5" or "Sesión 3", is never a topic: its items belong to the nearest heading above it that names knowledge.
 - If the contents have only generic headings, group their items under topics named by the subject they share.
 - The summary gives concepts, never topics.
 - A heading that names several pieces of knowledge stays one topic: "Directorio Activo y DNS" is one topic.
 
 ## Concepts
-- A concept is each item inside a topic: one piece of knowledge.
-- An item that names several pieces of knowledge gives one concept for each, unless together they are one \
-named piece of knowledge: "Archivos y editores" gives "Archivos" and "Editores"; "Stack, PUSH, POP" gives \
-three. Each element of an enumeration that can stand on its own is a concept.
-- Languages, notations and standards are concepts. Concrete products and tools are concepts only when the \
-course teaches them or uses them as content.
-- Give each piece of knowledge once.
+- A concept is one piece of knowledge named by an item inside a topic. One item gives as many concepts as pieces of knowledge it names: it is the usual case, not the exception.
+- Split an item at every "y", "e", "o", "vs", comma, slash, semicolon and full stop that joins pieces of knowledge, and repeat the words they share, so that each concept is understood on its own: "Archivos y editores" gives "Archivos" and "Editores"; "Stack, PUSH, POP" gives three; "Enrutamiento estático y dinámico" gives "Enrutamiento estático" and "Enrutamiento dinámico"; "Detección y corrección de errores" gives "Detección de errores" and "Corrección de errores". Never give the joined item as a concept besides its pieces.
+- Keep an item whole only when the joined words are the established name of one thing, as "Entrada/salida" or "Cliente-servidor" are.
+- An item that names something and then lists its parts or aspects, after a colon or in parentheses, gives that something and each element. An element that is not understood alone takes the name of what it belongs to: "Tablas de enrutamiento: estructura, actualización, convergencia" gives "Tablas de enrutamiento", "Estructura de tablas de enrutamiento", "Actualización de tablas de enrutamiento" and "Convergencia". The same holds for an item that only makes sense under its topic: under the topic "Compiladores", the item "Fases" is the concept "Fases de un compilador".
+- An item made only of generic words, with nothing named, is not a concept: "Conceptos y definiciones", "Historia y características", "Aplicación a diversos casos", "Problemas clásicos".
+- Languages, notations and standards are concepts. Concrete products and tools are concepts only when the course teaches them or uses them as content.
+- Give each piece of knowledge once as a concept, even if several items name it.
 
 ## The summary
-- Once the topics and their concepts are done, read the summary phrase by phrase. Each piece of knowledge \
-it names that is neither a topic nor already a concept is a concept too: add it under the topic it fits \
-best. "Se estudian la teoría de colas y la simulación de eventos discretos", with neither in the contents, \
-gives the concepts "Teoría de colas" and "Simulación de eventos discretos".
-- A summary names knowledge broadly, and a broad piece of knowledge is still a concept: keep it even if \
-no topic matches it well, or if the contents only touch it. When the summary calls them "temas" or \
-"tópicos", what it names is still concepts.
-- The nature, purpose and activities of the course are not knowledge, but a piece of knowledge named \
-inside them is.
+- Once the topics and their concepts are done, read the summary phrase by phrase, to its last word. Each piece of knowledge it names is a concept too, split and named by the same rules, unless a topic or a concept already has that name: add it under the topic it fits best. "Se estudian la teoría de colas y la simulación de eventos discretos", with neither in the contents, gives the concepts "Teoría de colas" and "Simulación de eventos discretos".
+- What a heading already names, whole or as one of the pieces it joins, is that topic: do not add it again as a concept. With the topic "Redes inalámbricas: Wi-Fi", a summary that names "Wi-Fi" adds nothing.
+- A summary names knowledge broadly, and a broad piece of knowledge is still a concept: keep it even if no topic matches it well, if the contents only touch it, or if some topic covers it under other words. When the summary calls them "temas" or "tópicos", what it names is still concepts.
+- The nature, purpose and activities of the course are not knowledge, but each piece of knowledge named inside them is: from "el estudiante diseña circuitos considerando el consumo de energía y las normas de seguridad", the concepts are "Circuitos", "Consumo de energía" and "Normas de seguridad".
 
 ## Names
-- Name topics and concepts as the syllabus does, in its language, without numbering, the words "chapter" \
-or "unit", weeks or hours: "CAPÍTULO 3 SQL DDL (3 horas)" is the topic "SQL DDL". Do not translate, \
-summarize or invent.
-- "Introducción a X" and "Fundamentos de X" are X: "Introducción a la administración de sistemas \
-operativos" is "Administración de sistemas operativos".
-- Keep qualifiers: "SQL avanzado" stays "SQL avanzado". Drop activity wording such as "estudio de", \
-"definición de", "aplicaciones de" or "representación de X en Y" when the knowledge is X or Y.
+- Name topics and concepts as the syllabus does, in its language, without numbering, the words "chapter" or "unit", weeks or hours, and without a leading article: "CAPÍTULO 3 SQL DDL (3 horas)" is the topic "SQL DDL"; "Los protocolos de transporte" is "Protocolos de transporte". Do not translate, summarize or invent. A translation or acronym the syllabus gives in parentheses stays in the name.
+- Wording that only presents the knowledge is dropped, in topics and in concepts: "Introducción a X", "Fundamentos de X", "Conceptos básicos de X", "Concepto de X", "Perspectiva general de X" and "Nociones de X" are X. "Introducción a la administración de sistemas operativos" is "Administración de sistemas operativos"; "Conceptos de multiplexación y conmutación" gives "Multiplexación" and "Conmutación". Two headings that become the same X are one topic.
+- "N: X", where N is a notation, a language or a family and X what is seen of it, gives both: "Notación BNF: Gramáticas libres de contexto" gives "Notación BNF" and "Gramáticas libres de contexto".
+- Keep qualifiers: "SQL avanzado" stays "SQL avanzado". Drop activity wording such as "estudio de", "definición de", "aplicaciones de" or "representación de X en Y" when the knowledge is X or Y.
 
 ## Linking to the graph
 - Every new topic belongs to exactly one knowledge unit of the vocabulary: the one whose subject covers \

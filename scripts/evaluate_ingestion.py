@@ -331,10 +331,16 @@ def total(cases: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
 
 
 def fusion(
-    matched: Iterable[Sequence[Match]], compound_notions: frozenset[str] = frozenset()
+    matched: Iterable[Sequence[Match]],
+    compound_notions: frozenset[str] = frozenset(),
+    held_out_nodes: frozenset[str] = frozenset(),
 ) -> dict[str, Any]:
     """The fusion measures over the nodes of every case: each node gathers the
-    global identifiers of the entries it consumed wherever it was an item."""
+    global identifiers of the entries it consumed wherever it was an item.
+
+    ``held_out_nodes`` are the nodes a held-out syllabus created. The prompt was
+    never adjusted with them in the snapshot, so the duplicates and the wrong
+    fusions they take part in are also counted apart."""
     nodes: dict[str, dict[str, Any]] = {}
     for matches in matched:
         for m in matches:
@@ -351,7 +357,8 @@ def fusion(
         return {"key": key, "label": nodes[key]["label"], "name": nodes[key]["name"]}
 
     duplicates = [
-        {"global_id": global_id, "label": label, "nodes": [described(key) for key in keys]}
+        {"global_id": global_id, "label": label, "nodes": [described(key) for key in keys],
+         "held_out": any(key in held_out_nodes for key in keys)}
         for global_id, by_label in sorted(holders.items())
         for label, keys in sorted(by_label.items()) if len(keys) > 1
     ]
@@ -365,7 +372,8 @@ def fusion(
             continue
         # Not a wrong fusion if, compound headings aside, a single notion is left.
         left = node["global_ids"] - compound_notions
-        (excepted if len(left) == 1 else wrong).append({**described(key), "global_ids": sorted(node["global_ids"])})
+        (excepted if len(left) == 1 else wrong).append(
+            {**described(key), "global_ids": sorted(node["global_ids"]), "held_out": key in held_out_nodes})
     return {
         "nodes_with_hits": len(nodes),
         "duplicated_notions": len({d["global_id"] for d in duplicates}),
@@ -373,6 +381,8 @@ def fusion(
         "split_notions": len(split),
         "wrong_fusions": len(wrong),
         "excepted_fusions": len(excepted),
+        "duplicated_notions_with_held_out": len({d["global_id"] for d in duplicates if d["held_out"]}),
+        "wrong_fusions_with_held_out": sum(w["held_out"] for w in wrong),
         "duplicates": duplicates,
         "split": split,
         "wrong": wrong,
@@ -435,6 +445,7 @@ def evaluate(
     warnings: list[str] = []
     accepted_syllabi: set[str] = set()
     rejections: Counter[str] = Counter()
+    held_out_nodes: set[str] = set()
 
     for attempt, items in walk(attempts, reference, isolated=isolated):
         syllabus = attempt.syllabus
@@ -457,6 +468,8 @@ def evaluate(
                 rejected.append(row)
             continue
         accepted_syllabi.add(syllabus)
+        if syllabus in held_out:
+            held_out_nodes.update(attempt.batch.nodes_by_key)
         if syllabus in hidden:
             continue
         matches = match(items, gold, syllabus)
@@ -501,7 +514,8 @@ def evaluate(
         "totals": totals,
         "rejected_attempts": rejected,
         "fusion": None if isolated or hidden else fusion(
-            matched, frozenset(e.global_id for e in gold.entries if e.id in compound_headings)),
+            matched, frozenset(e.global_id for e in gold.entries if e.id in compound_headings),
+            frozenset(held_out_nodes)),
         "warnings": warnings,
     }
 
@@ -983,7 +997,9 @@ def markdown(report: Mapping[str, Any]) -> str:
         f = report["fusion"]
         lines += ["", f"CP-14 over {f['nodes_with_hits']} nodes with a hit: {f['duplicated_notions']} duplicated "
                   f"notions ({f['surplus_nodes']} surplus nodes), {f['split_notions']} split notions, "
-                  f"{f['wrong_fusions']} wrong fusions, {f['excepted_fusions']} excepted."]
+                  f"{f['wrong_fusions']} wrong fusions, {f['excepted_fusions']} excepted. With a node a held-out "
+                  f"syllabus created: {f['duplicated_notions_with_held_out']} of the duplicated notions and "
+                  f"{f['wrong_fusions_with_held_out']} of the wrong fusions."]
     lines += [f"Warning: {warning}." for warning in report["warnings"]]
     return "\n".join(lines)
 

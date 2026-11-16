@@ -392,6 +392,26 @@ def test_the_chain_reports_the_fusion_with_the_compound_headings_of_the_annotati
     assert (report["fusion"]["wrong_fusions"], report["fusion"]["excepted_fusions"]) == (0, 1)
 
 
+def test_the_fusions_with_a_node_of_a_held_out_syllabus_are_counted_apart():
+    gold = Gold((
+        entry(1, "G1", "Pilas", syllabus="S1"), entry(1, "G1", "Pilas", syllabus="H"),
+        entry(1, "G1", "Pilas", syllabus="S2"), entry(2, "G2", "Colas", syllabus="S2"),
+        entry(2, "G3", "Colas", syllabus="H"),
+    ))
+    report = evaluate(gold, [
+        accepted(1, "S1", concept("Pilas", key="a")),
+        # The held-out syllabus repeats a node and creates another.
+        accepted(2, "H", concept("Pilas", key="b"), concept("Colas", key="c")),
+        accepted(3, "S2", concept("Pilas", key="d"), edges=[EdgeFact(HAS_PREREQUISITE, "d", "c")]),
+    ], {}, held_out=("H",))
+    measured = report["fusion"]
+    assert (measured["duplicated_notions"], measured["duplicated_notions_with_held_out"]) == (1, 1)
+    # "c" took G3 in H and G2 in S2: a wrong fusion on a node the held-out syllabus created.
+    assert (measured["wrong_fusions"], measured["wrong_fusions_with_held_out"]) == (1, 1)
+    without = fusion([hit(concept("Pilas", key="a"), "G1"), hit(concept("Pilas", key="b"), "G1")])
+    assert (without["duplicated_notions"], without["duplicated_notions_with_held_out"]) == (1, 0)
+
+
 # --- The reviewer's extraction --------------------------------------------------
 
 GOLD_REVIEWED = Gold((

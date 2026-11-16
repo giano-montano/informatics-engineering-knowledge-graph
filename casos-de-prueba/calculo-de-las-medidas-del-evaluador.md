@@ -264,6 +264,16 @@ positivo en todos sus casos no acumula ninguno y no participa.
 Un identificador global puede estar a la vez duplicado y partido; se cuenta
 en las dos.
 
+**Nodos de los sílabos reservados (agregado el 2026-11-16).** El prompt nunca
+se ajustó con los nodos de 1INF27 y 1INF37 en la instantánea, así que sus
+efectos aguas abajo solo se ven en la medición. Por eso, además de los
+totales, se cuenta aparte cuántas nociones duplicadas tienen entre sus nodos
+alguno que creó un sílabo reservado, y cuántas fusiones erróneas recaen en un
+nodo que creó uno de ellos (`duplicated_notions_with_held_out`,
+`wrong_fusions_with_held_out`; cada grupo listado lleva la marca `held_out`).
+Un nodo lo crea el sílabo en cuyo lote aceptado figura como nodo. Los totales
+de CP-14 no cambian.
+
 Con `--hide-held-out` CP-14 no se calcula: sin los dos casos, el grafo no es
 el final. Si falta algún caso en la ventana se calcula igual, con una
 advertencia.

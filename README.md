@@ -248,6 +248,11 @@ solo para CPU y sin las bibliotecas de CUDA: queda en unos 2,5 GB. Para
 instalar el bloqueo tal cual, que pesa varias veces más y solo sirve en un
 host con GPU: `docker compose build --build-arg IEKG_TORCH=locked api`.
 
+Con `IEKG_REHEARSAL=1` en `.env`, el panel del operador funciona en **modo
+ensayo**: las corridas recorren sus estados en `var/ensayo/` sin leer el PDF,
+sin llamar al modelo y sin tocar el grafo (enmienda 2026-11 de ADR-013). Se
+activa o desactiva con `docker compose up -d api`.
+
 Los procesos de construcción se ejecutan a demanda, con la API detenida
 (ADR-007):
 

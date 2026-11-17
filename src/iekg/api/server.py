@@ -17,7 +17,8 @@ from iekg.api.app import ApiContext, create_app, work_waiting
 from iekg.api.navigation import Neo4jNavigation
 from iekg.core.repository import Tx
 from iekg.graph_schema import INSTITUTIONAL, KEY, LAYER, LEARNING_RESOURCE
-from iekg.settings import ApiSettings, Settings, SettingsError
+from iekg.ingestion.rehearsal import REHEARSAL_COMMAND, seed_rehearsal_store
+from iekg.settings import ApiSettings, RehearsalSettings, Settings, SettingsError
 
 WORKER_COMMAND = (sys.executable, "-m", "iekg.ingestion.worker")
 
@@ -86,17 +87,28 @@ def main() -> int:
     try:
         settings = Settings.from_environment()
         api = ApiSettings.from_environment()
+        rehearsal = RehearsalSettings.from_environment()
     except SettingsError as error:
         print(f"error: {error}", file=sys.stderr)
         return 3
+    operational_db, uploads_dir, worker_command = settings.operational_db, None, WORKER_COMMAND
+    if rehearsal.enabled:
+        # Rehearsal mode (ADR-013, amendment 2026-11): the real stores stay as they are.
+        seed_rehearsal_store(settings.operational_db, rehearsal.operational_db)
+        operational_db, uploads_dir, worker_command = (
+            rehearsal.operational_db, rehearsal.documents_dir, REHEARSAL_COMMAND,
+        )
+        print(f"rehearsal mode: runs go to {operational_db}; nothing reaches the graph", file=sys.stderr)
     with GraphDatabase.driver(settings.neo4j_uri, auth=(settings.neo4j_user, settings.neo4j_password)) as driver:
         app = create_app(ApiContext(
             operator_token=api.operator_token,
-            operational_db=settings.operational_db,
+            operational_db=operational_db,
             documents_dir=settings.documents_dir,
-            worker=ChildWorker(lambda: work_waiting(settings.operational_db)),
+            worker=ChildWorker(lambda: work_waiting(operational_db), worker_command),
             resources=Neo4jResources(driver, settings.neo4j_database),
             navigation=Neo4jNavigation(driver, settings.neo4j_database),
+            uploads_dir=uploads_dir,
+            rehearsal=rehearsal.enabled,
         ))
         # Passing the app object, not an import string, rules out more workers.
         uvicorn.run(app, host=api.host, port=api.port)

@@ -119,6 +119,10 @@ def submit(api, content=PDF, file_name="silabo.pdf", headers=AUTH, **form):
     )
 
 
+def test_the_api_reports_the_real_mode_by_default(api):
+    assert api.client.get("/api/mode", headers=AUTH).json() == {"rehearsal": False}
+
+
 # --- Operator token ---------------------------------------------------------
 
 
@@ -128,6 +132,7 @@ def submit(api, content=PDF, file_name="silabo.pdf", headers=AUTH, **form):
     ("get", "/api/runs/1"),
     ("get", "/api/runs/1/discards"),
     ("get", "/api/audit-reports/latest"),
+    ("get", "/api/mode"),
 ])
 @pytest.mark.parametrize("headers", [
     {},

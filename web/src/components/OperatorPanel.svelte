@@ -68,6 +68,8 @@
 
   let runs = $state.raw([]);
   let latest = $state.raw(null);
+  // Rehearsal mode (ADR-013, amendment 2026-11): submissions never reach the graph.
+  let rehearsal = $state(false);
   let problem = $state('');
   let refreshing = $state(false);
   let updatedAt = $state(null);
@@ -154,7 +156,9 @@
     clearTimeout(timer);
     refreshing = true;
     try {
-      [runs, latest] = await Promise.all([call('/api/runs'), call('/api/audit-reports/latest')]);
+      let mode;
+      [runs, latest, mode] = await Promise.all([call('/api/runs'), call('/api/audit-reports/latest'), call('/api/mode').catch(() => ({ rehearsal: false }))]);
+      rehearsal = mode.rehearsal;
       problem = '';
       updatedAt = new Date();
       if (selectedId !== null) await loadDetail(selectedId, true);
@@ -302,6 +306,9 @@
         <button class="button quiet" type="button" onclick={() => leave()}>Salir</button>
       </header>
 
+      {#if rehearsal}
+        <p class="banner rehearsal" role="note"><Icon name="alert" /><span><strong>Modo ensayo.</strong> Los documentos que envíes recorren el flujo completo, pero no se leen ni cambian el grafo, y las corridas quedan en un historial de ensayo aparte.</span></p>
+      {/if}
       {#if problem}<p class="banner error" role="alert"><Icon name="alert" />No se pudo actualizar: {problem}</p>{/if}
 
       {#if gate}
@@ -613,6 +620,15 @@
 
   .banner.error :global(.icon) {
     color: var(--danger);
+  }
+
+  .banner.rehearsal {
+    border-color: var(--warning);
+  }
+
+  .banner.rehearsal :global(.icon) {
+    flex: none;
+    color: var(--warning);
   }
 
   .banner.ok {

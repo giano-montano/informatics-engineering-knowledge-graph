@@ -95,6 +95,10 @@ services:
       IEKG_LLM_TEMPERATURE: "${IEKG_LLM_TEMPERATURE:-}"
       IEKG_LLM_MAX_RETRIES: "${IEKG_LLM_MAX_RETRIES:-3}"
       IEKG_LLM_TIMEOUT_SECONDS: "${IEKG_LLM_TIMEOUT_SECONDS:-900}"
+      # Modo ensayo del flujo del operador (enmienda 2026-11 de ADR-013): las
+      # corridas recorren sus estados en almacenes propios y no tocan el grafo.
+      IEKG_REHEARSAL: "${IEKG_REHEARSAL:-}"
+      IEKG_REHEARSAL_STEP_SECONDS: "${IEKG_REHEARSAL_STEP_SECONDS:-4}"
     volumes: &app-volumes
       # Los tres almacenes de archivos son carpetas del host (ADR-013):
       # operational.sqlite, documents/ y facts/ dentro de esta.

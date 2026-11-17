@@ -144,6 +144,10 @@ scripts/replay_provider.py     Ayuda de desarrollo: proveedor simulado para
                                ensayar una ingesta (CA-11). Responde Chat
                                Completions con la salida guardada de una
                                corrida real; no paga ni envía nada.
+scripts/prepare_replay_rehearsal.py
+                               Ayuda de desarrollo: los almacenes de ese
+                               ensayo, como estaban antes de una corrida.
+                               El procedimiento completo está en `web/README.md`.
 tests/                         Pruebas; una negativa por cada forma de violar
                                cada regla o código EX.
 web/                           R6: InfoKnows, la aplicación web (#web del C4).

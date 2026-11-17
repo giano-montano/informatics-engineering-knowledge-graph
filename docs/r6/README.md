@@ -113,7 +113,7 @@ es justo lo que mide la prueba de aceptación.
 
 `web/tests/operator-walkthrough.mjs` sube un documento, así que escribe en el grafo. Por eso se corrió
 en un entorno de ensayo aparte: otro Neo4j, la API en otro puerto y una copia de los almacenes. El
-grafo y los almacenes de la medición no se tocaron.
+grafo y los almacenes de la medición no se tocaron. Cómo repetirlo, paso a paso: [`web/README.md`](../../web/README.md#ca-11-con-una-ingesta-completa-y-un-proveedor-simulado).
 
 **El proveedor del modelo de lenguaje fue simulado**, como el plan permite.
 `scripts/replay_provider.py` responde a la ruta de Chat Completions con la salida que dejó en el

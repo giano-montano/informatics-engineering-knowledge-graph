@@ -136,5 +136,80 @@ que **escribe en el grafo**: se corre sobre un grafo de ensayo, y después se
 vuelve a cargar y a reaplicar. Contra una API en modo ensayo (`IEKG_REHEARSAL=1`)
 no escribe nada: las corridas solo recorren sus estados.
 
+### CA-11 con una ingesta completa y un proveedor simulado
+
+Así se obtuvo la evidencia de `docs/r6/README.md` §4. Una corrida real de la
+cadena final se vuelve a subir en un entorno de ensayo aparte, con otro Neo4j,
+la API en el 8001 y una copia de los almacenes. La ingesta es la de
+producción: Docling, validación, escritura y auditoría. Solo el modelo de
+lenguaje es simulado: `scripts/replay_provider.py` responde con la salida que
+esa corrida guardó. No se toca el despliegue local (`iekg-neo4j`, `var/`), no
+se paga y no sale nada de la máquina.
+
+Todo va en PowerShell, desde la raíz del repositorio. En el ejemplo se ensaya
+la corrida 14 (1INF47); cualquier otra sirve, cambiando el número.
+
+1. **Los almacenes de ensayo:** el estado justo antes de esa corrida, y su PDF
+   aparte para subirlo.
+
+   ```powershell
+   uv run python scripts/prepare_replay_rehearsal.py --source var/medicion-r4 --run 14 --target var/ensayo-ca11
+   ```
+
+2. **Un Neo4j de ensayo** en otros puertos, sin volumen: se borra al detenerlo.
+
+   ```powershell
+   docker run -d --rm --name iekg-ca11-neo4j -p 127.0.0.1:17474:7474 -p 127.0.0.1:17687:7687 -e NEO4J_AUTH=neo4j/ensayo-ca11 neo4j:5.26.28-community
+   ```
+
+3. **Las variables del ensayo**, en cada terminal que se use en los pasos 4 y 6.
+   Ganan sobre `.env`, así que la clave real del proveedor no se usa.
+
+   ```powershell
+   $env:NEO4J_URI = "bolt://127.0.0.1:17687"; $env:NEO4J_PASSWORD = "ensayo-ca11"
+   $env:IEKG_OPERATIONAL_DB = "var/ensayo-ca11/operational.sqlite"
+   $env:IEKG_FACTS_DIR = "var/ensayo-ca11/facts"; $env:IEKG_DOCUMENTS_DIR = "var/ensayo-ca11/documents"
+   $env:IEKG_API_PORT = "8001"; $env:IEKG_OPERATOR_TOKEN = "ensayo-ca11"; $env:IEKG_REHEARSAL = ""
+   $env:IEKG_LLM_MODEL = "gpt-6.1-sol"; $env:IEKG_LLM_API_KEY = "simulated"
+   $env:IEKG_LLM_BASE_URL = "http://127.0.0.1:8766/v1"; $env:IEKG_LLM_MAX_RETRIES = "0"
+   ```
+
+4. **El grafo que vio esa corrida,** cuando el Neo4j de ensayo responda (unos
+   30 s): los dos comandos deben salir con 0.
+
+   ```powershell
+   uv run iekg-build load; if ($LASTEXITCODE -eq 0) { uv run iekg-build reapply }
+   ```
+
+5. **El proveedor simulado,** en otra terminal, que se deja abierta:
+
+   ```powershell
+   uv run python scripts/replay_provider.py --operational-db var/medicion-r4/operational.sqlite --run 14
+   ```
+
+6. **La API de ensayo,** en la terminal del paso 3: `uv run iekg-api`.
+7. **La web,** en otra terminal, en `web/`. Escucha en `localhost`, no en
+   `127.0.0.1`.
+
+   ```powershell
+   npm run build; $env:IEKG_DEV_API = "http://127.0.0.1:8001"; npx vite preview --port 4174
+   ```
+
+8. **El recorrido,** en otra terminal, en `web/`. También se puede hacer a mano
+   en `http://localhost:4174/?panel=operador`, con el token `ensayo-ca11`.
+
+   ```powershell
+   $env:INFOKNOWS_URL = "http://localhost:4174"; $env:INFOKNOWS_OPERATOR_TOKEN = "ensayo-ca11"
+   node tests/operator-walkthrough.mjs ../var/ensayo-ca11/1INF47.pdf 1INF47 "Proyecto de Implementación de Software"
+   ```
+
+   Con `--shots ../docs/r6/capturas` guarda las capturas O1 a O6. La corrida
+   tarda un par de minutos, sobre todo por Docling, y debe terminar
+   «Terminada», con 15 reglas sin violaciones y sin descartes.
+
+9. **Desmontar:** `docker stop iekg-ca11-neo4j`, cerrar las terminales y
+   borrar `var/ensayo-ca11/`. Para repetir el ensayo, la carpeta tiene que
+   estar vacía o no existir.
+
 Los ejemplos de los dos recorridos son los del plan, que dependen del grafo
 cargado: con el grafo final hay que fijarlos de nuevo.

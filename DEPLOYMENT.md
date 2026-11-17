@@ -265,6 +265,10 @@ docker compose stop api && sudo rm -rf var/ensayo && docker compose start api   
 Al encenderlo por primera vez, o tras borrar `var/ensayo/`, el historial de
 ensayo empieza como copia del real.
 
+El modo ensayo prueba el flujo del panel, no la ingesta. Para una ingesta de
+ensayo completa, con Docling y un proveedor simulado, en local: `web/README.md`,
+«CA-11 con una ingesta completa y un proveedor simulado».
+
 ### Reconstruir el grafo
 
 Con la API detenida y Neo4j encendido (ADR-007):

@@ -83,6 +83,9 @@ Lo que hay:
 
 ```
 README.md                      Cómo levantar el sistema y qué se puede probar.
+DEPLOYMENT.md                  El despliegue en AWS (Learner Lab): recursos,
+                               HTTPS con Caddy en el host, apagar y encender,
+                               actualizar, reconstruir el grafo y costos.
 docs/tesis.md                  El documento de tesis.
 docs/estandares-de-codigo.md   Convenciones. Vinculantes.
 docs/decisiones/               Un archivo por decisión rehecha.

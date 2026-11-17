@@ -140,6 +140,26 @@ que el localizador guardado de cada documento es
 que los enlaces funcionan. Los hechos no se reescriben, para que el grafo siga
 siendo exactamente el de la corrida final.
 
+### Qué archivo de variables lee quién
+
+| Archivo | Dónde | Lo lee | Para qué |
+|---|---|---|---|
+| `.env` | raíz de la copia local | `uv run …` (con `settings.py`) y `docker compose` en local | Desarrollo |
+| `.env` | `~/infoknows/` del servidor | solo `docker compose` en el servidor | Producción; no sale de allí |
+| `.env.aws` | raíz de la copia local | solo el CLI de `aws`, cargado a mano | Encender, apagar y administrar EC2; no tiene que ver con la aplicación |
+| `.env.example` | versionado | nadie | Plantilla |
+
+Precedencias:
+
+- En las dos lecturas, **una variable ya puesta en el entorno gana sobre
+  `.env`**: tanto en `settings.py` como en la interpolación de compose.
+- **Los contenedores no leen `.env`** (`.dockerignore` lo excluye). Compose
+  sustituye los `${…}` de `docker-compose.yml` y les pasa solo las variables
+  que ese archivo enumera. Además, fija `NEO4J_URI=bolt://neo4j:7687`.
+- Los almacenes (`IEKG_OPERATIONAL_DB` y los demás) no se ponen en contenedores:
+  quedan en sus valores por omisión bajo `/app/var`, que es la carpeta
+  `IEKG_DATA_DIR` del host.
+
 ## 6. Operación
 
 ### Entrar por SSH
@@ -175,7 +195,7 @@ solos, y Caddy es un servicio de systemd habilitado. En uno o dos minutos,
 
 ### Actualizar el código
 
-Desde la copia que se despliega, en la máquina local:
+Desde la copia principal, en la máquina local (rama `dev`):
 
 ```bash
 git archive --format=tar.gz -o infoknows.tar.gz <rama>
@@ -187,6 +207,25 @@ ssh ubuntu@<IP> 'tar -xzf ~/infoknows.tar.gz -C ~/infoknows && rm ~/infoknows.ta
 `git archive` no lleva `.env` ni `var/`, así que los dos se conservan. Los
 archivos que se hayan borrado en la rama sí quedan en el servidor. Si eso
 importa, vaciar antes `~/infoknows`, salvo `.env` y `var/`.
+
+Consideraciones:
+
+- **Solo se despliega lo commiteado.** `git archive` toma el commit, no el
+  árbol de trabajo. La rama que se despliega es `dev`.
+- **Si solo cambió `web/`:** `docker compose up -d --build web` reconstruye
+  solo la web (un minuto o menos) y no reinicia la API.
+- **Si cambió `src/`:** se reconstruye la imagen de la aplicación. La capa de
+  dependencias queda en caché mientras `uv.lock` no cambie, y la API se
+  reinicia en unos segundos.
+- **Si cambió el esquema** (`graph_schema.py`, las reglas, la proyección o la
+  ontología): después de desplegar hay que reconstruir el grafo (ver
+  «Reconstruir el grafo», abajo). Si cambiaron claves o la T-Box, los hechos
+  ya no sirven sin una migración (ADR-004).
+- **El servidor no ingesta:** no tiene clave del proveedor del modelo de
+  lenguaje. Tampoco hay que correr allí el recorrido del operador (CA-11),
+  porque escribe en el grafo.
+- **Disco:** cada reconstrucción deja imágenes viejas.
+  `docker image prune -f` las borra.
 
 ### Reconstruir el grafo
 

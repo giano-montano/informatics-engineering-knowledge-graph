@@ -1,6 +1,6 @@
 # ADR-013: Despliegue del prototipo y acceso del operador
 
-**Estado:** Aceptada
+**Estado:** Aceptada (enmendada 2026-11)
 **Fecha:** 2026-10
 **Atributos:** AC-04 (principal), AC-01, AC-02
 
@@ -31,3 +31,9 @@ El prototipo se despliega en una máquina virtual con Ubuntu que provee la espec
 - Sin HTTPS, el token viaja sin cifrar. Si la máquina virtual no ofrece HTTPS, se declara como limitación.
 - Quien tenga el token puede escribir en el grafo. Cambiarlo exige reiniciar la API, lo que interrumpe una ingesta en curso (ADR-007).
 - El host queda escrito en los localizadores (ADR-009).
+
+## Enmienda (2026-11)
+
+- **El host.** La máquina virtual es una instancia EC2 con Ubuntu en la cuenta educativa de AWS (AWS Academy Learner Lab) que la especialidad habilitó para esta tesis. Sigue siendo un solo host con Docker Compose; cómo se opera está en `DEPLOYMENT.md`.
+- **La corrida de medición** se ejecutó en la máquina de desarrollo, no en el host. Sus tres almacenes se copiaron al host, y ahí una carga seguida de una reaplicación reprodujo el mismo grafo (818 nodos y 2 898 aristas, auditorías limpias) sin llamar al modelo de lenguaje (ADR-004). Los localizadores guardados conservan el host de desarrollo (ADR-009). La web abre los documentos por su ruta, así que los enlaces funcionan.
+- **HTTPS.** El host termina TLS con Caddy, fuera de Docker Compose, con un certificado de Let's Encrypt emitido para la IP fija. El token del operador ya no viaja sin cifrar, y la limitación de las consecuencias no aplica en este despliegue.

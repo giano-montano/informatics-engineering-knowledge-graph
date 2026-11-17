@@ -152,6 +152,37 @@ reportan por categoría, y su efecto en la precisión se discute (ver abajo).
 Así la referencia de la medición de R4 queda fijada antes de cualquier
 contraste. La guía sigue en la v2.1.
 
+### Enmienda del 2026-11-16: una corrección tras la adjudicación
+
+Se revierte en parte la decisión anterior, después de terminar la
+adjudicación del segundo participante (commit `fac0e8c`) y antes de ingestar
+1INF37 y 1INF27 en la medición:
+
+- Se corrige solo lo que la adjudicación clasificó como falla de la
+  anotación (`omision`, `inclusion_indebida`, alias faltante), solo en los
+  dos sílabos del contraste, y cada corrección se apoya en una regla de la
+  guía v2.1. Los 11 sílabos del ajuste del prompt no se tocan, porque su
+  ajuste se hizo viendo las salidas del pipeline.
+- La adjudicación dio 0 omisiones, 0 alias faltantes y 1 inclusión indebida:
+  se retira 1INF27-033 «Notación O grande» (G-0110), un implícito no
+  inequívoco de «Medidas asintóticas» (L.4). Queda registrada en
+  `gold/consolidacion_changelog.tsv`. La anotación pasa de 745 a 744
+  entradas y de 664 a 663 nociones.
+- El contraste se sigue reportando contra la versión congelada (tag
+  `anotacion-congelada-2026-11-15`): medirlo contra la corregida sería
+  circular, porque la corrección sale del mismo contraste. La medición de
+  R4 usa la versión corregida (tag `anotacion-corregida-2026-11-16`).
+- Las cifras del alcance (39 entradas de 1INF27, 10 aceptables, 128 en
+  total) son las de la versión congelada, con la que se eligieron los
+  sílabos.
+
+Para reportar el contraste contra la versión congelada:
+
+```powershell
+git show anotacion-congelada-2026-11-15:casos-de-prueba/gold/gold_consolidado.tsv > var/gold-congelada.tsv
+uv run python scripts/evaluate_ingestion.py review --gold var/gold-congelada.tsv --review-dir casos-de-prueba/revision/revisor-2 --operational-db var/no-existe.sqlite
+```
+
 ## Qué se reporta
 
 Por sílabo y en total, para cada participante:

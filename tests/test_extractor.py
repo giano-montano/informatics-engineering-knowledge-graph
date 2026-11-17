@@ -281,6 +281,16 @@ def test_relations_join_concepts_of_the_output_and_existing_ones():
     assert EdgeFact(SPECIALIZES, "new-2", "concept") in facts.edges
 
 
+def test_a_relation_whose_ends_are_one_node_is_left_out():
+    # "Árboles de expansión" links by label to the existing concept, C-001.
+    facts = link(syllabus({
+        "topics": [{"name": "Grafos", "existing": "T-001", "concepts": [{"name": "Árboles de expansión"}]}],
+        "prerequisites": [{"concept": "Árboles de expansión", "prerequisite": "C-001"}],
+        "specializations": [{"concept": "C-001", "generalization": "Árboles de expansión"}],
+    }))
+    assert not [edge for edge in facts.edges if edge.type in (HAS_PREREQUISITE, SPECIALIZES)]
+
+
 @pytest.mark.parametrize("fields, place", [
     ({"topics": [{"name": "X", "existing": "T-999", "concepts": []}]}, "topic 'X'"),
     ({"topics": [{"name": "X", "knowledge_unit": "K-999", "concepts": []}]}, "topic 'X', knowledge_unit"),

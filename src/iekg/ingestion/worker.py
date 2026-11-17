@@ -24,7 +24,8 @@ from iekg.operational_store import OperationalStore
 from iekg.settings import ProviderSettings, Settings, SettingsError
 
 
-def build_extractor(provider: ProviderSettings) -> LanguageModelExtractor:
+def build_extractor(provider: ProviderSettings, **options) -> LanguageModelExtractor:
+    """The extractor on ``provider``; ``options`` go to it as they are (its reader, its key maker)."""
     # The client's own retries are the bounded retries on transient provider
     # errors (ADR-010): timeouts, rate limits, 5xx and dropped connections.
     client = AsyncOpenAI(
@@ -45,7 +46,7 @@ def build_extractor(provider: ProviderSettings) -> LanguageModelExtractor:
         "reasoning_effort": provider.reasoning_effort,
         "max_retries": provider.max_retries,
     }
-    return LanguageModelExtractor(model, model_settings=dict(model_settings), settings_record=record)
+    return LanguageModelExtractor(model, model_settings=dict(model_settings), settings_record=record, **options)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

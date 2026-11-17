@@ -130,6 +130,11 @@ scripts/evaluate_ingestion.py  Ayuda de desarrollo: mide CP-01 a CP-14 desde el
                                la extracción del revisor; reporte en
                                `var/measurements/`. Cómo calcula cada medida:
                                `casos-de-prueba/calculo-de-las-medidas-del-evaluador.md`.
+scripts/tune_prompt.py         Ayuda de desarrollo para el ajuste del prompt:
+                               ingesta cada sílabo por separado sobre la capa
+                               de referencia, sin escribir en Neo4j, con sus
+                               almacenes en `var/tuning/`. Rechaza 1INF27 y
+                               1INF37, y cuenta con tope los llamados pagados.
 tests/                         Pruebas; una negativa por cada forma de violar
                                cada regla o código EX.
 web/                           R6: InfoKnows, la aplicación web (#web del C4).
@@ -169,6 +174,8 @@ uv run iekg-api                          # la API en :8000; exige IEKG_OPERATOR_
 uv run python scripts/measure_navigation.py   # AC-05; solo lee, reporte en var/measurements/
 uv run python scripts/evaluate_ingestion.py cases --from-run N   # CP-01 a CP-14, la cadena desde la corrida N
 uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out   # corridas sueltas del ajuste
+uv run python scripts/tune_prompt.py --all   # ajuste: los 11 por separado, a var/tuning/
+uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out --operational-db var/tuning/operational.sqlite --facts-dir var/tuning/facts
 uv run python scripts/evaluate_ingestion.py review --workbook LLENO.xlsx   # una vez: exporta la extracción y compara
 uv run python scripts/evaluate_ingestion.py review --from-run N  # revisor contra anotación y pipeline
 start http://localhost:7474
@@ -193,6 +200,10 @@ npm run arch:serve        # vista previa en el navegador
 contenedor: no se combina con `uv run iekg-api`, porque serían dos escritores
 sobre el mismo grafo (ADR-007). `web/tests/operator-walkthrough.mjs` (CA-11)
 sube un documento y **escribe en el grafo**: después, `load` y `reapply`.
+
+Para reconstruir desde un historial guardado (por ejemplo, una cadena de Sonnet
+o GPT), consulta [Reaplicar los hechos](README.md#reaplicar-los-hechos): allí se
+explica cómo seleccionar los almacenes mediante variables de entorno.
 
 La contraseña vive en `.env`, ignorado por git. Si falta: copiar `.env.example`,
 poner una, `docker compose down -v` y volver a levantar.

@@ -312,6 +312,9 @@ otra vez solo con el backbone; `var/` no se toca.
 
 ## Reaplicar los hechos
 
+Ejecuta la carga y la reaplicación con la API y el worker detenidos; Neo4j
+debe seguir encendido.
+
 ```powershell
 uv run iekg-build load      # vacía la base y carga el backbone
 uv run iekg-build reapply   # reescribe la capa institucional desde var/facts/
@@ -322,6 +325,27 @@ que tiene archivo de hechos, sin volver a llamar al modelo de lenguaje. Salta
 las corridas detenidas por la auditoría y cierra con una sola auditoría. Se
 rechaza si la base ya tiene nodos institucionales: va justo después de una
 carga. Los códigos de salida son los de la carga.
+
+Puedes reconstruir el grafo desde un historial guardado eligiendo sus
+almacenes. Por ejemplo, desde la raíz del repositorio, en PowerShell:
+
+```powershell
+$env:IEKG_OPERATIONAL_DB="var/chain-sonnet-2/operational.sqlite"
+$env:IEKG_FACTS_DIR="var/chain-sonnet-2/facts"
+$env:IEKG_DOCUMENTS_DIR="var/chain-sonnet-2/documents"
+uv run iekg-build load
+if ($LASTEXITCODE -eq 0) { uv run iekg-build reapply }
+```
+
+Conserva juntos el SQLite y los hechos de ese historial: la reaplicación
+necesita ambos. Los documentos permiten seguir sirviendo los PDF. La carga
+sustituye el grafo activo, pero conserva los almacenes locales; la reaplicación
+usa todos los archivos de hechos elegibles, sin seleccionar una corrida de corte.
+Comprueba que termine con auditoría limpia antes de reiniciar la API con esas
+mismas rutas. Las variables permanecen en esa sesión de PowerShell.
+
+La reconstrucción requiere hechos compatibles con el esquema y las claves
+vigentes; los cambios de claves o de la T-Box exigen una migración (ADR-004).
 
 ## Medir la navigación (AC-05)
 

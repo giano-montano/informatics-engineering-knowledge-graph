@@ -22,9 +22,9 @@ Se empieza por aquí porque es lo que puede mover una cifra.
 **Elección 1. El orden en que se recorren los ítems.** La regla de uno a uno
 hace que el resultado dependa del orden: si dos ítems pueden consumir la misma
 entrada, el primero la toma y el segundo queda como falso positivo o toma
-otra. La tesis no dice en qué orden van. Se usa el del lote: primero los nodos
-que crea, en el orden del archivo, y después los nodos existentes que enlaza,
-en el orden en que aparecen por primera vez en las aristas. El orden del
+otra. La tesis no dice en qué orden van. Se usa el del lote: primero sus nodos,
+en el orden del archivo, y después los que solo nombran sus aristas, en el
+orden en que aparecen por primera vez en ellas. El orden del
 archivo es el de la salida del modelo y no se reordena.
 
 Para saber si el orden importó, el evaluador calcula además, por caso, el
@@ -111,14 +111,32 @@ escrita) y el almacén operacional (`var/operational.sqlite`), que dice de qué
 curso es cada corrida, en qué estado terminó, con qué modelo y con qué
 versión del prompt.
 
-**Los ítems de un lote (D3).** Todo tema o concepto que el lote crea o enlaza:
+**Los ítems de un lote (D3, cambiada el 2026-11-16).** Todo tema o concepto
+que el lote ubica en la estructura de su sílabo, lo cree o ya exista:
 
-- los nodos del lote con clase `Topic` o `Concept`;
-- los extremos de sus aristas que no son nodos del lote y cuya clase es
-  `Topic` o `Concept`. Entran por cualquier tipo de arista, incluido el
-  concepto requerido por el curso.
+- los nodos del lote con clase `Topic` o `Concept`, y los extremos de sus
+  aristas con esas clases que no figuran como nodos del lote;
+- **menos** los que el lote solo relaciona: los que son extremo de alguna
+  arista que no es de partonomía (`PART_OF`) y de ninguna que lo sea. Son el
+  concepto que el curso requiere y el que solo es extremo de un prerrequisito
+  o de una especialización.
 
-Cada nodo cuenta una vez por lote, aunque aparezca en varias aristas.
+Cada nodo cuenta una vez por lote, aunque aparezca en varias aristas. El lote
+nombra como nodo también a los nodos existentes que enlaza, así que figurar
+como nodo no dice que el lote lo creó.
+
+*Por qué cambió.* Hasta el 2026-11-16 era ítem todo lo que el lote crea o
+enlaza, incluido el concepto requerido. Pero la anotación registra lo que el
+sílabo contiene, y un concepto requerido es, por definición, uno que el
+sílabo no enseña: contarlo contra la anotación lo vuelve falso positivo
+aunque la relación sea correcta. Medido antes de congelar el código, con
+cinco ingestas de `gpt-6.1-sol` y `deepseek-flash` sobre instantáneas de una
+cadena: 34 de 301 ítems entraban solo así, y ninguno acertaba. Esas aristas
+se juzgan en CP-16. Ningún nodo queda sin evaluar como entidad: el esquema de
+salida solo deja crear conceptos bajo un tema, de modo que todo nodo fue ítem
+en el caso del sílabo que lo creó. **Costo documental:** cambia la unidad de
+evaluación de la tesis (§5.2.5.1), que se replica en Google Docs. El anexo de
+la guía de anotación no dice cómo se calcula la precisión y no cambia.
 
 **La etiqueta de un nodo existente.** El lote no la trae. Se toma de un índice
 de claves que se arma con la capa de referencia (la misma proyección del
@@ -218,6 +236,14 @@ El reporte lista cada falso positivo (nombre y tipo) y cada noción
 obligatoria no recuperada, por caso: son lo que se lee para entender una
 cifra.
 
+**Diagnóstico: los conceptos que el lote solo relaciona (2026-11-16).** No
+son ítems (sección 2), pero se reportan para que el cambio de definición se
+pueda ver: cada caso y cada total traen `related` (cuántos son),
+`related_hits` (cuántos habrían acertado, emparejados después de los ítems y
+con las entradas que quedaron libres) y `precision_with_related`, la
+precisión que saldría con la definición anterior. Cada caso los lista en
+`related_items`. **No es el indicador.**
+
 ## 6. Intentos rechazados
 
 De cada corrida rechazada de la cadena se lee el lote candidato que guarda el
@@ -249,6 +275,17 @@ positivo en todos sus casos no acumula ninguno y no participa.
 
 Un identificador global puede estar a la vez duplicado y partido; se cuenta
 en las dos.
+
+**Nodos de los sílabos reservados (agregado el 2026-11-16).** El prompt nunca
+se ajustó con los nodos de 1INF27 y 1INF37 en la instantánea, así que sus
+efectos aguas abajo solo se ven en la medición. Por eso, además de los
+totales, se cuenta aparte cuántas nociones duplicadas tienen entre sus nodos
+alguno que creó un sílabo reservado, y cuántas fusiones erróneas recaen en un
+nodo que creó uno de ellos (`duplicated_notions_with_held_out`,
+`wrong_fusions_with_held_out`; cada grupo listado lleva la marca `held_out`).
+Un nodo lo crea el sílabo del primer lote aceptado que lo nombra, porque un
+lote nombra como nodo también a los existentes que enlaza. Los totales
+de CP-14 no cambian.
 
 Con `--hide-held-out` CP-14 no se calcula: sin los dos casos, el grafo no es
 el final. Si falta algún caso en la ventana se calcula igual, con una
@@ -365,9 +402,10 @@ prueba:
 - **Fusión:** un caso por cada situación y uno por cada lado de la excepción.
 - **Revisor:** cada medida del protocolo, la adjudicación con sus
   categorías, y una adjudicación fuera del protocolo, que se rechaza.
-- **Ítems:** un nodo existente enlazado es ítem con la etiqueta del lote
-  anterior; una unidad de CS2023 no lo es; un extremo desconocido detiene la
-  evaluación.
+- **Ítems:** un nodo existente que el lote ubica bajo un tema es ítem con la
+  etiqueta del lote anterior; uno que solo requiere o relaciona no lo es,
+  figure o no como nodo del lote; una unidad de CS2023 no lo es; un extremo
+  desconocido detiene la evaluación.
 
 **Propiedad:** con la anotación real, un lote armado por sílabo con una
 etiqueta por entrada y su tipo da 100 % de precisión, de exhaustividad y de

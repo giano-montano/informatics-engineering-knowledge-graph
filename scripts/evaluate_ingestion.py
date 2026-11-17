@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from iekg.core.batch import Batch
-from iekg.graph_schema import CONCEPT, PREF_LABEL_ES, TOPIC
+from iekg.graph_schema import CONCEPT, PART_OF, PREF_LABEL_ES, TOPIC
 from iekg.ingestion.normalization import normalize_label
 from iekg.operational_store import REJECTED
 
@@ -186,11 +186,14 @@ def index_batch(known: Known, batch: Batch) -> None:
         known[node.key] = (node.label, node.properties.get(PREF_LABEL_ES, ""))
 
 
-def items_of(batch: Batch, known: Mapping[str, tuple[str, str]]) -> list[Item]:
-    """Every topic or concept the batch creates or links, once each: the nodes it
-    creates in the order of the batch, then the existing ones in the order its
-    edges first reach them."""
-    items = [Item(n.key, n.label, n.properties.get(PREF_LABEL_ES, "")) for n in batch.nodes if n.label in KIND_OF]
+def _split(batch: Batch, known: Mapping[str, tuple[str, str]]) -> tuple[list[Item], list[Item]]:
+    """The topics and concepts of the batch, once each: those it places in the
+    structure of its syllabus, and those it only relates. First its nodes, in the
+    order of the batch, then the ones only its edges name, in the order they
+    first do. A batch names as a node every existing node it links, too."""
+    placed = {key for edge in batch.edges if edge.type == PART_OF for key in (edge.source, edge.target)}
+    related_ends = {key for edge in batch.edges if edge.type != PART_OF for key in (edge.source, edge.target)}
+    reached = [(n.key, n.label, n.properties.get(PREF_LABEL_ES, "")) for n in batch.nodes]
     seen = set(batch.nodes_by_key)
     for edge in batch.edges:
         for key in (edge.source, edge.target):
@@ -199,10 +202,28 @@ def items_of(batch: Batch, known: Mapping[str, tuple[str, str]]) -> list[Item]:
             seen.add(key)
             if key not in known:
                 raise UnknownEndpoint(f"{edge.describe()}: {key} is in no earlier batch nor in the reference layer")
-            label, name = known[key]
-            if label in KIND_OF:
-                items.append(Item(key, label, name))
-    return items
+            reached.append((key, *known[key]))
+    items: list[Item] = []
+    related: list[Item] = []
+    for key, label, name in reached:
+        if label in KIND_OF:
+            only_related = key in related_ends and key not in placed
+            (related if only_related else items).append(Item(key, label, name))
+    return items, related
+
+
+def items_of(batch: Batch, known: Mapping[str, tuple[str, str]]) -> list[Item]:
+    """Every topic or concept the batch places in the structure of its syllabus,
+    created or existing: all but the ones it reaches only by an edge that is not
+    of partonomy."""
+    return _split(batch, known)[0]
+
+
+def related_of(batch: Batch, known: Mapping[str, tuple[str, str]]) -> list[Item]:
+    """The concepts the batch only relates: the one its course requires, or the
+    end of a prerequisite or a specialization. They are not items: the syllabus
+    does not contain them, and their edges are judged in CP-16."""
+    return _split(batch, known)[1]
 
 
 # --- Matching (thesis, 5.2.5.4) ----------------------------------------------
@@ -263,6 +284,7 @@ def _f1(precision: float | None, recall: float | None) -> float | None:
 
 
 def _with_ratios(counts: dict[str, Any]) -> dict[str, Any]:
+    counts = {"related": 0, "related_hits": 0, **counts}
     precision = _ratio(counts["hits"], counts["items"])
     recall = _ratio(counts["recovered"], counts["mandatory_notions"])
     return {
@@ -272,10 +294,16 @@ def _with_ratios(counts: dict[str, Any]) -> dict[str, Any]:
         "recall": recall,
         "f1": _f1(precision, recall),
         "type_agreement": _ratio(counts["type_matches"], counts["hits"]),
+        # Diagnostic, never the indicator: the precision if the concepts a batch only relates were items.
+        "precision_with_related": _ratio(counts["hits"] + counts["related_hits"],
+                                         counts["items"] + counts["related"]),
     }
 
 
-def measure(matches: Sequence[Match], gold: Gold, syllabus: str) -> dict[str, Any]:
+def measure(
+    matches: Sequence[Match], gold: Gold, syllabus: str, related: Sequence[Item] = ()
+) -> dict[str, Any]:
+    """``related`` only feeds the diagnostic: they are matched after the items, as if they were items too."""
     hits = [m for m in matches if m.entry is not None]
     consumed = {m.entry.id for m in hits}
     mandatory = gold.mandatory_notions_of(syllabus)
@@ -288,11 +316,16 @@ def measure(matches: Sequence[Match], gold: Gold, syllabus: str) -> dict[str, An
             "mandatory_notions": len(mandatory),
             "recovered": len(recovered),
             "type_matches": sum(KIND_OF[m.item.label] == m.entry.kind for m in hits),
+            "related": len(related),
+            "related_hits": sum(
+                m.entry is not None
+                for m in match([*(m.item for m in matches), *related], gold, syllabus)[len(matches):]),
         }),
         "most_hits": most_hits([m.item for m in matches], gold, syllabus),
         "false_positive_items": [
             {"key": m.item.key, "label": m.item.label, "name": m.item.name} for m in matches if m.entry is None
         ],
+        "related_items": [{"key": item.key, "label": item.label, "name": item.name} for item in related],
         "missed_notions": [
             {"global_id": global_id, "entry": entry.id, "label": entry.label}
             for global_id, entry in mandatory.items() if global_id not in recovered
@@ -300,7 +333,7 @@ def measure(matches: Sequence[Match], gold: Gold, syllabus: str) -> dict[str, An
     }
 
 
-_SUMMED = ("items", "hits", "mandatory_notions", "recovered", "type_matches")
+_SUMMED = ("items", "hits", "mandatory_notions", "recovered", "type_matches", "related", "related_hits")
 
 
 def total(cases: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
@@ -313,10 +346,16 @@ def total(cases: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
 
 
 def fusion(
-    matched: Iterable[Sequence[Match]], compound_notions: frozenset[str] = frozenset()
+    matched: Iterable[Sequence[Match]],
+    compound_notions: frozenset[str] = frozenset(),
+    held_out_nodes: frozenset[str] = frozenset(),
 ) -> dict[str, Any]:
     """The fusion measures over the nodes of every case: each node gathers the
-    global identifiers of the entries it consumed wherever it was an item."""
+    global identifiers of the entries it consumed wherever it was an item.
+
+    ``held_out_nodes`` are the nodes a held-out syllabus created. The prompt was
+    never adjusted with them in the snapshot, so the duplicates and the wrong
+    fusions they take part in are also counted apart."""
     nodes: dict[str, dict[str, Any]] = {}
     for matches in matched:
         for m in matches:
@@ -333,7 +372,8 @@ def fusion(
         return {"key": key, "label": nodes[key]["label"], "name": nodes[key]["name"]}
 
     duplicates = [
-        {"global_id": global_id, "label": label, "nodes": [described(key) for key in keys]}
+        {"global_id": global_id, "label": label, "nodes": [described(key) for key in keys],
+         "held_out": any(key in held_out_nodes for key in keys)}
         for global_id, by_label in sorted(holders.items())
         for label, keys in sorted(by_label.items()) if len(keys) > 1
     ]
@@ -347,7 +387,8 @@ def fusion(
             continue
         # Not a wrong fusion if, compound headings aside, a single notion is left.
         left = node["global_ids"] - compound_notions
-        (excepted if len(left) == 1 else wrong).append({**described(key), "global_ids": sorted(node["global_ids"])})
+        (excepted if len(left) == 1 else wrong).append(
+            {**described(key), "global_ids": sorted(node["global_ids"]), "held_out": key in held_out_nodes})
     return {
         "nodes_with_hits": len(nodes),
         "duplicated_notions": len({d["global_id"] for d in duplicates}),
@@ -355,6 +396,8 @@ def fusion(
         "split_notions": len(split),
         "wrong_fusions": len(wrong),
         "excepted_fusions": len(excepted),
+        "duplicated_notions_with_held_out": len({d["global_id"] for d in duplicates if d["held_out"]}),
+        "wrong_fusions_with_held_out": sum(w["held_out"] for w in wrong),
         "duplicates": duplicates,
         "split": split,
         "wrong": wrong,
@@ -381,16 +424,17 @@ class Attempt:
 
 def walk(
     attempts: Iterable[Attempt], reference: Mapping[str, tuple[str, str]], *, isolated: bool = False
-) -> Iterator[tuple[Attempt, list[Item] | None]]:
-    """Each attempt with its items, in the order of the runs. In a chain, every
+) -> Iterator[tuple[Attempt, list[Item] | None, list[Item]]]:
+    """Each attempt with its items and the concepts it only relates, in the order of the runs. In a chain, every
     accepted batch adds its nodes to what the later ones may link; an isolated
     run sees the reference layer alone."""
     known: Known = dict(reference)
     for attempt in sorted(attempts, key=lambda a: a.run_id):
         if attempt.batch is None:
-            yield attempt, None
+            yield attempt, None, []
             continue
-        yield attempt, items_of(attempt.batch, reference if isolated else known)
+        existing = reference if isolated else known
+        yield attempt, items_of(attempt.batch, existing), related_of(attempt.batch, existing)
         if attempt.accepted and not isolated:
             index_batch(known, attempt.batch)
 
@@ -417,9 +461,16 @@ def evaluate(
     warnings: list[str] = []
     accepted_syllabi: set[str] = set()
     rejections: Counter[str] = Counter()
+    held_out_nodes: set[str] = set()
+    # A batch names the existing nodes it links too: a node is created by the first batch that names it.
+    named: set[str] = set()
 
-    for attempt, items in walk(attempts, reference, isolated=isolated):
+    for attempt, items, related in walk(attempts, reference, isolated=isolated):
         syllabus = attempt.syllabus
+        created: set[str] = set()
+        if attempt.accepted and attempt.batch is not None:
+            created = set(attempt.batch.nodes_by_key) - named
+            named |= created
         if syllabus not in gold.syllabi:
             if attempt.accepted:
                 warnings.append(f"run {attempt.run_id} ({syllabus}) is not a test case; "
@@ -439,6 +490,8 @@ def evaluate(
                 rejected.append(row)
             continue
         accepted_syllabi.add(syllabus)
+        if syllabus in held_out:
+            held_out_nodes.update(created)
         if syllabus in hidden:
             continue
         matches = match(items, gold, syllabus)
@@ -447,7 +500,8 @@ def evaluate(
         if attempts_needed and attempts_needed > MAX_ATTEMPTS:
             warnings.append(f"{syllabus} needed {attempts_needed} attempts; the protocol allows {MAX_ATTEMPTS}")
         cases.append({"case": gold.case_of(syllabus), "syllabus": syllabus, **_run_fields(attempt),
-                      "attempts": attempts_needed, "accepted": True, **measure(matches, gold, syllabus)})
+                      "attempts": attempts_needed, "accepted": True,
+                      **measure(matches, gold, syllabus, related)})
 
     if not isolated:
         # Rejected every time: out of the graph, and its mandatory notions were not recovered.
@@ -482,7 +536,8 @@ def evaluate(
         "totals": totals,
         "rejected_attempts": rejected,
         "fusion": None if isolated or hidden else fusion(
-            matched, frozenset(e.global_id for e in gold.entries if e.id in compound_headings)),
+            matched, frozenset(e.global_id for e in gold.entries if e.id in compound_headings),
+            frozenset(held_out_nodes)),
         "warnings": warnings,
     }
 
@@ -873,7 +928,7 @@ def review(
     pipeline_adjudications: Mapping[str, Sequence[Mapping[str, str]]] | None = None,
 ) -> dict[str, Any]:
     accepted: dict[str, tuple[Attempt, list[Item]]] = {}
-    for attempt, items in walk(attempts, reference or {}):
+    for attempt, items, _ in walk(attempts, reference or {}):
         if attempt.accepted and attempt.syllabus not in accepted:
             accepted[attempt.syllabus] = (attempt, items)
     syllabi = []
@@ -942,6 +997,12 @@ def markdown(report: Mapping[str, Any]) -> str:
     rows += [(f"Total: {name}", f"{t['cases']} cases", None, None, *(t[m] for m in _MEASURES), None)
              for name, t in report["totals"].items() if t["cases"]]
     lines = [f"Mode: {report['mode']}.", "", *_table(header, rows), ""]
+    everything = report["totals"]["all"]
+    if everything["related"]:
+        lines.append(
+            f"Diagnostic: the batches only relate {everything['related']} existing concepts, which are not items "
+            f"({everything['related_hits']} would hit); with them the precision would be "
+            f"{_cell(everything['precision_with_related'])}.")
     if report["hidden"]:
         lines.append(f"Hidden, not evaluated: {', '.join(report['hidden'])}.")
     if report["not_run"]:
@@ -958,7 +1019,9 @@ def markdown(report: Mapping[str, Any]) -> str:
         f = report["fusion"]
         lines += ["", f"CP-14 over {f['nodes_with_hits']} nodes with a hit: {f['duplicated_notions']} duplicated "
                   f"notions ({f['surplus_nodes']} surplus nodes), {f['split_notions']} split notions, "
-                  f"{f['wrong_fusions']} wrong fusions, {f['excepted_fusions']} excepted."]
+                  f"{f['wrong_fusions']} wrong fusions, {f['excepted_fusions']} excepted. With a node a held-out "
+                  f"syllabus created: {f['duplicated_notions_with_held_out']} of the duplicated notions and "
+                  f"{f['wrong_fusions_with_held_out']} of the wrong fusions."]
     lines += [f"Warning: {warning}." for warning in report["warnings"]]
     return "\n".join(lines)
 

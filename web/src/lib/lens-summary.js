@@ -59,13 +59,18 @@ export function lensSummary({ lens, grain, node, response, scene }) {
       const g = GRAINS[grain];
       if (info.empty) {
         return node.label === 'Course'
-          ? { answer: `Lo que ${name} pide se aprende dentro del mismo curso, así que no hay camino previo por ${g.plural}.`, how: '', offer: 'courses' }
+          ? { answer: `Lo que ${name} enseña no necesita antes nada de fuera del curso, según los sílabos cargados: no hay camino previo por ${g.plural}. Lo que el curso pide de entrada es otra pregunta.`, how: '', offer: 'courses' }
           : { answer: `Para llegar a ${name} no hace falta pasar antes por ${g.another}, según los sílabos cargados.`, how: '' };
       }
       const where = grain === 'course' ? 'se enseña' : 'está';
       const rows = grain === 'area' ? 'las áreas, con su unidad y su tema,' : `los ${g.plural}`;
+      // A course has two answers that differ: this one follows what its
+      // concepts need before; the other, what the course itself asks for.
+      const course = node.label === 'Course';
       return {
-        answer: `Para llegar a ${name} conviene pasar antes por ${plural(info.stops.length, g.name, g.plural)}: ahí ${where} lo que necesitas saber antes (${plural(info.prerequisites.length, 'concepto', 'conceptos')}).`,
+        answer: `Para llegar a ${name} conviene pasar antes por ${plural(info.stops.length, g.name, g.plural)}: ahí ${where} lo que necesitas saber antes (${plural(info.prerequisites.length, 'concepto', 'conceptos')}).`
+          + (course ? ' Sale de lo que necesitan antes los conceptos que el curso enseña; lo que el curso pide de entrada es otra pregunta.' : ''),
+        offer: course ? 'courses' : undefined,
         how: `Abajo, los conceptos que necesitas antes; arriba, ${rows} donde se aprenden. «¿Por qué?» muestra la relación exacta y su fuente.`
           + (info.own ? ` «${escapeHtml(info.own.name_es)}» cuenta aunque también contiene a la meta: lo que se necesita antes es el concepto.` : ''),
       };

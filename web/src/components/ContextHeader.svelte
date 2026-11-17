@@ -42,7 +42,7 @@
   }
 </script>
 
-<header class="context">
+<header class="context" style:--c={node ? classColor(node) : null}>
   {#if !node}
     <h1>Elige por dónde empezar</h1>
   {:else}
@@ -166,35 +166,32 @@
   .lenses {
     display: flex;
     flex-wrap: wrap;
-    gap: 2px;
-    border-bottom: 1px solid var(--line);
+    gap: 6px;
+    padding: 2px 0;
   }
 
+  /* The questions are pills; the chosen one is filled with the color of the
+     class in focus, so the question and its subject read as one thing. */
   .lenses button {
-    position: relative;
-    padding: 7px 12px 9px;
-    border-radius: var(--radius-small) var(--radius-small) 0 0;
+    padding: 5px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: oklch(0.16 0.035 275 / 0.7);
     color: var(--text-2);
     font-weight: 550;
-    transition: color 160ms, background 160ms;
+    transition: color 160ms, background 160ms, border-color 160ms;
   }
 
   .lenses button:hover {
-    background: var(--surface);
+    background: var(--hover);
     color: var(--text);
   }
 
   .lenses button[aria-selected='true'] {
+    border-color: color-mix(in oklch, var(--c) 75%, transparent);
+    background: color-mix(in oklch, var(--c) 26%, var(--ground));
     color: var(--mark);
-  }
-
-  .lenses button[aria-selected='true']::after {
-    content: '';
-    position: absolute;
-    inset: auto 8px -1px;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--mark);
+    font-weight: 650;
   }
 
   .says {

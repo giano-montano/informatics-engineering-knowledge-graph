@@ -5,7 +5,7 @@
 
 import * as d3 from 'd3';
 
-import { RELATIONS, accessibleName, classColor, className, layerOf } from './vocabulary.js';
+import { CLASSES, RELATIONS, accessibleName, classColor, className, layerOf } from './vocabulary.js';
 
 const LINE_HEIGHT = 16;
 const CHAR_WIDTH = 7.1;
@@ -53,6 +53,19 @@ export function createCanvas(container, handlers) {
       .attr('viewBox', '0 0 10 10').attr('refX', 8.5).attr('refY', 5)
       .attr('markerWidth', 7.5).attr('markerHeight', 7.5).attr('orient', 'auto-start-reverse')
       .append('path').attr('d', 'M1,1.5 9,5 1,8.5Z');
+  }
+  // The glow of what matters now, and one sphere gradient per class: lit from
+  // the upper left, in the hue of the class.
+  const glow = defs.append('filter').attr('id', 'glow').attr('x', '-80%').attr('y', '-80%').attr('width', '260%').attr('height', '260%');
+  glow.append('feGaussianBlur').attr('in', 'SourceGraphic').attr('stdDeviation', 4.5).attr('result', 'wide');
+  const merged = glow.append('feMerge');
+  merged.append('feMergeNode').attr('in', 'wide');
+  merged.append('feMergeNode').attr('in', 'SourceGraphic');
+  for (const [label, { color }] of Object.entries(CLASSES)) {
+    const sphere = defs.append('radialGradient').attr('id', `sphere-${label}`).attr('cx', '35%').attr('cy', '30%').attr('r', '78%');
+    sphere.append('stop').attr('offset', '0%').style('stop-color', `color-mix(in oklch, ${color} 35%, white)`);
+    sphere.append('stop').attr('offset', '34%').style('stop-color', color);
+    sphere.append('stop').attr('offset', '100%').style('stop-color', `color-mix(in oklch, ${color} 62%, black)`);
   }
   const viewport = svg.append('g').attr('class', 'viewport');
   const boxLayer = viewport.append('g').attr('class', 'boxes').attr('aria-hidden', 'true');
@@ -238,6 +251,8 @@ export function createCanvas(container, handlers) {
   // --- Render -------------------------------------------------------------------
 
   function render(scene, options = {}) {
+    // How small the names may get when the map is fitted small (see app.css).
+    svg.style('--floor', scene.labelFloor ?? 0.85);
     const hadFocus = svg.node().contains(document.activeElement);
     const anchor = placed.get(options.enterFrom) ?? placed.get(scene.focusKey) ?? { x: 0, y: 0 };
     const nodes = scene.nodes.map((target) => {
@@ -267,7 +282,7 @@ export function createCanvas(container, handlers) {
       return g;
     });
     edges
-      .attr('class', (d) => `edge edge-${d.tone}${d.edge ? '' : ' edge-bundle'}${d.id === selectedEdge ? ' is-selected' : ''}`)
+      .attr('class', (d) => `edge edge-${d.tone} rel-${d.type}${d.edge ? '' : ' edge-bundle'}${d.id === selectedEdge ? ' is-selected' : ''}`)
       .style('--c', (d) => RELATIONS[d.type]?.color)
       .on('pointermove', (event, d) => showTip(edgeTip(d), event.clientX, event.clientY))
       .on('pointerleave', hideTip)
@@ -288,7 +303,7 @@ export function createCanvas(container, handlers) {
       },
     );
     joined
-      .attr('class', (d) => `node node-${d.tone} layer-${d.node.layer} class-${d.node.label}`)
+      .attr('class', (d) => `node node-${d.tone}${d.lit ? ' node-lit' : ''} layer-${d.node.layer} class-${d.node.label}`)
       .attr('tabindex', (d) => (d.tone === 'dot' ? -1 : 0))
       .attr('aria-label', (d) => accessibleName(d.node)
         + (d.tone === 'focus' ? '. En foco' : '. Enter para ponerlo en foco')
@@ -316,7 +331,8 @@ export function createCanvas(container, handlers) {
       .on('blur', hideTip);
 
     joined.select('.halo').attr('d', (d) => (d.tone === 'focus' ? outline(d, d.r + 9) : null));
-    joined.select('.shape').attr('d', (d) => outline(d));
+    joined.select('.shape').attr('d', (d) => outline(d))
+      .style('fill', (d) => (d.node.layer === 'reference' || d.tone === 'dot' ? null : `url(#sphere-${d.node.label})`));
     // CS2023 reads as a double outline; a document carries its page.
     joined.select('.core').attr('d', (d) => {
       if (d.tone === 'dot') return null;

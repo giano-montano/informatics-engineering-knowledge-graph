@@ -117,7 +117,15 @@
   header {
     display: grid;
     gap: 10px;
-    padding-bottom: 20px;
+    margin-bottom: 4px;
+    padding: 16px;
+    border: 1px solid color-mix(in oklch, var(--c-unit) 40%, transparent);
+    border-radius: 14px;
+    background: color-mix(in oklch, var(--c-unit) 9%, var(--surface));
+  }
+
+  header + :global(section) {
+    border-top: 0;
   }
 
   h2 {

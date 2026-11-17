@@ -87,6 +87,8 @@ class Scene {
         sub: options.sub ?? node.course_code ?? null,
       },
       expandable: Boolean(options.expandable),
+      // Lit: what the map wants seen first besides the focus.
+      lit: Boolean(options.lit),
       // Where the lines to its parts start when its name sits on their way.
       out: options.out ?? 0,
     };
@@ -164,18 +166,19 @@ export function layoutOverview(overview) {
   const areas = overview.nodes.filter((node) => node.label === 'KnowledgeArea').sort(byName);
   const courses = overview.nodes.filter((node) => node.label === 'Course')
     .sort((a, b) => (a.course_code ?? '').localeCompare(b.course_code ?? ''));
-  const columns = Math.max(1, Math.min(5, Math.ceil(Math.sqrt(courses.length))));
+  // The canvas is wider than tall: the grid of courses is too.
+  const columns = Math.max(1, Math.min(6, Math.ceil(Math.sqrt(courses.length * 1.6))));
   const rows = Math.ceil(courses.length / columns);
-  const cellX = 190;
-  const cellY = 112;
-  const ringX = Math.max(430, (columns * cellX) / 2 + 250);
-  const ringY = Math.max(300, (rows * cellY) / 2 + 190);
+  const cellX = 184;
+  const cellY = 124;
+  const ringX = Math.max(430, (columns * cellX) / 2 + 190);
+  const ringY = Math.max(280, (rows * cellY) / 2 + 150);
   courses.forEach((course, index) => {
     const row = Math.floor(index / columns);
     const inRow = Math.min(columns, courses.length - row * columns);
     const x = ((index % columns) - (inRow - 1) / 2) * cellX;
     const y = (row - (rows - 1) / 2) * cellY;
-    scene.put(course, x, y, { side: 'below', width: 22 });
+    scene.put(course, x, y, { side: 'below', width: 20 });
   });
   if (courses.length) scene.caption(0, -(rows * cellY) / 2 - 22, 'Cursos con sílabo', { kind: 'row' });
   areas.forEach((area, index) => {
@@ -186,11 +189,14 @@ export function layoutOverview(overview) {
     const side = Math.abs(Math.cos(angle)) < 0.25 ? (y < 0 ? 'above' : 'below') : x < 0 ? 'left' : 'right';
     scene.put(area, x, y, {
       tone: filled ? 'main' : 'far',
+      lit: filled,
       side,
       width: 24,
       sub: filled ? `${plural(area.topics, 'tema', 'temas')} · ${plural(area.concepts, 'concepto', 'conceptos')}` : null,
     });
   });
+  // Thirty names in one view: here they shrink less than anywhere else.
+  scene.labelFloor = 0.7;
   scene.info = {
     areas: areas.length,
     filled: areas.filter((area) => area.topics > 0).length,

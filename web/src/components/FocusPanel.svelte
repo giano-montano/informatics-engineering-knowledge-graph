@@ -386,10 +386,20 @@
     outline: none;
   }
 
+  /* The record of the focus is the one card of the panel, tinted with the
+     color of its class. Everything below it is plain sections. */
   .record {
     display: grid;
     gap: 6px;
-    padding-bottom: 18px;
+    margin-bottom: 4px;
+    padding: 16px;
+    border: 1px solid color-mix(in oklch, var(--c) 40%, transparent);
+    border-radius: 14px;
+    background: color-mix(in oklch, var(--c) 9%, var(--surface));
+  }
+
+  .record + :global(section) {
+    border-top: 0;
   }
 
   .chips {

@@ -9,9 +9,10 @@
 :root {
   color-scheme: dark;
 
-  --ground: oklch(0.155 0.028 275);
-  --ground-deep: oklch(0.125 0.026 275);
-  --surface: oklch(0.195 0.03 275);
+  --ground: oklch(0.145 0.03 275);
+  --ground-deep: oklch(0.105 0.028 275);
+  --space: oklch(0.085 0.025 275);
+  --surface: oklch(0.165 0.034 275);
   --raised: oklch(0.235 0.034 275);
   --hover: oklch(0.275 0.04 275);
   --line: oklch(0.31 0.04 275);
@@ -252,12 +253,22 @@ svg.graph:active {
   }
 }
 
-/* The syllabi: a filled circle. */
+/* The syllabi: a filled circle, lit from above like a small sphere. The fill
+   is the gradient of its class, set by the renderer. */
 .graph .shape {
   fill: var(--c);
-  stroke: var(--ground);
-  stroke-width: 2;
-  transition: fill 200ms;
+  stroke: oklch(1 0 0 / 0.5);
+  stroke-width: 0.9;
+  transition: filter 200ms;
+}
+
+/* Light is for what matters now: the focus, what the pointer or the keyboard
+   is on, and the areas the syllabi already reach. */
+.graph .node-focus .shape,
+.graph .node-lit .shape,
+.graph .node:hover .shape,
+.graph .node:focus-visible .shape {
+  filter: url(#glow);
 }
 
 /* CS2023: a hexagon with a double outline and a translucent fill (ADR-019). */
@@ -289,8 +300,18 @@ svg.graph:active {
   fill: none;
   stroke: var(--c);
   stroke-width: 1.5;
-  opacity: 0.55;
+  opacity: 0.7;
   pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.3;
+  }
 }
 
 .graph .ring {
@@ -305,16 +326,12 @@ svg.graph:active {
   opacity: 1;
 }
 
-.graph .node:hover:not(.node-focus) .shape {
-  fill: color-mix(in oklch, var(--c) 82%, white);
-}
-
 .graph .layer-reference.node:hover:not(.node-focus) .shape {
   fill: color-mix(in oklch, var(--c) 34%, var(--ground));
 }
 
 .graph .node-far {
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .graph .node-far:hover,
@@ -326,17 +343,29 @@ svg.graph:active {
   stroke-width: 1;
 }
 
+/* When a large map is fitted small, the names shrink less than the map. */
+.graph .label {
+  transform: scale(calc(1 / clamp(var(--floor, 0.85), var(--k), 1)));
+}
+
+.graph .caption-row {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(calc(1 / clamp(var(--floor, 0.85), var(--k), 1)));
+}
+
 .graph .label text {
   font-size: 13px;
+  font-weight: 500;
   fill: var(--text);
   paint-order: stroke;
-  stroke: var(--ground);
+  stroke: var(--space);
   stroke-width: 4px;
   stroke-linejoin: round;
 }
 
 .graph .node-focus .label .name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   fill: var(--mark);
 }
@@ -373,6 +402,14 @@ svg.graph:active {
   opacity: 0.62;
   pointer-events: none;
   transition: opacity 160ms, stroke-width 160ms;
+}
+
+/* The order to learn in is the line the map is read by: it carries light.
+   A CSS shadow, because an SVG filter does not paint an exactly horizontal line. */
+.graph .edge-main.rel-HAS_PREREQUISITE .edge-line {
+  stroke-width: 2;
+  opacity: 0.92;
+  filter: drop-shadow(0 0 3px color-mix(in oklch, var(--c) 70%, transparent));
 }
 
 .graph .edge-hit {
@@ -412,6 +449,7 @@ svg.graph:active {
   stroke: var(--mark);
   stroke-width: 2.6;
   opacity: 1;
+  filter: drop-shadow(0 0 4px oklch(1 0 0 / 0.6));
 }
 
 /* The head of an arrow takes the color of its line. */
@@ -424,7 +462,7 @@ svg.graph:active {
   font-weight: 650;
   fill: var(--text-2);
   paint-order: stroke;
-  stroke: var(--ground);
+  stroke: var(--space);
   stroke-width: 4px;
   animation: appear 500ms var(--ease) backwards;
 }
@@ -439,9 +477,10 @@ svg.graph:active {
 }
 
 .graph .boxes rect {
-  fill: oklch(0.2 0.03 275 / 0.55);
-  stroke: var(--line);
+  fill: oklch(0.2 0.04 275 / 0.4);
+  stroke: var(--line-strong);
   stroke-width: 1;
+  stroke-dasharray: 5 5;
 }
 
 .graph-tip {

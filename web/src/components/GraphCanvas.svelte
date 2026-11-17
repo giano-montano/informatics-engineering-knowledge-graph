@@ -185,10 +185,29 @@
     position: relative;
     min-height: 0;
     overflow: hidden;
+    /* Deep space with one cloud of light, in the hue of the interface: the
+       classes and the relations keep the color for themselves. */
     background:
-      radial-gradient(ellipse 70% 60% at 50% 45%, oklch(0.2 0.045 280 / 0.9), transparent 75%),
-      var(--ground-deep);
+      radial-gradient(ellipse 60% 52% at 38% 44%, oklch(0.34 0.13 285 / 0.62), transparent 72%),
+      radial-gradient(ellipse 46% 42% at 74% 68%, oklch(0.34 0.1 245 / 0.42), transparent 72%),
+      var(--space);
     border-top: 1px solid var(--line);
+  }
+
+  /* A few fixed stars. They do not move: the map is what moves. */
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.6;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 23px 41px, oklch(1 0 0 / 0.7), transparent 60%),
+      radial-gradient(1px 1px at 127px 13px, oklch(0.9 0.04 275 / 0.6), transparent 60%),
+      radial-gradient(1.5px 1.5px at 181px 157px, oklch(0.9 0.06 230 / 0.55), transparent 60%),
+      radial-gradient(1px 1px at 61px 193px, oklch(1 0 0 / 0.45), transparent 60%),
+      radial-gradient(1px 1px at 233px 97px, oklch(0.9 0.05 300 / 0.5), transparent 60%);
+    background-size: 260px 230px;
   }
 
   .host {

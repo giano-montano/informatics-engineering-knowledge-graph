@@ -33,6 +33,17 @@ En el servidor, todo vive en `/home/ubuntu/infoknows/`:
   `var/medicion-r4/` de la copia principal: `operational.sqlite`, `documents/`
   y `facts/`.
 
+  Hay una diferencia con `var/medicion-r4/`, que se deja intacta como
+  evidencia de R4: en el `operational.sqlite` desplegado, y en el de
+  `var/ensayo/`, la corrida 6 está cerrada a mano. Esa corrida quedó «en
+  curso» porque el worker murió leyendo el PDF de 1INF30, antes de llamar al
+  modelo y de escribir, y la cadena siguió en la corrida 7. El 2026-11-17 se
+  marcó como fallida, con el motivo en su campo de error y como hora de cierre
+  el inicio de la corrida 7, que es una cota superior. Así no figura para
+  siempre como en curso (ADR-007). La copia de antes del cambio quedó junto a
+  cada almacén, como `operational.before-closing-run-6.sqlite`. El despliegue
+  local, en `var/despliegue-local/`, tiene el mismo cambio.
+
 Delante del compose, en el propio host, Caddy termina TLS (§4):
 
 ```

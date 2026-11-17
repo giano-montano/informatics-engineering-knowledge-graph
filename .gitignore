@@ -40,5 +40,6 @@ casos-de-prueba/silabos-en-orden/
 var/
 poster/
 
+.env.aws
 
 ~$*

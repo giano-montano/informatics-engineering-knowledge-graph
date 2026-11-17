@@ -16,7 +16,7 @@ deployment {
 
   host vm 'Máquina virtual de la especialidad' {
     technology 'Ubuntu'
-    description 'Único host del prototipo. La corrida de medición se ejecuta aquí, desde la carga (ADR-013).'
+    description 'Único host del prototipo: una instancia EC2 de la cuenta educativa de AWS que habilitó la especialidad. La corrida de medición se hizo en desarrollo; aquí se reproduce con carga y reaplicación (ADR-013).'
 
     runtime compose 'Docker Compose' {
 

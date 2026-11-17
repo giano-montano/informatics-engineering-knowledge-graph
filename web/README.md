@@ -133,7 +133,8 @@ node tests/walkthrough.mjs --shots ../docs/r6/capturas             # y guarda la
 
 `tests/operator-walkthrough.mjs` hace lo mismo con CA-11. Sube un documento, así
 que **escribe en el grafo**: se corre sobre un grafo de ensayo, y después se
-vuelve a cargar y a reaplicar.
+vuelve a cargar y a reaplicar. Contra una API en modo ensayo (`IEKG_REHEARSAL=1`)
+no escribe nada: las corridas solo recorren sus estados.
 
 Los ejemplos de los dos recorridos son los del plan, que dependen del grafo
 cargado: con el grafo final hay que fijarlos de nuevo.

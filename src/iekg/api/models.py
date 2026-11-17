@@ -133,6 +133,14 @@ class AuditGate(BaseModel):
     reason: str | None = Field(description="Why it is closed; null when open.")
 
 
+class OperationMode(BaseModel):
+    """Whether the operation routes run in rehearsal mode (ADR-013, amendment 2026-11)."""
+
+    model_config = _example({"rehearsal": True})
+
+    rehearsal: bool
+
+
 class LatestAuditReport(BaseModel):
     model_config = _example({
         "gate": {"state": "closed", "reason": "latest report with violations"},

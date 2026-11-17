@@ -60,7 +60,21 @@ internet ─443/80─▶ Caddy (host, systemd) ─▶ 127.0.0.1:8080 nginx (web)
   laboratorio puede borrar los recursos.
 - **Las credenciales del CLI** (`AWS_SESSION_TOKEN`) vencen con cada sesión: se
   copian de nuevo desde «AWS Details» del Learner Lab a `.env.aws`, en la raíz
-  de la copia principal (ignorado por git).
+  de la copia principal (ignorado por git), tal como las muestra el
+  laboratorio: con `[default]` y las claves en minúscula. Para cargarlas en
+  Git Bash, desde la raíz de la copia principal:
+
+  ```bash
+  while IFS='=' read -r k v || [ -n "$k" ]; do
+    k=$(printf '%s' "$k" | tr -d '[:space:]'); v=$(printf '%s' "$v" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
+    case "$k" in ''|\#*|\[*) continue;; esac
+    export "$(printf '%s' "$k" | tr '[:lower:]' '[:upper:]')=$v"
+  done < <(tr -d '\r' < .env.aws)
+  export AWS_DEFAULT_REGION=us-east-1 AWS_PAGER="" MSYS_NO_PATHCONV=1
+  ```
+
+  `RequestExpired` o `InvalidClientTokenId` quieren decir que la sesión venció
+  o que no se cargó el token de sesión.
 
 Fuente: *AWS Academy Learner Lab – Foundation Services* (© 2021, copia
 publicada por otra universidad: fuente gris), contrastada con el CLI donde se
@@ -226,6 +240,30 @@ Consideraciones:
   porque escribe en el grafo.
 - **Disco:** cada reconstrucción deja imágenes viejas.
   `docker image prune -f` las borra.
+
+### Modo ensayo del operador
+
+El servidor queda en modo ensayo (`IEKG_REHEARSAL=1` en su `.env`): el panel
+del operador funciona completo, pero los envíos no tocan el grafo ni los
+almacenes reales. Las corridas de ensayo viven en `~/infoknows/var/ensayo/`.
+El panel está en `https://<IP>/?panel=operador`; el token, en el `.env` del
+servidor (§5).
+
+Las variables de `.env` se leen solo cuando arranca un contenedor. Por eso,
+después de editar el `.env`, `docker compose up -d api` recrea solo el
+contenedor de la API con el valor nuevo. Mientras arranca, unos 15 segundos,
+el panel y la navegación dan error; Neo4j y la web no se reinician.
+
+```bash
+ssh ubuntu@<IP>
+cd ~/infoknows
+sed -i 's/^IEKG_REHEARSAL=.*/IEKG_REHEARSAL=0/' .env && docker compose up -d api   # apagarlo
+sed -i 's/^IEKG_REHEARSAL=.*/IEKG_REHEARSAL=1/' .env && docker compose up -d api   # encenderlo
+docker compose stop api && sudo rm -rf var/ensayo && docker compose start api   # borrar el historial de ensayo
+```
+
+Al encenderlo por primera vez, o tras borrar `var/ensayo/`, el historial de
+ensayo empieza como copia del real.
 
 ### Reconstruir el grafo
 

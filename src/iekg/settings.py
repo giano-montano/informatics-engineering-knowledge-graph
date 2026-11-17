@@ -84,6 +84,35 @@ class ProviderSettings:
         )
 
 
+_TRUE = {"1", "true", "yes", "on"}
+
+
+@dataclass(frozen=True)
+class RehearsalSettings:
+    """The rehearsal mode of the operator flow (ADR-013, amendment 2026-11).
+
+    On, the API records runs in stores of their own and launches the rehearsal
+    worker, which walks them through their states: nothing reaches the graph,
+    the fact store or the language model provider.
+    """
+
+    enabled: bool
+    operational_db: Path
+    documents_dir: Path
+    step_seconds: float
+
+    @classmethod
+    def from_environment(cls) -> "RehearsalSettings":
+        load_dotenv(find_dotenv(usecwd=True))
+        root = Path(os.environ.get("IEKG_REHEARSAL_DIR", "var/ensayo"))
+        return cls(
+            enabled=os.environ.get("IEKG_REHEARSAL", "").strip().lower() in _TRUE,
+            operational_db=root / "operational.sqlite",
+            documents_dir=root / "documents",
+            step_seconds=float(os.environ.get("IEKG_REHEARSAL_STEP_SECONDS", "4")),
+        )
+
+
 @dataclass(frozen=True)
 class ApiSettings:
     """What only the API reads: the operator token (ADR-013) and where it listens."""

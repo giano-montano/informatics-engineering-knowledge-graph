@@ -110,6 +110,8 @@ src/iekg/build_tools/          Procesos de construcción: proyección TTL → lo
 src/iekg/ingestion/            Ingesta (#worker del C4): envío, orquestador,
                                extractor (Docling + PydanticAI), hechos
                                declarados y el punto de entrada `iekg-worker`.
+                               `rehearsal.py`: el worker del modo ensayo
+                               (`IEKG_REHEARSAL`, enmienda 2026-11 de ADR-013).
 src/iekg/api/                  API (#api del C4): rutas de operación bajo
                                `/api`, con token; rutas de navegación bajo
                                `/api`, públicas, con sus consultas y cotas en
@@ -203,7 +205,9 @@ npm run arch:serve        # vista previa en el navegador
 `docker compose up -d` sin nombrar servicio levanta también la API en un
 contenedor: no se combina con `uv run iekg-api`, porque serían dos escritores
 sobre el mismo grafo (ADR-007). `web/tests/operator-walkthrough.mjs` (CA-11)
-sube un documento y **escribe en el grafo**: después, `load` y `reapply`.
+sube un documento y **escribe en el grafo**: después, `load` y `reapply`. En
+modo ensayo (`IEKG_REHEARSAL=1`) no escribe nada, pero tampoco ejercita la
+ingesta; para una ingesta de ensayo completa está `scripts/replay_provider.py`.
 
 Para reconstruir desde un historial guardado (por ejemplo, una cadena de Sonnet
 o GPT), consulta [Reaplicar los hechos](README.md#reaplicar-los-hechos): allí se

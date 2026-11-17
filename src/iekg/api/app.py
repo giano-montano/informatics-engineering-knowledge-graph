@@ -22,6 +22,7 @@ from iekg.api.models import (
     AuditGate,
     AuditReportView,
     LatestAuditReport,
+    OperationMode,
     RunDetail,
     RunDiscards,
     RunSummary,
@@ -68,6 +69,14 @@ class ApiContext:
     worker: WorkerLauncher
     resources: ResourceIndex
     navigation: GraphNavigation
+    # In rehearsal mode uploads go apart from the documents the graph serves
+    # (ADR-013, amendment 2026-11); None keeps them together.
+    uploads_dir: Path | None = None
+    rehearsal: bool = False
+
+    @property
+    def upload_documents(self) -> Path:
+        return self.uploads_dir or self.documents_dir
 
     def store(self) -> OperationalStore:
         # Opened and closed inside each endpoint, not in a dependency: a sqlite3
@@ -134,7 +143,7 @@ def operations_router(context: ApiContext) -> APIRouter:
         with context.store() as store:
             try:
                 run_id = submit_document(
-                    store, context.documents_dir, file.file, file_name=file.filename or "",
+                    store, context.upload_documents, file.file, file_name=file.filename or "",
                     resource_type=resource_type, course_code=course_code, course_name=course_name,
                 )
             except SubmissionError as error:
@@ -144,7 +153,7 @@ def operations_router(context: ApiContext) -> APIRouter:
         except OSError as error:
             # All or nothing: a run no worker will take is withdrawn (ADR-007).
             with context.store() as store:
-                withdrawn = withdraw_submission(store, context.documents_dir, run_id)
+                withdrawn = withdraw_submission(store, context.upload_documents, run_id)
             if withdrawn:
                 raise HTTPException(
                     503, f"could not launch the worker ({error}); nothing was recorded, submit the document again",
@@ -175,6 +184,11 @@ def operations_router(context: ApiContext) -> APIRouter:
             except KeyError:
                 batch, raw_output = None, None
             return RunDiscards.of(store.discards_of(run_id), batch, raw_output)
+
+    @router.get("/mode")
+    def operation_mode() -> OperationMode:
+        """Whether submissions are rehearsals that never reach the graph (ADR-013, amendment 2026-11)."""
+        return OperationMode(rehearsal=context.rehearsal)
 
     @router.get("/audit-reports/latest")
     def latest_audit_report() -> LatestAuditReport:

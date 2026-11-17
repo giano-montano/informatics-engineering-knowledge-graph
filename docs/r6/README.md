@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-11-17 · **Grafo:** corrida final de R4 (CS2023 y los 13 sílabos; hoja de datos 2 del
 plan) · **Navegador:** Chromium sin interfaz, con Playwright 1.65.1, a 1440 × 900. Las capturas O1 a
-O6 y la sección 4 son del 2026-11-15, sobre el grafo de desarrollo y con el aspecto anterior.
+O6 son de un grafo de ensayo con las trece corridas de la cadena final (sección 4).
 
 La aplicación está en [`web/`](../../web/README.md). Aquí quedan las capturas de sus pantallas y el
 resultado de recorrer los casos del
@@ -40,8 +40,8 @@ Con el nombre de la captura equivalente de R5 (`docs/r5/p1-lienzo/capturas/`) do
 | [`O1-acceso-rechazado`](capturas/O1-acceso-rechazado.png) | El acceso del operador rechaza un token inválido | CU-11 |
 | [`O2-panel-del-operador`](capturas/O2-panel-del-operador.png) | El panel: compuerta de auditoría, carga y corridas | CU-11 |
 | [`O3-corrida-registrada`](capturas/O3-corrida-registrada.png) | Una corrida recién registrada, pendiente | CU-11 |
-| [`O4-detalle-de-la-corrida`](capturas/O4-detalle-de-la-corrida.png) | El resumen de una corrida que terminó como fallida | CU-11 |
-| [`O5-auditoria-de-cierre`](capturas/O5-auditoria-de-cierre.png), [`O6-descartes`](capturas/O6-descartes.png) | Sus pestañas de auditoría de cierre y de descartes, vacías | CU-11 |
+| [`O4-detalle-de-la-corrida`](capturas/O4-detalle-de-la-corrida.png) | El resumen de esa corrida, ya terminada | CU-11 |
+| [`O5-auditoria-de-cierre`](capturas/O5-auditoria-de-cierre.png), [`O6-descartes`](capturas/O6-descartes.png) | Su auditoría de cierre, regla por regla, y su pestaña de descartes, sin descartes | CU-11 |
 
 ## 2. Recorrido técnico de CA-01 a CA-10
 
@@ -111,30 +111,34 @@ es justo lo que mide la prueba de aceptación.
 
 ## 4. Recorrido técnico de CA-11 (panel del operador)
 
-`web/tests/operator-walkthrough.mjs`, contra la API local, con el sílabo de 1INF33 y el servidor
-local de pruebas como proveedor del modelo de lenguaje. **El recorrido no llegó a ver una ingesta
-terminada**, por dos causas ajenas a la aplicación:
+`web/tests/operator-walkthrough.mjs` sube un documento, así que escribe en el grafo. Por eso se corrió
+en un entorno de ensayo aparte: otro Neo4j, la API en otro puerto y una copia de los almacenes. El
+grafo y los almacenes de la medición no se tocaron.
 
-- En el primer intento (corrida 5) el worker murió al cargar los modelos de lectura de PDF, por falta
-  de memoria en la máquina (`memory allocation of 2359296 bytes failed`). La corrida quedó «en
-  curso» en el almacén operacional y el panel la siguió mostrando así: es la limitación que declara
-  ADR-007, una corrida interrumpida no se recupera sola.
-- En el segundo (corrida 6) el servidor local de pruebas ya no respondía, y la corrida terminó como
-  fallida (`provider: Connection error.`).
+**El proveedor del modelo de lenguaje fue simulado**, como el plan permite.
+`scripts/replay_provider.py` responde a la ruta de Chat Completions con la salida que dejó en el
+almacén operacional una corrida real: la 14 de la cadena final (1INF47, Proyecto de Implementación
+de Software). El resto de la ingesta es el de producción: el worker lee el PDF con Docling, arma el
+lote, lo valida, lo escribe y lo audita. El grafo de ensayo se preparó como lo vio esa corrida al
+empezar: `load` y `reapply` con los hechos de las corridas 1 a 13.
 
 | Paso | Resultado esperado | Resultado | Lo que se vio |
 |---|---|---|---|
 | 1 | Un token inválido se rechaza y no da acceso | cumple | «El sistema rechazó ese token. Revísalo y vuelve a intentarlo.» |
 | 2 | El token del operador da acceso y muestra el estado de la compuerta de auditoría | cumple | «Compuerta de auditoría: abierta», con el último reporte, de la reaplicación, sin violaciones |
-| 3 | Subir el sílabo con su tipo, código y nombre de curso registra una corrida nueva, pendiente | cumple | «Corrida 6 registrada como pendiente. Se lanzó el worker.» |
-| 4 | La corrida avanza hasta un estado final, con su duración | cumple, con un estado final de fallo | Estados vistos, sin tocar nada: pendiente → en curso → fallida; duración 40 s |
-| 5 | Sus descartes, o el aviso de que no hubo, y su reporte de auditoría regla por regla; el estado es el del almacén operacional | cumple en parte | Estado «fallida», igual que en el almacén; aviso de que no hubo descartes; sin reporte de cierre, porque una corrida fallida no escribe |
+| 3 | Subir el sílabo con su tipo, código y nombre de curso registra una corrida nueva, pendiente | cumple | «Corrida 14 registrada como pendiente. Se lanzó el worker.» |
+| 4 | La corrida avanza hasta un estado final, con su duración | cumple | Estados vistos, sin tocar nada: pendiente → en curso → terminada; duración 1 min 44 s |
+| 5 | Sus descartes, o el aviso de que no hubo, y su reporte de auditoría regla por regla; el estado es el del almacén operacional | cumple | Estado «terminada», igual que en el almacén; 15 reglas en la auditoría de cierre, sin violaciones; 0 descartes |
 
-Lo que queda por ver en CA-11: una corrida que termine bien, con su reporte de cierre regla por regla.
-Ese reporte sí se vio en el panel para las cuatro corridas terminadas que ya estaban en el almacén
-(15 reglas cada una), pero no para una corrida subida en este recorrido. Hay que repetirlo con el
-servidor de pruebas levantado y memoria libre.
+Los hechos que escribió la corrida de ensayo son los de la corrida 14 real: los mismos 21 nodos y 51
+aristas, con los mismos nombres y propiedades y los mismos destinos en CS2023. Solo cambian las
+claves, que nacen al subir el documento. El simulador recibió una sola llamada, con el esquema de
+salida estricto. La corrida registra como modelo `simulated-replay (gpt-6.1-sol)` y 0 tokens, así
+que en el almacén queda dicho que la respuesta fue simulada.
 
-Ninguna de las dos corridas escribió en el grafo. Después se ejecutaron `load` y `reapply`, desde el
-contenedor de construcción, y el recorrido de CA-01 a CA-10 se repitió con el mismo resultado.
+Lo que este recorrido no comprueba es la llamada a un proveedor real; esa parte la midió la corrida
+final de R4. Hubo dos intentos anteriores, el 2026-11-15, con un proveedor local de pruebas, y no
+llegaron a una corrida terminada. En el primero, el worker murió por falta de memoria al cargar los
+modelos de lectura de PDF, y la corrida quedó «en curso», que es la limitación que declara ADR-007.
+En el segundo, el proveedor ya no respondía y la corrida terminó como fallida.
 

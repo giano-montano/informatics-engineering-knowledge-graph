@@ -4,7 +4,7 @@
   // state that offers to walk the areas.
   import { searchByName } from '../lib/api-client.js';
   import { exploration } from '../lib/exploration-state.svelte.js';
-  import { EXAMPLE_SEARCHES } from '../lib/tour.js';
+  import { examples, loadExamples } from '../lib/examples.svelte.js';
   import { classColor, className, layerOf } from '../lib/vocabulary.js';
   import Icon from './Icon.svelte';
   import LayerMark from './LayerMark.svelte';
@@ -18,6 +18,7 @@
   let active = $state(-1);
   let pending = null;
   let timer = null;
+  loadExamples();
 
   export function focusInput() {
     input?.focus();
@@ -138,7 +139,7 @@
           <p>Tampoco hay un área o una unidad de CS2023 con ese nombre. Prueba con otra palabra o recorre las áreas.</p>
           <div class="actions">
             <button class="button primary" type="button" onclick={seeAreas}>Ver las áreas</button>
-            {#each EXAMPLE_SEARCHES.slice(0, 4) as example (example)}
+            {#each examples.names.slice(0, 4) as example (example)}
               <button class="button" type="button" onclick={() => searchFor(example)}>{example}</button>
             {/each}
           </div>

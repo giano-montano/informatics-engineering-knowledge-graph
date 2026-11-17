@@ -156,8 +156,9 @@ es **InfoKnows**: va en la interfaz y en los README. «Constelación» es el
 nombre de la propuesta en los documentos de R5, que no se renombran; InfoKnows
 no va en los ADR ni en el modelo C4.
 
-Lo que **no** está decidido del despliegue: la edición de Neo4j y qué puertos
-se publican. El compose deja las dos cosas como estaban y parametrizadas.
+Del despliegue: Neo4j es Community (un volumen creado con Enterprise no abre
+con Community; `NEO4J_IMAGE` en `.env` conserva Enterprise), la web publica el
+80 (`IEKG_WEB_PORT`) y los puertos de Neo4j se publican solo en el loopback.
 
 ## 7. Comandos
 
@@ -186,7 +187,7 @@ npm run build             # compilado estático en web/dist/
 npm run walkthrough       # CA-01 a CA-10 con puntero y con teclado; solo lee
 cd ..
 
-docker compose up -d --build              # todo en contenedores; la web en :8080
+docker compose up -d --build              # todo en contenedores; la web en :80
 docker compose stop api                   # antes de un proceso de construcción
 docker compose run --rm build load        # y `reapply`; después, `start api`
 

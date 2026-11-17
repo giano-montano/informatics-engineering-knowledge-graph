@@ -45,7 +45,7 @@ El `docker-compose.yml` de la raíz levanta todo: `docker compose up -d --build`
 El contenedor `web` compila la aplicación y la sirve con nginx, que reenvía
 `/api` y `/resources` a la API bajo el mismo origen
 ([ADR-007](../docs/decisiones/0007-invocacion-de-la-ingesta-y-escritor-unico.md)):
-por eso no hay CORS ni ninguna dirección con el host escrito. El puerto se elige
+por eso no hay CORS ni ninguna dirección con el host escrito. El puerto, el 80 por omisión, se elige
 con `IEKG_WEB_PORT` en `.env`. Los pasos completos están en el README de la
 raíz, sección «Desplegar con Docker».
 
@@ -101,9 +101,9 @@ Lo demás es apoyo de esos componentes:
   y pregunta.
 - `src/lib/graph-reading.js`: lecturas de una respuesta `{nodes, edges}`. Solo
   reordenan lo que la API devolvió; no derivan nodos ni aristas.
-- `src/lib/tour.js`: las búsquedas de ejemplo y el recorrido sugerido del
-  inicio. Son los únicos ejemplos escritos en la aplicación y dependen del
-  grafo cargado: se revisan con el grafo final.
+- `src/lib/examples.svelte.js`: las búsquedas de ejemplo del inicio. Ninguna
+  está escrita en la aplicación: son nombres tomados al azar del grafo
+  cargado, de los temas y conceptos junto a dos cursos.
 - `src/components/`: `NodeLink`, `LayerMark`, `DocLink`, `RelationCard` e `Icon`,
   piezas que comparten la ficha, la cabecera y el buscador.
 - `src/app.css`: los colores, la tipografía y los estilos del lienzo. El color
@@ -127,7 +127,7 @@ la prueba de aceptación se hace con personas.
 ```powershell
 npx playwright install chromium      # una vez
 npm run walkthrough                  # contra http://localhost:5173
-$env:INFOKNOWS_URL = "http://localhost:8080"; npm run walkthrough   # contra el despliegue
+$env:INFOKNOWS_URL = "http://localhost"; npm run walkthrough   # contra el despliegue
 node tests/walkthrough.mjs --shots ../docs/r6/capturas             # y guarda las capturas
 ```
 

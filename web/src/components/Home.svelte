@@ -4,7 +4,7 @@
   // the areas that already have topics from the syllabi.
   import { ApiError, fetchOverview } from '../lib/api-client.js';
   import { exploration } from '../lib/exploration-state.svelte.js';
-  import { EXAMPLE_SEARCHES, TOUR, runStep } from '../lib/tour.js';
+  import { examples, loadExamples } from '../lib/examples.svelte.js';
   import { byName, plural } from '../lib/vocabulary.js';
   import Icon from './Icon.svelte';
   import NodeLink from './NodeLink.svelte';
@@ -19,6 +19,7 @@
       exploration.overview = await fetchOverview();
       exploration.status = 'ready';
       status = 'ready';
+      loadExamples();
     } catch (error) {
       message = error instanceof ApiError ? error.message : 'No se pudo cargar el inicio.';
       status = 'error';
@@ -34,13 +35,6 @@
     .sort((a, b) => (a.course_code ?? '').localeCompare(b.course_code ?? '')));
   const empty = $derived(status === 'ready' && !areas.length);
 
-  let running = $state(-1);
-  async function take(index) {
-    running = index;
-    const found = await runStep(index, exploration).catch(() => false);
-    running = -1;
-    if (!found) exploration.notify(`El grafo cargado no tiene «${TOUR[index].name}»: este ejemplo no aplica.`);
-  }
 </script>
 
 <aside class="panel" id="focus-panel" aria-label="Por dónde empezar" tabindex="-1">
@@ -68,14 +62,17 @@
       <p class="note">Todavía no se cargó el estándar CS2023 ni ningún sílabo. El operador tiene que ejecutar la carga.</p>
     </section>
   {:else}
-    <section>
-      <h3>Busca por nombre</h3>
-      <div class="chips">
-        {#each EXAMPLE_SEARCHES as example (example)}
-          <button class="button" type="button" onclick={() => onsearch?.(example)}>{example}</button>
-        {/each}
-      </div>
-    </section>
+    {#if examples.names.length}
+      <section>
+        <h3>Busca por nombre</h3>
+        <p class="note">Algunos nombres del grafo, al azar:</p>
+        <div class="chips">
+          {#each examples.names as example (example)}
+            <button class="button" type="button" onclick={() => onsearch?.(example)}>{example}</button>
+          {/each}
+        </div>
+      </section>
+    {/if}
 
     <section>
       <h3>Cursos con sílabo <span class="count">{courses.length}</span></h3>
@@ -103,22 +100,6 @@
           </ul>
         </details>
       {/if}
-    </section>
-
-    <section>
-      <details>
-        <summary>Recorrido sugerido<span class="count">{TOUR.length} ejemplos</span></summary>
-        <p class="note">Cada ejemplo abre una pregunta que el mapa responde.</p>
-        <ol class="tour">
-          {#each TOUR as step, index (step.text)}
-            <li>
-              <button type="button" disabled={running >= 0} onclick={() => take(index)}>
-                <span class="number">{index + 1}</span><span>{step.text}</span>
-              </button>
-            </li>
-          {/each}
-        </ol>
-      </details>
     </section>
   {/if}
 </aside>
@@ -247,38 +228,6 @@
 
   summary:hover {
     background: var(--hover);
-  }
-
-  .tour {
-    display: grid;
-    gap: 2px;
-    margin-top: 8px;
-  }
-
-  .tour button {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    gap: 10px;
-    width: 100%;
-    padding: 8px;
-    margin-left: -8px;
-    border-radius: var(--radius-small);
-    text-align: left;
-  }
-
-  .tour button:hover:not(:disabled) {
-    background: var(--raised);
-  }
-
-  .number {
-    display: grid;
-    place-items: center;
-    width: 22px;
-    height: 22px;
-    border: 1px solid var(--line-strong);
-    border-radius: 50%;
-    color: var(--text-2);
-    font-size: var(--step--1);
   }
 
   .problem p {

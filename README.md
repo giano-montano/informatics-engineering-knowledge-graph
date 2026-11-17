@@ -239,7 +239,9 @@ docker compose up -d --build
 docker compose ps           # neo4j y api "(healthy)", web "Up"
 ```
 
-La aplicación queda en `http://<host>:8080` (o en el puerto de `IEKG_WEB_PORT`).
+La aplicación queda en `http://<host>` (puerto 80, o el de `IEKG_WEB_PORT`).
+Los puertos de Neo4j se publican solo en el loopback del host: en un servidor,
+el Browser se alcanza con un túnel SSH (`ssh -L 7474:localhost:7474 -L 7687:localhost:7687 …`).
 La primera construcción tarda unos minutos. La imagen de la aplicación instala
 las dependencias en las versiones de `uv.lock`, con PyTorch en su compilado
 solo para CPU y sin las bibliotecas de CUDA: queda en unos 2,5 GB. Para
@@ -260,11 +262,11 @@ Lo que hay que poner en `.env` en cada máquina:
 
 - `NEO4J_PASSWORD` e `IEKG_OPERATOR_TOKEN`.
 - `IEKG_PUBLIC_BASE_URL`: la dirección por la que los estudiantes llegan a la
-  web, por ejemplo `http://<IP fija>:8080`. Queda escrita en el localizador de
+  web, por ejemplo `http://<IP fija>`. Queda escrita en el localizador de
   cada documento que se suba (ADR-009), así que se fija **antes** de ingestar.
   InfoKnows abre los documentos por su ruta, de modo que los enlaces siguen
   funcionando aunque esa dirección cambie; el localizador guardado, no.
-- `IEKG_WEB_PORT`, si la web no va en el 8080.
+- `IEKG_WEB_PORT`, si la web no va en el 80.
 - El proveedor del modelo de lenguaje (`IEKG_LLM_*`), solo si se va a ingestar.
   Si el proveedor corre en el propio host, dentro del contenedor se llega a él
   con `IEKG_LLM_BASE_URL_IN_CONTAINER=http://host.docker.internal:8765/v1`.
@@ -412,14 +414,14 @@ Solo las lee `docker-compose.yml`:
 
 | Variable | Por defecto | Uso |
 |---|---|---|
-| `IEKG_WEB_PORT` | `8080` | Puerto del host en que nginx publica la web |
+| `IEKG_WEB_PORT` | `80` | Puerto del host en que nginx publica la web |
 | `IEKG_DATA_DIR` | `./var` | Carpeta del host con los tres almacenes de archivos |
 | `IEKG_LLM_BASE_URL_IN_CONTAINER` | la de `IEKG_LLM_BASE_URL` | Dirección del proveedor vista desde el contenedor |
-| `NEO4J_IMAGE` | `neo4j:5.26.28-enterprise` | Imagen de Neo4j |
+| `NEO4J_IMAGE` | `neo4j:5.26.28-community` | Imagen de Neo4j |
 | `NEO4J_HEAP_INITIAL`, `NEO4J_HEAP_MAX`, `NEO4J_PAGECACHE` | `2G`, `4G`, `2G` | Memoria de Neo4j |
 
 En los contenedores, `IEKG_PUBLIC_BASE_URL` vale por omisión
-`http://localhost:8080`, la dirección de la web.
+`http://localhost`, la dirección de la web.
 
 Las rutas relativas se resuelven desde el directorio actual: corre los
 comandos desde la raíz del repositorio.
@@ -466,9 +468,12 @@ var/                 Datos locales del sistema (no se versiona)
   `docker compose down -v` y `docker compose up -d`.
 - **Tildes mal impresas en la consola de Windows:** es solo la consola. Los
   datos están bien guardados y el Browser los muestra correctamente.
-- **Edición de Neo4j:** el `docker-compose.yml` usa Neo4j Enterprise con
-  licencia de evaluación, para desarrollo. El sistema solo usa funciones de la
-  edición Community, que es la del despliegue.
+- **Edición de Neo4j:** el `docker-compose.yml` usa Neo4j Community. Un
+  volumen creado antes con Enterprise no abre con Community (el contenedor se
+  reinicia sin llegar a «healthy»): o se pone
+  `NEO4J_IMAGE=neo4j:5.26.28-enterprise` en `.env`, o se crea un volumen nuevo
+  con `docker compose down -v` y se reconstruye el grafo con `load` y
+  `reapply`.
 - **`NOT NULL constraint failed: audit_reports.violations`:** el
   `var/operational.sqlite` es anterior a los reportes abiertos. Muévelo o
   bórralo, y la siguiente carga crea uno nuevo. La base no se toca.

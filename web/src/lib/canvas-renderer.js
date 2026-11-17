@@ -5,10 +5,8 @@
 
 import * as d3 from 'd3';
 
+import { CHAR_WIDTH, LABEL_FLOOR, LINE_HEIGHT, lineWidth } from './layouts.js';
 import { CLASSES, RELATIONS, accessibleName, classColor, className, layerOf } from './vocabulary.js';
-
-const LINE_HEIGHT = 16;
-const CHAR_WIDTH = 7.1;
 
 function hexagon(r) {
   const points = d3.range(6).map((i) => {
@@ -28,12 +26,6 @@ function outline(d, r = d.r) {
 }
 
 const DOCUMENT_GLYPH = 'M-3.6,-5h4.6l2.8,2.8v7.2h-7.4zM1,-5v2.8h2.8';
-
-/** How wide a line of a name is drawn: capitals and the name in focus take more. */
-function lineWidth(line, focus) {
-  const capitals = line.replace(/[^A-ZÁÉÍÓÚÑ]/g, '').length;
-  return (line.length + capitals * 0.22) * CHAR_WIDTH * (focus ? 1.3 : 1);
-}
 
 /** The room a point takes with its name; `grow` is how much the names are enlarged (see app.css). */
 function labelBox(d, grow = 1) {
@@ -86,7 +78,7 @@ export function createCanvas(container, handlers) {
   let placed = new Map();
   let selectedEdge = null;
   let firstRender = true;
-  let labelFloor = 0.85;
+  let labelFloor = LABEL_FLOOR;
 
   // --- Zoom -------------------------------------------------------------------
 
@@ -268,7 +260,7 @@ export function createCanvas(container, handlers) {
 
   function render(scene, options = {}) {
     // How small the names may get when the map is fitted small (see app.css).
-    labelFloor = scene.labelFloor ?? 0.85;
+    labelFloor = scene.labelFloor ?? LABEL_FLOOR;
     svg.style('--floor', labelFloor);
     const hadFocus = svg.node().contains(document.activeElement);
     const anchor = placed.get(options.enterFrom) ?? placed.get(scene.focusKey) ?? { x: 0, y: 0 };

@@ -49,7 +49,9 @@ Con el nombre de la captura equivalente de R5 (`docs/r5/p1-lienzo/capturas/`) do
 (Tab, flechas, Enter, `+`, `Ctrl K` y `Alt ←`; sin ratón). Usa los casos genéricos del plan con su
 hoja de datos 2, y donde el plan pide un dato lo compara con lo que responde la API en ese momento.
 Se corrió contra el despliegue con Docker Compose, detrás de nginx: **66 de 66 comprobaciones
-cumplen**.
+cumplen**. Tras corregir dos solapamientos de nombres en el mapa, se repitió con el compilado de
+producción servido por `vite preview` contra la API de ese mismo despliegue, con el mismo resultado,
+y las capturas de la sección 1 son de esa corrida.
 
 El paso 4 de CA-10 no está en el plan: comprueba el interruptor «Fuentes» del flujo de CU-10.
 

@@ -29,10 +29,18 @@ function outline(d, r = d.r) {
 
 const DOCUMENT_GLYPH = 'M-3.6,-5h4.6l2.8,2.8v7.2h-7.4zM1,-5v2.8h2.8';
 
-function labelBox(d) {
+/** How wide a line of a name is drawn: capitals and the name in focus take more. */
+function lineWidth(line, focus) {
+  const capitals = line.replace(/[^A-ZÁÉÍÓÚÑ]/g, '').length;
+  return (line.length + capitals * 0.22) * CHAR_WIDTH * (focus ? 1.3 : 1);
+}
+
+/** The room a point takes with its name; `grow` is how much the names are enlarged (see app.css). */
+function labelBox(d, grow = 1) {
   if (!d.label) return { x0: d.tx - d.r, x1: d.tx + d.r, y0: d.ty - d.r, y1: d.ty + d.r };
-  const width = Math.max(...d.label.lines.map((line) => line.length), (d.label.sub ?? '').length * 0.86) * CHAR_WIDTH;
-  const height = (d.label.lines.length + (d.label.sub ? 1 : 0)) * LINE_HEIGHT;
+  const focus = d.tone === 'focus';
+  const width = Math.max(...d.label.lines.map((line) => lineWidth(line, focus)), (d.label.sub ?? '').length * 0.86 * CHAR_WIDTH) * grow;
+  const height = (d.label.lines.length + (d.label.sub ? 1 : 0)) * LINE_HEIGHT * grow;
   const { side } = d.label;
   if (side === 'left') return { x0: d.tx - d.r - 10 - width, x1: d.tx + d.r, y0: d.ty - Math.max(d.r, height / 2), y1: d.ty + Math.max(d.r, height / 2) };
   if (side === 'right') return { x0: d.tx - d.r, x1: d.tx + d.r + 10 + width, y0: d.ty - Math.max(d.r, height / 2), y1: d.ty + Math.max(d.r, height / 2) };
@@ -78,6 +86,7 @@ export function createCanvas(container, handlers) {
   let placed = new Map();
   let selectedEdge = null;
   let firstRender = true;
+  let labelFloor = 0.85;
 
   // --- Zoom -------------------------------------------------------------------
 
@@ -92,7 +101,18 @@ export function createCanvas(container, handlers) {
   function fit(duration = 520) {
     const { width, height } = container.getBoundingClientRect();
     if (!current.nodes.length || !width || !height) return;
-    const boxes = current.nodes.map(labelBox);
+    // Fitted once with the names at their size, and again with the size they
+    // take at that zoom: a map fitted small enlarges its names.
+    const first = fitScale(width, height, 1);
+    const { scale, x0, x1, y0, y1, pad } = fitScale(width, height, 1 / Math.min(1, Math.max(labelFloor, first.scale)));
+    const tx = pad.x + (width - 2 * pad.x) / 2 - ((x0 + x1) / 2) * scale;
+    const ty = pad.top + (height - pad.top - pad.bottom) / 2 - ((y0 + y1) / 2) * scale;
+    const target = d3.zoomIdentity.translate(tx, ty).scale(scale);
+    (reduced.matches || !duration ? svg : svg.transition().duration(duration).ease(d3.easeCubicOut)).call(zoom.transform, target);
+  }
+
+  function fitScale(width, height, grow) {
+    const boxes = current.nodes.map((d) => labelBox(d, grow));
     for (const caption of current.captions) {
       const w = caption.text.length * CHAR_WIDTH;
       const x0 = caption.anchor === 'start' ? caption.x : caption.anchor === 'end' ? caption.x - w : caption.x - w / 2;
@@ -106,11 +126,7 @@ export function createCanvas(container, handlers) {
     // The bottom clears the trail, the legend and the controls that sit on the canvas.
     const pad = { x: 40, top: 24, bottom: 112 };
     const k = Math.min(1.15, (width - 2 * pad.x) / Math.max(1, x1 - x0), (height - pad.top - pad.bottom) / Math.max(1, y1 - y0));
-    const scale = Math.max(0.3, k);
-    const tx = width / 2 - ((x0 + x1) / 2) * scale;
-    const ty = pad.top + (height - pad.top - pad.bottom) / 2 - ((y0 + y1) / 2) * scale;
-    const target = d3.zoomIdentity.translate(tx, ty).scale(scale);
-    (reduced.matches || !duration ? svg : svg.transition().duration(duration).ease(d3.easeCubicOut)).call(zoom.transform, target);
+    return { scale: Math.max(0.3, k), x0, x1, y0, y1, pad };
   }
 
   function zoomBy(factor) {
@@ -252,7 +268,8 @@ export function createCanvas(container, handlers) {
 
   function render(scene, options = {}) {
     // How small the names may get when the map is fitted small (see app.css).
-    svg.style('--floor', scene.labelFloor ?? 0.85);
+    labelFloor = scene.labelFloor ?? 0.85;
+    svg.style('--floor', labelFloor);
     const hadFocus = svg.node().contains(document.activeElement);
     const anchor = placed.get(options.enterFrom) ?? placed.get(scene.focusKey) ?? { x: 0, y: 0 };
     const nodes = scene.nodes.map((target) => {

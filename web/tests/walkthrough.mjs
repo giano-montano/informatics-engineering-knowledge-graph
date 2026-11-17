@@ -3,8 +3,8 @@
 // API, once with the pointer and once with the keyboard alone.
 //
 // It is a check before the acceptance test, not the test: that one is run
-// with the advisor and three users. The examples are those of the plan,
-// marked [SFG] there: with another graph they have to be fixed again.
+// with the advisor and three users. The cases are the generic ones of the
+// plan and SHEET is its data sheet: with another graph, only SHEET changes.
 //
 //   node tests/walkthrough.mjs [--shots <dir>] [--only pointer|keyboard]
 //
@@ -206,6 +206,34 @@ async function openDocument(link) {
   return { href, tab: target === '_blank' && Boolean(popup), status: response.status(), type: response.headers()['content-type'] ?? '' };
 }
 
+// --- The data sheet ---------------------------------------------------------------
+
+// Sheet 2 of the plan: the graph of the final run (CS2023 and the 13 syllabi).
+// With another graph, this object is what changes; the cases below do not.
+const SHEET = {
+  search: 'memoria',
+  noMatch: 'compiladores',
+  topic: 'ADMINISTRACIÓN DE MEMORIA',
+  concept: 'Memoria virtual',
+  prerequisite: 'Paginación',
+  free: 'Memoria',
+  syllabus: 'Sílabo 1INF29',
+  course: { name: 'Sistemas Operativos', code: '1INF29' },
+  area: 'Sistemas Operativos',
+  wideArea: { name: 'Fundamentos Algorítmicos', syllabi: ['Sílabo 1INF24', 'Sílabo 1INF27', 'Sílabo 1INF32'] },
+  general: 'Llamadas al sistema',
+  unit: 'Gestión de Memoria',
+  chain: 'Sistemas Operativos › Gestión de Memoria › ADMINISTRACIÓN DE MEMORIA',
+  whyStop: 'Programación 2',
+  expected: { courses: 13, litAreas: 10, results: 11, neighbors: 9, concepts: 7, steps: 6 },
+};
+
+const sorted = (list) => [...list].sort((a, b) => a.localeCompare(b));
+const same = (a, b) => JSON.stringify(sorted(a)) === JSON.stringify(sorted(b));
+const openTopic = () => open(SHEET.search, SHEET.topic, 'Tema');
+const openConcept = () => open(SHEET.concept.toLowerCase(), SHEET.concept, 'Concepto');
+const openCourse = () => open(SHEET.course.name.toLowerCase(), SHEET.course.name, 'Curso');
+
 // --- The cases --------------------------------------------------------------------
 
 async function ca01() {
@@ -220,39 +248,34 @@ async function ca01() {
     const expected = overview.nodes.filter((n) => n.label === 'KnowledgeArea' && n.topics > 0);
     const figures = await page.$$eval('svg.graph g.node-main.class-KnowledgeArea .sub', (items) => items.map((i) => i.textContent));
     const text = await panel();
-    const seen = `${areas.length} áreas, ${courses.length} cursos, ${lit.length} áreas con temas; ${figures[0]}`;
-    if (courses.length !== 4) notes.add(`CA-01.1: el inicio muestra ${courses.length} cursos; el plan dice 4 [SFG].`);
-    if (lit.length !== 7) notes.add(`CA-01.1: ${lit.length} áreas con temas; el plan dice 7 [SFG].`);
     return {
       ok: areas.length === 17 && courses.length === overview.nodes.filter((n) => n.label === 'Course').length
-        && lit.length === expected.length && figures.length === lit.length && figures.every((f) => /tema.* · .*concepto/.test(f))
-        && text.includes(`${lit.length} de 17`),
-      seen,
+        && courses.length === SHEET.expected.courses && lit.length === expected.length && lit.length === SHEET.expected.litAreas
+        && figures.length === lit.length && figures.every((f) => /tema.* · .*concepto/.test(f)) && text.includes(`${lit.length} de 17`),
+      seen: `${areas.length} áreas, ${courses.length} cursos, ${lit.length} áreas con temas; ${figures[0]}`,
     };
   });
-  await search('lógica');
-  await shot('B1-busqueda-logica');
-  await check('CA-01', 2, 'Buscar «lógica» lista hasta 20 coincidencias, cada una con su clase y su origen en texto', async () => {
+  await search(SHEET.search);
+  await shot('B1-busqueda');
+  await check('CA-01', 2, 'La búsqueda lista hasta 20 coincidencias, cada una con su clase y su origen en texto', async () => {
     const list = await options();
-    if (list.length !== 9) notes.add(`CA-01.2: «lógica» da ${list.length} resultados; el plan dice 9 [SFG]. La API devuelve ${list.length} coincidencias y 2 documentos de procedencia, que no son resultados.`);
     return {
-      ok: list.length > 0 && list.length <= 20 && list.every((item) => item.kind && /CS2023|Sílabo PUCP/.test(item.layer)),
-      seen: `${list.length} resultados: ${list.map((i) => `${i.name} (${i.kind}, ${i.layer})`).join('; ')}`,
+      ok: list.length === SHEET.expected.results && list.length <= 20 && list.every((item) => item.kind && /CS2023|Sílabo PUCP/.test(item.layer)),
+      seen: `${list.length} resultados para «${SHEET.search}»: ${list.map((i) => `${i.name} (${i.kind}, ${i.layer})`).join('; ')}`,
     };
   });
-  await check('CA-01', 3, 'Elegir el tema «Lógica proposicional» lo pone en foco, en el mapa y en la ficha', async () => {
-    await choose('Lógica proposicional', 'Tema');
+  await check('CA-01', 3, 'Elegir el tema lo pone en foco, en el mapa y en la ficha', async () => {
+    await choose(SHEET.topic, 'Tema');
     const focus = await page.locator('svg.graph g.node[aria-current=true]').getAttribute('aria-label');
     const heading = await page.locator('#focus-panel h2').innerText();
-    return { ok: (await title()) === 'Lógica proposicional' && focus.startsWith('Tema Lógica proposicional') && heading === 'Lógica proposicional', seen: focus };
+    return { ok: (await title()) === SHEET.topic && focus.startsWith(`Tema ${SHEET.topic}`) && heading === SHEET.topic, seen: focus };
   });
-  await search('árbol');
+  await search(SHEET.noMatch);
   await shot('B2-busqueda-sin-resultados');
-  await check('CA-01', 4, 'Buscar «árbol» dice que ningún sílabo cargado lo trata y ofrece ver las áreas', async () => {
+  await check('CA-01', 4, 'Un texto sin coincidencias: el sistema lo dice y ofrece ver las áreas', async () => {
     const text = await page.locator('#search-results').innerText();
     const offered = await page.getByRole('button', { name: 'Ver las áreas' }).isVisible();
-    if (!text.includes('Ningún sílabo')) notes.add('CA-01.4: «árbol» tiene resultados en este grafo; el plan lo usa como texto sin coincidencias [SFG].');
-    return { ok: text.includes('Ningún sílabo cargado trata «árbol»') && offered, seen: text };
+    return { ok: text.includes(`Ningún sílabo cargado trata «${SHEET.noMatch}»`) && offered && (await options()).length === 0, seen: text };
   });
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
@@ -260,7 +283,7 @@ async function ca01() {
 
 async function ca02() {
   await goHome();
-  await open('lógica', 'Lógica proposicional', 'Tema');
+  await openTopic();
   await shot('C-foco-lo-que-lo-rodea');
   await check('CA-02', 1, 'Vecinos directos con el nombre de cada relación, y algunos vecinos de esos vecinos, apagados; cada vecino del mapa está en «Conexiones»', async () => {
     const heads = await captions();
@@ -271,25 +294,25 @@ async function ca02() {
     await section('Conexiones').locator('details').evaluateAll((items) => items.forEach((item) => { item.open = true; }));
     const listed = await section('Conexiones').innerText();
     const missing = nodes.filter((n) => n.tone !== 'focus' && !listed.includes(n.name)).map((n) => n.name);
-    if (!says.includes('12 elementos')) notes.add(`CA-02.1: ${says.match(/\d+ elementos?/)?.[0]} directos; el plan dice 12 [SFG].`);
     return {
       ok: heads.some((h) => h.startsWith('Contiene')) && heads.includes('Es parte de') && heads.includes('Material de estudio')
-        && far.length > 0 && missing.length === 0 && (await node('Unidad Matemática Discreta').count()) === 1,
+        && far.length > 0 && missing.length === 0 && (await node(`Unidad ${SHEET.unit}`).count()) === 1
+        && says.includes(`${SHEET.expected.neighbors} elementos`),
       seen: `${says} Rótulos: ${heads.join(', ')}. Apagados: ${far.length}. Fuera de «Conexiones»: ${missing.join(', ') || 'ninguno'}`,
     };
   });
-  await check('CA-02', 2, 'Pasar a «Contradicción» lo pone en foco y lo visitado suma un paso', async () => {
-    await activate(node('Concepto Contradicción'));
+  await check('CA-02', 2, 'Pasar a uno de sus conceptos lo pone en foco y lo visitado suma un paso', async () => {
+    await activate(node(`Concepto ${SHEET.concept}`));
     await settle();
     const trail = await page.$$eval('.trail ol li', (items) => items.map((i) => i.textContent.trim()));
-    return { ok: (await title()) === 'Contradicción' && trail.length === 2, seen: `Visitado: ${trail.join(' › ')}` };
+    return { ok: (await title()) === SHEET.concept && trail.length === 2, seen: `Visitado: ${trail.join(' › ')}` };
   });
   await check('CA-02', 3, 'Volver al tema lo pone otra vez en foco, con sus vecinos', async () => {
     if (mode === 'pointer') await page.click('.step-back');
     else await page.keyboard.press('Alt+ArrowLeft');
     await settle();
     const heads = await captions();
-    return { ok: (await title()) === 'Lógica proposicional' && heads.some((h) => h.startsWith('Contiene')), seen: await title() };
+    return { ok: (await title()) === SHEET.topic && heads.some((h) => h.startsWith('Contiene')), seen: await title() };
   });
   await check('CA-02', 4, 'El + de un vecino agrega sus conexiones al mapa, con nombre, y el foco no cambia', async () => {
     const before = (await mapNodes()).length;
@@ -306,7 +329,7 @@ async function ca02() {
     const after = (await mapNodes()).length;
     await shot('C2-conexiones-traidas-con-mas');
     return {
-      ok: after > before && (await title()) === 'Lógica proposicional' && heads.some((h) => h.startsWith(`Conexiones de «${name}»`)),
+      ok: after > before && (await title()) === SHEET.topic && heads.some((h) => h.startsWith(`Conexiones de «${name}»`)),
       seen: `+ en «${name}»: de ${before} a ${after} puntos; ${heads.find((h) => h.startsWith('Conexiones de'))}`,
     };
   });
@@ -314,11 +337,11 @@ async function ca02() {
 
 async function ca03() {
   await goHome();
-  await open('contradicción', 'Contradicción', 'Concepto');
+  await openConcept();
   await lens('Qué necesitas antes');
   await shot('D2-que-necesitas-antes');
   await check('CA-03', 1, 'Prerrequisitos ordenados por distancia, sin uno de más ni de menos frente a la API', async () => {
-    const key = await keyOf('contradicción', 'Contradicción', 'Concept');
+    const key = await keyOf(SHEET.concept, SHEET.concept, 'Concept');
     const response = await api('/api/concepts/prerequisites', { key });
     const expected = response.nodes.filter((n) => n.depth >= 1).map((n) => `${n.depth}:${n.name_es}`).sort();
     const groups = await section('Qué necesitas antes').evaluate((element) => {
@@ -330,71 +353,79 @@ async function ca03() {
       }
       return found.sort();
     });
-    const onMap = (await mapNodes()).filter((n) => n.tone !== 'focus').map((n) => n.name).sort();
+    const onMap = (await mapNodes()).filter((n) => n.tone !== 'focus').map((n) => n.name);
     const heads = await captions();
     return {
-      ok: JSON.stringify(groups) === JSON.stringify(expected) && JSON.stringify(onMap) === JSON.stringify(expected.map((e) => e.slice(2)).sort())
-        && heads.includes('Justo antes'),
+      ok: JSON.stringify(groups) === JSON.stringify(expected) && same(onMap, expected.map((e) => e.slice(2)))
+        && expected.includes(`1:${SHEET.prerequisite}`) && expected.some((e) => !e.startsWith('1:')) && heads.includes('Justo antes'),
       seen: `Ficha: ${groups.join(', ')}. API: ${expected.join(', ')}. Columnas: ${heads.join(', ')}`,
     };
   });
-  await check('CA-03', 2, 'Por qué «Tabla de verdad» va antes: la relación con su fuente', async () => {
-    if (mode === 'pointer') await clickEdge('Contradicción', 'Tabla de verdad');
-    else await activate(page.getByRole('button', { name: 'Ver la fuente de la relación con Tabla de verdad' }));
+  await check('CA-03', 2, 'Por qué su prerrequisito directo va antes: la relación con su fuente', async () => {
+    if (mode === 'pointer') await clickEdge(SHEET.concept, SHEET.prerequisite);
+    else await activate(page.getByRole('button', { name: `Ver la fuente de la relación con ${SHEET.prerequisite}` }));
     const card = page.locator('#selected-relation');
     await card.waitFor();
     await page.waitForTimeout(400);
     await shot('F1-relacion-seleccionada');
     const text = (await card.innerText()).replace(/\s+/g, ' ');
-    return has(text, 'Contradicción', 'necesita antes', 'Tabla de verdad', 'Lo dice', 'Sílabo 1INF01');
+    return has(text, SHEET.concept, 'necesita antes', SHEET.prerequisite, 'Lo dice', SHEET.syllabus);
   });
-  await check('CA-03', 3, '«Negación» no necesita nada antes, y se muestra qué depende de él', async () => {
-    await open('negación', 'Negación', 'Concepto');
+  await check('CA-03', 3, 'Un concepto sin prerrequisitos: no necesita nada antes, y se muestra qué depende de él', async () => {
+    await open(SHEET.free.toLowerCase(), SHEET.free, 'Concepto');
     await lens('Qué necesitas antes');
+    const key = await keyOf(SHEET.free, SHEET.free, 'Concept');
+    const around = await api('/api/nodes', { key });
+    const dependents = around.edges.filter((e) => e.type === 'HAS_PREREQUISITE' && e.target === key)
+      .map((e) => around.nodes.find((n) => n.key === e.source).name_es);
     const says = await answer();
     const drawn = (await mapNodes()).map((n) => n.name);
-    return { ok: says.includes('no necesita nada antes') && says.includes('Tabla de verdad') && drawn.includes('Tabla de verdad'), seen: says };
+    return {
+      ok: says.includes('no necesita nada antes') && dependents.length > 0 && dependents.every((name) => drawn.includes(name)),
+      seen: `${says} Dependen de él: ${dependents.join(', ')}`,
+    };
   });
 }
 
 async function ca04() {
   await goHome();
-  await open('técnicas de programación', 'Técnicas de Programación', 'Curso');
+  await openCourse();
   await lens('Cursos que conviene llevar antes');
   await shot('D5-cursos-que-conviene-llevar-antes');
   const part = section('Cursos que conviene llevar antes');
+  const key = await keyOf(SHEET.course.name, SHEET.course.name, 'Course');
+  const response = await api('/api/courses/prerequisites', { key });
+  const named = (k) => response.nodes.find((n) => n.key === k);
   await check('CA-04', 1, 'Lo que el curso pide y lo que enseña, con su nombre en la ficha', async () => {
-    const key = await keyOf('técnicas de programación', 'Técnicas de Programación', 'Course');
-    const response = await api('/api/courses/prerequisites', { key });
-    const names = (type) => response.edges.filter((e) => e.type === type && e.source === key)
-      .map((e) => response.nodes.find((n) => n.key === e.target).name_es).sort();
+    const names = (type) => response.edges.filter((e) => e.type === type && e.source === key).map((e) => named(e.target).name_es).sort();
     const text = await part.innerText();
     const required = names('REQUIRES_CONCEPT');
     const taught = names('TEACHES_CONCEPT');
-    if (taught.length !== 43) notes.add(`CA-04.1: el curso enseña ${taught.length} conceptos; el plan dice 43 [SFG].`);
     return {
-      ok: required.every((name) => text.includes(name)) && taught.every((name) => text.includes(name))
+      ok: required.length > 0 && required.every((name) => text.includes(name)) && taught.every((name) => text.includes(name))
         && text.includes(`Lo que pide · ${required.length}`) && (await how()).includes(`${taught.length} conceptos`),
       seen: `Pide: ${required.join(', ')}. Enseña: ${taught.length}, todos con nombre en la ficha`,
     };
   });
-  await check('CA-04', 2, 'El curso que conviene llevar antes, con los conceptos que lo justifican y la fuente de cada uno', async () => {
+  await check('CA-04', 2, 'Los cursos que conviene llevar antes, cada uno con los conceptos que lo justifican y la fuente de cada uno', async () => {
+    const expected = response.nodes.filter((n) => n.label === 'Course' && n.key !== key);
     const previous = part.locator('.previous');
-    const text = (await previous.first().innerText()).replace(/\s+/g, ' ');
-    const sources = await previous.first().locator('.source').count();
-    const items = await previous.first().locator('.list > li').count();
+    const blocks = (await previous.allInnerTexts()).map((t) => t.replace(/\s+/g, ' '));
+    const counts = await previous.evaluateAll((items) => items.map((item) => [item.querySelectorAll('.list > li').length, item.querySelectorAll('.source').length]));
     await activate(previous.first().locator('.source'));
     const card = (await page.locator('#selected-relation').innerText()).replace(/\s+/g, ' ');
     return {
-      ok: text.includes('Fundamentos de Programación') && text.includes('1INF01') && items >= 1 && sources === items && /Lo dice .*Sílabo/.test(card),
-      seen: `${text} · tarjeta: ${card}`,
+      ok: expected.length > 0 && blocks.length === expected.length
+        && expected.every((course) => blocks.some((b) => b.includes(course.name_es) && b.includes(course.course_code)))
+        && counts.every(([items, sources]) => items >= 1 && sources === items) && /Lo dice .*Sílabo/.test(card),
+      seen: `${blocks.join(' · ')} · tarjeta: ${card}`,
     };
   });
 }
 
 async function ca05() {
   await goHome();
-  await open('contradicción', 'Contradicción', 'Concepto');
+  await openConcept();
   await lens('Dónde está en la carrera');
   await shot('D3-donde-esta-en-la-carrera');
   await check('CA-05', 1, 'La cadena área › unidad › tema, y cada eslabón con su capa', async () => {
@@ -403,7 +434,7 @@ async function ca05() {
     const layers = Object.fromEntries(nodes.map((n) => [n.kind, n.label]));
     const chain = await section('Dónde está en la carrera').locator('.chain li').allInnerTexts();
     return {
-      ok: says.includes('Fundamentos Matemáticos y Estadísticos › Matemática Discreta › Lógica proposicional')
+      ok: says.includes(SHEET.chain)
         && layers.KnowledgeArea.includes('de CS2023') && layers.KnowledgeUnit.includes('de CS2023')
         && layers.Topic.includes('de un sílabo') && layers.Concept.includes('de un sílabo')
         && nodes.filter((n) => n.layer === 'reference').length === 2 && chain.length === 4,
@@ -414,41 +445,44 @@ async function ca05() {
 
 async function ca06() {
   await goHome();
-  await open('lógica', 'Lógica proposicional', 'Tema');
+  await openTopic();
   await lens('Qué contiene');
   await shot('D1-que-contiene-tema');
   await check('CA-06', 1, 'Los conceptos del tema', async () => {
     const concepts = (await mapNodes()).filter((n) => n.kind === 'Concept');
-    return { ok: concepts.length === 10 && (await answer()).includes('10 conceptos'), seen: await answer() };
+    return { ok: concepts.length === SHEET.expected.concepts && (await answer()).includes(`${SHEET.expected.concepts} conceptos`), seen: await answer() };
   });
   await check('CA-06', 2, 'Los conceptos en pasos según sus prerrequisitos internos; ninguno antes que uno de sus prerrequisitos', async () => {
     const steps = await section('Qué contiene').locator('.steps > li').evaluateAll((items) => items.map((item) => [...item.querySelectorAll('.name')].map((n) => n.textContent)));
-    const key = await keyOf('lógica', 'Lógica proposicional', 'Topic');
+    const key = await keyOf(SHEET.search, SHEET.topic, 'Topic');
     const response = await api('/api/elements/location', { key });
     const stepOf = new Map(steps.flatMap((names, index) => names.map((name) => [name, index])));
     const name = (k) => response.nodes.find((n) => n.key === k).name_es;
-    const broken = response.edges.filter((e) => e.type === 'HAS_PREREQUISITE' && stepOf.has(name(e.source)) && stepOf.has(name(e.target)))
-      .filter((e) => stepOf.get(name(e.source)) <= stepOf.get(name(e.target)));
+    const inside = response.edges.filter((e) => e.type === 'HAS_PREREQUISITE' && stepOf.has(name(e.source)) && stepOf.has(name(e.target)));
+    const broken = inside.filter((e) => stepOf.get(name(e.source)) <= stepOf.get(name(e.target)));
     const heads = await captions();
     return {
-      ok: steps.length === 3 && steps[1].includes('Tabla de verdad') && ['Contradicción', 'Contingencia', 'Tautología'].every((n) => steps[2].includes(n))
-        && broken.length === 0 && heads.includes('Paso 3'),
+      ok: steps.length === SHEET.expected.steps && stepOf.size === SHEET.expected.concepts && inside.length > 0 && broken.length === 0
+        && heads.includes(`Paso ${steps.length}`),
       seen: steps.map((names, index) => `Paso ${index + 1}: ${names.join(', ')}`).join(' · '),
     };
   });
   await check('CA-06', 3, 'El área, nivel por nivel, con sus cifras; si no cabe, el mapa llega hasta los temas y lo dice', async () => {
-    await open('redes y comunicación', 'Redes y Comunicación', 'Área');
+    await open(SHEET.area.toLowerCase(), SHEET.area, 'Área');
     await lens('Qué contiene');
     await shot('D6-que-contiene-area');
     const says = await answer();
     const nodes = await mapNodes();
     const overview = await api('/api/overview');
-    const area = overview.nodes.find((n) => n.name_es === 'Redes y Comunicación');
+    const area = overview.nodes.find((n) => n.name_es === SHEET.area && n.label === 'KnowledgeArea');
     const figures = `${area.units} unidades, ${area.topics} temas y ${area.concepts} conceptos`;
-    if (figures !== '8 unidades, 14 temas y 132 conceptos') notes.add(`CA-06.3: el área tiene ${figures}; el plan dice 8, 14 y 132 [SFG].`);
+    const reading = await how();
+    const whole = nodes.filter((n) => n.kind === 'Concept').length === area.concepts;
+    const units = nodes.filter((n) => n.kind === 'KnowledgeUnit').length;
+    // Many units without topics go in one line of the map, and the reading says so.
     return {
-      ok: says.includes(figures) && nodes.filter((n) => n.kind === 'KnowledgeUnit').length === area.units
-        && nodes.filter((n) => n.kind === 'Topic').length === area.topics && (await how()).includes('llega hasta los temas'),
+      ok: says.includes(figures) && (units === area.units || (units < area.units && reading.includes('unidades sin temas')))
+        && nodes.filter((n) => n.kind === 'Topic').length === area.topics && (whole || reading.includes('llega hasta los temas')),
       seen: `${says} ${await how()}`,
     };
   });
@@ -456,12 +490,12 @@ async function ca06() {
 
 async function ca07() {
   await goHome();
-  await open('lógica', 'Lógica proposicional', 'Tema');
+  await openTopic();
   const part = section('Material de estudio');
-  await check('CA-07', 1, 'El material del tema, con su tipo', async () => has((await part.innerText()).replace(/\s+/g, ' '), 'Abrir Sílabo 1INF01', 'Sílabo'));
+  await check('CA-07', 1, 'El material del tema, con su tipo', async () => has((await part.innerText()).replace(/\s+/g, ' '), `Abrir ${SHEET.syllabus}`, 'Sílabo'));
   await check('CA-07', 2, 'El PDF del sílabo abre en una pestaña nueva, y es el del curso indicado', async () => {
-    const found = await api('/api/search', { q: '1INF01' });
-    const course = found.nodes.find((n) => n.label === 'Course' && n.course_code === '1INF01');
+    const found = await api('/api/search', { q: SHEET.course.code });
+    const course = found.nodes.find((n) => n.label === 'Course' && n.course_code === SHEET.course.code);
     const source = found.edges.find((e) => e.type === 'WAS_DERIVED_FROM' && e.source === course.key).target;
     const opened = await openDocument(part.locator('a.doc'));
     return {
@@ -470,23 +504,24 @@ async function ca07() {
     };
   });
   await check('CA-07', 3, 'Un concepto no tiene material propio: se ofrece el de su tema', async () => {
-    await open('contradicción', 'Contradicción', 'Concepto');
+    await openConcept();
     const text = (await part.innerText()).replace(/\s+/g, ' ');
     const offer = page.getByRole('button', { name: /Ver el material de su tema/ });
     const visible = await offer.isVisible();
     await activate(offer);
     await settle();
-    return { ok: text.includes('no tiene material propio') && visible && (await title()) === 'Lógica proposicional', seen: text };
+    return { ok: text.includes('no tiene material propio') && visible && (await title()) === SHEET.topic, seen: text };
   });
-  await check('CA-07', 4, 'El área: los sílabos que tratan sobre sus partes, cada uno con el tema por el que llega', async () => {
-    await open('redes y comunicación', 'Redes y Comunicación', 'Área');
+  await check('CA-07', 4, 'Un área: los sílabos que tratan sobre sus partes, cada uno con el tema por el que llega', async () => {
+    await open(SHEET.wideArea.name.toLowerCase(), SHEET.wideArea.name, 'Área');
     await lens('Material de estudio');
     await shot('D7-material-de-estudio');
     const entries = await part.locator('.resource').evaluateAll((items) => items.map((item) => ({
       name: item.querySelector('a.doc span').textContent, reached: item.querySelectorAll('.about button').length,
     })));
     return {
-      ok: entries.length === 2 && entries.every((e) => e.reached >= 1) && ['Sílabo 1INF35', 'Sílabo INF238'].every((n) => entries.some((e) => e.name.includes(n))),
+      ok: entries.length === SHEET.wideArea.syllabi.length && entries.every((e) => e.reached >= 1)
+        && SHEET.wideArea.syllabi.every((n) => entries.some((e) => e.name.includes(n))),
       seen: entries.map((e) => `${e.name}, por ${e.reached} temas`).join(' · '),
     };
   });
@@ -494,54 +529,60 @@ async function ca07() {
 
 async function ca08() {
   await goHome();
-  await open('entrada y salida de datos desde archivos', 'Entrada y salida de datos desde archivos', 'Concepto');
+  await openConcept();
   await lens('Camino hasta aquí');
   await grain('curso');
   await shot('D4-camino-hasta-aqui-por-curso');
+  const key = await keyOf(SHEET.concept, SHEET.concept, 'Concept');
   const stops = () => page.$$eval('.stops .stop', (items) => items.map((item) => item.innerText.replace(/\s+/g, ' ').replace(' ¿Por qué?', '')));
-  const needed = async () => (await mapNodes()).filter((n) => n.kind === 'Concept' && n.tone !== 'focus').map((n) => n.name);
+  const needed = async () => sorted((await mapNodes()).filter((n) => n.kind === 'Concept' && n.tone !== 'focus').map((n) => n.name)).join(', ');
+  const lifted = async (grainName, label) => (await api('/api/learning-path', { key, grain: grainName })).nodes
+    .filter((n) => n.label === label && n.depth >= 1).map((n) => n.name_es);
+  const covers = (list, names) => list.length === names.length && names.every((name) => list.some((s) => s.includes(name)));
   const seenNeeded = [];
-  await check('CA-08', 1, 'Por cursos: los cursos por los que conviene pasar y, abajo, el concepto que se necesita antes', async () => {
+  await check('CA-08', 1, 'Por cursos: los cursos por los que conviene pasar, por distancia, y los conceptos que se necesitan antes', async () => {
     const list = await stops();
-    seenNeeded.push((await needed()).join(','));
+    seenNeeded.push(await needed());
+    const path = await api('/api/learning-path', { key, grain: 'course' });
+    const courses = path.nodes.filter((n) => n.label === 'Course' && n.depth >= 1);
+    const concepts = sorted(path.nodes.filter((n) => n.label === 'Concept' && n.depth >= 1).map((n) => n.name_es)).join(', ');
     const groups = await page.locator('.stops .group').count();
     return {
-      ok: list.length === 2 && list.some((s) => s.includes('Administración de Sistemas Operativos') && s.includes('1INF35'))
-        && list.some((s) => s.includes('Técnicas de Programación') && s.includes('INF144')) && groups === 1 && seenNeeded[0] === 'Archivos',
-      seen: `Paradas: ${list.join(' · ')} (misma distancia: ${groups === 1 ? 'sí' : 'no'}). Abajo: ${seenNeeded[0]}`,
+      ok: courses.length > 1 && covers(list, courses.map((c) => c.name_es)) && courses.every((c) => list.some((s) => s.includes(c.course_code)))
+        && groups === new Set(courses.map((c) => c.depth)).size && seenNeeded[0] === concepts,
+      seen: `Paradas: ${list.join(' · ')} (${groups} distancias). Abajo: ${seenNeeded[0]}`,
     };
   });
-  await check('CA-08', 2, 'Por temas y por áreas; una parada que contiene a la meta lo dice; el concepto no cambia', async () => {
+  await check('CA-08', 2, 'Por temas y por áreas; una parada que contiene a la meta lo dice; los conceptos no cambian', async () => {
     await grain('tema');
     const topics = await stops();
-    seenNeeded.push((await needed()).join(','));
+    seenNeeded.push(await needed());
     await grain('área');
     const areas = await stops();
-    seenNeeded.push((await needed()).join(','));
+    seenNeeded.push(await needed());
     return {
-      ok: topics.some((s) => s.includes('Administración local')) && topics.some((s) => s.includes('Ingreso y salida de datos') && s.includes('el mismo tema'))
-        && areas.some((s) => s.includes('Sistemas Operativos')) && areas.some((s) => s.includes('Fundamentos del Desarrollo de Software') && s.includes('la misma área'))
+      ok: covers(topics, await lifted('topic', 'Topic')) && topics.some((s) => s.includes(SHEET.topic) && s.includes('el mismo tema'))
+        && covers(areas, await lifted('area', 'KnowledgeArea')) && areas.some((s) => s.includes(SHEET.area) && s.includes('la misma área'))
         && new Set(seenNeeded).size === 1,
-      seen: `Temas: ${topics.join(' · ')}. Áreas: ${areas.join(' · ')}. Concepto en las tres: ${seenNeeded.join(' / ')}`,
+      seen: `Temas: ${topics.join(' · ')}. Áreas: ${areas.join(' · ')}. Conceptos en las tres: ${[...new Set(seenNeeded)].join(' / ')}`,
     };
   });
   await check('CA-08', 3, 'Por qué pasar por un curso: las relaciones que lo justifican, cada una con su fuente', async () => {
     await grain('curso');
-    await activate(page.getByRole('button', { name: /¿Por qué pasar por Administración de Sistemas Operativos/ }));
+    await activate(page.getByRole('button', { name: new RegExp(`¿Por qué pasar por ${SHEET.whyStop}`) }));
     const card = page.locator('#focus-panel .card');
     await card.waitFor();
     await page.waitForTimeout(500);
     await shot('F2-por-que-de-una-parada');
-    const steps = await card.locator('.why-steps > li').allInnerTexts();
-    const flat = steps.map((s) => s.replace(/\s+/g, ' '));
+    const flat = (await card.locator('.why-steps > li').allInnerTexts()).map((s) => s.replace(/\s+/g, ' '));
     return {
-      ok: flat.length === 2 && /Administración de Sistemas Operativos.*enseña.*Archivos.*Sílabo 1INF35/.test(flat[0])
-        && /Entrada y salida de datos desde archivos.*necesita antes.*Archivos.*Sílabo INF144/.test(flat[1]),
+      ok: flat.length >= 2 && new RegExp(`${SHEET.whyStop}.*enseña.*Sílabo`).test(flat[0])
+        && flat.slice(1).every((line) => /necesita antes.*Sílabo/.test(line)),
       seen: flat.join(' · '),
     };
   });
-  await check('CA-08', 4, 'Con un curso como meta, el camino sale vacío: se explica y se remite a «Cursos que conviene llevar antes»', async () => {
-    await open('técnicas de programación', 'Técnicas de Programación', 'Curso');
+  await check('CA-08', 4, 'Con un curso como meta: el camino, o el aviso de que sale vacío, y la remisión a «Cursos que conviene llevar antes»', async () => {
+    await openCourse();
     await lens('Camino hasta aquí');
     const says = await answer();
     const offer = page.getByRole('button', { name: /Ver «Cursos que conviene llevar antes»/ });
@@ -549,34 +590,43 @@ async function ca08() {
     await activate(offer);
     await settle();
     const selected = await page.locator('.lenses [aria-selected=true]').innerText();
-    return { ok: says.includes('no hay camino previo') && visible && selected === 'Cursos que conviene llevar antes', seen: says };
+    return {
+      ok: (says.includes('no hay camino previo') || says.includes('los conceptos que el curso enseña')) && says.includes('otra pregunta')
+        && visible && selected === 'Cursos que conviene llevar antes',
+      seen: says,
+    };
   });
 }
 
 async function ca09() {
   await goHome();
-  await check('CA-09', 1, 'Buscar «ethernet» y abrir «Ethernet IEEE 802.3» lo pone en foco', async () => {
-    await open('ethernet', 'Ethernet IEEE 802.3', 'Concepto');
-    return { ok: (await title()) === 'Ethernet IEEE 802.3', seen: await title() };
+  const key = await keyOf(SHEET.general, SHEET.general, 'Concept');
+  const response = await api('/api/concepts/specializations', { key });
+  const expected = response.edges.filter((e) => e.type === 'SPECIALIZES' && e.target === key)
+    .map((e) => response.nodes.find((n) => n.key === e.source).name_es);
+  await check('CA-09', 1, 'Buscar el concepto general y abrirlo lo pone en foco', async () => {
+    await open(SHEET.general.toLowerCase(), SHEET.general, 'Concepto');
+    return { ok: (await title()) === SHEET.general, seen: await title() };
   });
   await check('CA-09', 2, 'Sus tipos', async () => {
     await lens('Tipos');
     await shot('D8-tipos');
-    const kinds = (await mapNodes()).filter((n) => n.tone !== 'focus').map((n) => n.name).sort();
+    const kinds = (await mapNodes()).filter((n) => n.tone !== 'focus').map((n) => n.name);
     const listed = await section('Tipos').innerText();
     return {
-      ok: JSON.stringify(kinds) === JSON.stringify(['10GigabitEthernet', 'FastEthernet', 'Gigabit Ethernet']) && kinds.every((k) => listed.includes(k)),
-      seen: `${await answer()} Mapa: ${kinds.join(', ')}`,
+      ok: expected.length >= 2 && same(kinds, expected) && kinds.every((k) => listed.includes(k)),
+      seen: `${await answer()} Mapa: ${sorted(kinds).join(', ')}`,
     };
   });
-  await check('CA-09', 3, 'Pasar a «FastEthernet»: es un tipo de «Ethernet IEEE 802.3»', async () => {
-    await activate(node('Concepto FastEthernet'));
+  await check('CA-09', 3, 'Pasar a uno de sus tipos: es un tipo del concepto general', async () => {
+    const kind = sorted(expected)[0];
+    await activate(node(`Concepto ${kind}`));
     await settle();
     const says = await answer();
-    return { ok: (await title()) === 'FastEthernet' && says.includes('es un tipo de Ethernet IEEE 802.3'), seen: says };
+    return { ok: (await title()) === kind && says.includes(`es un tipo de ${SHEET.general}`), seen: says };
   });
   await check('CA-09', 4, 'Un concepto sin tipos: el sistema dice que no tiene tipos registrados', async () => {
-    await open('contradicción', 'Contradicción', 'Concepto');
+    await openConcept();
     await lens('Tipos');
     const says = await answer();
     return { ok: says.includes('ni tiene tipos registrados'), seen: says };
@@ -585,18 +635,19 @@ async function ca09() {
 
 async function ca10() {
   await goHome();
-  await open('contradicción', 'Contradicción', 'Concepto');
+  await openConcept();
   await lens('Qué necesitas antes');
   const card = page.locator('#selected-relation');
   await check('CA-10', 1, 'De dónde sale la relación: nombra el documento que la afirma', async () => {
     if (mode === 'pointer') {
-      await node('Concepto Tabla de verdad').hover();
-      await clickEdge('Contradicción', 'Tabla de verdad');
-    } else await activate(page.getByRole('button', { name: 'Ver la fuente de la relación con Tabla de verdad' }));
+      // The point itself: the middle of a point with its name below is empty.
+      await node(`Concepto ${SHEET.prerequisite}`).locator('.shape').hover();
+      await clickEdge(SHEET.concept, SHEET.prerequisite);
+    } else await activate(page.getByRole('button', { name: `Ver la fuente de la relación con ${SHEET.prerequisite}` }));
     await card.waitFor();
     const text = (await card.innerText()).replace(/\s+/g, ' ');
     const marked = await page.locator('svg.graph g.edge.is-selected').count();
-    return { ok: /Lo dice .*Sílabo 1INF01/.test(text) && marked === 1, seen: text };
+    return { ok: text.includes('Lo dice') && text.includes(SHEET.syllabus) && marked === 1, seen: text };
   });
   await check('CA-10', 2, 'Abre el PDF de ese sílabo en una pestaña nueva', async () => {
     const opened = await openDocument(card.locator('a.doc'));
@@ -606,7 +657,7 @@ async function ca10() {
     };
   });
   await check('CA-10', 3, 'Un elemento de CS2023, como la unidad: nombra CS2023 y enlaza su publicación de ACM', async () => {
-    await open('matemática discreta', 'Matemática Discreta', 'Unidad');
+    await open(SHEET.unit.toLowerCase(), SHEET.unit, 'Unidad');
     await shot('E-panel-del-foco-cs2023');
     const record = page.locator('#focus-panel .record');
     const text = (await record.innerText()).replace(/\s+/g, ' ');
@@ -614,7 +665,7 @@ async function ca10() {
     return { ok: text.includes('CS2023') && href.startsWith('https://dl.acm.org/'), seen: `${text} → ${href}` };
   });
   await check('CA-10', 4, 'El interruptor «Fuentes» dibuja la línea de cada elemento a su documento', async () => {
-    await open('contradicción', 'Contradicción', 'Concepto');
+    await openConcept();
     await lens('Qué necesitas antes');
     const toggle = page.getByRole('switch', { name: 'Fuentes' });
     if (mode === 'pointer') await toggle.click();
@@ -626,7 +677,7 @@ async function ca10() {
     await shot('F3-fuentes-en-el-mapa');
     const lines = await page.locator('svg.graph g.edge-source').count();
     const documents = (await mapNodes()).filter((n) => n.kind === 'LearningResource').map((n) => n.name);
-    return { ok: lines >= 5 && documents.includes('Sílabo 1INF01'), seen: `${lines} líneas de fuente hacia ${documents.join(', ')}` };
+    return { ok: lines >= 5 && documents.includes(SHEET.syllabus), seen: `${lines} líneas de fuente hacia ${documents.join(', ')}` };
   });
 }
 
@@ -649,7 +700,7 @@ for (const current of ['pointer', 'keyboard']) {
   }
   if (SHOTS && mode === 'pointer') {
     await goHome();
-    await open('lógica', 'Lógica proposicional', 'Tema');
+    await openTopic();
     await page.locator('#focus-panel').evaluate((element) => { element.scrollTop = 260; });
     await shot('E-panel-del-foco');
   }
@@ -668,7 +719,7 @@ for (const first of results.filter((r) => r.mode === modes[0])) {
   lines.push(`| ${first.id} | ${first.step} | ${first.expected} | ${verdicts.join(' | ')} | ${(failed ?? first).seen.replace(/\|/g, '/').replace(/\n/g, ' ')} |`);
 }
 const passed = results.filter((r) => r.ok).length;
-const report = [`Recorrido técnico contra ${BASE}: ${passed} de ${results.length} comprobaciones cumplen.`, '', ...lines, '', 'Diferencias con los ejemplos [SFG] del plan:', ...(notes.size ? [...notes].map((n) => `- ${n}`) : ['- ninguna'])].join('\n');
+const report = [`Recorrido técnico contra ${BASE}: ${passed} de ${results.length} comprobaciones cumplen.`, '', ...lines, '', 'Notas:', ...(notes.size ? [...notes].map((n) => `- ${n}`) : ['- ninguna'])].join('\n');
 writeFileSync(new URL('walkthrough.md', OUT), report);
 console.log(`\n${passed}/${results.length} ok`);
 for (const note of notes) console.log('note:', note);

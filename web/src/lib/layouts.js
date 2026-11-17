@@ -23,6 +23,21 @@ const FOCUS_RADIUS = 24;
 const DOT_RADIUS = 5;
 const LEVEL = { KnowledgeArea: 0, KnowledgeUnit: 1, Topic: 2, Concept: 3 };
 
+// --- How much room a name takes ---------------------------------------------------
+// Shared with the canvas, which fits the map with the same measures.
+
+export const LINE_HEIGHT = 16;
+export const CHAR_WIDTH = 7.1;
+// How small the names may get when the map is fitted small (see app.css); a
+// map fitted small enlarges its names up to 1 / LABEL_FLOOR.
+export const LABEL_FLOOR = 0.85;
+
+/** How wide a line of a name is drawn: capitals and the name in focus take more. */
+export function lineWidth(line, focus = false) {
+  const capitals = line.replace(/[^A-ZÁÉÍÓÚÑ]/g, '').length;
+  return (line.length + capitals * 0.22) * CHAR_WIDTH * (focus ? 1.3 : 1);
+}
+
 // --- Pieces of a scene ------------------------------------------------------------
 
 export function wrap(text, width = 22, maxLines = 2) {
@@ -315,16 +330,21 @@ export function layoutNeighborhood(detail, focusKey, expansions = new Map()) {
     }
   }
   // Each one above the wing of the neighbor it hangs from, joined by the edge that brought it.
+  // The columns are as wide as the widest name of the side, at the size the
+  // names take when the map is fitted small: long topics come in capitals.
+  const farWidth = 20;
   for (const sign of [-1, 1]) {
     const side = far.filter((item) => Math.sign(scene.at(item.through.key).x) === sign)
       .sort((x, y) => byName(x.through, y.through) || byName(x.node, y.node));
-    const perRow = 4;
+    const widest = Math.max(0, ...side.flatMap((item) => wrap(item.node.name_es ?? item.node.key, farWidth).map((line) => lineWidth(line))));
+    const gapX = Math.max(176, widest / LABEL_FLOOR + 18);
+    const perRow = gapX > 200 ? 3 : 4;
     const rows = Math.ceil(side.length / perRow);
     side.forEach((item, index) => {
       const row = Math.floor(index / perRow);
       const inRow = Math.min(perRow, side.length - row * perRow);
-      const x = sign * (wingX + 30) + ((index % perRow) - (inRow - 1) / 2) * 176;
-      scene.put(item.node, x, extent.top - 64 - (rows - 1 - row) * 84, { tone: 'far', side: 'above', width: 20 });
+      const x = sign * (wingX + 30) + ((index % perRow) - (inRow - 1) / 2) * gapX;
+      scene.put(item.node, x, extent.top - 64 - (rows - 1 - row) * 84, { tone: 'far', side: 'above', width: farWidth });
       scene.link(item.edge, item.edge.source, item.edge.target, { tone: 'far' });
     });
   }
@@ -607,6 +627,15 @@ function layoutTree(scene, response, focusKey, root) {
   const leafGap = 34;
   const depthGap = [0, 250, 590, 960];
   let nextY = 0;
+  // A leaf with its count under the name takes two lines: it moves away from
+  // the leaf before by half of each one's height, at the size the names take
+  // when the map is fitted small.
+  let leafRows = 1;
+  const nextLeaf = (rows) => {
+    nextY += Math.max(leafGap, ((leafRows + rows) / 2) * (LINE_HEIGHT / LABEL_FLOOR) + 12);
+    leafRows = rows;
+    return nextY;
+  };
   const bare = [];
   const conceptsUnder = (node) => (node.label === 'Concept' ? 1 : childrenOf(response, node.key).reduce((sum, child) => sum + conceptsUnder(child), 0));
   const place = (node, depth) => {
@@ -620,8 +649,8 @@ function layoutTree(scene, response, focusKey, root) {
       }
     }
     const ys = children.map((child) => place(child, depth + 1));
-    const y = ys.length ? (ys[0] + ys.at(-1)) / 2 : (nextY += leafGap);
     const total = node.label === 'Topic' && !withConcepts ? conceptsUnder(node) : 0;
+    const y = ys.length ? (ys[0] + ys.at(-1)) / 2 : nextLeaf(total ? 2 : 1);
     const placed = scene.put(node, depthGap[depth] ?? depth * 300, y, {
       side: depth === 0 ? 'left' : 'right',
       width: depth === 0 ? 22 : 40,
@@ -638,7 +667,7 @@ function layoutTree(scene, response, focusKey, root) {
     scene.caption(depthGap[1] - 14, nextY + 58, `+ ${bare.length} unidades de CS2023 que ningún sílabo cargado trata todavía`, { anchor: 'start', kind: 'note' });
   } else {
     bare.forEach((unit) => {
-      nextY += leafGap;
+      nextLeaf(2);
       scene.put(unit, depthGap[1], nextY, { side: 'right', width: 36, lines: 1, tone: 'far', sub: 'solo en CS2023' });
     });
   }

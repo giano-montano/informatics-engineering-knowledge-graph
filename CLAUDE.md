@@ -138,6 +138,10 @@ scripts/tune_prompt.py         Ayuda de desarrollo para el ajuste del prompt:
                                de referencia, sin escribir en Neo4j, con sus
                                almacenes en `var/tuning/`. Rechaza 1INF27 y
                                1INF37, y cuenta con tope los llamados pagados.
+scripts/replay_provider.py     Ayuda de desarrollo: proveedor simulado para
+                               ensayar una ingesta (CA-11). Responde Chat
+                               Completions con la salida guardada de una
+                               corrida real; no paga ni envía nada.
 tests/                         Pruebas; una negativa por cada forma de violar
                                cada regla o código EX.
 web/                           R6: InfoKnows, la aplicación web (#web del C4).

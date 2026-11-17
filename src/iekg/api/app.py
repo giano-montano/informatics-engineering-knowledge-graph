@@ -225,6 +225,14 @@ def navigation_router(context: ApiContext) -> APIRouter:
             return SubgraphView(nodes=[], edges=[])
         return SubgraphView.of(context.navigation.fetch(query) or Subgraph())
 
+    @router.get("/overview", response_model_exclude_unset=True)
+    def overview() -> SubgraphView:
+        """Every knowledge area, with how many units, topics and concepts are part of it, and every course.
+
+        Where a student starts without a name. No edge between them is returned.
+        """
+        return SubgraphView.of(context.navigation.fetch(navigation.overview()) or Subgraph())
+
     @get("/nodes")
     def node_detail(key: Key) -> SubgraphView:
         """The node with its properties, its direct neighbors and a few of theirs, by any edge but WAS_DERIVED_FROM."""

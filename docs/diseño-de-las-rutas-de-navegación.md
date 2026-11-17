@@ -88,6 +88,7 @@ Una clave que no existe, o que es de otra clase que la que la ruta espera (un cu
 | Ruta | Requisito | Patrón medido |
 |---|---|---|
 | `GET /api/search?q=` | RF-18 | — |
+| `GET /api/overview` | Inicio sin buscar: las áreas, con sus conteos, y los cursos | — |
 | `GET /api/nodes?key=` | Detalle de un nodo | — |
 | `GET /api/concepts/prerequisites?key=` | RF-11 | — |
 | `GET /api/courses/prerequisites?key=` | RF-12 | Prerrequisito entre cursos |
@@ -95,6 +96,8 @@ Una clave que no existe, o que es de otra clase que la que la ruta espera (un cu
 | `GET /api/elements/resources?key=` | RF-14 | Recursos agregados sobre las partes |
 | `GET /api/learning-path?key=&grain=` | RF-15 | Prerrequisito elevado |
 | `GET /api/concepts/specializations?key=` | RF-16 | Cierre de especialización |
+
+`/api/overview` (agregada el 2026-11-15, para el inicio de R6) no lleva clave y nunca responde 404: devuelve todas las áreas y todos los cursos, sin aristas entre ellos, como la búsqueda. Cada área lleva como dato propio cuántas unidades, temas y conceptos son parte de ella (`units`, `topics`, `concepts`), contados sobre los nodos que existen bajo ella por `PART_OF`: es la regla de la sección 1, lo propio de cada ruta va como dato del nodo, y la forma sigue siendo `{nodes, edges}`. No es uno de los patrones medidos.
 
 Las rutas solo leen, en sesiones de lectura. Su Cypher es de forma fija y solo recibe valores; las etiquetas y los tipos de arista salen del esquema del grafo.
 

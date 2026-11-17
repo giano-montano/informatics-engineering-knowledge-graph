@@ -1,0 +1,18 @@
+# La imagen de la aplicación solo necesita pyproject.toml, uv.lock, src/ y
+# ontology/. Nada de lo local entra: ni secretos ni almacenes.
+.git
+.env
+.venv
+**/__pycache__
+**/node_modules
+var
+data
+docs
+casos-de-prueba
+tests
+scripts
+web
+internal-notes
+.claude
+.agents
+poster

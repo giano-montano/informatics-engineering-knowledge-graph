@@ -27,6 +27,7 @@ from iekg.graph_schema import (
     COURSE,
     INSTITUTIONAL,
     KEY,
+    KNOWLEDGE_AREA,
     LAYER,
     LEARNING_RESOURCE,
     REFERENCE,
@@ -414,6 +415,27 @@ def test_a_key_the_graph_does_not_have_is_not_found(api, path, params):
 def test_a_navigation_route_refuses_wrong_parameters(api, path, params):
     assert api.client.get(path, params=params).status_code == 422
     assert api.navigation.queries == []
+
+
+def test_the_overview_runs_without_a_key_and_without_the_token(api):
+    response = api.client.get("/api/overview")
+    assert response.status_code == 200
+    assert response.json() == {"nodes": [], "edges": []}
+    assert api.navigation.queries == [navigation.overview()]
+
+
+def test_an_area_of_the_overview_carries_its_counts(api):
+    api.navigation.subgraph = Subgraph(nodes=(
+        GraphNode("a", KNOWLEDGE_AREA, REFERENCE, "Redes y Comunicación", "Networking and Communication",
+                  units=8, topics=14, concepts=132),
+        GraphNode("z", COURSE, INSTITUTIONAL, "Redes de Computadoras", None, course_code="INF238"),
+    ))
+    assert api.client.get("/api/overview").json()["nodes"] == [
+        {"key": "a", "label": KNOWLEDGE_AREA, "name_es": "Redes y Comunicación",
+         "name_en": "Networking and Communication", "layer": REFERENCE, "units": 8, "topics": 14, "concepts": 132},
+        {"key": "z", "label": COURSE, "name_es": "Redes de Computadoras", "name_en": None, "layer": INSTITUTIONAL,
+         "course_code": "INF238"},
+    ]
 
 
 def test_the_search_sends_every_word_as_a_prefix(api):

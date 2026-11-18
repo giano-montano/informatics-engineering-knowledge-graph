@@ -5,6 +5,7 @@
   import { searchByName } from '../lib/api-client.js';
   import { exploration } from '../lib/exploration-state.svelte.js';
   import { examples, loadExamples } from '../lib/examples.svelte.js';
+  import { screen } from '../lib/screen.svelte.js';
   import { classColor, className, layerOf } from '../lib/vocabulary.js';
   import Icon from './Icon.svelte';
   import LayerMark from './LayerMark.svelte';
@@ -112,10 +113,11 @@
     bind:this={input}
     bind:value={text}
     type="text"
+    enterkeyhint="search"
     role="combobox"
     autocomplete="off"
     spellcheck="false"
-    placeholder="Busca un tema, un concepto o un curso"
+    placeholder={screen.compact ? 'Busca un tema o un curso' : 'Busca un tema, un concepto o un curso'}
     aria-expanded={open}
     aria-controls="search-results"
     aria-autocomplete="list"
@@ -309,5 +311,52 @@
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 6px;
+  }
+
+  @media (max-width: 900px), (pointer: coarse) {
+    input {
+      padding-right: 12px;
+    }
+
+    kbd {
+      display: none;
+    }
+  }
+
+  /* A phone: the results take the width of the screen, under the bar. */
+  @media (max-width: 900px) {
+    input {
+      height: 40px;
+    }
+
+    .results {
+      position: fixed;
+      top: 60px;
+      left: 8px;
+      right: 8px;
+      max-height: calc(100dvh - 76px);
+    }
+
+    li {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      min-height: 48px;
+      padding: 10px;
+    }
+
+    .name {
+      overflow: visible;
+      white-space: normal;
+      text-wrap: pretty;
+      line-height: 1.3;
+    }
+
+    .layer {
+      display: none;
+    }
+
+    .actions .button {
+      min-height: 40px;
+    }
   }
 </style>

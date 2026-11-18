@@ -52,4 +52,10 @@
   .current .name {
     font-weight: 650;
   }
+
+  @media (pointer: coarse) {
+    .node-link {
+      min-height: 40px;
+    }
+  }
 </style>

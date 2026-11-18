@@ -251,4 +251,23 @@
   .loading {
     gap: 14px;
   }
+
+  @media (max-width: 900px) {
+    header {
+      padding: 14px;
+    }
+
+    h2 {
+      font-size: var(--step-2);
+    }
+
+    .chips .button {
+      min-height: 40px;
+    }
+
+    ul li,
+    summary {
+      min-height: 44px;
+    }
+  }
 </style>

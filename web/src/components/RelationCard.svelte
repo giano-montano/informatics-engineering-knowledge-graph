@@ -52,4 +52,12 @@
   .by {
     color: var(--text-2);
   }
+
+  /* A phone: long names wrap instead of running out of the card. */
+  @media (max-width: 900px) {
+    .statement :global(.name) {
+      white-space: normal;
+      text-wrap: pretty;
+    }
+  }
 </style>

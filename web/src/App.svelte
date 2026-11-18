@@ -6,7 +6,9 @@
   import Icon from './components/Icon.svelte';
   import OperatorPanel from './components/OperatorPanel.svelte';
   import Search from './components/Search.svelte';
+  import Sheet from './components/Sheet.svelte';
   import { exploration } from './lib/exploration-state.svelte.js';
+  import { screen } from './lib/screen.svelte.js';
 
   let search = $state(null);
   exploration.start();
@@ -43,7 +45,7 @@
 
     {#if exploration.view === 'explore'}
       <Search bind:this={search} />
-      <button class="button quiet" type="button" onclick={() => exploration.openOperator()}>
+      <button class="button quiet operator" type="button" onclick={() => exploration.openOperator()}>
         <Icon name="key" /> Operador
       </button>
     {:else}
@@ -61,10 +63,17 @@
         <ContextHeader />
         <GraphCanvas />
       </div>
-      {#if exploration.focusKey}
-        <FocusPanel />
+      {#snippet record()}
+        {#if exploration.focusKey}
+          <FocusPanel />
+        {:else}
+          <Home onsearch={(text) => search?.searchFor(text)} />
+        {/if}
+      {/snippet}
+      {#if screen.compact}
+        <Sheet>{@render record()}</Sheet>
       {:else}
-        <Home onsearch={(text) => search?.searchFor(text)} />
+        {@render record()}
       {/if}
     </main>
   {/if}
@@ -75,6 +84,7 @@
     display: grid;
     grid-template-rows: 56px minmax(0, 1fr);
     height: 100%;
+    height: 100dvh;
   }
 
   .skip {
@@ -154,6 +164,55 @@
 
     .tagline {
       display: none;
+    }
+  }
+
+  /* A phone: the map fills the screen and the record rides over it in a
+     sheet; the operator's panel stays on larger screens. */
+  @media (max-width: 900px) {
+    .app {
+      grid-template-rows: 56px minmax(0, 1fr);
+    }
+
+    .top {
+      gap: 10px;
+      padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+    }
+
+    .brand {
+      column-gap: 8px;
+      flex: none;
+    }
+
+    .brand svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .name {
+      font-size: var(--step-1);
+    }
+
+    /* While the visitor types, the search takes the whole bar. */
+    .top:has(:global(.search:focus-within)) .name {
+      display: none;
+    }
+
+    .operator {
+      display: none;
+    }
+
+    /* Clipped, not hidden: nothing may scroll it from code. */
+    .explore {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      overflow: clip;
+    }
+
+    .map {
+      grid-template-columns: minmax(0, 1fr);
+      height: calc(100% - var(--peek) + 18px);
     }
   }
 </style>

@@ -220,10 +220,11 @@ solos, y Caddy es un servicio de systemd habilitado. En uno o dos minutos,
 
 ### Actualizar el código
 
-Desde la copia principal, en la máquina local (rama `dev`):
+Desde la copia principal, en la máquina local, una vez que `dev` está unida a
+`main`:
 
 ```bash
-git archive --format=tar.gz -o infoknows.tar.gz <rama>
+git archive --format=tar.gz -o infoknows.tar.gz main
 scp infoknows.tar.gz ubuntu@<IP>:~
 ssh ubuntu@<IP> 'tar -xzf ~/infoknows.tar.gz -C ~/infoknows && rm ~/infoknows.tar.gz \
   && cd ~/infoknows && docker compose up -d --build'
@@ -236,7 +237,8 @@ importa, vaciar antes `~/infoknows`, salvo `.env` y `var/`.
 Consideraciones:
 
 - **Solo se despliega lo commiteado.** `git archive` toma el commit, no el
-  árbol de trabajo. La rama que se despliega es `dev`.
+  árbol de trabajo. La rama que se despliega es `main`: el trabajo se hace en
+  `dev` y se une a `main` antes de desplegar.
 - **Si solo cambió `web/`:** `docker compose up -d --build web` reconstruye
   solo la web (un minuto o menos) y no reinicia la API.
 - **Si cambió `src/`:** se reconstruye la imagen de la aplicación. La capa de

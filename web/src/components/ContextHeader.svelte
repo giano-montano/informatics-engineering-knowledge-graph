@@ -17,6 +17,23 @@
     if (!node) return overviewSummary(scene.info);
     return lensSummary({ lens: exploration.lens, grain: exploration.grain, node, response: exploration.response, scene });
   });
+  // On a phone the chosen question stays in sight in its strip, and the note
+  // on how to read the drawing folds to two lines.
+  let strip = $state(null);
+  let howOpen = $state(false);
+  $effect(() => {
+    exploration.lens;
+    exploration.focusKey;
+    howOpen = false;
+    const chosen = strip?.querySelector('[aria-selected="true"]');
+    if (chosen && strip.scrollWidth > strip.clientWidth) {
+      const left = chosen.offsetLeft - strip.offsetLeft;
+      if (left < strip.scrollLeft || left + chosen.offsetWidth > strip.scrollLeft + strip.clientWidth) {
+        strip.scrollTo({ left: Math.max(0, left - 14), behavior: 'smooth' });
+      }
+    }
+  });
+
   const stops = $derived(exploration.lens === 'path' && exploration.scene?.info?.stops?.length ? exploration.scene.info.stops : null);
 
   // Tabs: the arrows move between the lenses, and choosing follows the focus.
@@ -48,7 +65,7 @@
   {:else}
     <div class="title">
       <button class="button quiet home" type="button" onclick={() => exploration.goHome()}>
-        <Icon name="home" /> Inicio
+        <Icon name="home" /> <span class="home-word">Inicio</span>
       </button>
       <span class="class-chip" style:--c={classColor(node)}>{className(node)}</span>
       <h1 title={node.name_es}>{node.name_es}</h1>
@@ -56,7 +73,7 @@
       <span class="layer"><LayerMark {node} />{layerOf(node).name}</span>
     </div>
 
-    <div class="lenses" role="tablist" aria-label="Qué preguntar sobre este elemento">
+    <div class="lenses" bind:this={strip} role="tablist" aria-label="Qué preguntar sobre este elemento">
       {#each lenses as lens, index (lens)}
         <button
           type="button"
@@ -108,12 +125,18 @@
   {/if}
 
   {#if summary.how || exploration.expansions.size}
-    <p class="how">
-      {@html summary.how}
-      {#if exploration.expansions.size && exploration.lens === 'neighborhood'}
-        <button class="text-button" type="button" onclick={() => exploration.clearExpansions()}>Quitar lo que trajiste con +</button>
+    <div class="how-row">
+      <p class="how" class:open={howOpen} id="how-to-read">
+        {@html summary.how}
+        {#if exploration.expansions.size && exploration.lens === 'neighborhood'}
+          <button class="text-button" type="button" onclick={() => exploration.clearExpansions()}>Quitar lo que trajiste con +</button>
+        {/if}
+      </p>
+      {#if summary.how}
+        <button class="text-button how-toggle" type="button" aria-expanded={howOpen} aria-controls="how-to-read"
+          onclick={() => (howOpen = !howOpen)}>{howOpen ? 'Menos' : 'Cómo leerlo'}</button>
       {/if}
-    </p>
+    </div>
   {/if}
 </header>
 
@@ -259,5 +282,142 @@
     font-size: 12px;
     line-height: 1;
     vertical-align: 1px;
+  }
+
+  .how-toggle {
+    display: none;
+  }
+
+  /* A phone: one line of title, the questions in a strip that scrolls
+     sideways, and the note on how to read folded. */
+  @media (max-width: 900px) {
+    .context {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 7px;
+      padding: 10px 14px 8px;
+    }
+
+    .title {
+      gap: 8px;
+    }
+
+    .home {
+      flex: none;
+      justify-content: center;
+      width: 36px;
+      min-height: 36px;
+      margin-left: -6px;
+      padding: 0;
+    }
+
+    .home-word {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+
+    h1 {
+      flex: 1;
+      font-size: var(--step-2);
+    }
+
+    .title .class-chip {
+      order: 3;
+      flex: none;
+    }
+
+    .code {
+      flex: none;
+      font-size: var(--step-0);
+    }
+
+    .layer {
+      display: none;
+    }
+
+    .lenses {
+      flex-wrap: nowrap;
+      margin: 0 -14px;
+      padding: 2px 14px;
+      overflow-x: auto;
+      scroll-padding-inline: 14px;
+      scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 14px, black calc(100% - 22px), transparent);
+      mask-image: linear-gradient(to right, transparent, black 14px, black calc(100% - 22px), transparent);
+    }
+
+    .lenses::-webkit-scrollbar {
+      display: none;
+    }
+
+    .lenses button {
+      flex: none;
+      min-height: 38px;
+      white-space: nowrap;
+    }
+
+    .says {
+      font-size: 0.9375rem;
+      line-height: 1.42;
+    }
+
+    .path-tools {
+      gap: 8px;
+    }
+
+    .grains button {
+      min-height: 32px;
+    }
+
+    .path-tools :global(.stops) {
+      flex-wrap: nowrap;
+      width: calc(100% + 28px);
+      margin: 0 -14px;
+      padding: 2px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .path-tools :global(.stops .group) {
+      flex-wrap: nowrap;
+    }
+
+    .path-tools :global(.stops > li) {
+      flex: none;
+    }
+
+    .path-tools :global(.stops .go),
+    .path-tools :global(.stops .why) {
+      min-height: 36px;
+      white-space: nowrap;
+    }
+
+    .how-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .how {
+      flex: 1;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      line-clamp: 1;
+    }
+
+    .how.open {
+      display: block;
+    }
+
+    .how-toggle {
+      display: inline;
+      flex: none;
+      color: var(--text-2);
+      font-size: var(--step--1);
+    }
   }
 </style>

@@ -1,0 +1,304 @@
+# CLAUDE.md — rama `dev`
+
+Instrucciones para sesiones de Claude Code en la **implementación de tesis**.
+
+**Documento vivo.** Si algo aquí deja de ser cierto, se corrige aquí mismo.
+
+---
+
+## 1. Qué es esta rama, y qué no
+
+`dev` es la implementación seria del módulo de grafo (R4), escrita paso a paso
+por Giano. Nace de la rama `lab`, pero **vacía**: el primer commit borró todo
+`src/`, `schema/`, `tests/` y `build/`.
+
+Eso no fue higiene. El laboratorio se construyó a base de generación por IA a
+una velocidad a la que su autor no llegó a revisar si la arquitectura era la que
+él quería. Código que no se puede defender en una sustentación es pasivo, no
+activo. Por eso se rehace.
+
+El laboratorio sigue existiendo, congelado, en el tag **`lab-2026-09-01`**.
+
+## 2. La regla que sostiene todo lo demás
+
+**Se lee `lab`, nunca se trae de `lab`.**
+
+```powershell
+git show lab-2026-09-01:src/iekg/rules.py      # sí
+git checkout lab-2026-09-01 -- src/iekg/       # NO
+```
+
+Y el orden importa: **primero se escribe la decisión en prosa, después se mira
+el laboratorio** para ver si se pasó algo por alto. Al revés, el archivo viejo
+resuelve el problema antes de que nadie lo haya pensado, y sale el mismo diseño
+con otros nombres, sin la medición que lo justificaba.
+
+Corolario para Claude: **no adelantes arquitectura.** Si falta una decisión, se
+pregunta o se enuncia como pregunta abierta; no se rellena con lo que hacía el
+laboratorio. Escribir código antes de que la decisión esté escrita es
+exactamente el fallo que esta rama existe para corregir.
+
+## 3. Con quién trabajas y cómo
+
+Giano, tesista de Ingeniería Informática (PUCP). Aprendiendo Neo4j y Cypher
+sobre la marcha: no asumas fluidez, pero tampoco expliques de menos.
+
+- **Empezar por los huecos y los supuestos débiles. Sin halagos.**
+- Proponer opciones **con recomendación explícita; él decide.** Antes de la
+  pregunta, una explicación en prosa llana de cada opción y su consecuencia.
+- Distinguir lo que sirve para **decidir qué probar** (fuente gris: repos,
+  foros, blogs, preprints) de lo **sustentable en la tesis** (estándar, paper
+  revisado, documentación oficial). Marcar lo gris fuente por fuente.
+- Cuando algo **contradiga una decisión previa**, decirlo de frente.
+- **Verificar versiones y estado del arte antes de recomendar.** No de memoria.
+- **Leer `docs/tesis.md` antes de señalar algo como hueco de diseño.**
+- **Cada propuesta técnica lleva su costo documental** (ver §8, «Documentos que
+  son entregables»).
+
+## 4. Antes de opinar, leer
+
+| Archivo | Por qué |
+|---|---|
+| `docs/tesis.md` | Las decisiones de diseño ya tomadas y argumentadas. |
+| `docs/estandares-de-codigo.md` | Idioma, nomenclatura, pruebas. **No dupliques sus reglas: síguelas.** |
+| `docs/decisiones/` | Las decisiones ya rehechas, con sus alternativas descartadas. |
+
+Al diseñar la ingesta, leer además §3 (proveedores de LLM) y las preguntas 17 y
+18 de §4.4 de `docs/repositorio/traspaso-del-laboratorio.md`. El resto de ese
+documento está archivado.
+
+## 5. El proyecto en una pantalla
+
+Resultados de tesis: **R1** ontología OWL validada · **R2** backbone de 17 áreas
+y 162 unidades de CS2023 en Turtle · **R3** documentación del módulo de KG ·
+**R4** módulo de KG y pipeline de ingesta (*lo que se construye aquí*) · **R5**
+documentación de navegación · **R6** prototipo de navegación.
+
+Restricción del asesor, vinculante: **especificación declarativa más intérprete
+pequeño; nada hardcodeado, nada de ORM.**
+
+## 6. Estado del árbol
+
+Lo que hay:
+
+```
+README.md                      Cómo levantar el sistema y qué se puede probar.
+DEPLOYMENT.md                  El despliegue en AWS (Learner Lab): recursos,
+                               HTTPS con Caddy en el host, apagar y encender,
+                               actualizar, reconstruir el grafo y costos.
+docs/tesis.md                  El documento de tesis.
+docs/estandares-de-codigo.md   Convenciones. Vinculantes.
+docs/decisiones/               Un archivo por decisión rehecha.
+docs/diseño-de-las-rutas-de-navegación.md
+                               Decisiones de la navegación que no son ADR.
+docs/repositorio/              Auditorías con su deuda, y el traspaso del
+                               laboratorio, archivado.
+docs/referencias/              Notas sobre herramientas de terceros, con
+                               fuentes verificadas y fechadas (docling.md).
+docs/architecture/             Modelo C4 en LikeC4 (*.c4).
+ontology/*.ttl                 R1 (esquema OWL) y R2 (backbone CS2023).
+docker-compose.yml             El sistema completo: Neo4j 5.26 LTS, la API con
+                               su worker, la web detrás de nginx y los
+                               procesos de construcción (perfil `build`).
+Dockerfile                     Imagen única de la aplicación, con tres puntos
+                               de entrada (ADR-007).
+src/iekg/graph_schema.py       Esquema del grafo: la declaración única (ADR-008).
+src/iekg/core/                 Núcleo (#nucleo del C4): validador, repositorio,
+                               auditor, lote e instantánea, códigos de regla.
+src/iekg/build_tools/          Procesos de construcción: proyección TTL → lote
+                               y los comandos `iekg-build load` y `reapply`.
+src/iekg/ingestion/            Ingesta (#worker del C4): envío, orquestador,
+                               extractor (Docling + PydanticAI), hechos
+                               declarados y el punto de entrada `iekg-worker`.
+                               `rehearsal.py`: el worker del modo ensayo
+                               (`IEKG_REHEARSAL`, enmienda 2026-11 de ADR-013).
+src/iekg/api/                  API (#api del C4): rutas de operación bajo
+                               `/api`, con token; rutas de navegación bajo
+                               `/api`, públicas, con sus consultas y cotas en
+                               `navigation.py`, entre ellas `/api/overview`,
+                               el inicio de R6; `/resources/{clave}`; punto
+                               de entrada `iekg-api`.
+src/iekg/operational_store.py  Almacén operacional (SQLite): corridas,
+                               descartes, salida del modelo de cada corrida
+                               con hechos (con evidencia y justificación) y
+                               reportes de auditoría.
+src/iekg/fact_store.py         Almacén de hechos: un archivo por corrida escrita.
+src/iekg/settings.py           Configuración desde el entorno y `.env`.
+scripts/submit_document.py     Ayuda de desarrollo: envía un PDF y corre el
+                               worker sin la API. No es punto de entrada.
+scripts/measure_navigation.py  Ayuda de desarrollo: mide los cinco patrones de
+                               AC-05 con las funciones de las rutas; reporte
+                               en `var/measurements/`. Sus pruebas lo importan
+                               (`pythonpath` de pytest).
+scripts/evaluate_ingestion.py  Ayuda de desarrollo: mide CP-01 a CP-14 desde el
+                               almacén de hechos y la anotación, y compara con
+                               la extracción del revisor; reporte en
+                               `var/measurements/`. Cómo calcula cada medida:
+                               `casos-de-prueba/calculo-de-las-medidas-del-evaluador.md`.
+scripts/tune_prompt.py         Ayuda de desarrollo para el ajuste del prompt:
+                               ingesta cada sílabo por separado sobre la capa
+                               de referencia, sin escribir en Neo4j, con sus
+                               almacenes en `var/tuning/`. Rechaza 1INF27 y
+                               1INF37, y cuenta con tope los llamados pagados.
+scripts/replay_provider.py     Ayuda de desarrollo: proveedor simulado para
+                               ensayar una ingesta (CA-11). Responde Chat
+                               Completions con la salida guardada de una
+                               corrida real; no paga ni envía nada.
+scripts/prepare_replay_rehearsal.py
+                               Ayuda de desarrollo: los almacenes de ese
+                               ensayo, como estaban antes de una corrida.
+                               El procedimiento completo está en `web/README.md`.
+tests/                         Pruebas; una negativa por cada forma de violar
+                               cada regla o código EX.
+web/                           R6: InfoKnows, la aplicación web (#web del C4).
+                               Svelte 5, Vite y D3 (ADR-017, ADR-018). Un
+                               archivo por componente de la vista
+                               `webComponents`; la tabla está en
+                               `web/README.md`. `web/Dockerfile` y
+                               `web/nginx.conf` son el contenedor web.
+                               `web/tests/` tiene los recorridos técnicos de
+                               CA-01 a CA-11 con Playwright.
+docs/r6/                       Capturas de R6 y el resultado del recorrido
+                               técnico previo a la prueba de aceptación.
+var/                           Almacenes locales del sistema. Ignorado por git.
+```
+
+El diseño de la navegación y el protocolo de medición de AC-05 (sección 8)
+están en `docs/diseño-de-las-rutas-de-navegación.md`. El nombre del producto
+es **InfoKnows**: va en la interfaz y en los README. «Constelación» es el
+nombre de la propuesta en los documentos de R5, que no se renombran; InfoKnows
+no va en los ADR ni en el modelo C4.
+
+Del despliegue: Neo4j es Community (un volumen creado con Enterprise no abre
+con Community; `NEO4J_IMAGE` en `.env` conserva Enterprise), la web publica el
+80 (`IEKG_WEB_PORT`) y los puertos de Neo4j se publican solo en el loopback.
+
+## 7. Comandos
+
+```powershell
+docker compose up -d neo4j               # desarrollo: solo la base
+uv sync
+uv run pytest tests/ -q                  # las marcadas neo4j se saltan si la base no responde
+uv run pytest tests/ -q -m "not neo4j"   # solo las que no necesitan Neo4j
+uv run iekg-build load                   # vacía la base y carga el backbone
+uv run python scripts/submit_document.py SILABO.pdf --course 1INF33 --name "Bases de Datos"
+uv run iekg-worker                       # procesa las corridas pendientes
+uv run iekg-build reapply                # tras una carga, reescribe la capa institucional
+uv run iekg-api                          # la API en :8000; exige IEKG_OPERATOR_TOKEN
+uv run python scripts/measure_navigation.py   # AC-05; solo lee, reporte en var/measurements/
+uv run python scripts/evaluate_ingestion.py cases --from-run N   # CP-01 a CP-14, la cadena desde la corrida N
+uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out   # corridas sueltas del ajuste
+uv run python scripts/tune_prompt.py --all   # ajuste: los 11 por separado, a var/tuning/
+uv run python scripts/evaluate_ingestion.py cases --isolated --hide-held-out --operational-db var/tuning/operational.sqlite --facts-dir var/tuning/facts
+uv run python scripts/evaluate_ingestion.py review --workbook LLENO.xlsx   # una vez: exporta la extracción y compara
+uv run python scripts/evaluate_ingestion.py review --from-run N  # revisor contra anotación y pipeline
+start http://localhost:7474
+
+cd web; npm ci            # una vez: Svelte, Vite, D3 y Playwright, fijados
+npm run dev               # InfoKnows en :5173; reenvía /api y /resources a :8000
+npm run build             # compilado estático en web/dist/
+npm run walkthrough       # CA-01 a CA-10 con puntero y con teclado; solo lee
+cd ..
+
+docker compose up -d --build              # todo en contenedores; la web en :80
+docker compose stop api                   # antes de un proceso de construcción
+docker compose run --rm build load        # y `reapply`; después, `start api`
+
+npm install               # una vez: LikeC4 fijado en package.json
+npm run arch:validate     # sintaxis y referencias del modelo C4
+npm run arch:export       # PNG en docs/architecture/images/, solo en hitos
+npm run arch:serve        # vista previa en el navegador
+```
+
+`docker compose up -d` sin nombrar servicio levanta también la API en un
+contenedor: no se combina con `uv run iekg-api`, porque serían dos escritores
+sobre el mismo grafo (ADR-007). `web/tests/operator-walkthrough.mjs` (CA-11)
+sube un documento y **escribe en el grafo**: después, `load` y `reapply`. En
+modo ensayo (`IEKG_REHEARSAL=1`) no escribe nada, pero tampoco ejercita la
+ingesta; para una ingesta de ensayo completa está `scripts/replay_provider.py`.
+
+Para reconstruir desde un historial guardado (por ejemplo, una cadena de Sonnet
+o GPT), consulta [Reaplicar los hechos](README.md#reaplicar-los-hechos): allí se
+explica cómo seleccionar los almacenes mediante variables de entorno.
+
+La contraseña vive en `.env`, ignorado por git. Si falta: copiar `.env.example`,
+poner una, `docker compose down -v` y volver a levantar.
+
+**La carga del backbone** (`iekg-build load`) revisa los dos TTL contra la
+Tabla 1 del anexo, proyecta el backbone y lo valida en memoria; recién entonces
+vacía la base, crea las 8 restricciones de unicidad y el índice de la
+búsqueda, escribe 180 nodos y 341 aristas en una transacción y audita las 15
+reglas. El reporte queda en `var/operational.sqlite`. Códigos de salida: 0
+limpio; 1 cargado, con violaciones en la auditoría; 2 rechazado sin tocar la
+base; 3 fallido.
+
+Para verificarla desde cero:
+
+1. Vaciar. En el Browser, `MATCH (n) DETACH DELETE n`: la carga borra y crea
+   las restricciones por su cuenta. Para una base nueva del todo,
+   `docker compose down -v` y `docker compose up -d`, que borra también
+   restricciones y logs del contenedor. `var/` no se toca.
+2. Comprobar que quedó vacía: `MATCH (n) RETURN count(n)`.
+3. `uv run iekg-build load`.
+4. Ver el resultado en el Browser:
+   - `MATCH (n) UNWIND labels(n) AS label RETURN label, count(*)`: 17, 179,
+     162 y 1.
+   - `MATCH ()-[r]->() RETURN type(r), count(*)`: 162 `PART_OF` y 179
+     `WAS_DERIVED_FROM`.
+   - `MATCH p = (:KnowledgeUnit)-[:PART_OF]->(a:KnowledgeArea) WHERE a.key ENDS WITH '#KA-AI' RETURN p`
+   - `SHOW CONSTRAINTS`: 8, con nombre `<Etiqueta>_key_unique`.
+   - `SHOW INDEXES`: entre los de Neo4j, `name_search`, de tipo `FULLTEXT`.
+
+La consola de Windows puede mostrar mal las tildes de la salida; los datos
+están bien guardados y el Browser los muestra correctamente.
+
+## 8. Al escribir documentación
+
+### Documentos que son entregables
+
+Cinco grupos de documentos no son documentación interna del repositorio:
+`docs/tesis.md`, `anexo-guía-de-anotación-de-referencia`, el anexo de transición al grafo de propiedades,
+`docs/decisiones/` (solo materializados en la tabla resumen de la sección de "Arquitectura del módulo...";
+los de R5, ADR-016 a ADR-019, en una tabla propia del capítulo de O3) 
+y `docs/architecture/`. Salen del razonamiento de la tesis y
+se plasman como entregables o anexos en los documentos oficiales, que viven
+fuera del repositorio (Google Docs). Cambiar uno de ellos obliga a replicar el
+cambio allá y a mantener alineados todos los que dicen lo mismo. 
+`docs/atributos-de-calidad.md` es solo para tener a mano lo que ya se dice en el
+documento oficial de tesis respecto a atributos de calidad, mantenerlo actualizado 
+considerando que tesis prima.
+`docs/requisitos-funcionales-de-referencia.md` ahora es documentación interna
+del repo, para guiar mejor los requerimientos del módulo de grafo de
+conocimiento; su única fuente de verdad es el repositorio. Ahí se anota también
+lo que el protocolo de medición de la tesis exige al sistema.
+
+Por eso, ante una discrepancia entre el código y estos documentos, las salidas
+se prefieren en este orden:
+
+1. **Que el código cumpla lo escrito.** No cuesta ninguna edición.
+2. **Declararlo en el repositorio** (`docs/repositorio/`, un archivo de deuda
+   por auditoría), como limitación o como matiz conocido, cuando el riesgo
+   real es bajo.
+3. **Editar los entregables** solo si lo escrito es falso y la falsedad
+   importa para la sustentación. En ese caso, la propuesta nombra cada
+   documento afectado.
+
+Toda propuesta técnica dice cuál de las tres implica y qué documentos toca.
+
+- `docs/decisiones/NNNN-*.md`: una decisión por archivo, en español, con las
+  **alternativas descartadas** y por qué. Es el producto, no el adorno: sin
+  ellas, en tres meses no se sabrá por qué algo es así.
+- Diagramas C4: el fuente es `docs/architecture/*.c4`, un solo modelo con una
+  vista por nivel, más el flujo de la ingesta (vista dinámica) y el
+  despliegue. No se agrega otra herramienta de diagramas. Durante el trabajo se ven en la vista previa de la
+  extensión LikeC4, no en imágenes. Tras cada cambio, `arch:validate`. Los PNG
+  se exportan solo en hitos (entregas de tesis, revisiones con el asesor), y
+  cuando se exportan van en el mismo commit que el `.c4` del que salen. Claude
+  edita a partir de una decisión ya escrita; Giano revisa el diff y la vista
+  previa antes de hacer commit. Claude no hace push.
+- **Un documento obsoleto que aparenta estar vigente es peor que ninguno.** Si
+  algo cambia, se escribe uno nuevo; no se reescribe el viejo. La excepción es
+  este archivo y `docs/estandares-de-codigo.md`, que sí son vivos. Los ADR
+  admiten enmiendas solo para cambios menores; lo que invalida una decisión,
+  aunque sea en parte, va en un ADR nuevo. El criterio está en
+  `docs/decisiones/README.md`.

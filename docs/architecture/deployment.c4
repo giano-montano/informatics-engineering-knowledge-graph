@@ -1,0 +1,75 @@
+// Despliegue del prototipo. Diagrama suplementario del modelo C4.
+//
+// Restricciones que este archivo expresa:
+// 1. La API, el worker y los procesos de construcción salen de una sola
+//    imagen con tres puntos de entrada. La API lanza el worker como proceso
+//    hijo dentro de su propio contenedor; los procesos de construcción
+//    corren en un contenedor aparte, a demanda y con el sistema detenido
+//    (ADR-007).
+// 2. La aplicación web se sirve aparte, con nginx, que reenvía /api y
+//    /resources a la API bajo un mismo dominio (ADR-007).
+// 3. Los tres almacenes de archivos son carpetas del host; la base de
+//    grafos usa un volumen administrado por Docker (ADR-013).
+// 4. Los localizadores llevan el host escrito: el almacén de hechos no se
+//    reutiliza en otro host; en un host nuevo se vuelve a ingestar (ADR-009).
+deployment {
+
+  host vm 'Máquina virtual de la especialidad' {
+    technology 'Ubuntu'
+    description 'Único host del prototipo: una instancia EC2 de la cuenta educativa de AWS que habilitó la especialidad. La corrida de medición se hizo en desarrollo; aquí se reproduce con carga y reaplicación (ADR-013).'
+
+    runtime compose 'Docker Compose' {
+
+      runtime webc 'Contenedor web' {
+        technology 'nginx'
+        description 'Sirve el compilado de la aplicación web y reenvía /api y /resources a la API.'
+        web = instanceOf kms.web
+      }
+
+      runtime appc 'Contenedor de la aplicación' {
+        technology 'Imagen única'
+        description 'La API, que lanza el worker como proceso hijo.'
+        api = instanceOf kms.api
+        worker = instanceOf kms.worker
+      }
+
+      runtime buildc 'Contenedor de construcción' {
+        technology 'Misma imagen, otro punto de entrada'
+        description 'Se ejecuta a demanda, con el contenedor de la aplicación detenido (ADR-007).'
+        buildTools = instanceOf kms.buildTools
+      }
+
+      runtime neo4jc 'Contenedor de Neo4j' {
+        technology 'Neo4j Community, volumen administrado'
+        neo4j = instanceOf kms.neo4j
+      }
+    }
+
+    runtime folders 'Carpetas del host' {
+      technology 'Montadas en los contenedores de la aplicación y de construcción'
+      description 'Persisten fuera de los contenedores; se abren, respaldan y copian como carpetas (ADR-013).'
+      sqlite = instanceOf kms.sqlite
+      documentStore = instanceOf kms.documentStore
+      factStore = instanceOf kms.factStore
+    }
+  }
+
+  // Cada par agrupa varias relaciones del modelo, y la vista de despliegue
+  // ignora `with { title }`: sin estos resúmenes, la arista saldría como
+  // «[...]». La vista excluye las relaciones derivadas de esos pares.
+  vm.compose.webc.web -> vm.compose.appc.api 'Reenvía /api y /resources' {
+    #resumen
+    technology 'HTTP'
+  }
+  vm.compose.appc.api -> vm.folders.documentStore 'Guarda al subir, lee al servir' {
+    #resumen
+  }
+  vm.compose.appc.worker -> vm.compose.neo4jc.neo4j 'Lee la instantánea; escribe y audita' {
+    #resumen
+    technology 'Cypher'
+  }
+  vm.compose.buildc.buildTools -> vm.compose.neo4jc.neo4j 'Vacía, carga, reaplica y audita' {
+    #resumen
+    technology 'Cypher'
+  }
+}

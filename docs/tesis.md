@@ -1,0 +1,2008 @@
+**PONTIFICIA UNIVERSIDAD CATÓLICA DEL PERÚ**  
+**FACULTAD DE CIENCIAS E INGENIERÍA**  
+![A blue circle with white text and a ship in the waterDescription automatically generated][image1]
+
+**Diseño e implementación de un sistema de gestión de conocimiento (KMS) basado en grafos de conocimiento para la navegación y descubrimiento de recursos de Ingeniería Informática**
+
+**Tesis para obtener el título profesional de Ingeniero Informático**  
+**AUTOR:**  
+Giano Sebastian Montaño Cruz  
+**ASESORES:**  
+Dr. Héctor Andrés Melgar, Mag. Eder Quispe
+
+**Lima, Junio, 2026**
+
+# **Resumen**
+
+(NO NECESARIO EN LOS CURSOS DE TESIS)
+
+- La extensión debe ser de 200 a 300 palabras, sin exceder a una página.  
+- Escriba en tiempo verbal presente  
+- El resumen debe contener información sobre:  
+* La justificación de la investigación  
+* Los objetivos o hipótesis  
+* La teoría o supuestos teóricos o metodológicos en la que se sustenta  
+* El método o procedimiento realizado (de ser necesario)  
+* Los resultados (de ser necesario)  
+* La conclusión principal
+
+# **Tema FCI**
+
+Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es necesario colocarlo durante los cursos de tesis.
+
+# **Tabla de Contenido**
+
+[**Capítulo 1\. Generalidades	9**](#generalidades)
+
+[1.1 Problemática	9](#problemática)
+
+[1.1.1 Árbol de Problemas	11](#árbol-de-problemas)
+
+[1.1.2 Descripción	12](#descripción)
+
+[1.1.3 Problema seleccionado	20](#problema-seleccionado)
+
+[1.2 Objetivos	20](#objetivos)
+
+[1.2.1 Objetivo general	20](#objetivo-general)
+
+[1.2.2 Objetivos específicos	21](#objetivos-específicos)
+
+[1.2.3 Resultados esperados y mapeo de verificación	21](#resultados-esperados-y-mapeo-de-verificación)
+
+[1.3 Métodos, procedimientos y herramientas	25](#métodos,-procedimientos-y-herramientas)
+
+[1.3.1 Métodos y procedimientos	27](#métodos-y-procedimientos)
+
+[1.3.1.1 Procedimiento para el modelado ontológico \- R1	27](#procedimiento-para-el-modelado-ontológico---r1)
+
+[1.3.1.2 Procedimiento para la instanciación en capa de referencia \- R2	28](#procedimiento-para-la-instanciación-en-capa-de-referencia---r2)
+
+[1.3.1.3 Procedimiento para la documentación del módulo del grafo \- R3	29](#procedimiento-para-la-documentación-del-módulo-del-grafo---r3)
+
+[1.3.1.4 Procedimiento para la construcción del módulo de KG y pipeline \- R4	31](#procedimiento-para-la-construcción-del-módulo-de-kg-y-pipeline---r4)
+
+[1.3.1.5 Procedimiento para la documentación del mecanismo de navegación \- R5	33](#procedimiento-para-la-documentación-del-mecanismo-de-navegación---r5)
+
+[1.3.1.6 Procedimiento para el prototipo de navegación \- R6	33](#procedimiento-para-el-prototipo-de-navegación---r6)
+
+[1.3.2 Herramientas	34](#herramientas)
+
+[1.3.2.1 Base de datos orientada a grafos: Neo4j y Cypher	34](#base-de-datos-orientada-a-grafos:-neo4j-y-cypher)
+
+[1.3.2.2 Lenguajes y estándares semánticos: OWL 2 y RDF	35](#lenguajes-y-estándares-semánticos:-owl-2-y-rdf)
+
+[1.3.2.3 Edición y validación ontológica: Protégé y HermiT	35](#edición-y-validación-ontológica:-protégé-y-hermit)
+
+[1.3.2.4 Estándares Disciplinares (CC2020, CS2023 y SWEBOK)	35](#estándares-disciplinares-\(cc2020,-cs2023-y-swebok\))
+
+[1.3.2.5 Python y FastAPI	36](#python-y-fastapi)
+
+[1.3.2.6 Orquestación y LLMs	37](#orquestación-y-llms)
+
+[1.3.2.7 Git y Github para versionado y repositorio de código y documentación	38](#git-y-github-para-versionado-y-repositorio-de-código-y-documentación)
+
+[**Capítulo 2\. Marco Conceptual	38**](#marco-conceptual)
+
+[2.1 Introducción	38](#introducción)
+
+[2.2 Desarrollo del marco conceptual	38](#desarrollo-del-marco-conceptual)
+
+[2.2.1 Dominio de la educación en informática	38](#dominio-de-la-educación-en-informática)
+
+[2.2.1.1 Currículo universitario y fragmentación	38](#currículo-universitario-y-fragmentación)
+
+[2.2.1.2 Dependencias conceptuales y relaciones de prerrequisito	39](#dependencias-conceptuales-y-relaciones-de-prerrequisito)
+
+[2.2.2 Representación formal del conocimiento	40](#representación-formal-del-conocimiento)
+
+[2.2.2.1 Ontología y sus componentes (T-Box, A-Box)	40](#ontología-y-sus-componentes-\(t-box,-a-box\))
+
+[2.2.2.2 Grafo de conocimiento (Knowledge Graph)	41](#grafo-de-conocimiento-\(knowledge-graph\))
+
+[2.2.3 Gestión del conocimiento	41](#gestión-del-conocimiento)
+
+[2.2.4 Aprendizaje y navegación	42](#aprendizaje-y-navegación)
+
+[2.2.4.1 Aprendizaje autodirigido (self-directed learning)	42](#aprendizaje-autodirigido-\(self-directed-learning\))
+
+[2.2.4.2 Navegación y descubrimiento de recursos educativos	42](#navegación-y-descubrimiento-de-recursos-educativos)
+
+[**Capítulo 3\. Estado del Arte	44**](#estado-del-arte)
+
+[3.1 Introducción	44](#introducción-1)
+
+[3.2 Objetivos de revisión	44](#objetivos-de-revisión)
+
+[3.3 Preguntas de revisión	44](#preguntas-de-revisión)
+
+[3.4 Estrategia de búsqueda	45](#estrategia-de-búsqueda)
+
+[3.4.1 Motor de búsqueda a usar	46](#motor-de-búsqueda-a-usar)
+
+[3.4.2 Cadenas de búsqueda a usar	46](#cadenas-de-búsqueda-a-usar)
+
+[3.4.3 Documentos encontrados	47](#documentos-encontrados)
+
+[3.4.4 Criterios de inclusión	51](#criterios-de-inclusión)
+
+[3.4.5 Criterios de exclusión	52](#criterios-de-exclusión)
+
+[3.5 Formulario de extracción de datos	52](#formulario-de-extracción-de-datos)
+
+[3.6 Resultados de la revisión	54](#resultados-de-la-revisión)
+
+[3.6.1 Respuesta a pregunta P1: modelado de currículos y dominios computacionales con ontologías y grafos	54](#respuesta-a-pregunta-p1:-modelado-de-currículos-y-dominios-computacionales-con-ontologías-y-grafos)
+
+[3.6.2 Respuesta a pregunta P2: arquitecturas de KMS basados en grafos e ingesta automatizada	56](#respuesta-a-pregunta-p2:-arquitecturas-de-kms-basados-en-grafos-e-ingesta-automatizada)
+
+[3.6.3 Respuesta a pregunta P3: mecanismos de navegación y descubrimiento semántico	58](#respuesta-a-pregunta-p3:-mecanismos-de-navegación-y-descubrimiento-semántico)
+
+[3.7 Conclusiones	61](#conclusiones)
+
+[**Capítulo 4\. Modelo del dominio del conocimiento de Ingeniería Informática	63**](#modelo-del-dominio-del-conocimiento-de-ingeniería-informática)
+
+[4.1 Introducción	64](#introducción-2)
+
+[4.2 Modelo ontológico formal del dominio de Ingeniería Informática	64](#modelo-ontológico-formal-del-dominio-de-ingeniería-informática)
+
+[4.2.1 Descripción del resultado	64](#descripción-del-resultado)
+
+[4.2.2 Procedimiento y estructura del modelo	65](#procedimiento-y-estructura-del-modelo)
+
+[4.2.3 Verificación y mediciones	69](#verificación-y-mediciones)
+
+[4.3 Capa de referencia curada desde el estándar CS2023	70](#capa-de-referencia-curada-desde-el-estándar-cs2023)
+
+[4.4 Discusión	72](#discusión)
+
+[**Capítulo 5\. Módulo de gestión del grafo de conocimiento	77**](#módulo-de-gestión-del-grafo-de-conocimiento)
+
+[5.1 Introducción	77](#introducción-3)
+
+[5.2 Documentación del módulo del grafo de conocimiento	77](#documentación-del-módulo-del-grafo-de-conocimiento)
+
+[5.2.1 Atributos de calidad del módulo del grafo de conocimiento	78](#atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
+
+[5.2.2 Modelo de datos del grafo	81](#modelo-de-datos-del-grafo)
+
+[5.2.3 Reglas de integridad del grafo	84](#reglas-de-integridad-del-grafo)
+
+[5.2.4 Arquitectura del módulo	86](#arquitectura-del-módulo)
+
+[5.2.4.1 Contexto del sistema	88](#contexto-del-sistema)
+
+[5.2.4.2 Contenedores	90](#contenedores)
+
+[5.2.4.3 Componentes	92](#componentes)
+
+[5.2.4.4 Flujo de la ingesta	95](#flujo-de-la-ingesta)
+
+[5.2.4.5 Despliegue	97](#despliegue)
+
+[5.2.5 Casos de prueba de la ingesta automatizada	98](#casos-de-prueba-de-la-ingesta-automatizada)
+
+[5.2.5.1 Objeto y alcance	98](#objeto-y-alcance)
+
+[5.2.5.2 Anotación de referencia	99](#anotación-de-referencia)
+
+[5.2.5.3 Casos de prueba	101](#casos-de-prueba)
+
+[5.2.5.4 Reglas de emparejamiento	103](#reglas-de-emparejamiento)
+
+[5.2.5.5 Medidas de fusión	104](#medidas-de-fusión)
+
+[5.2.5.6 Casos de prueba de relaciones	104](#casos-de-prueba-de-relaciones)
+
+[5.2.6 Verificación de R3	105](#verificación-de-r3)
+
+[5.2.6.1 Verificación y mediciones	105](#verificación-y-mediciones-1)
+
+[5.2.6.2 Validación de experto	107](#validación-de-experto)
+
+[5.2.6.3 Indicador	107](#indicador)
+
+[5.3 Discusión	107](#discusión-1)
+
+[5.3.1 Resumen de los resultados	107](#resumen-de-los-resultados)
+
+[5.3.2 Interpretación de los resultados	108](#interpretación-de-los-resultados)
+
+[5.3.3 Los resultados en el contexto de la revisión de la literatura	109](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura)
+
+[5.3.4 Generalización de los resultados	110](#generalización-de-los-resultados)
+
+[5.3.5 Limitaciones de los resultados	111](#limitaciones-de-los-resultados)
+
+[**Capítulo 6\. Conclusiones y trabajos futuros	112**](#conclusiones-y-trabajos-futuros)
+
+[6.1 Conclusiones	112](#conclusiones-1)
+
+[6.2 Trabajos futuros	112](#trabajos-futuros)
+
+[**Referencias	113**](#referencias)
+
+# **Índice de figuras**
+
+[Figura 1\. Distribución de respondentes por ciclo (N=154). Fuente: elaboración propia a partir de la encuesta (Anexo D).	11](#figura-1.-distribución-de-respondentes-por-ciclo-\(n=154\).-fuente:-elaboración-propia-a-partir-de-la-encuesta-\(anexo-d\).)
+
+[Figura 2\. Árbol de problemas	12](#figura-2.-árbol-de-problemas)
+
+[Figura 3\. Facilidad percibida para identificar conocimientos previos antes de abordar un tema nuevo (1 \= nada fácil, 5 \= muy fácil; N=154). Fuente: elaboración propia (Anexo D).	15](#figura-3.-facilidad-percibida-para-identificar-conocimientos-previos-antes-de-abordar-un-tema-nuevo-\(1-=-nada-fácil,-5-=-muy-fácil;-n=154\).-fuente:-elaboración-propia-\(anexo-d\).)
+
+[Figura 4\. Criterios usados para planificar cursos electivos (opción múltiple; N=154). Fuente: elaboración propia (Anexo D)	18](#figura-4.-criterios-usados-para-planificar-cursos-electivos-\(opción-múltiple;-n=154\).-fuente:-elaboración-propia-\(anexo-d\))
+
+[Figura 5\. Jerarquía de clases de la ontología visualizada en Protégé (OntoGraf). Fuente: elaboración propia.	66](#figura-5.-jerarquía-de-clases-de-la-ontología-visualizada-en-protégé-\(ontograf\).-fuente:-elaboración-propia.)
+
+[Figura 6\. Diagrama de contexto del sistema (nivel 1 del modelo C4). Fuente: elaboración propia.	89](#figura-6.-diagrama-de-contexto-del-sistema-\(nivel-1-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 7\. Diagrama de contenedores del sistema (nivel 2 del modelo C4). Fuente: elaboración propia.	90](#figura-7.-diagrama-de-contenedores-del-sistema-\(nivel-2-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 8\. Componentes de la API (nivel 3 del modelo C4). Fuente: elaboración propia.	93](#figura-8.-componentes-de-la-api-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 9\. Componentes del worker de ingesta (nivel 3 del modelo C4). Fuente: elaboración propia.	93](#figura-9.-componentes-del-worker-de-ingesta-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 10\. Componentes de los procesos de construcción (nivel 3 del modelo C4). Fuente: elaboración propia.	95](#figura-10.-componentes-de-los-procesos-de-construcción-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 11\. Flujo de la ingesta de un documento. Fuente: elaboración propia.	96](#figura-11.-flujo-de-la-ingesta-de-un-documento.-fuente:-elaboración-propia.)
+
+[Figura 12\. Diagrama de despliegue del prototipo. Fuente: elaboración propia.	97](#figura-12.-diagrama-de-despliegue-del-prototipo.-fuente:-elaboración-propia.)
+
+# **Índice de tablas**
+
+[Tabla 1\. Ficha técnica de la encuesta de orientación del aprendizaje	9](#tabla-1.-ficha-técnica-de-la-encuesta-de-orientación-del-aprendizaje)
+
+[Tabla 2\. Mapeo de resultados, medios de verificación e indicadores del objetivo O 1	21](#tabla-2.-mapeo-de-resultados,-medios-de-verificación-e-indicadores-del-objetivo-o-1)
+
+[Tabla 3\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 2	22](#tabla-3.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-2)
+
+[Tabla 4\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 3	24](#tabla-4.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-3)
+
+[Tabla 5\. Herramientas, métodos y procedimientos por resultado	26](#tabla-5.-herramientas,-métodos-y-procedimientos-por-resultado)
+
+[Tabla 6\. Uso de la técnica PICOC	44](#tabla-6.-uso-de-la-técnica-picoc)
+
+[Tabla 7\. Palabras clave organizadas con técnica PICOC por pregunta	46](#tabla-7.-palabras-clave-organizadas-con-técnica-picoc-por-pregunta)
+
+[Tabla 8\. Resultados de documentos en búsquedas y filtración	48](#tabla-8.-resultados-de-documentos-en-búsquedas-y-filtración)
+
+[Tabla 9\. Documentos seleccionados finales	48](#tabla-9.-documentos-seleccionados-finales)
+
+[Tabla 10\. Formulario de extracción de datos para la pregunta P1	52](#tabla-10.-formulario-de-extracción-de-datos-para-la-pregunta-p1)
+
+[Tabla 11\. Formulario de extracción de datos para la pregunta P2	53](#tabla-11.-formulario-de-extracción-de-datos-para-la-pregunta-p2)
+
+[Tabla 12\. Formulario de extracción de datos para la pregunta P3	53](#tabla-12.-formulario-de-extracción-de-datos-para-la-pregunta-p3)
+
+[Tabla 13\. Propiedades de objeto de la ontología.	67](#tabla-13.-propiedades-de-objeto-de-la-ontología.)
+
+[Tabla 14\. Atributos de calidad del módulo del grafo de conocimiento	78](#tabla-14.-atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
+
+[Tabla 15\. Escenarios de calidad de los atributos definidos	79](#tabla-15.-escenarios-de-calidad-de-los-atributos-definidos)
+
+[Tabla 16\. Tipos de arista del grafo y pares de etiquetas admitidos	82](#tabla-16.-tipos-de-arista-del-grafo-y-pares-de-etiquetas-admitidos)
+
+[Tabla 17\. Propiedades de nodo y de arista	83](#tabla-17.-propiedades-de-nodo-y-de-arista)
+
+[Tabla 18\. Reglas de integridad del grafo	84](#tabla-18.-reglas-de-integridad-del-grafo)
+
+[Tabla 19\. Reglas del módulo	85](#tabla-19.-reglas-del-módulo)
+
+[Tabla 20\. Decisiones de arquitectura del módulo	86](#tabla-20.-decisiones-de-arquitectura-del-módulo)
+
+[Tabla 21\. Mecanismo que impide cada regla en la ingesta	94](#tabla-21.-mecanismo-que-impide-cada-regla-en-la-ingesta)
+
+[Tabla 22\. Casos de prueba de extracción y resumen de la anotación de referencia	102](#tabla-22.-casos-de-prueba-de-extracción-y-resumen-de-la-anotación-de-referencia)
+
+[Tabla 23\. Trazabilidad de los atributos de calidad	106](#tabla-23.-trazabilidad-de-los-atributos-de-calidad)
+
+1. # **Generalidades** {#generalidades}
+
+Este capítulo presenta el contexto general del proyecto. Se describe la problemática que motiva el desarrollo del sistema, se enuncian los objetivos del trabajo y se detallan los métodos, procedimientos y herramientas que se emplearán para alcanzarlos.
+
+1. ## **Problemática** {#problemática}
+
+La caracterización de la problemática que sigue se sustenta en tres tipos de fuentes complementarias: el análisis del corpus académico institucional de la carrera (plan de estudios, sílabos, guías de concentración y plataformas docentes), que permite identificar las propiedades estructurales del cuerpo de conocimiento curricular en su estado actual; la literatura sobre representación del conocimiento educativo y estándares curriculares internacionales (CS2023, CC2020, SWEBOK), que aporta el marco conceptual para diagnosticar los déficits que afectan dicho corpus; y dos instrumentos empíricos (una encuesta de orientación del aprendizaje a 154 estudiantes de Ingeniería Informática de la PUCP, con análisis descriptivo en el Anexo D, y una entrevista semiestructurada al director de la carrera, Luis Flores, cuyo análisis temático se encuentra en el Anexo E) que documentan las consecuencias de esos déficits sobre los estudiantes de la carrera. Los datos de ambos instrumentos fueron analizados y se integran a lo largo de la descripción como manifestaciones empíricas de los déficits identificados.
+
+###### **Tabla 1\. Ficha técnica de la encuesta de orientación del aprendizaje** {#tabla-1.-ficha-técnica-de-la-encuesta-de-orientación-del-aprendizaje}
+
+| Campo | Detalle |
+| :---- | :---- |
+| Instrumento | Cuestionario autoadministrado en línea (Google Forms) |
+| Población | Estudiantes de Ingeniería Informática, PUCP |
+| Respuestas | 157 recibidas; 154 de Ingeniería Informática (analizadas) |
+| Muestreo | No probabilístico por conveniencia |
+| Periodo | 13 de mayo del 2026 \- 14 de mayo del 2026 |
+| Estructura | 17 ítems (Likert 1-5, opción única, opción múltiple, abierta) |
+| Análisis | Descriptivo (ítems cerrados, anexo D) y temático (ítems abiertos y entrevista, Anexo E) |
+| Anexos | Análisis descriptivo de los datos de la encuesta (ítems cerrados): Anexo D  Análisis temático de los datos de la entrevista e ítems abiertos de la encuesta: Anexo E |
+
+La encuesta de orientación del aprendizaje se aplicó mediante un cuestionario autoadministrado en línea (Google Forms) dirigido a estudiantes de Ingeniería Informática de la PUCP, difundido por correo electrónico y canales estudiantiles entre el 13 y 14 de mayo del 2026\. Se recibieron 157 respuestas, de las cuales 154 corresponden a estudiantes de Ingeniería Informática y constituyen la base del análisis; las 3 restantes, de otras especialidades, se excluyeron. El instrumento consta de 17 ítems que combinan escalas de Likert de 1 a 5, preguntas de opción única, de opción múltiple y de respuesta abierta, y cubre cuatro dimensiones: identificación de dependencias conceptuales, acceso a recursos de estudio, estrategia de aprendizaje y valoración de la propuesta (no considerada para el sustento de la problemática). Los ítems cerrados se analizaron mediante análisis descriptivo (Anexo D). La muestra es no probabilística por conveniencia y presenta sobre-representación del noveno ciclo (Figura 1), por lo que sus resultados se interpretan como evidencia indicativa del fenómeno, no como estimaciones poblacionales. ![][image2]
+
+##### **Figura 1\. Distribución de respondentes por ciclo (N=154). Fuente: elaboración propia a partir de la encuesta (Anexo D).** {#figura-1.-distribución-de-respondentes-por-ciclo-(n=154).-fuente:-elaboración-propia-a-partir-de-la-encuesta-(anexo-d).}
+
+Por otro lado, la entrevista semiestructurada con el director de carrera de Ingeniería Informática, Luis Flores, ha sido transcrita y analizada mediante análisis temático (Anexo E) junto a las respuestas de preguntas abiertas de la encuesta (dimensión de valoración de la propuesta que no está siendo considerada para respaldar la problemática).
+
+1. ### **Árbol de Problemas** {#árbol-de-problemas}
+
+| Problemas efectos | Tiempo significativo en identificar prerrequisitos conceptuales para abordar temas nuevos, con detección tardía de brechas de conocimiento una vez iniciado el estudio.  | Búsqueda dispersa de material para un mismo tema, con uso frecuente de IA generativa de propósito general como apoyo conceptual sin anclaje al currículo institucional. | Planificación del recorrido curricular guiada principalmente por canales informales (recomendaciones, horario disponible), con dificultad para articular el itinerario de forma autónoma. |  |
+| :---- | :---- | :---- | :---- | ----- |
+| **Problema central** | Los elementos del currículo de Ingeniería Informática PUCP (cursos, conceptos, recursos, etc.) no están disponibles de forma articulada en un medio digital integrado que permita consultarlos de forma transversal.  |  |  |  |
+| **Problemas causa** | Las dependencias entre los contenidos de la carrera están especificadas a nivel de cursos (prerrequisitos formales entre asignaturas), pero no a nivel de los conceptos y temas subyacentes.  | Los recursos académicos de la carrera se encuentran distribuidos entre múltiples plataformas y formatos, sin vinculación explícita con los elementos del currículo que abordan.  | La información sobre las relaciones entre los elementos del currículo (entre cursos, entre conceptos, entre recursos) se encuentra repartida entre múltiples documentos institucionales. |  |
+
+##### **Figura 2\. Árbol de problemas** {#figura-2.-árbol-de-problemas}
+
+2. ### **Descripción** {#descripción}
+
+El cuerpo de conocimiento de la carrera de Ingeniería Informática de la PUCP, entendido como el conjunto articulado de cursos, conceptos y recursos académicos que componen el dominio formativo de la disciplina, se encuentra documentado en un conjunto de artefactos institucionales heterogéneos: el plan de estudios oficial, los sílabos por asignatura, las guías de concentración y los repositorios de material docente alojados en distintas plataformas. El análisis de este corpus revela tres déficits estructurales que limitan su aprovechamiento como activo informativo digital: la representación de las dependencias entre contenidos se detiene en el nivel de curso y no desciende al nivel conceptual; los recursos académicos asociados al currículo se encuentran distribuidos sin vinculación explícita con los elementos del dominio que abordan; y las relaciones entre los elementos del currículo se reparten entre múltiples documentos institucionales sin estar articuladas entre sí. Las consecuencias observables de estos déficits sobre los estudiantes de la carrera, recogidas mediante una encuesta a 154 respondentes y una entrevista al director de carrera, permiten dimensionar la magnitud y el carácter del problema.
+
+El primer déficit afecta la representación de las dependencias entre contenidos. El plan de estudios de Ingeniería Informática vigente en la facultad[^1] (Anexo F) establece prerrequisitos entre asignaturas como unidades atómicas: un curso A debe aprobarse antes que un curso B. Esta formalización es necesaria para la gestión académica, pero deja fuera el nivel donde efectivamente operan las dependencias de aprendizaje: el de los conceptos y temas subyacentes a cada asignatura. Por ejemplo, en el plan de estudios vigente el curso Proyecto de Diseño y Desarrollo de Software (1INF54) tiene como requisitos a Ingeniería de Software (1INF37) y Experimentación Numérica (1EST14) (Anexo F); sin embargo, su sílabo pide a cada equipo desarrollar dos soluciones metaheurísticas para el problema del proyecto y elegir una de ellas, y las metaheurísticas se enseñan en Algoritmos Avanzados (1INF32), curso que no forma parte de esa cadena formal de prerrequisitos; la dependencia de aprendizaje existe, pero la estructura formal de prerrequisitos entre cursos no la representa. La literatura sobre representación del conocimiento educativo identifica este nivel de granularidad (el de los conceptos y temas dentro y entre cursos) como la unidad fundamental para soportar el razonamiento curricular automatizado [(Tsidylo & Kozibroda, 2024\)](https://www.zotero.org/google-docs/?yfOcfI), y los estándares internacionales de Computer Science Curriculum (CS2023, CC2020, SWEBOK) estructuran sus recomendaciones explícitamente sobre *Knowledge Areas, Units y Topics* jerárquicamente articulados, no sobre cursos [(Barron et al., 2026\)](https://www.zotero.org/google-docs/?yB4EsN).
+
+La práctica pedagógica institucional ha intentado paliar este déficit mediante la recomendación de que los profesores expliciten en sus sílabos las conexiones con cursos previos y posteriores, pero el director de la carrera reconoce que el cumplimiento es heterogéneo: "algunos lo hacen con mayor éxito que otros" (L. Flores, entrevista, 2026). La consecuencia se manifiesta en los datos de la encuesta: aproximadamente el 78% de los respondentes reporta dificultad para identificar qué conocimientos previos necesita dominar antes de abordar un tema nuevo (análisis descriptivo de la encuesta sobre orientación de aprendizaje, Anexo D), y más del 86% declara haber descubierto con cierta o mucha frecuencia, ya iniciado el estudio de un tema, que le faltaba base de algún curso que no había considerado (Anexo D). Los comentarios cualitativos ilustran el fenómeno: "No te das cuenta de que te hace falta más matemática hasta que llevas Inteligencia Artificial" (respondente, ciclo 9). Desde la psicología educativa, esta situación corresponde a un déficit metacognitivo: en ausencia de un modelo explícito del dominio, el estudiante no puede dirigir eficientemente su esfuerzo hacia las brechas que más le afectan [(Buitrago & Chiappe, 2019; National Research Council, 2000\)](https://www.zotero.org/google-docs/?0InSV7). La evidencia sugiere, sin embargo, que este efecto no es uniforme a lo largo de la carrera: tiende a ser más pronunciado en los ciclos iniciales y medios, y se reduce en ciclos avanzados a medida que el estudiante construye, por exposición acumulada, una comprensión más integrada del dominio.
+
+![][image3]
+
+##### **Figura 3\. Facilidad percibida para identificar conocimientos previos antes de abordar un tema nuevo (1 \= nada fácil, 5 \= muy fácil; N=154). Fuente: elaboración propia (Anexo D).** {#figura-3.-facilidad-percibida-para-identificar-conocimientos-previos-antes-de-abordar-un-tema-nuevo-(1-=-nada-fácil,-5-=-muy-fácil;-n=154).-fuente:-elaboración-propia-(anexo-d).}
+
+El segundo déficit afecta la vinculación entre los recursos académicos y los elementos del currículo a los que pertenecen. Los materiales producidos durante la formación (presentaciones, lecturas, guías de laboratorio, evaluaciones, grabaciones de clase) se alojan en plataformas y formatos heterogéneos: Paideia organiza el contenido por curso y por ciclo, los profesores mantienen repositorios individuales con sus propios criterios de organización, y los materiales externos consultados por los estudiantes (libros, papers, videos, sitios docentes) residen en infraestructuras ajenas a la universidad. Ninguna de estas fuentes mantiene metadatos compartidos que vinculen un recurso específico con los conceptos o temas del currículo que aborda, de modo que un mismo concepto cubierto en dos cursos distintos aparece como contenido aislado en cada uno, sin que la representación digital del currículo refleje su transversalidad. La literatura sobre construcción de grafos de conocimiento educativos identifica este tipo de integración heterogénea como un obstáculo central para el aprovechamiento del corpus académico institucional [(Wang, 2025\)](https://www.zotero.org/google-docs/?bjsNMW). Los datos lo confirman en el caso PUCP: más del 57% de los respondentes consulta entre dos y tres fuentes distintas cuando busca material para un concepto específico, y cerca del 28% consulta entre cuatro o más, con baja frecuencia de encontrar inmediatamente lo pertinente (Anexo D). De forma cada vez más central, las herramientas de inteligencia artificial generativa de propósito general (ChatGPT, Gemini) aparecen mencionadas en aproximadamente el 65-70% de las respuestas sobre estrategias de conexión entre temas (Anexo D), funcionando como el mecanismo de orientación conceptual más utilizado en la carrera; esta adopción masiva no resuelve el déficit de vinculación, sino que lo desplaza hacia un mediador externo que carece de contextualización al plan de estudios institucional y de trazabilidad académica verificable [(Huang et al., 2026; Y. Li et al., 2024; Z. Li et al., 2025\)](https://www.zotero.org/google-docs/?LdLcxs). La diferencia entre una orientación mediada por IA de propósito general y una representación anclada al currículo PUCP no es trivial: es la diferencia entre una respuesta plausible y una respuesta trazable.
+
+Existen, además, condiciones institucionales que explican por qué la integración no ha ocurrido hasta ahora. El director de la carrera identifica tres barreras estructurales: los materiales docentes están protegidos por derechos de autor de sus autores individuales; los contenidos de un mismo curso varían entre ciclos a medida que los profesores actualizan su propuesta pedagógica; y el material de un ciclo anterior puede resultar incongruente con la versión vigente del curso (L. Flores, entrevista, 2026). Estas restricciones no invalidan la propuesta técnica de esta tesis (cuyo objeto no es indexar archivos físicos sino modelar semánticamente los conceptos del currículo y sus relaciones, vinculando los recursos por referencia) pero constituyen condiciones del contexto institucional que deben informar el diseño del sistema y su estrategia de mantenimiento.
+
+El tercer déficit afecta la consolidación de las relaciones entre los elementos del currículo. Mientras los dos déficits anteriores se refieren a la representación interna de cada elemento (sus conceptos componentes; sus recursos asociados), este se refiere a cómo los elementos se conectan entre sí a nivel macroestructural: qué cursos contribuyen a una concentración de especialización, qué cursos comparten conceptos o temas transversales, qué recorridos coherentes existen entre áreas del conocimiento de la disciplina. Esta información existe parcialmente en la institución, pero se encuentra repartida entre artefactos separados: el plan de estudios oficial enumera los cursos por ciclo y los prerrequisitos, las guías de concentración describen los electivos asociados a cada línea, los sílabos detallan cada curso de forma autocontenida, y la articulación entre estos artefactos depende en gran medida del conocimiento tácito de profesores especialistas. El director de la carrera confirma este patrón: cuando un estudiante busca orientación sobre Inteligencia Artificial busca al profesor Beltrán o al profesor Villanueva; cuando se inclina por Ingeniería de Software, al profesor Dávila (L. Flores, entrevista, 2026, Anexo E). La orientación de calidad existe en la facultad, pero opera como conocimiento distribuido entre personas, no como representación accesible del currículo. La literatura sobre exploración de currículos educativos describe esta fragmentación como una de las barreras principales para la planificación de trayectorias formativas coherentes [(Nguyen et al., 2022\)](https://www.zotero.org/google-docs/?RNQgv5)
+
+Los datos empíricos reflejan la consecuencia de este déficit sobre la planificación curricular de los estudiantes. La elección de cursos electivos se realiza, en aproximadamente el 43% de las respuestas, sobre la base de recomendaciones de compañeros (Anexo D), por detrás únicamente de la consulta del plan de estudios oficial. Cerca del 84% reporta dificultad media o alta para trazar su propio itinerario de aprendizaje (Anexo D). El director describe el patrón desde la perspectiva institucional: "muchas veces los alumnos simplemente terminan eligiendo los electivos que les cuadran en horario, más que teniendo un plan" (L. Flores, entrevista, 2026). Reconoce, además, que los estudiantes con menor promedio (CRAEST) tienen menor libertad de elección por el sistema de turnos de matrícula, lo que introduce una dimensión de desigualdad en el acceso a la orientación informal disponible. El resultado es que la articulación entre cursos, áreas y trayectorias profesionales, aunque existe en los documentos institucionales y en el conocimiento de profesores especialistas, no se encuentra disponible como representación consultable de forma autónoma por el estudiante.
+
+![][image4]
+
+##### **Figura 4\. Criterios usados para planificar cursos electivos (opción múltiple; N=154). Fuente: elaboración propia (Anexo D)** {#figura-4.-criterios-usados-para-planificar-cursos-electivos-(opción-múltiple;-n=154).-fuente:-elaboración-propia-(anexo-d)}
+
+La consecuencia acumulada de estos tres déficits estructurales es que el cuerpo de conocimiento curricular de Ingeniería Informática de la PUCP, aunque existe distribuido entre múltiples artefactos institucionales y profesores expertos, no se encuentra disponible como activo digital articulado e integrado consultable de forma transversal. Los datos lo dimensionan: identificar qué se necesita aprender para un tema nuevo toma, en la moda de la muestra, más de un día, y en una proporción relevante de casos varios días o semanas (Anexo D); la orientación informal por pares funciona, pero depende del acceso de cada estudiante a redes de pares y a profesores especialistas; y la mediación de facto vía IA generativa de propósito general, aunque accesible, carece de anclaje al currículo institucional. A esto se suma que aproximadamente el 17% de los respondentes declara no tener todavía clara su área de interés profesional (Anexo D), concentrado en ciclos intermedios, un dato que sugiere que el activo digital propuesto debería habilitar tanto la navegación dirigida hacia metas conocidas como la exploración abierta del dominio para quienes aún se encuentran en fase de construcción de su identidad profesional.
+
+Para abordar este desnivel, el presente proyecto plantea el desarrollo de un sistema de gestión del conocimiento (KMS) basado en grafos para la disciplina de Ingeniería Informática. La solución se construirá a partir de tres ejes metodológicos alineados con los déficits identificados: la formalización del dominio curricular mediante un modelado ontológico que descienda al nivel de conceptos y temas (atendiendo al primer déficit); un pipeline de ingesta automatizada que, mediante técnicas de procesamiento de lenguaje natural y modelos de lenguaje de gran escala (LLMs), extraiga y vincule los recursos académicos a los elementos del dominio que abordan (segundo déficit); y una interfaz de navegación visual que permita recorrer las relaciones del currículo como un todo articulado, identificar dependencias conceptuales, descubrir recursos pertinentes y trazar rutas de aprendizaje coherentes con metas profesionales o con la exploración abierta del dominio (tercer déficit). A diferencia de las herramientas de IA generativa de propósito general que los estudiantes utilizan actualmente, este sistema estará contextualizado al plan de estudios PUCP, anclado en estándares disciplinares verificados, y diseñado para ofrecer trazabilidad académica sobre las relaciones que representa.
+
+3. ### **Problema seleccionado** {#problema-seleccionado}
+
+El cuerpo de conocimiento curricular de la carrera de Ingeniería Informática de la PUCP no se encuentra disponible como un activo digital articulado e integrado que permita consultar de forma transversal sus elementos (cursos, conceptos y recursos académicos) y las relaciones entre ellos. Las dependencias entre contenidos están formalizadas a nivel de prerrequisitos entre cursos, pero no descienden al nivel conceptual donde efectivamente operan; los recursos académicos asociados a la carrera se encuentran distribuidos en plataformas y formatos heterogéneos sin vinculación explícita con los elementos del currículo que abordan; y las relaciones entre los propios elementos del currículo, aunque existen en distintos documentos institucionales y en el conocimiento tácito de profesores especialistas, no se encuentran articuladas en una representación consultable de forma autónoma. Esta situación se manifiesta en un proceso de orientación del aprendizaje que es costoso en tiempo, que se apoya en mediadores externos (IA generativa de propósito general) sin anclaje al currículo institucional ni trazabilidad académica, y que depende fuertemente de canales informales para la planificación del recorrido formativo.
+
+2. ## **Objetivos** {#objetivos}
+
+   1. ### **Objetivo general** {#objetivo-general}
+
+Diseñar e implementar un sistema de gestión de conocimiento basado en grafos de conocimiento que permita a los estudiantes de Ingeniería Informática de la PUCP navegar el dominio de su carrera y descubrir recursos académicos de forma semántica y trazable, explicitando las dependencias conceptuales entre los contenidos.
+
+2. ### **Objetivos específicos**  {#objetivos-específicos}
+
+1. Modelar el dominio del conocimiento de la carrera de Ingeniería Informática mediante una ontología formal que represente cursos, conceptos, temas, áreas de conocimiento  y sus relaciones, tomando como referencia el plan de estudios de la PUCP y el estándar CS2023.   
+2. Diseñar e implementar un módulo de gestión del grafo de conocimiento que, bajo la ontología definida, integre recursos académicos heterogéneos mediante un pipeline de ingesta automatizada y exponga una interfaz programática para su consulta y gestión.  
+3. Diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles.
+
+   3. ### **Resultados esperados y mapeo de verificación** {#resultados-esperados-y-mapeo-de-verificación}
+
+###### **Tabla 2\. Mapeo de resultados, medios de verificación e indicadores del objetivo O 1** {#tabla-2.-mapeo-de-resultados,-medios-de-verificación-e-indicadores-del-objetivo-o-1}
+
+| Objetivo: O 1: Modelar el dominio del conocimiento de la carrera de Ingeniería Informática mediante una ontología formal que represente cursos, conceptos, temas, áreas de conocimiento  y sus relaciones, tomando como referencia el plan de estudios de la PUCP y el estándar CS2023. |  |  |
+| :---- | :---- | :---- |
+| **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
+| R1. Modelo ontológico formal del dominio de Ingeniería Informática que define clases, relaciones semánticas tipadas, y restricciones del dominio. | Documento de especificación de la ontología revisado y aprobado por el asesor especialista. Documento de decisiones de diseño de ontología. | Validación de experto en Ingeniería de Conocimiento respecto al diseño de la ontología y decisiones tomadas. Validación de la consistencia de la ontología mediante HermiT Define al menos 5 clases y 3 tipos de relaciones.[^2] |
+| R2. Capa de referencia (instancias) curada desde el estándar CS2023. | Documento de especificación de la ontología | Validación de la consistencia de la ontología mediante HermiT |
+
+###### **Tabla 3\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 2** {#tabla-3.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-2}
+
+| Objetivo: O 2: Diseñar e implementar un módulo de gestión del grafo de conocimiento que, bajo la ontología definida, integre recursos académicos heterogéneos mediante un pipeline de ingesta automatizada y exponga una interfaz programática para su consulta y gestión. |  |  |
+| :---- | :---- | :---- |
+| **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
+| R3. Documentación del módulo del grafo de conocimiento que especifica el modelo de datos del grafo, los componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Documentos de arquitectura con diagramas C4, modelo de datos y ADRs. Documento de casos de prueba para validación de la ingesta automatizada del pipeline.  | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
+| R4. Módulo de gestión del grafo de conocimiento implementado que incluye el pipeline de ingesta automatizada de documentos académicos (sílabos PDF) y una API documentada para consulta y gestión del grafo. | Código fuente del módulo Documentación técnica de la API (endpoints, esquema de datos, ejemplos de uso) Reporte de extracción sobre el conjunto de pruebas. | Verificación de la precisión de entidades extraídas mayor o igual a un 75% (nodos o conceptos del grafo de conocimiento) mediante anotación de referencia adjudicada por el autor.[^3] |
+
+###### **Tabla 4\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 3** {#tabla-4.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-3}
+
+| Objetivo: O 3: Diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. |  |  |
+| :---- | :---- | :---- |
+| **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
+| R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Reporte técnico del mecanismo de navegación | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
+| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | \- Pasa exitosamente el 100% de las pruebas de aceptación (con **asesor de tesis**), donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. \- Pasa exitosamente el 100% de las pruebas de aceptación con al menos 3 usuarios reales para validar la construcción del grafo de conocimiento. |
+
+3. ## **Métodos, procedimientos y herramientas** {#métodos,-procedimientos-y-herramientas}
+
+En esta sección se detallarán los métodos y procedimientos necesarios para obtener los resultados. Se presenta un resumen en la Tabla 5\.
+
+###### **Tabla 5\. Herramientas, métodos y procedimientos por resultado** {#tabla-5.-herramientas,-métodos-y-procedimientos-por-resultado}
+
+| Resultado | Herramientas | Métodos o procedimientos |
+| :---- | :---- | :---- |
+| R1 \- Modelo ontológico | Protégé   OWL 2 HermiT | Metodología Ontology Development 101 (Noy & McGuinness, 2001), adaptada con validación dual (validación con experto y validación de consistencia con razonador HermiT), esquema de clases informado por Barron et al. (2026) y estándares internacionales de guías curriculares (CS2023) como referencia de vocabulario de dominio. |
+| R2 \- Capa de referencia | Protégé   OWL 2 HermiT | Paso 7 de OD101: instanciación curada desde CS2023 hasta nivel KU. |
+| R3 \- Documentación del módulo | Modelo C4 (Brown, 2018\) Git y Github  | Diseño arquitectónico iterativo Documentación con niveles 1-3 del Modelo C4 Registro de decisiones técnicas mediante Architecture Decision Records.  Diseño y documentación de los casos de prueba de la ingesta |
+| R4 \- Módulo KG y pipeline | Neo4j Python (FastAPI) Docling PydanticAI LLM de OpenAI Git y Github Cypher (lenguaje de consulta de grafos) Git y Github  | Procedimiento de *Ontology Population* mediante extracción de información asistida por LLM y curación de contenido previa. |
+| R5 \- Documentación del mecanismo | Modelo C4 Git/GitHub | Diseño documentado con C4 (niveles 1-3) y ADRs; diseño de flujos de interacción y wireframes |
+| R6 \- Mecanismo de navegación | Svelte y Vite (framework frontend) D3 (librería de visualización de grafos) Git y Github  | Prototipado iterativo a partir de los flujos y wireframes de R5; pruebas de aceptación de funcionalidades core. |
+
+1. ### **Métodos y procedimientos** {#métodos-y-procedimientos}
+
+   1. #### **Procedimiento para el modelado ontológico \- R1** {#procedimiento-para-el-modelado-ontológico---r1}
+
+Para el desarrollo del modelo ontológico formal (T-Box) que representará el dominio de la Ingeniería Informática, se aplicará la metodología Ontology Development 101 propuesta por Noy y McGuinness (2001). Esta metodología iterativa ha sido adaptada para ajustarse a las particularidades del dominio educativo universitario, estructurando el procedimiento en tres fases secuenciales que agrupan los pasos de la metodología:
+
+**Fase 1: Especificación y conceptualización del dominio**
+
+Determinación del alcance: El dominio se delimita a los conocimientos de Ciencias de la Computación e Ingeniería de Software que toma la malla de Ingeniería Informática en la PUCP.
+
+Adopción del metamodelo educativo: Se utilizará la arquitectura de clases de Barron et al. (2026) como esquema de referencia. Esto permite definir las clases de alto nivel y sus relaciones. Las clases de alto nivel se limitan al **modelo de conocimiento**; la clase “Competence” queda fuera del alcance actual como punto de extensión futura. Sin embargo, la referencia raíz es el modelo de conocimiento del estándar internacional CS2023.
+
+Modelado de la capa de recursos**:** Se definirán las clases y propiedades necesarias para representar los metadatos de los recursos (sílabos, materiales, archivos). Esta capa no almacena el archivo físico, sino su **semántica** (ej. "el PDF X aborda el concepto Y"), permitiendo la navegación en el grafo posteriormente. 
+
+**Fase 2: Formalización e implementación**
+
+En esta fase, el diseño conceptual se traslada al entorno de desarrollo Protégé. Los pasos críticos incluyen:
+
+- Definición de la jerarquía de clases: Implementación de las clases raíz y subclases según los estándares definidos.  
+- Modelado de relaciones (propiedades de objetos): Se implementarán las relaciones fundamentales del dominio, con especial énfasis en la propiedad de prerrequisito; al ser un axioma núcleo de la ontología, esta relación permitirá los posteriores recorridos conceptuales entre nodos del grafo.  
+- Serialización: El modelo será formalizado utilizando el lenguaje estándar OWL 2\.
+
+**Fase 3: Validación dual (estructural y lógica)**
+
+Validación de diseño con experto: De manera concurrente a la edición en Protégé, el esquema de clases, las restricciones de dominio y las propiedades serán validadas mediante revisiones directas con el asesor especialista. Finalmente se ejecutará HermiT sobre el modelo para garantizar la consistencia lógica de la T-Box.
+
+2. #### **Procedimiento para la instanciación en capa de referencia \- R2** {#procedimiento-para-la-instanciación-en-capa-de-referencia---r2}
+
+Conforme al Paso 7 de la metodología Ontology Development 101, se poblará la ontología con las instancias que conforman la capa de referencia del dominio: un esqueleto autoritativo y estable derivado del estándar CS2023, sobre el cual la capa de contenido institucional (R4) se enlazará sin modificarlo.
+
+**Fase 1: Instanciación curada de la taxonomía**
+
+Se puebla la ontología con las instancias de Área de Conocimiento y Unidad de Conocimiento del eje temático (Ciencias de la Computación e Ingeniería de Software) a partir del CS2023. La curación se detiene en el nivel de KU; las instancias de Tópico y Concepto se poblarán en R4 desde el material PUCP.
+
+Registro de procedencia: cada instancia del backbone registra su estándar de origen mediante una propiedad de procedencia, habilitando la trazabilidad de la representación.
+
+Esta capa de referencia no será modificada por el pipeline de ingesta automatizada (R4); este último únicamente podrá crear instancias institucionales y enlazarlas a los nodos del backbone.
+
+**Fase 2: Validación**
+
+Se ejecuta el razonador HermiT sobre la T-Box junto con la capa de referencia, verificando la ausencia de inconsistencias y el respeto de las relaciones funcionales y de las disjuntas declaradas.
+
+3. #### **Procedimiento para la documentación del módulo del grafo \- R3** {#procedimiento-para-la-documentación-del-módulo-del-grafo---r3}
+
+El objetivo de este procedimiento es producir la documentación del módulo: su modelo de datos, su arquitectura y decisiones de diseño, y los casos de prueba que validarán la ingesta del pipeline. Se emplea el Modelo C4 (Brown, s. f.) en sus niveles 1 a 3, complementado con Architecture Decision Records, y un diseño guiado por un conjunto acotado de atributos de calidad priorizados.
+
+**Fase 1 \- Definición de atributos de calidad**
+
+Antes de modelar componentes, se identifican los atributos de calidad que guiarán las decisiones arquitectónicas. Cada atributo se especifica como un escenario de calidad con una medida verificable (Bass et al., 2021). 
+
+**Fase 2 \- Modelado C4**
+
+Se producirán tres niveles de diagramas:
+
+Nivel 1 (Contexto del sistema): Muestra el KMS como una caja negra, sus usuarios y los sistemas externos con los que se comunica.
+
+Nivel 2 (Contenedores): Descompone el sistema en sus unidades desplegables independientes.
+
+Nivel 3 (Componentes): Descompone el interior de cada contenedor en sus componentes lógicos. 
+
+Esta diagramación permitirá planificar y comunicar mejor la estructura del módulo para facilitar su mantenimiento y extensión [(Brown, s. f.)](https://www.zotero.org/google-docs/?JDm2DW); así como evitar la deuda técnica. 
+
+**Fase 3 \- Modelado del esquema de datos LPG**
+
+Se especificará la transición del modelo ontológico OWL definido en R1 al modelo físico de Grafos de Propiedades Etiquetadas (LPG) para su implementación en Neo4j. Este paso es necesario porque OWL opera con semántica de lógicas de descripción mientras que Neo4j opera con un modelo de propiedades más eficiente para consultas de navegación. La transición preserva las clases y relaciones fundamentales de la T-Box, pero las traduce a nodos con etiquetas, relaciones con tipos y propiedades escalares.
+
+El esquema contempla dos capas de instancias que comparten la misma estructura de etiquetas y tipos de relación: una capa de referencia (backbone), conformada por las instancias derivadas de los estándares producidas en R2, que la ingesta no modifica; y una capa de contenido institucional, poblada incrementalmente por el pipeline de ingesta de R4, cuyas instancias se enlazan a los nodos del backbone. Esta distinción se materializa mediante una marca de capa en cada nodo, y condiciona las restricciones de escritura del sistema: el pipeline de ingesta opera exclusivamente sobre la capa de contenido institucional.
+
+**Fase 4 \- Registro de decisiones (ADR)**
+
+Las decisiones arquitectónicas de mayor impacto se documentarán mediante **Architecture Decision Records (ADRs)**, siguiendo la propuesta original de Michael Nygard. Un ADR es un registro breve de una decisión arquitectónica significativa, junto con su contexto, la alternativa o alternativas evaluadas, la decisión tomada y sus consecuencias para el sistema. Las decisiones mínimas a documentar incluirán, entre ellas, la elección de Neo4j como motor de grafos frente a alternativas RDF.
+
+**Fase 5 \- Diseño de casos de prueba de la ingesta**
+
+Se define el conjunto de casos de prueba que verificarán la extracción del pipeline sobre el conjunto piloto, incluyendo la anotación de referencia contra la que se compara la extracción y el criterio de aceptación de precisión. Este documento es el medio de verificación de la ingesta y será ejecutado en R4.
+
+4. #### **Procedimiento para la construcción del módulo de KG y pipeline \- R4** {#procedimiento-para-la-construcción-del-módulo-de-kg-y-pipeline---r4}
+
+**Fase 1 \- Preparación del entorno de datos**
+
+Se configurará Neo4j con el esquema LPG derivado de la T-Box (R1) y documentado en R3, creando los índices y restricciones necesarios para garantizar la unicidad de nodos y la eficiencia de las consultas de navegación. Como paso previo a la ingesta automatizada, se carga la capa de referencia (backbone) producida en R2, que provee la estructura fija de áreas y unidades de conocimiento del dominio. El conjunto piloto de documentos a procesar comprende los sílabos de los cursos del eje temático de Ciencias de la Computación e Ingeniería de Software.
+
+**Fase 2 \- Pipeline de ingesta automatizada**
+
+El pipeline transforma documentos académicos no estructurados en instancias del grafo (A-Box) siguiendo el esquema de la T-Box definida en R1. El proceso consta de tres etapas:
+
+Preprocesamiento documental: Los sílabos en formato PDF se pre-procesan con librerías especializadas. La salida es texto estructurado listo para su análisis semántico.
+
+Extracción semántica con LLM: Mediante PydanticAI se orquesta la llamada al LLM seleccionado con prompts estructurados que instruyen al modelo a extraer únicamente entidades y relaciones definidas en la T-Box. La salida del LLM es un grafo parcial en formato JSON estructurado.
+
+Carga en Neo4j: las entidades y relaciones extraídas se traducen a sentencias Cypher para su persistencia. Se implementa una estrategia de merge que reconcilia las entidades extraídas con la capa de referencia: cuando un concepto extraído de un sílabo coincide con un nodo del backbone, se enlaza a este en lugar de crear un duplicado; cuando no existe correspondencia, se crea como instancia institucional enlazada a la unidad de conocimiento que le corresponde. El pipeline no crea ni modifica nodos de la capa de referencia.
+
+**Fase 3 \- Implementación de la API REST**
+
+Se implementará el backend con Python y FastAPI, exponiendo los endpoints necesarios para que el mecanismo de navegación pueda operar sin conocer Cypher directamente. La API se documentará automáticamente con la especificación OpenAPI generada por FastAPI.
+
+**Fase 4 \- Validación del pipeline**
+
+La precisión del pipeline se evaluará ejecutando sobre el conjunto piloto los casos de prueba documentados en R3, que comparan las entidades extraídas con una anotación de referencia adjudicada por el autor. El criterio de aceptación es una precisión mayor o igual al 75 % sobre el conjunto de pruebas. Aplica a las instancias institucionales extraídas; no a la capa de referencia, curada y verificada en R2.
+
+5. #### **Procedimiento para la documentación del mecanismo de navegación \- R5** {#procedimiento-para-la-documentación-del-mecanismo-de-navegación---r5}
+
+El objetivo de este procedimiento es producir la documentación de diseño y arquitectura del mecanismo de navegación (frontend) antes de su implementación.
+
+**Fase 1 \- Diseño de flujos e interfaz**
+
+Primero se definen los atributos de calidad del mecanismo de navegación, a partir de las necesidades de los estudiantes y de los atributos del módulo que la interfaz hereda. Luego, a partir del esquema del grafo definido en R3 y del conjunto de datos piloto disponible tras la ingesta de R4, se diseñan los flujos de interacción principales del mecanismo y se especifican sus casos de uso. Esta fase produce los wireframes de las pantallas principales.
+
+**Fase 2 \- Documentación arquitectónica**
+
+La arquitectura del frontend se documenta con el Modelo C4 en sus niveles 1 a 3 y se registran las decisiones de diseño relevantes mediante Architecture Decision Records, entre ellas la elección de la librería de visualización de grafos y del framework frontend en función de los requisitos de la visualización (escalabilidad de nodos, soporte para interacción de tipo drill-down, entre otros). El producto de este resultado es el reporte técnico del mecanismo de navegación, que constituye su medio de verificación.
+
+6. #### **Procedimiento para el prototipo de navegación \- R6** {#procedimiento-para-el-prototipo-de-navegación---r6}
+
+Se aplica un enfoque de prototipado iterativo centrado en la exploración del grafo sin requerir conocimiento del lenguaje de consulta subyacente.
+
+**Fase 1 \- Implementación del prototipo**
+
+Se implementa el mecanismo como una aplicación web que consume los endpoints de la API REST del módulo (R4) mediante llamadas HTTP. La lógica de navegación semántica permanece encapsulada en el backend de R4; el frontend es responsable únicamente de presentar los resultados de forma visual e interactiva, conforme a los flujos y wireframes definidos en R5.
+
+**Fase 2 \- Pruebas de aceptación**
+
+Las funcionalidades del prototipo se verifican mediante un plan de pruebas de aceptación ejecutado con el asesor de tesis y con al menos tres usuarios reales. Cada caso de prueba especifica la entrada, la acción esperada y el criterio de aceptación, comprobando que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El criterio de aceptación es que se apruebe el 100 % de los casos. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados y sus resultados.
+
+2. ### **Herramientas** {#herramientas}
+
+   1. #### **Base de datos orientada a grafos: Neo4j y Cypher** {#base-de-datos-orientada-a-grafos:-neo4j-y-cypher}
+
+Se ha seleccionado Neo4j por su eficiencia en la gestión de relaciones complejas y transversales, típicas de un currículo académico. Neo4j implementa un modelo de *labeled property graph* (LPG) en el que los nodos representan entidades del dominio, las relaciones son dirigidas y tanto nodos como relaciones pueden poseer propiedades; en esta tesis, este modelo se empleará para materializar la A-Box y ejecutar consultas de navegación semántica mediante Cypher [(*Neo4j Documentation*, s. f.)](https://www.zotero.org/google-docs/?cr5imP).
+
+A diferencia de un razonador OWL, Cypher se utilizará como un motor de recorrido de caminos y coincidencia de patrones. La principal limitación de este enfoque es que Neo4j no infiere jerarquías automáticamente, por lo que relaciones como la transitividad deberán quedar explicitadas mediante el pipeline o mediante consultas recursivas.
+
+2. #### **Lenguajes y estándares semánticos: OWL 2 y RDF** {#lenguajes-y-estándares-semánticos:-owl-2-y-rdf}
+
+OWL 2 se empleará para la especificación formal del dominio en la T-Box, ya que el estándar está concebido para representar ontologías con significado formal. RDF se usará como fundamento conceptual del modelo semántico, dado que define la información como grafos de triples sujeto-predicado-objeto. [(*OWL 2 Web Ontology Language Document Overview 2nd Edition*, 2012; *RDF 1.1 Concepts and Abstract Syntax*, 2014\)](https://www.zotero.org/google-docs/?V4MSIa)
+
+3. #### **Edición y validación ontológica: Protégé y HermiT** {#edición-y-validación-ontológica:-protégé-y-hermit}
+
+Para la edición del modelo ontológico se utilizará Protégé, un editor de ontologías de código abierto con soporte para OWL 2 y conexión directa con razonadores como HermiT. La validación lógica automática de la ontología se realizará con HermiT, un razonador OWL 2 conforme con OWL 2 Direct Semantics, con el fin de verificar la consistencia del modelo y la ausencia de clases insatisfacibles [(Glimm et al., 2014; *Protégé*, s. f.)](https://www.zotero.org/google-docs/?PSkzKb).
+
+4. #### **Estándares Disciplinares (CC2020, CS2023 y SWEBOK)** {#estándares-disciplinares-(cc2020,-cs2023-y-swebok)}
+
+Los estándares internacionales fundamentan la capa de referencia (*backbone*) de la ontología, limitada al modelo de conocimiento. Sus roles son diferenciados:
+
+* CS2023 (ACM/IEEE): fuente primaria de la estructura del backbone (áreas y unidades de conocimiento del eje temático).
+
+* SWEBOK: referencia de alineación de la rama de Ingeniería de Software. Las KAs de SE de CS2023 y SWEBOK son análogas pero no idénticas. No es fuente de extracción del backbone.
+
+* CC2020: referencia fundacional. CC2020 introduce el paradigma de competencias que CS2023 adopta; el modelado de competencias queda fuera del alcance de este trabajo.
+
+Las instancias derivadas de estos estándares conforman nodos fijos que el pipeline de ingesta (R4) no modifica; este únicamente enlaza el contenido institucional de la PUCP a ellos.
+
+5. #### **Python y FastAPI** {#python-y-fastapi}
+
+Python es un lenguaje ampliamente adoptado en computación científica, análisis de datos e inteligencia artificial, con un ecosistema maduro y portable; esto es en parte gracias a la amplitud de su ecosistema de librerías especializadas en procesamiento de lenguaje natural, manipulación de grafos y orquestación de modelos de lenguaje; además se destaca su legibilidad, flexibilidad y utilidad [(Millman & Aivazis, 2011\)](https://www.zotero.org/google-docs/?14VgsK). En este proyecto, Python constituye el entorno unificado que integra las distintas etapas del módulo KG: el preprocesamiento documental, la extracción semántica con PydanticAI y la persistencia en Neo4j mediante el driver oficial de Python.
+
+Para la exposición de la interfaz programática del módulo, se utilizará FastAPI, un framework web moderno de alto rendimiento que permite construir APIs REST basadas en anotaciones de tipo (type hints) y con generación automática de documentación en formato OpenAPI (Swagger). La elección de FastAPI sobre alternativas como Flask o Django REST Framework se sustenta en tres criterios técnicos relevantes para este proyecto: su soporte nativo para esquemas de datos con Pydantic (que garantiza la validación de las respuestas del grafo contra un esquema definido), su rendimiento asíncrono basado en ASGI, y la generación automática de documentación interactiva que facilita la verificación de los endpoints durante el desarrollo [(Ramírez, s. f.)](https://www.zotero.org/google-docs/?DPK8wv).
+
+6. #### **Orquestación y LLMs**  {#orquestación-y-llms}
+
+Para automatizar la extracción de información desde sílabos y otros documentos extensos, se emplearán modelos de lenguaje de gran escala (LLMs como Gemini, GPT, etc.). Sin embargo, dado que el objetivo del módulo no es generar texto libre sino producir instancias, relaciones y restricciones compatibles con un esquema formal, la orquestación se implementará con PydanticAI. Este framework está concebido como un agente en Python orientado a aplicaciones de producción, con salidas tipadas, uso de herramientas y orquestación multiagente; posee ventajas como que cuando una salida no cumple el esquema, activa un mecanismo de reintento sobre la validación en lugar de aceptar silenciosamente un resultado inválido. A esto se suma que Pydantic genera y personaliza esquemas JSON directamente desde modelos, lo que permite fijar la forma de la salida del modelo de lenguaje: cada entidad y relación que propone llega tipada, y el pipeline la valida después contra las reglas del grafo [(Pydantic, 2024/2026)](https://www.zotero.org/google-docs/?ECK3fa).
+
+Esta elección resulta más adecuada que una aproximación más generalista con LangChain para el núcleo de poblamiento ontológico. LangChain ofrece una arquitectura de agente preconstruida e integraciones amplias; sin embargo, allí la salida estructurada es una capacidad dentro de un ecosistema más amplio, mientras que en PydanticAI la validación tipada y el control del esquema constituyen el centro del diseño (LangChain, s. f.; Pydantic, 2024/2026). Para un pipeline cuyo foco es la consistencia semántica, la normalización y la trazabilidad, esa diferencia es metodológicamente relevante.
+
+La conversión de los sílabos a texto se realizará con Docling (Livathinos et al., 2025), que convierte el PDF en Markdown y conserva sus encabezados y listas mediante modelos de análisis de diseño. La extracción depende de esa estructura, porque un tema es el encabezado que agrupa ítems. Se prefiere a los extractores de texto plano, que la pierden, y a los servicios en la nube, que envían el documento a un tercero: Docling corre localmente y su licencia es MIT.
+
+Extracción con LLM: Se prioriza el uso de modelos con alta capacidad de razonamiento para identificar relaciones complejas que no siempre son explícitas en el texto del sílabo.
+
+7. #### **Git y Github para versionado y repositorio de código y documentación** {#git-y-github-para-versionado-y-repositorio-de-código-y-documentación}
+
+Para los resultados R3, R4, R5 y R6 se empleará como principal repositorio Github, ya que esta herramienta sirve no solo para mantener el código, sino que su uso se extiende a la documentación técnica de arquitectura (modelo C4) y registro de decisiones arquitectónicas (ADRs) en archivos Markdown (.md) al  “vivir cerca del código” y aprovechar el versionado para poder tener registro histórico y trazabilidad de la evolución del proyecto durante todo su ciclo de vida. 
+
+2. # **Marco Conceptual** {#marco-conceptual}
+
+   1. ## **Introducción** {#introducción}
+
+Este capítulo presenta los conceptos fundamentales que enmarcan el problema y la solución propuesta en esta tesis. Se organiza en cuatro bloques temáticos: el dominio de la educación en informática, con énfasis en la fragmentación curricular y las dependencias conceptuales entre contenidos; la representación formal del conocimiento mediante ontologías y grafos; los sistemas de gestión del conocimiento como infraestructura para hacer ese conocimiento accesible y útil; y los principios de aprendizaje autodirigido y navegación semántica que sustentan la interacción del estudiante con el sistema propuesto.
+
+2. ## **Desarrollo del marco conceptual** {#desarrollo-del-marco-conceptual}
+
+   1. ### **Dominio de la educación en informática**  {#dominio-de-la-educación-en-informática}
+
+      1. #### **Currículo universitario y fragmentación** {#currículo-universitario-y-fragmentación}
+
+En el ámbito de la computación, un currículo se define formalmente como la materia educativa que estructura el curso de estudio, especificando temas, pedagogías y resultados de aprendizaje para cada experiencia educativa. Tradicionalmente, este dominio se ha organizado bajo un enfoque de Aprendizaje Basado en el Conocimiento (KBL) mediante el modelo jerárquico KA-KU-LO (Knowledge Area, Knowledge Unit, Learning Outcome), donde estándares como el CS2023 identifican áreas que deben ser "empaquetadas" en cursos para conformar una oferta coherente.
+
+Sin embargo, esta estructura jerárquica enfrenta el problema de la fragmentación, exacerbado por lo que el informe CC2020 denomina el "Desafío de la Torre de Babel", donde la falta de una nomenclatura universal y el uso de términos con significados divergentes entre instituciones generan silos de información. En la problemática específica de la PUCP, esta fragmentación se manifiesta en la forma en que el conocimiento del currículo se documenta y distribuye. El plan de estudios propone una construcción progresiva e interconectada a lo largo de los diez ciclos, pero los artefactos institucionales que lo soportan (sílabos individuales, guías de concentración, materiales por curso en Paideia) presentan los cursos como unidades autocontenidas, sin que las relaciones entre ellos queden articuladas en una representación accesible.
+
+2. #### **Dependencias conceptuales y relaciones de prerrequisito** {#dependencias-conceptuales-y-relaciones-de-prerrequisito}
+
+La arquitectura de un currículo en informática se sostiene sobre el concepto de andamiaje (scaffolding), donde el aprendizaje de nuevos conceptos requiere obligatoriamente de una base de conocimientos previos verificados. Los estándares internacionales como CC2020 y CS2023 establecen que la competencia no es solo la suma de saberes, sino la integración de conocimiento, habilidades y disposiciones en una tarea específica. Para operativizar esta progresión, las universidades utilizan prerrequisitos formales, los cuales intentan garantizar que el estudiante posea la base necesaria para avanzar.
+
+En el contexto del plan de estudios de Ingeniería Informática de la PUCP, se observa una distinción crítica entre la dependencia administrativa y la dependencia conceptual. Por ejemplo, el curso de Inteligencia Artificial (1INF24) tiene como prerrequisito formal Algoritmos Avanzados (1INF32). No obstante, las relaciones conceptuales subyacentes, como la dependencia específica de ciertos modelos matemáticos o estructuras de datos para implementar redes neuronales, no se encuentran formalizadas ni explicitadas en los documentos institucionales. Los prerrequisitos de curso constituyen, por tanto, una representación de granularidad agregada que sirve a la gestión académica pero no expone las dependencias del dominio a nivel de los conceptos, temas subyacentes. Esta diferencia de granularidad explica por qué las relaciones operativas del aprendizaje quedan implícitas en el conocimiento tácito de cada profesor en lugar de estar disponibles como representación consultable.
+
+2. ### **Representación formal del conocimiento** {#representación-formal-del-conocimiento}
+
+   1. #### **Ontología y sus componentes (T-Box, A-Box)** {#ontología-y-sus-componentes-(t-box,-a-box)}
+
+Una ontología es una especificación formal y explícita de una conceptualización compartida dentro de un dominio determinado (Gruber, 1993). Provee el vocabulario común necesario para que sistemas de IA compartan y reutilicen conocimiento. Según Di Giacomo y Lenzerini (1996), un sistema basado en lógica de descripción (que proporcionan una semántica formal para los lenguajes de ontologías) se divide en dos componentes:
+
+T-Box (Terminological Box): Representa el esquema o estructura conceptual, definiendo clases y relaciones (ej. "Una Unidad de Conocimiento es parte de un Área de Conocimiento").
+
+A-Box (Assertion Box): Contiene las aserciones sobre individuos o instancias específicas (ej. "El curso INF241 es una instancia de la clase Curso").
+
+En esta tesis, la T-Box define el esquema del dominio, mientras que la A-Box se divide en dos capas pobladas con los datos específicos del CS2023 (Áreas de Conocimiento y Unidades de Conocimiento*)* y del plan de estudios de la PUCP respectivamente.
+
+2. #### **Grafo de conocimiento (Knowledge Graph)** {#grafo-de-conocimiento-(knowledge-graph)}
+
+El concepto de grafo de conocimiento fue popularizado por Google en 2012 bajo el lema "cosas, no cadenas" (things, not strings), buscando pasar de la búsqueda de texto plano a la búsqueda de entidades del mundo real. Una definición más formal establece que un grafo de conocimiento adquiere e integra información en una ontología y aplica un razonador para derivar nuevo conocimiento (Ehrlinger & Wöß, 2016).
+
+A diferencia de una base de datos tradicional, el grafo de conocimiento permite representar relaciones complejas y realizar inferencias semánticas. Ejemplo: Si un estudiante busca "Estructuras de Datos", el grafo no solo devuelve un nodo que abarque directamente ese tema, sino que conecta semánticamente con otros recursos como guías de práctica y videos que apoyan conceptos específicos dentro de ese tema y relacionados.
+
+3. ### **Gestión del conocimiento** {#gestión-del-conocimiento}
+
+   1. **Sistemas de gestión del conocimiento (KMS)**
+
+Un KMS es un sistema basado en tecnologías de la información diseñado para apoyar y mejorar los procesos organizacionales de creación, almacenamiento, recuperación, transferencia y aplicación del conocimiento. Según Alavi y Leidner (2001), el objetivo de un KMS no es solo almacenar datos, sino facilitar que la información sea poseída en la mente de los individuos como conocimiento personalizado.
+
+En el contexto de esta tesis, el KMS propuesto busca consolidar el conocimiento que se encuentra disperso en documentos académicos y plataformas separadas, exponiéndolo como representación relacional accesible para la toma de decisiones del estudiante.
+
+4. ### **Aprendizaje y navegación** {#aprendizaje-y-navegación}
+
+   1. #### **Aprendizaje autodirigido (self-directed learning)** {#aprendizaje-autodirigido-(self-directed-learning)}
+
+El aprendizaje autodirigido es una competencia humana básica definida como la capacidad de aprender por cuenta propia. El modelo de Garrison (1997) propone tres dimensiones interconectadas:
+
+* Autogestión: El control de las tareas y recursos de aprendizaje.  
+* Automonitoreo: La responsabilidad cognitiva de construir significado y monitorear el propio proceso de aprendizaje.  
+* Motivación: El impulso para iniciar y persistir en la tarea de aprendizaje.
+
+La dimensión del automonitoreo es particularmente sensible al estado del dominio: cuando las relaciones conceptuales de la disciplina no están explicitadas en una representación accesible, el estudiante puede no identificar con precisión las brechas de conocimiento que aún debe cubrir, fenómeno descrito en la literatura como la dificultad de "ignorar que se ignora". El automonitoreo efectivo, por tanto, no depende solo de la disposición individual del estudiante, sino también de la disponibilidad de un modelo del dominio que permita ubicar los propios conocimientos respecto al conjunto.
+
+2. #### **Navegación y descubrimiento de recursos educativos** {#navegación-y-descubrimiento-de-recursos-educativos}
+
+La búsqueda exploratoria en grafos de conocimiento ocurre cuando un usuario necesita entender y extraer información de un dominio que no le es familiar. A diferencia de una búsqueda tradicional de palabras clave, la navegación semántica permite al estudiante expandir nodos progresivamente (drill-down) para acceder a niveles de detalle crecientes.
+
+Sistemas actuales en informática utilizan estas interfaces para generar rutas de aprendizaje personalizadas (ej. el camino más corto entre dos conceptos) y visualizar dependencias de prerrequisitos mediante métricas de centralidad (Li et al., 2019; Chen et al., 2023; Dong et al., 2023; Liu & Zhan, 2025). Esto permite que el estudiante trace una ruta hacia una meta profesional específica, descubriendo recursos que apoyan directamente su plan de carrera.
+
+3. # **Estado del Arte** {#estado-del-arte}
+
+   1. ## **Introducción** {#introducción-1}
+
+En este capítulo se presenta la revisión sistemática de literatura realizada como sustento del presente proyecto. El proceso sigue las tres fases establecidas por Kitchenham y Charters (2007): planificación, que comprende la definición del objetivo de revisión y las preguntas de investigación; ejecución, que incluye la estrategia de búsqueda, los criterios de selección y la extracción de datos; y reporte, que sintetiza los hallazgos en respuesta a cada pregunta formulada.
+
+2. ## **Objetivos de revisión** {#objetivos-de-revisión}
+
+La presente revisión sistemática tiene como objetivo identificar y analizar el estado actual de la investigación en tres áreas que fundamentan el presente proyecto: el modelado ontológico de dominios curriculares en computación, las arquitecturas de sistemas de gestión de conocimiento basados en grafos con ingesta para contextos educativos, y los mecanismos de navegación y descubrimiento semántico de recursos académicos. A partir de esta revisión se busca identificar las limitaciones de los enfoques existentes y fundamentar las decisiones de diseño del sistema propuesto.
+
+3. ## **Preguntas de revisión** {#preguntas-de-revisión}
+
+###### **Tabla 6\. Uso de la técnica PICOC** {#tabla-6.-uso-de-la-técnica-picoc}
+
+| Criterio | Descripción |
+| ----- | ----- |
+| **P \- Población** | Estudiantes universitarios, sistemas educativos, currículos de Ingeniería Informática |
+| **I \- Intervención** | Grafos de conocimiento, ontologías, sistemas de gestión de conocimiento semántico |
+| **C- Comparación** | No aplica (no se comparan métodos entre sí, sino se caracteriza el estado del arte) |
+| **O \- Resultados** | Modelado curricular, ingesta automatizada de contenido, navegación semántica, rutas de aprendizaje |
+| **Cx \- Contexto** | Educación superior, ingeniería informática, ciencias de la computación |
+
+Las preguntas de revisión formuladas son:
+
+* P1. ¿Cómo se han modelado currículos universitarios y dominios de conocimiento computacional mediante grafos de conocimiento u ontologías, y qué limitaciones presentan los enfoques existentes?
+
+* P2. ¿Qué arquitecturas de sistemas de gestión de conocimiento basados en grafos han sido propuestas para contextos educativos, y cómo se ha implementado la ingesta automatizada de contenido académico?
+
+* P3. ¿Qué mecanismos de navegación y descubrimiento semántico de recursos educativos han sido evaluados, y qué evidencia existe sobre su efectividad para apoyar el aprendizaje autodirigido?
+
+  4. ## **Estrategia de búsqueda** {#estrategia-de-búsqueda}
+
+Para la elaboración del presente estado del arte, se realizó una Revisión Sistemática de Literatura (SLR) siguiendo los lineamientos de Kitchenham (2007). Se seleccionaron las bases de datos ACM Digital Library y Scopus, aplicando cadenas de búsqueda centradas en la intersección de la gestión del conocimiento y la ingeniería de software. Los criterios de inclusión se enfocaron en estudios publicados en los últimos 7 años que aborden los temas de cada pregunta.
+
+1. ### **Motor de búsqueda a usar** {#motor-de-búsqueda-a-usar}
+
+- Scopus  
+- ACM Digital Library
+
+  2. ### **Cadenas de búsqueda a usar** {#cadenas-de-búsqueda-a-usar}
+
+Las cadenas se construyeron a partir del método PICOC, priorizando los criterios I (Intervención), O (Resultados) y Cx (Contexto), que concentran los términos más discriminantes para cada pregunta. La tabla 7 muestra las palabras clave organizadas por criterio PICOC y por pregunta.
+
+###### **Tabla 7\. Palabras clave organizadas con técnica PICOC por pregunta** {#tabla-7.-palabras-clave-organizadas-con-técnica-picoc-por-pregunta}
+
+| Criterio | P1 | P2 | P3 |
+| :---- | :---- | :---- | :---- |
+| **I** | "educational knowledge graph", "ontology", "semantic model" | "knowledge graph", "knowledge management system", "knowledge base" | "knowledge graph", "semantic model" |
+| **O** | "curriculum", "course", "syllabus", "learning outcome", "competency" | "information extraction", "knowledge extraction", "ingestion", "ontology population", "document processing" | "resource discovery", "navigation", "visualization", "exploratory search" |
+| **Cx** | "computer science", "computing education" | "education", "academic", "e-learning", "university" | "student", "learner", "self-directed learning" |
+
+La estructura de cada cadena sigue la forma (I) AND (O) AND (Cx):
+
+P1: 
+
+("educational knowledge graph" OR “ontology” OR ontological OR "semantic model") AND
+
+(curriculum OR curricula OR curricular OR syllabus OR syllabi OR course OR courses OR prerequisite OR prerequisites OR "learning outcome\*" OR competence OR competency ) AND
+
+("computer science" OR "computing education")
+
+P2: 
+
+("knowledge graph" OR "knowledge base" OR "knowledge management system") AND 
+
+("information extraction" OR "knowledge extraction" OR “ingestion” OR "ontology population" OR "document processing") AND 
+
+(“education” OR “academic” OR "e-learning" OR university)
+
+P3: 
+
+("knowledge graph" or “semantic model”) AND 
+
+("resource discovery" OR “navigation” OR “visualization” OR "exploratory search") AND 
+
+(“student” OR “learner” OR "self-directed learning")
+
+3. ### **Documentos encontrados** {#documentos-encontrados}
+
+El proceso de selección de documentos se realizó en tres etapas. En la primera etapa se ejecutaron las cadenas de búsqueda en Scopus (por título, resumen y palabras clave), aplicando filtros de Subject Area (Computer Science), rango de años (2019-2026) y tipo de documento (Article, Conference Paper); y en ACM Digital Library (ACM Full-Text Collection) se ejecutó las mismas cadenas (por resumen) aplicando los mismos filtros de rango de años. En la segunda etapa se revisaron los títulos y resúmenes de los resultados obtenidos, descartando aquellos claramente fuera del dominio de interés y aplicando los criterios de inclusión y exclusión definidos. En la tercera etapa se realizó la lectura completa de los documentos que superaron las etapas anteriores, descartando aquellos que, pese a pasar el filtro de título y resumen, no aportaban información relevante para responder las preguntas de revisión; también se descartaron los que no eran accesibles o eran de pago. La Tabla 8 resume los resultados de cada etapa por cadena de búsqueda por base de datos.
+
+###### **Tabla 8\. Resultados de documentos en búsquedas y filtración** {#tabla-8.-resultados-de-documentos-en-búsquedas-y-filtración}
+
+| Cadena | Base de datos | Resultados iniciales | Tras filtros de base de datos | Duplicados entre bases de datos | Tras filtro de título y abstract | Seleccionados finales |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| **P1** | **Scopus** | 196 | 40 | 2 | 5 | 5 |
+| **P1** | **ACM** | 12 | 3 |  | 0 | 0 |
+| **P2** | **Scopus** | 233 | 124 | 12 | 10 | 10 |
+| **P2** | **ACM** | 17 | 14 |  | 0 | 0 |
+| **P3** | **Scopus** | 151 | 106 | 2 | 7 | 7 |
+| **P3** | **ACM** | 2 | 2 |  | 0 | 0 |
+| **Total** |  | 580 | 309 | 0 | 22 | 22 |
+
+###### **Tabla 9\. Documentos seleccionados finales** {#tabla-9.-documentos-seleccionados-finales}
+
+| Título de la publicación | Autor | Año | Fuente | Pregunta relacionada |
+| :---- | :---- | :---- | :---- | :---- |
+| A Courses Ontology System for Computer Science Education | Wang, Y., Wang, Z., Hu, X., Bai, T., Yang, S., & Huang, L. | 2019 | Scopus | P1 |
+| A Ontology Construction Method of Course Knowledge Graph Based on Dependency of Knowledge Points | Bin, Q., Zuhairi, M. F., Morcos, J., & Zhengqiu, L. | 2025 | Scopus | P1 |
+| An Educational Ontology for Formal Languages and Compilers | Oprea, M. | 2020 | Scopus | P1 |
+| Ontology-based representation and design of subject domains for Computer Science education | Tsidylo, I. M., & Kozibroda, S. V. | 2024 | Scopus | P1 |
+| Towards a Computer Science Topics Ontology | Barron, J., Feldhausen, R., & Bean, N. H. | 2026 | Scopus | P1 |
+| Course Recommendation System Based on Course Knowledge Graph Generated by Large Language Models | Chen, X., Yin, C., Chen, H., Rong, W., Ouyang, Y., & Chai, Y. ( | 2024 | Scopus | P2 |
+| Automatic Construction System for Curriculum Knowledge Graphs Based on Large Language Models LLM-Based Curriculum Map Construction | Li, S., Xiao, Y., Li, J., & Li, Y. | 2026 | Scopus | P2 |
+| Multi-Source Education Knowledge Graph Construction and Fusion for College Curricula | Li, Z., Cheng, L., Zhang, C., Zhu, X., & Zhao, H. | 2023 | Scopus | P2 |
+| Construction of Programming Knowledge Graph Based on Student Knowledge Needs | Liu, L. | 2024 | Scopus | P2 |
+| Research on Triple Joint Extraction Method of Knowledge Graph for Education Domain | Liu, Y., Zuo, Q., Zhang, S., Li, Y., Wang, C., Han, F., & Cheng, X. | 2026 | Scopus | P2 |
+| An approach to constructing a graph data repository for course recommendation based on IT career goals in the context of big data | Nguyen, T., Vu, N., & Ly, B. | 2022 | Scopus | P2 |
+| Knowledge Graph for University Course Construction Based on Gated Graph Attention Networks | Pan, J., Liu, J., Wei, D., Zhuang, J., Qiu, S., & Du, J. | 2023 | Scopus | P2 |
+| Study on Multi-source Heterogeneous Data Fusion and Knowledge Graph Construction Techniques in Higher Education Institutions | Wang, C. | 2025 | Scopus | P2 |
+| LLM-Powered Construction of Course Knowledge-Competency Graphs | Xu, J., & Che, M. | 2025 | Scopus | P2 |
+| GLM-4-Based Method for Automatic Construction of Content Graph | Yang, M., Diao, M., Luo, J., Shen, W., & Zhang, C. | 2025 | Scopus | P2 |
+| Design and Development of a Knowledge Service Platform in the Field of Computer Science: Knowledge Service Platform in Computer Science: Design and Development | Chen, C., Zhu, S., Tao, Q., Wu, Q., & Shi, Y. | 2023 | Scopus | P3 |
+| Gradual Study Advising with Course Knowledge Graphs | Dong, J., Li, W., Wang, Y., Li, Q., Baciu, G., Cao, J., Huang, X., Li, R. C., & Ng, P. H. F. | 2023 | Scopus | P3 |
+| Web-Based Learning Object Search Engine Solution Together with Data Visualization: The Case of MERLOT II | Gunarathne, W. K. T. M., Chootong, C., Sommool, W., Ochirbat, A., Chen, Y.-C., Reisman, S., & Shih, T. K. | 2018 | Scopus | P3 |
+| Construction, visualization and application of knowledge graph of computer science major | Li, Y., Zhao, J., Yang, L., & Zhang, Y. | 2019 | Scopus | P3 |
+| The ESW of Wikidata: Exploratory search workflows on Knowledge Graphs | Lissandrini, M., Prando, G., & Silvello, G. | 2025 | Scopus | P3 |
+| Research on Visual Learning Platform for Database Principles Knowledge Points Integrating Knowledge Graph and Deep Learning | Liu, P., & Zhan, C. | 2025 | Scopus | P3 |
+| AI-driven Interactive Hierarchical Concept Maps for Digital Learning Environments and Intelligent Textbooks | Tytenko, S. | 2025 | Scopus | P3 |
+
+4. ### **Criterios de inclusión** {#criterios-de-inclusión}
+
+- Publicado entre 2019 y 2026  
+- Publicado en revista con peer review o en conferencia indexada (ACM, IEEE, Springer, Elsevier)  
+- El estudio propone, implementa o evalúa al menos uno de los siguientes temas centrales con respecto a las preguntas de investigación: (a) un modelo ontológico o grafo de conocimiento aplicado a un dominio curricular o educativo, (b) un sistema de gestión de conocimiento para contextos de aprendizaje que incluye ingesta de contenido, o (c) un mecanismo de navegación o descubrimiento de recursos académicos  
+- Disponible en inglés o español
+
+  5. ### **Criterios de exclusión** {#criterios-de-exclusión}
+
+- Literatura gris (preprints sin revisar, blogs, repositorios GitHub, tweets), salvo validación explícita del asesor  
+- Estudios que mencionan "knowledge graph" o "ontology" únicamente como contexto o trabajo futuro, sin implementación ni diseño formal  
+- Aplicaciones fuera del dominio educativo sin transferibilidad clara al contexto universitario.  
+- Acceso bloqueado o de pago.  
+- Estudios duplicados dentro de la misma pregunta de revisión
+
+  5. ## **Formulario de extracción de datos** {#formulario-de-extracción-de-datos}
+
+Una vez seleccionados los estudios primarios y verificada su calidad, se aplicó un formulario de extracción para registrar de manera homogénea la información relevante de cada trabajo. Este instrumento permitió sistematizar los datos bibliográficos y las variables de análisis asociadas a cada pregunta de revisión, de modo que la evidencia pudiera compararse y sintetizarse con mayor precisión. Para mantener trazabilidad y orden en el análisis, el formulario se organizó en una hoja independiente por cada pregunta de revisión.
+
+###### **Tabla 10\. Formulario de extracción de datos para la pregunta P1** {#tabla-10.-formulario-de-extracción-de-datos-para-la-pregunta-p1}
+
+| Campo | Descripción de lo que se extrae | Justificación para la revisión |
+| :---- | :---- | :---- |
+| ¿Qué entidades modela? | Cursos, conceptos, unidades de conocimiento, entre otras | Permite comparar el nivel de granularidad y cobertura del modelo propuesto. |
+| ¿Qué tecnología de representación usa? | OWL, RDF, grafo de propiedades, entre otras | Sirve para contrastar formalismos de representación semántica. |
+| ¿Cómo se alinea a un estándar disciplinar? | Alineación con CC2020, CS2023, ACM, IEEE u otros marcos | Permite evaluar si el modelo está sustentado en un referente curricular reconocido. |
+| ¿Qué limitaciones declara el autor? | Cobertura limitada, falta de validación, problemas de escalabilidad, entre otras | Ayuda a identificar vacíos que justifican la propuesta de la tesis. |
+
+###### **Tabla 11\. Formulario de extracción de datos para la pregunta P2** {#tabla-11.-formulario-de-extracción-de-datos-para-la-pregunta-p2}
+
+| Campo | Descripción de lo que se extrae | Justificación para la revisión |
+| :---- | :---- | :---- |
+| ¿Qué componentes tiene el sistema? | Ingesta, almacenamiento, consulta, interfaz, exportación, recomendación, etc. | Permite caracterizar la arquitectura funcional del sistema. |
+| ¿Cómo se integra/ingesta el contenido? | Scraping, NLP, reglas, LLM, extracción manual o enfoques híbridos | Sirve para comparar estrategias de construcción automática del conocimiento. |
+| ¿Qué tecnología de almacenamiento usa? | Neo4j, triplestore RDF, bases relacionales, u otras | Permite evaluar decisiones de persistencia y modelado de datos. |
+| ¿Cómo expone el conocimiento? | API REST, Cypher, SPARQL, interfaz web u otro mecanismo | Ayuda a identificar cómo el sistema hace accesible el grafo al usuario o a otras aplicaciones. |
+| ¿Qué limitaciones declara el autor? | Precisión, escalabilidad, dependencia del dominio, cobertura, entre otras | Permite detectar debilidades técnicas y de aplicación que orientan mejoras. |
+
+###### **Tabla 12\. Formulario de extracción de datos para la pregunta P3** {#tabla-12.-formulario-de-extracción-de-datos-para-la-pregunta-p3}
+
+| Campo | Descripción de lo que se extrae | Justificación para la revisión |
+| :---- | :---- | :---- |
+| ¿Qué tipo de interfaz de exploración propone? | Grafo visual, interfaz conversacional, lista, vista mixta u otra | Permite clasificar el modo de interacción ofrecido al usuario. |
+| ¿Qué funcionalidades de navegación implementa? | Rutas de aprendizaje, filtros, búsqueda semántica, recomendación, visualización, etc. | Sirve para comparar el alcance funcional de cada propuesta. |
+| ¿Cómo evalúa la efectividad? | Experimentos con usuarios, validación experta, métricas automáticas, cuestionarios, etc. | Permite valorar la solidez de la evidencia reportada. |
+| ¿Qué resultado reporta? | Mejora en orientación, satisfacción, rapidez de búsqueda, comprensión, entre otros | Ayuda a sintetizar el aporte concreto del mecanismo propuesto. |
+| ¿Qué limitaciones declara el autor? | Dominio acotado, falta de validación, usabilidad limitada, dependencia de expertos, etc. | Permite detectar vacíos que justifican el diseño de la solución propia. |
+
+El detalle del formulario de extracción para cada pregunta de investigación puede ser consultado en el siguiente enlace:
+
+[https\://docs.google.com/spreadsheets/d/1TIa564pZofJFd22sXDC10J2rh9d6sZlQ7LabbzptVk8/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1TIa564pZofJFd22sXDC10J2rh9d6sZlQ7LabbzptVk8/edit?usp=sharing)
+
+O puede consultarse en el **anexo A, B y C**.
+
+6. ## **Resultados de la revisión** {#resultados-de-la-revisión}
+
+   1. ### **Respuesta a pregunta P1: modelado de currículos y dominios computacionales con ontologías y grafos** {#respuesta-a-pregunta-p1:-modelado-de-currículos-y-dominios-computacionales-con-ontologías-y-grafos}
+
+Los estudios revisados revelan una tendencia consistente hacia la modelización jerárquica del currículo, donde la unidad básica de representación es el **punto de conocimiento** o **concepto**, agrupado en estructuras de mayor granularidad como unidades temáticas, cursos y áreas de conocimiento. Esta arquitectura de tres o más niveles es reconocible en prácticamente todos los trabajos analizados (Wang et al., 2019; Bin et al., 2025; Oprea, 2020). Sin embargo, los modelos más recientes amplían el alcance ontológico más allá del contenido disciplinar: Tsidylo y Kozibroda (2024) incorporan explícitamente competencias (universales, profesionales e instrumentales) junto con el perfil del estudiante y los recursos educativos, mientras que Barron et al. (2026) añaden resultados de aprendizaje, niveles de habilidad según la Taxonomía de Bloom revisada y criterios de evaluación. Esta evolución sugiere un desplazamiento desde ontologías centradas en el **qué se enseña** hacia modelos que intentan capturar **cómo se evalúa y a quién**. No obstante, la alineación con estándares disciplinares internacionales sigue siendo la excepción: la mayoría de los trabajos se ancla en currículos institucionales propios o en sílabos de curso específicos (Wang et al., 2019; Bin et al., 2025; Oprea, 2020; Tsidylo & Kozibroda, 2024), y únicamente Barron et al. (2026) adoptan explícitamente el marco ACM Computer Science Curricula 2023 como referente externo, lo que dificulta la interoperabilidad y comparabilidad entre las propuestas.
+
+En cuanto a las tecnologías de representación, existe una predominio claro de OWL (Web Ontology Language) como lenguaje de modelado, utilizado en la totalidad de los estudios revisados, en combinación con la herramienta Protégé para el diseño de la jerarquía ontológica (Wang et al., 2019; Bin et al., 2025; Oprea, 2020; Tsidylo & Kozibroda, 2024; Barron et al., 2026). El estrato de almacenamiento y consulta incorpora tecnologías de la Web Semántica como RDF (Tsidylo & Kozibroda, 2024\) y el lenguaje de consultas SPARQL (Barron et al., 2026), lo que posiciona la pila tecnológica de la Web Semántica como el paradigma dominante en el área. Resulta significativa la ausencia total de enfoques basados en grafos de propiedad etiquetada (Labeled Property Graphs, LPG) o plataformas como Neo4j, lo que sugiere que la comunidad investigadora orientada a la representación curricular ha optado mayoritariamente por la semántica formal de la web semántica en detrimento de soluciones de grafos nativos más escalables. En los trabajos que requieren construcción automatizada del grafo, se emplean frameworks complementarios como Jena con Java (Wang et al., 2019\) o scripts de scraping en Python con BeautifulSoup (Bin et al., 2025), evidenciando que la capa de adquisición de datos permanece ad hoc y poco estandarizada.
+
+Las limitaciones declaradas por los autores representan un vacío de investigación sistemático que trasciende los estudios individuales. En primer lugar, se identifica un problema generalizado de **escala reducida y cobertura parcial**; los modelos se construyen sobre un único curso o área de conocimiento acotada, y los propios autores advierten que la extensión a dominios más amplios plantea desafíos de rendimiento y consistencia (Bin et al., 2025; Barron et al., 2026). En segundo lugar, persiste una dependencia significativa del **trabajo manual** para la extracción y validación de conceptos a partir de libros de texto y sílabos, lo que compromete la escalabilidad y reproducibilidad de los métodos (Bin et al., 2025; Oprea, 2020). En tercer lugar, varios trabajos admiten carecer de **validación empírica** con usuarios reales o de un proceso formal para evaluar la maestría del estudiante sobre los nodos del grafo (Barron et al., 2026; Tsidylo & Kozibroda, 2024). Finalmente, el uso de datos sintéticos o placeholders para poblar partes del modelo (Barron et al., 2026\) pone de manifiesto que la brecha entre la estructura ontológica propuesta y una implementación instanciada y operativa sigue sin cerrarse. En conjunto, estos hallazgos señalan la necesidad de enfoques que combinen alineación con estándares curriculares reconocidos, automatización en la construcción del grafo y mecanismos de validación formales que permitan verificar la utilidad pedagógica del modelo resultante.
+
+2. ### **Respuesta a pregunta P2: arquitecturas de KMS basados en grafos e ingesta automatizada** {#respuesta-a-pregunta-p2:-arquitecturas-de-kms-basados-en-grafos-e-ingesta-automatizada}
+
+El análisis arquitectónico de los sistemas de gestión del conocimiento basados en grafos para educación revela un patrón estructural recurrente compuesto por cuatro capas funcionales: ingesta y preprocesamiento de datos, extracción y procesamiento del conocimiento, almacenamiento en grafo, y visualización o exposición (Liu, 2024; Xu & Che, 2025; Wang, 2025; Li et al., 2023). En lo que respecta a la tecnología de almacenamiento, Neo4j se consolida como la plataforma dominante de manera evidente, adoptada prácticamente en la totalidad de los estudios que especifican un motor de base de datos (Nguyen et al., 2022; Li et al., 2026; Liu, 2024; Yang et al., 2025; Pan et al., 2023; Xu & Che, 2025; Li et al., 2023; Wang, 2025). Esta preferencia responde a su modelo de datos nativo, el Labeled Property Graph (LPG), y a su capacidad para representar relaciones complejas entre entidades curriculares de forma eficiente. Como excepción notable, Wang (2025) adopta un enfoque híbrido que combina Neo4j para la gestión del grafo con tripletas RDF para el almacenamiento semántico del conocimiento, complementado por una capa de caché en Redis, lo que refleja una arquitectura más sofisticada orientada a entornos institucionales de mayor escala. En contraste, Chen et al. (2024) y Liu et al. (2026) no especifican el motor de almacenamiento, limitando la comparabilidad técnica de sus propuestas.
+
+La evolución en los métodos de ingesta y construcción automática de grafos describe una trayectoria clara desde enfoques basados en reglas y anotación manual hacia pipelines híbridos cada vez más dependientes de modelos de lenguaje de gran escala (Large Language Models, LLMs). Los trabajos más tempranos del corpus utilizan técnicas de web scraping  con modelos de aprendizaje profundo de tipo BiLSTM+CRF o GGAT para el reconocimiento de entidades y relaciones (Liu, 2024; Pan et al., 2023; Chen et al., 2024), mientras que los estudios más recientes desplazan el peso del procesamiento hacia LLMs (como GLM-4, DeepSeek, Qwen o ChatGLM-6B) para la extracción semántica automatizada de conceptos y relaciones a partir de documentos curriculares no estructurados (Yang et al., 2025; Li et al., 2026; Xu & Che, 2025). No obstante, esta transición no implica la eliminación del componente manual: prácticamente todos los sistemas mantienen alguna forma de intervención humana, ya sea para la anotación de datos de entrenamiento, la validación experta de la ontología o la corrección de extracciones erróneas (Pan et al., 2023; Xu & Che, 2025; Liu et al., 2026). Ello evidencia que la automatización plena del proceso de construcción del grafo sigue siendo un problema abierto, donde la supervisión experta actúa como mecanismo de control de calidad indispensable.
+
+Respecto a la exposición de las funcionalidades, predomina la visualización interactiva como modalidad principal de acceso que es a menudo integrada directamente en plataformas educativas institucionales (Yang et al., 2025), mientras que los mecanismos de consulta estructurada mediante el lenguaje Cypher constituyen la segunda opción más frecuente (Liu, 2024; Yang et al., 2025). Solo un caso adopta una arquitectura de servicios basada en APIs RESTful y consultas SPARQL, orientada a la integración con sistemas externos (Wang, 2025), lo que pone de manifiesto la escasa interoperabilidad entre plataformas que caracteriza este conjunto de propuestas. En cuanto a las limitaciones críticas, se identifican tres vacíos transversales: en primer lugar, la fragilidad en la precisión de la extracción, especialmente ante relaciones semánticas ambiguas, conceptos abstractos o términos con alta especificidad disciplinar (Li et al., 2026; Yang et al., 2025; Xu & Che, 2025; Liu et al., 2026); en segundo lugar, la dependencia de datos de dominio cerrado o de baja cobertura, que compromete la generalización de los modelos entrenados (Chen et al., 2024; Li et al., 2023); y, en tercer lugar, la escasez de conjuntos de datos públicos anotados específicos para el dominio educativo, lo que dificulta la replicación y la comparación sistemática entre propuestas (Liu et al., 2026). En conjunto, estos hallazgos sugieren que la madurez arquitectónica de los sistemas es considerablemente mayor que su madurez en términos de calidad del conocimiento representado y su capacidad de validación empírica a escala real.
+
+3. ### **Respuesta a pregunta P3: mecanismos de navegación y descubrimiento semántico** {#respuesta-a-pregunta-p3:-mecanismos-de-navegación-y-descubrimiento-semántico}
+
+El conjunto de propuestas analizadas converge hacia interfaces de tipo mixto que integran visualización interactiva de grafos, y funcionalidades de búsqueda y navegación estructurada siendo este el paradigma dominante frente a las interfaces puramente conversacionales o basadas en listas (Li et al., 2019; Chen et al., 2023; Dong et al., 2023; Liu & Zhan, 2025). La funcionalidad más recurrente es la generación de rutas de aprendizaje, presente en múltiples sistemas bajo distintas implementaciones: desde el cálculo del camino más corto entre nodos de conocimiento (Li et al., 2019\) hasta la optimización mediante redes neuronales de grafos convolucionales (Liu & Zhan, 2025\) o la visualización de dependencias de prerrequisitos con métricas de centralidad como PageRank (Dong et al., 2023). Un segundo patrón destacado es la navegación jerárquica de tipo drill-down, que permite al usuario expandir progresivamente nodos para acceder a niveles de granularidad creciente, incluyendo variantes con generación dinámica de sub-mapas impulsada por LLMs (Tytenko, 2025). En el extremo más técnico del espectro se sitúan propuestas orientadas a usuarios expertos, como los flujos de trabajo exploratorios sobre grafos Wikidata mediante consultas SPARQL secuenciadas en entornos de notebook (Lissandrini et al., 2025), y la exploración jerárquica por clusters temáticos en motores de búsqueda de objetos de aprendizaje (Gunarathne et al., 2018), ambas con un perfil de usuario claramente diferenciado del estudiante autodirigido típico.
+
+La evidencia empírica sobre la efectividad de estos mecanismos es heterogénea tanto en rigor metodológico como en los resultados que reporta. El estudio más robusto del corpus corresponde a Liu & Zhan (2025), quienes desarrollan un experimento longitudinal de dieciséis semanas con 180 estudiantes divididos en grupos de control y experimental, reportando mejoras cuantificables en dominio del conocimiento (22.7%), eficiencia de aprendizaje (19.6%) y satisfacción del usuario (32.1%). Por su parte, Tytenko (2025) recurre a cuestionarios de satisfacción con estudiantes universitarios, obteniendo valoraciones elevadas (8.91/10 en satisfacción general y 91.4% de percepción de mayor compromiso), aunque sin métricas objetivas de rendimiento académico. En el plano de las métricas automáticas, Gunarathne et al. (2018) validan la calidad del algoritmo de agrupamiento mediante el coeficiente de Silueta, y Lissandrini et al. (2025) emplean precisión, recall y F-score sobre flujos de consulta de referencia, aunque en ambos casos la evaluación se centra en el rendimiento técnico del sistema más que en el impacto sobre el aprendizaje. Los trabajos restantes se limitan a ilustraciones cualitativas o comparativas funcionales frente a métodos tradicionales, sin experimentos formales con usuarios (Li et al., 2019; Dong et al., 2023; Chen et al., 2023), lo que debilita significativamente las afirmaciones de efectividad pedagógica que formulan.
+
+Las limitaciones declaradas por los autores revelan tensiones estructurales que condicionan la validez y escalabilidad de estas propuestas. En el plano de la usabilidad, la desorientación del usuario en grafos grandes y complejos emerge como un problema transversal: Tytenko (2025) reporta *topic drift* e inconsistencias estructurales en niveles profundos de navegación jerárquica, mientras que Dong et al. (2023) reconocen la dificultad de los estudiantes para localizar conceptos clave cuando el grafo crece en densidad. En cuanto al dominio, la mayoría de los sistemas opera en entornos acotados: un curso, una disciplina o un conjunto reducido de palabras clave de prueba; esto limita drásticamente su generalización (Gunarathne et al., 2018; Liu & Zhan, 2025). Adicionalmente, la falta de validación experimental completa constituye un vacío crítico: Dong et al. (2023) admiten explícitamente que el algoritmo central de recomendación de rutas no está implementado y se delega al trabajo futuro, mientras que Chen et al. (2023) no reportan evaluación con usuarios reales. Finalmente, las métricas empleadas en los estudios que sí evalúan formalmente presentan sus propias restricciones: Lissandrini et al. (2025) señalan que sus indicadores de calidad no consideran similitud semántica, lo que puede penalizar respuestas correctas semánticamente equivalentes a las de referencia. En síntesis, la evidencia disponible apunta a un potencial pedagógico prometedor de estas interfaces, pero la ausencia de evaluaciones controladas, a escala y con métricas de aprendizaje reales constituye el vacío más significativo que la investigación futura deberá abordar.
+
+7. ## **Conclusiones** {#conclusiones}
+
+El análisis de la literatura revisada permite concluir que la comunidad investigadora ha alcanzado un nivel de madurez razonable en la representación formal del conocimiento curricular mediante ontologías. Los trabajos examinados demuestran que es posible modelar con rigor conceptos, competencias, resultados de aprendizaje y relaciones pedagógicas mediante OWL y tecnologías de la Web Semántica (Wang et al., 2019; Barron et al., 2026; Tsidylo & Kozibroda, 2024). Sin embargo, este avance en la representación no se ha trasladado de forma equivalente a la automatización de la construcción del grafo. La ingesta de contenido educativo heterogéneo (sílabos, libros de texto, diapositivas y materiales multimodales) continúa siendo un cuello de botella crítico: los sistemas más establecidos dependen de anotación manual intensiva o de modelos supervisados entrenados sobre corpus de dominio cerrado (Pan et al., 2023; Liu, 2024), mientras que los enfoques más recientes basados en LLMs, aunque prometedores, acusan fragilidades en la extracción de relaciones abstractas y muestran alta sensibilidad a la calidad de los datos de preentrenamiento (Li et al., 2026; Yang et al., 2025; Xu & Che, 2025). La consecuencia directa es que ningún sistema del corpus ha demostrado ser capaz de construir y mantener un grafo de conocimiento curricular completo, actualizado y semánticamente validado a escala institucional real.
+
+En el plano de la navegación y el descubrimiento, la evidencia sugiere que las interfaces basadas en grafos interactivos tienen el potencial de mejorar la orientación académica y la autonomía del estudiante de manera más efectiva que los métodos instruccionales tradicionales. Los resultados más sólidos provienen de entornos experimentales controlados donde la visualización de rutas de aprendizaje, la exploración jerárquica y la recomendación personalizada se combinan en una experiencia integrada (Liu & Zhan, 2025; Tytenko, 2025). No obstante, esta evidencia positiva está sistemáticamente acotada: los sistemas evaluados operan sobre un único curso o disciplina, utilizan datos sintéticos o de prueba, y no han sido sometidos a validaciones con grupos de usuarios amplios en condiciones ecológicamente válidas (Dong et al., 2023; Chen et al., 2023; Gunarathne et al., 2018). La usabilidad se deteriora a medida que el grafo crece en complejidad, y problemas como la desorientación en niveles profundos de navegación o la dificultad para localizar conceptos clave en estructuras densas permanecen sin solución sistemática (Tytenko, 2025; Dong et al., 2023). En consecuencia, el salto desde el prototipo experimental hacia un sistema de descubrimiento semántico funcional a escala curricular real no ha sido dado por ningún trabajo del corpus.
+
+La síntesis de los tres ejes de análisis permite identificar con precisión el vacío de investigación que justifica la presente propuesta. No existe, en la literatura revisada, un sistema que integre de forma cohesionada y operativa los tres componentes que la evidencia señala como necesarios: una ontología curricular formalmente alineada con un estándar disciplinar internacional de amplia adopción (como ACM/IEEE CC2020 o CS2023), un pipeline de ingesta automatizada capaz de procesar documentos curriculares heterogéneos a escala mediante LLMs con control de calidad semántico, y una interfaz de descubrimiento que traduzca esa representación formal en mecanismos de navegación y recomendación efectivos para el estudiante autodirigido. Los trabajos orientados a la representación ontológica carecen de automatización y de capa de interacción (Wang et al., 2019; Oprea, 2020); los sistemas de construcción automática de grafos priorizan la ingesta sobre la calidad semántica y la interoperabilidad (Li et al., 2023; Liu et al., 2026); y las interfaces de navegación operan sobre grafos de cobertura restringida sin ancla en estándares curriculares reconocidos (Li et al., 2019; Dong et al., 2023). Este triple vacío de formalización estándar, automatización escalable y validación pedagógica integrada constituye la brecha que el sistema de gestión del conocimiento (KMS) propuesto en esta investigación busca cerrar, ofreciendo al estudiante universitario de Ciencias de la Computación un entorno coherente para comprender, navegar y planificar su trayectoria de aprendizaje con base en una representación curricular formalmente fundamentada.
+
+4. # **Modelo del dominio del conocimiento de Ingeniería Informática** {#modelo-del-dominio-del-conocimiento-de-ingeniería-informática}
+
+   1. ## **Introducción** {#introducción-2}
+
+Este capítulo presenta los resultados del objetivo específico O1: modelar el dominio del conocimiento de la carrera de Ingeniería Informática mediante una ontología formal que represente cursos, conceptos, temas, áreas de conocimiento y sus relaciones, tomando como referencia el plan de estudios de la PUCP y el estándar CS2023. Comprende dos resultados: el modelo ontológico formal del dominio (R1), que fija las clases, relaciones tipadas y restricciones sobre las que se asienta el sistema, y la capa de referencia curada desde CS2023 (R2), que lo puebla con las áreas y unidades del estándar. Para cada uno se describe su estructura y cómo se verificó, por revisión de un experto y por verificación automática de consistencia. El poblamiento con contenido institucional corresponde al módulo de ingesta (R4) y queda fuera de este capítulo.
+
+2. ## **Modelo ontológico formal del dominio de Ingeniería Informática** {#modelo-ontológico-formal-del-dominio-de-ingeniería-informática}
+
+   1. ### **Descripción del resultado** {#descripción-del-resultado}
+
+El primer resultado (R1) es el modelo ontológico formal que define el esquema conceptual (T-Box) del dominio: sus clases, las relaciones semánticas tipadas entre ellas y las restricciones lógicas que gobiernan su uso. Responde al primer objetivo: modelar el dominio mediante una ontología formal, al fijar la estructura sobre la cual el sistema representa cursos, conceptos, temas, áreas de conocimiento y recursos, y las dependencias entre ellos. Es importante precisar el alcance de este resultado: R1 es el esquema, no su contenido. Su poblamiento corresponde a resultados distintos: la capa de referencia curada desde el estándar se presenta en la sección siguiente (R2) y el contenido institucional extraído proviene del módulo de ingesta (R4).
+
+El modelo se construyó aplicando la metodología Ontology Development 101 (Noy & McGuinness, 2001), adaptada al dominio educativo, y se validó por dos vías: la revisión de un experto en Ingeniería de Conocimiento y la verificación automática de consistencia lógica con el razonador HermiT. La especificación completa de la ontología se encuentra en el Anexo G y el registro razonado de las decisiones de diseño en el Anexo I. La estructura que se presenta a continuación resulta de los pasos de definición de clases, propiedades y facetas de esa metodología.
+
+2. ### **Procedimiento y estructura del modelo** {#procedimiento-y-estructura-del-modelo}
+
+El desarrollo inició con la delimitación del dominio a las áreas de Ciencias de la Computación e Ingeniería de Software y de un conjunto de preguntas de competencia que el modelo debe poder responder: qué conocimientos preceden a un concepto, a qué unidad y área pertenece, qué recursos lo tratan, entre otras. Como punto de partida estructural se reutilizó el metamodelo curricular de Barron et al. (2026), alineado con el estándar CS2023. Sobre esa base se definieron las clases, las propiedades y las restricciones del esquema.
+
+El modelo adopta una T-Box minimalista: solo las categorías estructurales del dominio se representan como clases, mientras que las entidades concretas (un área, un curso o un concepto particular) son instancias. Esta decisión mantiene el esquema estable y traslada el volumen del dominio a la capa de instancias, más eficiente de poblar y de consultar. Se definen ocho clases: una superclase abstracta, Elemento de Conocimiento, que agrupa los cuatro niveles del dominio (Área de Conocimiento, Unidad de Conocimiento, Tema y Concepto) y tres clases para los recursos y su empaquetamiento: Curso, Recurso de Aprendizaje y Tipo de Recurso. La Figura 5 muestra la jerarquía resultante tal como la representa Protégé.
+
+![][image5]
+
+##### **Figura 5\. Jerarquía de clases de la ontología visualizada en Protégé (OntoGraf). Fuente: elaboración propia.[^4]** {#figura-5.-jerarquía-de-clases-de-la-ontología-visualizada-en-protégé-(ontograf).-fuente:-elaboración-propia.}
+
+Se observa que el árbol es plano: las cuatro subclases de Elemento de Conocimiento dependen directamente de la superclase y no unas de otras. La profundidad de cuatro niveles del dominio no está, por tanto, en la jerarquía de clases sino en las relaciones de composición que se describen a continuación.
+
+La decisión estructural central es que la cadena de cuatro niveles no es una jerarquía de subsunción sino una partonomía: una unidad de conocimiento no es un tipo de área, sino una parte de ella. Dado que las entidades concretas son instancias, la relación entre ellas es una propiedad entre individuos y no una relación entre clases. En consecuencia, el árbol de clases es plano (las cuatro subclases dependen directamente de la superclase abstracta y son disjuntas entre sí) y la profundidad del dominio se expresa mediante relaciones, no mediante anidamiento de clases.
+
+Sobre esa base, el modelo define las propiedades de objeto bajo un principio de economía: se afirman únicamente los hechos atómicos y los agregados se derivan por consulta. La composición se modela como una relación transitiva de tipo "parte de", con sub-relaciones simples para cada nivel; el prerrequisito se afirma solo entre conceptos, de modo que los prerrequisitos a nivel de tema, curso o área se infieren en lugar de almacenarse. Dos relaciones entre curso y concepto (los conceptos que un curso enseña y los que asume como entrada) permiten inferir el prerrequisito conceptual entre cursos, que tampoco se almacena. El esquema se completa con la especialización entre conceptos, la relación que vincula un recurso con aquello de lo que trata, el tipo de recurso y la procedencia que registra la fuente de cada nodo. El prerrequisito se declara transitivo, de modo que la cadena completa de dependencias de un concepto se obtiene por cierre y no requiere afirmarse arista por arista. La Tabla 13 detalla las propiedades definidas, con su dominio, su rango y las características lógicas declaradas en cada caso.
+
+###### **Tabla 13\. Propiedades de objeto de la ontología.[^5]** {#tabla-13.-propiedades-de-objeto-de-la-ontología.}
+
+| Propiedad | Dominio | Rango | Características | Inversa |
+| :---- | :---- | :---- | :---- | :---- |
+| isPartOf | KnowledgeElement | KnowledgeElement | Transitiva; superpropiedad de las tres siguientes | hasPart (transitiva) |
+| conceptInTopic | Concept | Topic | Simple; subpropiedad de isPartOf | \- |
+| topicInKnowledgeUnit | Topic | KnowledgeUnit | Simple; subpropiedad de isPartOf | \- |
+| knowledgeUnitInKnowledgeArea | KnowledgeUnit | KnowledgeArea | Simple; subpropiedad de isPartOf; funcional | \- |
+| hasPrerequisite | Concept | Concept | Transitiva | isPrerequisiteFor (transitiva) |
+| specializes | Concept | Concept | Simple | hasSpecialization |
+| teachesConcept | Course | Concept | Simple | conceptTaughtBy |
+| requiresConcept | Course | Concept | Simple | conceptRequiredBy |
+| isAbout | LearningResource | KnowledgeElement o Course | Simple | hasResource |
+| hasResourceType | LearningResource | ResourceType | Simple | \- |
+| wasDerivedFrom | KnowledgeElement o Course | LearningResource | Simple | \- |
+
+Las restricciones lógicas son las que sostienen la integridad del esquema. Dos de ellas impiden que las categorías se confundan entre sí. La primera declara Elemento de Conocimiento como la unión disjunta de sus cuatro subclases: todo elemento pertenece entonces a exactamente uno de los cuatro niveles, y ningún individuo puede ser a la vez tema y concepto. Es también el mecanismo con el que la superclase opera como abstracta, pues OWL no ofrece clases abstractas sino particiones exhaustivas. La segunda declara disjuntas entre sí las cuatro clases de nivel superior, lo que impide clasificar un individuo simultáneamente como curso y como recurso. Las dos restricciones restantes gobiernan la composición: la pertenencia de una unidad de conocimiento a su área es funcional, de modo que una unidad pertenece a exactamente un área; y un invariante de cuatro niveles obliga a que todo concepto pertenezca a un tema, todo tema a una unidad y toda unidad a un área. El comportamiento de estas restricciones bajo razonamiento automático se detalla en la validación; la especificación completa de clases, propiedades y axiomas figura en el Anexo G y su justificación razonada en el Anexo I (decisiones de diseño).
+
+3. ### **Verificación y mediciones** {#verificación-y-mediciones}
+
+La validación de R1 sigue una estrategia dual, con una herramienta por régimen.
+
+**Consistencia lógica (HermiT)**
+
+Una vez implementada en OWL con Protégé, la ontología se sometió a razonamiento automático con HermiT, que verifica la ausencia de clases insatisfacibles y la correcta inferencia de la jerarquía. La ejecución del razonador sobre la T-Box no detectó clases insatisfacibles ni inconsistencias, con lo que queda verificado el indicador de consistencia lógica comprometido para R1. Gracias a los axiomas de disyunción y a los dominios y rangos precisos de las propiedades, HermiT detecta situaciones como un individuo clasificado a la vez como Tópico y Concepto, una unidad de conocimiento enlazada a dos áreas distintas, o una arista de composición de nivel equivocado.
+
+Límite de mundo abierto: HermiT detecta contradicciones, no ausencias. El invariante de cuatro niveles (todo concepto pertenece al menos a un tema; todo tema, al menos a una unidad; toda unidad, al menos a un área) se afirma mediante axiomas existenciales acompañados de una anotación que advierte que, bajo el supuesto de mundo abierto, su incumplimiento no es detectado por el razonador. La verificación de completitud (nodos huérfanos, recursos sin enlace, instancias sin procedencia) se realiza mediante consultas de integridad en una etapa posterior del proyecto, no en R1.
+
+**Validación de experto**
+
+La T-Box y el conjunto de decisiones de diseño que la sustentan fueron revisados y aprobados por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar; el registro de esa validación se adjunta como evidencia en el Anexo H.
+
+**Indicador**
+
+El modelo define ocho clases (Figura 5\) y diecisiete propiedades de objeto, incluidas las inversas declaradas (Tabla 13), por encima del piso de al menos cinco clases y tres tipos de relación que se desprenden de las preguntas de competencia. El indicador se cumple.
+
+3. ## **Capa de referencia curada desde el estándar CS2023** {#capa-de-referencia-curada-desde-el-estándar-cs2023}
+
+   1. **Descripción del resultado**
+
+El segundo resultado del primer objetivo específico consiste en poblar el modelo con una capa de referencia: el conjunto de instancias que fija el vocabulario estructural del dominio antes de incorporar contenido institucional. Esta capa se cura exclusivamente desde el estándar CS2023 y llega hasta el nivel de unidad de conocimiento, conforme a la decisión de diseño que establece ese estándar como fuente única del backbone.
+
+La curación produjo diecisiete áreas de conocimiento y 162 unidades, cotejadas contra el índice canónico del estándar. Cada instancia registra su nombre legible, su pertenencia de capa (que distingue lo curado de lo que poblará posteriormente el pipeline de ingesta) y su procedencia, que la vincula al documento del que se derivó. Cada unidad se enlaza además a su área mediante la propiedad de pertenencia correspondiente, que es funcional: una unidad pertenece a exactamente un área.
+
+2. **Procedimiento de curación**
+
+La carga se realizó de forma programática, mediante un script que transforma la tabla curada en instancias del modelo siguiendo el procedimiento de curación descrito en la sección 1.3. Esta decisión responde a tres criterios: reproducibilidad (el backbone puede regenerarse íntegramente desde la tabla fuente), trazabilidad de la curación, y eliminación del error de transcripción manual que introduciría el poblamiento a mano de más de un centenar de individuos.
+
+3. **Verificación y mediciones**
+
+La verificación operó en tres niveles. Primero, la correspondencia con el estándar: se contrastaron los conteos de áreas y unidades y se verificó por muestreo la asignación de unidades a sus áreas. Segundo, la consistencia lógica: se ejecutó el razonador sobre el modelo y la capa de referencia en conjunto, sin detectar inconsistencias ni clases insatisfacibles. Para que esta verificación sea efectiva fue necesario declarar explícitamente la identidad distinta entre todas las instancias del backbone, pues el supuesto de mundo abierto de la lógica descriptiva no asume nombres únicos: sin esa declaración, un enlace erróneo de una unidad a dos áreas distintas llevaría al razonador a inferir que ambas áreas son la misma entidad en lugar de señalar la contradicción. Tercero, la revisión del asesor especialista.
+
+Conviene precisar el alcance de esta verificación. El razonador garantiza que la capa de referencia no contiene contradicciones lógicas, no que reproduzca fielmente el estándar: la fidelidad al documento fuente se establece por cotejo documental y revisión experta, no por inferencia automática. Las clases de tema y concepto permanecen sin instanciar en esta capa; sus instancias provienen íntegramente del material institucional y se incorporan en el resultado correspondiente al módulo de ingesta.
+
+La ejecución del razonador sobre el modelo y la capa de referencia en conjunto no detectó inconsistencias ni clases insatisfacibles, con lo que queda verificado el indicador de consistencia lógica comprometido para R2.
+
+4. ## **Discusión** {#discusión}
+
+   1. **Resumen de los resultados**
+
+El capítulo presentó dos resultados. El primero es un esquema conceptual de ocho clases y diecisiete propiedades de objeto; en términos descriptivos, una representación del dominio en cuatro niveles de granularidad (área, unidad, tema y concepto) articulados por composición, sobre la que se declaran el prerrequisito entre conceptos, la distinción entre lo que un curso enseña y lo que asume como entrada, el vínculo de un recurso con aquello de lo que trata y la procedencia de cada nodo. El segundo es la capa de referencia derivada del estándar CS2023: diecisiete áreas y ciento sesenta y dos unidades de conocimiento, esto es, el vocabulario estructural completo del estándar hasta el nivel de unidad, con la fuente de cada instancia registrada. Ambos resultados se sometieron a razonamiento automático sin que se detectaran inconsistencias ni clases insatisfacibles, y fueron revisados y aprobados por el experto en Ingeniería del Conocimiento.
+
+2. **Interpretación de los resultados**
+
+El problema que motiva el proyecto es que el conocimiento de la carrera está distribuido en documentos dispersos sin que las dependencias entre contenidos estén explicitadas en ninguna parte. Lo que estos dos resultados significan, en conjunto, es que la estructura ausente ya existe y es consultable antes de contener un solo dato institucional: hay un lugar donde la dependencia conceptual puede afirmarse y un vocabulario común contra el cual anclarla. Tres decisiones del modelo concentran ese efecto.
+
+La primera es la T-Box minimalista. Al representar como clases únicamente las categorías estructurales y dejar las entidades concretas como instancias, el esquema no crece cuando crece el dominio: incorporar un área, un curso o mil conceptos no modifica la ontología. Esto es lo que vuelve viable el poblamiento automatizado que el proyecto plantea más adelante, porque un esquema que exigiera declarar una clase por cada contenido convertiría cada ingesta en una modificación del modelo.
+
+La segunda es tratar los cuatro niveles como partonomía y no como jerarquía de subsunción. La diferencia no es terminológica: bajo subsunción, un concepto sería un tipo de área y heredaría sus propiedades, lo que es falso en el dominio; bajo composición, un concepto es parte de un tema que es parte de una unidad. Como la relación es transitiva, la pertenencia de un contenido a su área se obtiene por consulta sin almacenarla, que es la condición para que el sistema responda a qué área o unidad pertenece cualquier nodo sin mantener información redundante ni exponerse a que esa redundancia se desincronice.
+
+La tercera es afirmar el prerrequisito únicamente entre conceptos. Los prerrequisitos entre temas, cursos y áreas (que son los que el estudiante consulta en la práctica) se infieren a partir de los conceptuales y de las dos relaciones que distinguen lo que un curso enseña de lo que asume como entrada. El efecto es una reducción del trabajo de curación: en lugar de declarar a mano las dependencias en cada nivel, se declara el nivel más fino y el resto se deriva. Esto atiende directamente lo que la revisión de literatura identificó como el cuello de botella del área.
+
+La capa de referencia, por su parte, no es solamente un conjunto de instancias. Al fijar el vocabulario estructural antes de incorporar contenido, establece el conjunto de valores contra el cual se validará la población posterior: el material institucional no introduce áreas ni unidades nuevas, sino que se enlaza a las existentes. Esa restricción es la que permite enlazar la salida del pipeline de ingesta a un dominio de valores conocido.
+
+3. **Los resultados en el contexto de la revisión de la literatura**
+
+La revisión sistemática permite situar ambos resultados en tres ejes:
+
+En cuanto a la estructura, el resultado es consistente con la literatura. La modelización jerárquica del currículo, con el concepto como unidad básica agrupada en estructuras de mayor granularidad, es reconocible en prácticamente todos los trabajos analizados (Wang et al., 2019; Bin et al., 2025; Oprea, 2020), y el modelo desarrollado comparte esa arquitectura de cuatro niveles. La revisión no reporta, sin embargo, con qué criterio esos trabajos separan clase de instancia ni si tratan la composición como subsunción o como partonomía, de modo que la comparación en ese punto específico no puede establecerse con el material disponible.
+
+En cuanto a la alineación con estándares, el resultado se separa de la mayoría. La revisión encontró que la alineación con estándares disciplinares internacionales sigue siendo la excepción y que únicamente Barron et al. (2026) adoptan explícitamente el marco CS2023, mientras el resto se ancla en currículos institucionales propios o en sílabos de curso específicos (Wang et al., 2019; Bin et al., 2025; Oprea, 2020; Tsidylo & Kozibroda, 2024). La capa de referencia se ubica del lado de Barron et al. y, con ello, del lado de la interoperabilidad que la propia revisión identificaba como carencia del área.
+
+En cuanto a la cobertura, el resultado difiere. La revisión señala un problema generalizado de escala reducida, con modelos construidos sobre un único curso o sobre un área de conocimiento acotada, cuyos autores advierten que la extensión a dominios más amplios plantea desafíos de rendimiento y consistencia (Bin et al., 2025; Barron et al., 2026). La capa de referencia cubre las diecisiete áreas del estándar. Conviene precisar el alcance de esa diferencia: es una diferencia de amplitud estructural, no de profundidad. El modelo cubre más áreas, pero ninguna de ellas contiene todavía temas ni conceptos, mientras que los trabajos citados modelan en profundidad el dominio acotado que eligieron. La comparación en profundidad solo será posible una vez poblado el contenido institucional.
+
+A ello se suma una diferencia en la procedencia de los datos. La revisión observa que el uso de datos sintéticos o de marcadores de posición para poblar partes del modelo (Barron et al., 2026\) deja sin cerrar la brecha entre la estructura ontológica propuesta y una implementación instanciada. La capa de referencia se deriva íntegramente de un documento real y cada instancia registra el documento del que proviene, lo que sitúa el resultado del lado de esa brecha que la literatura señala como abierta.
+
+4. **Generalización de los resultados**
+
+Ambos resultados se generalizan de forma distinta y conviene separarlos.
+
+El esquema no codifica ni a la PUCP ni a CS2023. Sus clases son categorías estructurales (área, unidad, tema, concepto, curso, recurso y tipo de recurso) y sus restricciones expresan un invariante de cuatro niveles, no un contenido particular. En principio, cualquier currículo que se organice en esos cuatro niveles puede representarse con él sin modificarlo. Esa transferibilidad, sin embargo, es una propiedad del diseño y no un resultado comprobado: el modelo no se ha instanciado con un currículo distinto ni con un estándar que organice el dominio de otra manera, de modo que no hay evidencia suficiente para afirmar que se generaliza.
+
+La capa de referencia no se generaliza, porque es específica del estándar CS2023 y de su índice canónico. Lo que sí es transferible es el procedimiento con que se construyó (curación tabular, carga programática desde la tabla fuente, registro de procedencia y verificación en tres niveles), aplicable a cualquier estándar disciplinar publicado en forma de índice estructurado.
+
+5. **Limitaciones de los resultados**
+
+En primer lugar, la verificación de consistencia opera bajo el supuesto de mundo abierto: el razonador detecta contradicciones, no ausencias. El invariante de cuatro niveles se afirma mediante axiomas existenciales cuyo incumplimiento no es señalado. La detección de nodos huérfanos, recursos sin enlace o instancias sin procedencia requiere consultas de integridad, que corresponden a una etapa posterior del proyecto.
+
+Segundo, la consistencia lógica no equivale a fidelidad al estándar. El razonador garantiza que la capa de referencia no contiene contradicciones, no que reproduzca correctamente CS2023; esa correspondencia se estableció por cotejo documental de los conteos y verificación por muestreo de la asignación de unidades a áreas, no por inferencia automática.
+
+Tercero, la validación experta se realizó con un único especialista, que además es el asesor del proyecto. No hay revisión independiente ni contraste entre evaluadores, por lo que la aprobación del diseño acredita la revisión de un experto del área pero no constituye consenso sobre las decisiones tomadas.
+
+Cuarto, el indicador comprometido para el modelo (al menos cinco clases y tres tipos de relación) es un piso de completitud estructural derivado de las preguntas de competencia, no una medida de adecuación del modelo al dominio. A ello se añade que esas preguntas se emplearon para delimitar el alcance y derivar el conjunto mínimo de clases y relaciones, pero el modelo no se ha ejercitado todavía contra ellas mediante consultas, verificación que requiere instancias en los cuatro niveles.
+
+Quinto, la curación se detiene en el nivel de unidad de conocimiento. Las clases de tema y concepto permanecen sin instanciar, y el prerrequisito, que es la relación central del modelo, se afirma precisamente entre conceptos. En consecuencia, la capacidad que el modelo habilita en el diseño (inferir dependencias conceptuales y derivar de ellas los prerrequisitos entre cursos) no puede ejercitarse con lo obtenido hasta aquí. Su comprobación depende del poblamiento institucional y se aborda en el resultado correspondiente al módulo de ingesta.
+
+5. # **Módulo de gestión del grafo de conocimiento** {#módulo-de-gestión-del-grafo-de-conocimiento}
+
+   1. ## **Introducción** {#introducción-3}
+
+Este capítulo presenta los resultados del objetivo específico O2: diseñar e implementar un módulo de gestión del grafo de conocimiento que, bajo la ontología definida, integre recursos académicos heterogéneos mediante un pipeline de ingesta automatizada y exponga una interfaz programática para su consulta y gestión. Comprende dos resultados: la documentación del módulo (R3), que especifica sus atributos de calidad, el modelo de datos del grafo, sus reglas de integridad, su arquitectura y los casos de prueba de la ingesta, y el módulo implementado con su pipeline de ingesta y su API (R4). Con ellos, la estructura definida en el capítulo anterior se puebla con el contenido de los sílabos y queda disponible para su consulta. La navegación del estudiante sobre el grafo corresponde al objetivo O3 y queda fuera de este capítulo.
+
+2. ## **Documentación del módulo del grafo de conocimiento** {#documentación-del-módulo-del-grafo-de-conocimiento}
+
+Este resultado se obtuvo con las cinco fases del procedimiento descrito en el capítulo 1, aplicadas de forma iterativa: atributos de calidad (fase 1), modelado C4 (fase 2), esquema del grafo de propiedades (fase 3), registro de decisiones (fase 4\) y casos de prueba de la ingesta (fase 5). Las secciones siguientes las presentan en otro orden, porque la arquitectura se apoya en el modelo de datos. La arquitectura se escribió como un único modelo en LikeC4, del que se generan todas las vistas; ese modelo, los ADRs y el catálogo de requisitos se publican en el repositorio, de modo que cada figura puede regenerarse desde su fuente.
+
+1. ### **Atributos de calidad del módulo del grafo de conocimiento** {#atributos-de-calidad-del-módulo-del-grafo-de-conocimiento}
+
+El diseño del módulo se guía por cinco atributos de calidad, derivados de las necesidades de los interesados, de las restricciones del entorno en que el módulo opera y de las condiciones del proceso de desarrollo. Cada uno se especifica como escenario de calidad en la forma de seis partes propuesta por Bass et al. (2021): fuente, estímulo, artefacto, entorno, respuesta y medida de respuesta. La medida es la parte decisiva, ya que un atributo sin medida verificable no puede sostener ninguna decisión de diseño. El vocabulario de caracterización proviene de la norma ISO/IEC 25010 (International Organization for Standardization & International Electrotechnical Commission, 2023). Se presentan los atributos seleccionados en la Tabla 14 y los escenarios de calidad en la Tabla 15\.
+
+###### **Tabla 14\. Atributos de calidad del módulo del grafo de conocimiento** {#tabla-14.-atributos-de-calidad-del-módulo-del-grafo-de-conocimiento}
+
+|  | Propiedad | Origen | Prioridad |
+| :---- | :---- | :---- | :---- |
+| AC-01 | El grafo cargado cumple las condiciones que el modelo ontológico declara sobre su contenido | Ausencia de razonador en ejecución y salida no determinista de la extracción | Alta |
+| AC-02 | Es posible demostrar AC-01 con un procedimiento documentado y re-ejecutable, sin inspeccionar el código | La ingesta debe ser verificable frente a un criterio de aceptación | Alta |
+| AC-03 | Toda instancia y afirmación que la corrida crea queda asociada al documento del que fue derivada; las que ya existían conservan su procedencia | El estudiante debe poder remitir a su fuente la información que el sistema le presenta | Alta |
+| AC-04 | Corregir una capa no obliga a reconstruir la otra  | La capa de referencia se corrige y los documentos se reprocesan de forma reiterada durante el ciclo | Media |
+| AC-05 | Las consultas con recorrido transitivo responden en tiempo compatible con navegación interactiva | La navegación exploratoria pierde utilidad si la respuesta interrumpe el flujo de atención | Media |
+
+###### **Tabla 15\. Escenarios de calidad de los atributos definidos** {#tabla-15.-escenarios-de-calidad-de-los-atributos-definidos}
+
+|  | AC-01 | AC-02 | AC-03 | AC-04 | AC-05 |
+| :---- | :---- | :---- | :---- | :---- | :---- |
+| Fuente | Proceso de ingesta		 | Asesor, jurado o autor	 | Proceso de ingesta	 | Autor | Estudiante |
+| Estímulo | Un lote de afirmaciones candidatas incluye elementos que violan las restricciones del modelo | Se requiere establecer si el grafo satisface las condiciones que el modelo ontológico declara sobre su contenido | Se ingesta un documento institucional | Se corrige la capa de referencia o se incorpora un documento nuevo | Se solicita una consulta con cierre transitivo o agregación multinivel |
+| Artefacto  | Grafo de conocimiento | Grafo de conocimiento | Capa de contenido institucional | Proceso de construcción del grafo | Base de datos  |
+| Entorno  | Ingesta del conjunto piloto				 | Posterior a cualquier carga | Cualquier corrida de ingesta | Ciclo de desarrollo | Grafo cargado con el conjunto piloto (13 sílabos, del orden de mil nodos) en el entorno de despliegue del prototipo, tras una pasada de calentamiento  |
+| Respuesta  | Las afirmaciones que violan esas condiciones no se incorporan al grafo; las que escapan se detectan después de la carga y se reportan | Se obtiene un reporte por condición | Toda instancia y afirmación que la corrida crea queda asociada al documento del que fue derivada; las que ya existían conservan su procedencia | La operación no re-ejecuta las etapas propias de la otra capa | Se retorna el resultado completo de la derivación |
+| Medida | Cero violaciones detectadas después de la carga; afirmaciones rechazadas por documento y por tipo de condición | Toda condición declarada cuenta con una comprobación asociada; el reporte se obtiene en una única ejecución | Cero elementos institucionales sin procedencia tras la corrida | Una corrección de la capa de referencia no dispara ninguna extracción asistida por modelo de lenguaje | Tiempo de ejecución en el motor, sin serialización ni transporte, de los cinco patrones de consulta, cada uno ejecutado diez veces desde cada uno de sus nodos de partida válidos: mediana y percentil 95 por debajo de un segundo para cada patrón  |
+
+Los cinco patrones son el prerrequisito entre cursos, el área de un concepto, los recursos de un elemento agregados sobre sus partes, el prerrequisito elevado a tema, curso o área, y el cierre de especialización. La consulta del detalle de un nodo no se mide, porque recorre una distancia fija, el nodo y su vecindario cercano, y no deriva ningún cierre ni agregado. Ejecutar cada patrón desde todos sus nodos de partida evita elegir los parámetros de las consultas. El tamaño exacto del grafo y las características del entorno (procesador, memoria y versión del motor) se reportan junto con la medición, y la primera ejecución, con la caché de planes de consulta vacía, se reporta aparte y sin umbral.
+
+La auditoría posterior a la carga es una medida necesaria pero insuficiente: el pipeline valida los hechos candidatos antes de escribirlos, de modo que difícilmente lleguen violaciones a la base. Por eso se registra también cuántos hechos candidatos fueron descartados en la validación y por qué motivo, dato que se reporta junto con la precisión de la extracción, ya que una precisión alta acompañada de un descarte masivo indicaría que el pipeline incorporó muy poco contenido.
+
+2. ### **Modelo de datos del grafo** {#modelo-de-datos-del-grafo}
+
+El grafo se almacena en Neo4j Community, una base de datos de grafos de propiedades que no ejecuta un razonador. Por eso el modelo ontológico del capítulo anterior no se carga tal cual: cada constructo llega al grafo como una estructura (una etiqueta de nodo, un tipo de arista o una propiedad) o como una regla de integridad que el módulo impide violar al escribir y comprueba después. Esta sección resume esa transición; la correspondencia constructo por constructo figura en el **Anexo K**.
+
+Cada clase se convierte en una etiqueta de nodo con su nombre en inglés, y los nodos de los cuatro niveles del dominio llevan además la etiqueta de la superclase, Elemento de Conocimiento, que en la ontología infería el razonador. Cada nodo tiene una única propiedad de identidad, su clave: el IRI del individuo en la capa de referencia y, en la institucional, un identificador que se asigna antes de escribir el nodo y se guarda con el lote, o que se deriva de uno estable, como el código de un curso. Las propiedades de objeto afirmadas se convierten en tipos de arista con dirección fija. Las inversas y los cierres transitivos no se almacenan, sino que se obtienen por consulta, conforme a la decisión de afirmar solo hechos atómicos y derivar los agregados (DD-07). Las cuatro propiedades de partonomía se reúnen en un solo tipo de arista, porque el par de etiquetas de sus extremos basta para saber de qué nivel se trata. El resultado son los ocho tipos de arista que presenta la Tabla 16\.
+
+###### **Tabla 16\. Tipos de arista del grafo y pares de etiquetas admitidos** {#tabla-16.-tipos-de-arista-del-grafo-y-pares-de-etiquetas-admitidos}
+
+| Tipo de arista | Propiedad de origen | Pares admitidos (origen a destino) |
+| :---- | :---- | :---- |
+| PART\_OF | isPartOf y sus tres subpropiedades | Concept a Topic; Topic a KnowledgeUnit; KnowledgeUnit a KnowledgeArea |
+| HAS\_PREREQUISITE | hasPrerequisite | Concept a Concept |
+| SPECIALIZES | specializes | Concept a Concept |
+| TEACHES\_CONCEPT | teachesConcept | Course a Concept |
+| REQUIRES\_CONCEPT | requiresConcept | Course a Concept |
+| IS\_ABOUT | isAbout | LearningResource a KnowledgeArea, KnowledgeUnit, Topic, Concept o Course |
+| HAS\_RESOURCE\_TYPE | hasResourceType | LearningResource a ResourceType |
+| WAS\_DERIVED\_FROM | wasDerivedFrom | KnowledgeArea, KnowledgeUnit, Topic, Concept o Course a LearningResource |
+
+Cada fila fija una dirección que el archivo de la ontología no registra, porque OWL trata como simétrica la relación entre una propiedad y su inversa. Ninguna de esas direcciones obliga a que una arista vaya de la capa de referencia hacia la institucional; por eso toda arista que escribe la ingesta parte de un nodo institucional, y el contenido extraído se enlaza a la capa de referencia sin modificarla. En el MVP, el tipo de recurso tiene una sola instancia, Sílabo, que el operador declara al subir cada documento junto con el código del curso al que pertenece. Cada sílabo crea o actualiza solo su propio curso: los prerrequisitos formales entre cursos no se extraen, porque el prerrequisito entre cursos se deriva de los conceptos que cada uno enseña y requiere.
+
+El grafo no admite otras propiedades que las de la Tabla 17\. Todas, salvo dos, provienen de un constructo de la ontología o de los vocabularios que esta reutiliza. La primera excepción es la procedencia por arista, que el modelo ontológico dejó fuera de OWL (DD-09) y que el módulo necesita para que cada afirmación institucional remita al documento del que se derivó (AC-03). La segunda es el código de curso, que identifica al curso de forma estable y es el dato por el que el estudiante lo reconoce.
+
+###### **Tabla 17\. Propiedades de nodo y de arista** {#tabla-17.-propiedades-de-nodo-y-de-arista}
+
+| Propiedad | Elemento que la lleva | Origen |
+| :---- | :---- | :---- |
+| Clave | Todo nodo | El IRI del individuo, en la capa de referencia; en la institucional, se asigna antes de escribir el nodo o se deriva de un identificador estable |
+| Marca de capa | Todo nodo | Propiedad de anotación de la T-Box |
+| Etiqueta preferida, una por idioma | Todo nodo | Vocabulario SKOS |
+| Descripción | Nodos que la tienen | Vocabulario Dublin Core |
+| Localizador | Recurso de aprendizaje | Propiedad de datos de la T-Box |
+| Código de curso | Curso | Sin constructo de origen; lo declara el operador al subir el documento |
+| Procedencia | Toda arista que escribe la ingesta | Sin constructo de origen (DD-09) |
+
+El localizador siempre puede abrirse desde la navegación. En la capa de referencia es la dirección pública del estándar; en la institucional, la dirección en la que el propio sistema sirve el documento subido.
+
+3. ### **Reglas de integridad del grafo** {#reglas-de-integridad-del-grafo}
+
+Los axiomas que HermiT comprobaba sobre la ontología no tienen representación en el grafo. Su contenido se conserva como diez reglas de integridad, condiciones que el grafo debe cumplir en todo momento. La Tabla 18 las enuncia junto con el constructo del que provienen.
+
+###### **Tabla 18\. Reglas de integridad del grafo** {#tabla-18.-reglas-de-integridad-del-grafo}
+
+| Código | Regla | Constructo de origen |
+| :---- | :---- | :---- |
+| RI-01 | Todo nodo tiene clave no nula, y no hay dos nodos con la misma clave | Individuo nombrado; individuos distintos |
+| RI-02 | Todo nodo lleva la etiqueta de su clase; los nodos KnowledgeArea, KnowledgeUnit, Topic y Concept llevan además la etiqueta KnowledgeElement | Clase; subsunción |
+| RI-03 | Todo nodo lleva exactamente una de las etiquetas KnowledgeElement, Course, LearningResource y ResourceType, y todo nodo KnowledgeElement exactamente una de KnowledgeArea, KnowledgeUnit, Topic y Concept | Unión disjunta y disyunción |
+| RI-04 | Toda arista es de uno de los ocho tipos de la Tabla 16 | Propiedad afirmada; propiedad inversa |
+| RI-05 | Cada arista une un par de etiquetas admitido para su tipo en la Tabla 16, en la dirección de la propiedad afirmada | Dominio y rango; subpropiedad de partonomía; unión de clases |
+| RI-06 | Entre dos nodos hay como máximo una arista de cada tipo en cada dirección | Propiedad afirmada |
+| RI-07 | Ninguna unidad tiene aristas de partonomía hacia más de un área | Propiedad funcional |
+| RI-08 | Todo concepto tiene al menos una arista de partonomía hacia un tema; todo tema, hacia una unidad; toda unidad, hacia un área | Restricción existencial |
+| RI-09 | Todo nodo y toda arista tiene solo propiedades declaradas en la Tabla 17 | Propiedad de datos; propiedad de anotación; etiqueta de idioma |
+| RI-10 | Si un recurso de aprendizaje tiene localizador, su valor es un URI absoluto con esquema http o https | Propiedad de datos |
+
+Cada regla se garantiza de dos maneras. Primero, se impide al escribir: la violación nunca llega a confirmarse, porque se rechaza antes de escribir o porque la propia forma de la escritura la impide. Después, se detecta: una auditoría ejecuta sobre el grafo completo una consulta por regla y emite un reporte. En la ingesta, las diez reglas se impiden al escribir, salvo RI-07, que no aplica porque la ingesta no escribe aristas de unidad a área. En la carga de la capa de referencia, RI-07 descansa en la verificación con HermiT de R2, y RI-08 solo se detecta en la auditoría, porque el razonador no señala ausencias bajo el supuesto de mundo abierto. El detalle por regla y por camino de escritura figura en el Anexo K.
+
+Las diez reglas resultan de traducir la ontología. Otras cinco resultan de decisiones del propio módulo y se presentan en la Tabla 19; la auditoría las comprueba en el mismo reporte.
+
+###### **Tabla 19\. Reglas del módulo** {#tabla-19.-reglas-del-módulo}
+
+| Código | Regla | Origen |
+| :---- | :---- | :---- |
+| RM-01 | Todo nodo tiene marca de capa, con valor de referencia o institucional | DD-02 |
+| RM-02 | Ninguna arista sale de un nodo de la capa de referencia hacia uno de la capa institucional | DD-02 |
+| RM-03 | Todo tema, concepto y curso institucional tiene al menos una arista de procedencia hacia un recurso de aprendizaje, y toda arista que escribe la ingesta lleva su procedencia | DD-09 |
+| RM-04 | No existen ciclos de prerrequisito ni de especialización | Navegación (R5 y R6) |
+| RM-05 | Todo recurso de aprendizaje tiene localizador | DD-10 |
+
+RM-02 es la forma comprobable de la frontera entre capas, de la que depende AC-04, y RM-03 la de la procedencia que exige AC-03. RM-04 no la impone la ontología, donde la transitividad admite ciclos, sino la navegación, que ordena los conceptos según sus prerrequisitos. Las cinco se impiden al escribir, igual que las reglas de integridad.
+
+El grafo solo cambia por tres caminos: la carga de la capa de referencia, la ingesta de un documento y la reaplicación de los hechos guardados (sección siguiente). Cada uno abre su reporte antes de tocar el grafo y lo completa con una auditoría al terminar; así, el último reporte describe el estado vigente del grafo o, si quedó abierto, avisa que ese estado no se auditó, y en ambos casos decide si la ingesta continúa. Eso es lo que permite establecer AC-01 sin inspeccionar el código (AC-02). Como en la ingesta todas las reglas se impiden al escribir, una violación que la auditoría encuentre después de una ingesta revela un error del código y no un dato incorrecto. En ese caso se emite el reporte y las ingestas pendientes quedan suspendidas hasta corregir el error.
+
+4. ### **Arquitectura del módulo** {#arquitectura-del-módulo}
+
+La arquitectura se documenta con el modelo C4 (Brown, s. f.), que describe un sistema en niveles de detalle creciente: su contexto, sus contenedores y los componentes de cada contenedor. Las decisiones que la sustentan se registran como ADRs. La Tabla 20 resume cada una con la alternativa principal que descartó y el atributo de calidad al que responde principalmente; el texto completo puede consultarse en el repositorio público:
+
+[https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones) 
+
+###### **Tabla 20\. Decisiones de arquitectura del módulo** {#tabla-20.-decisiones-de-arquitectura-del-módulo}
+
+| ADR | Decisión | Alternativa principal descartada | Justificación | Atributo principal |
+| :---- | :---- | :---- | :---- | :---- |
+| ADR-001 | Neo4j Community como base de datos del grafo; la ontología OWL queda como modelo conceptual | Triplestore RDF, con o sin razonamiento en ejecución | El razonamiento ocurre en diseño; en ejecución se necesitan recorridos transitivos y propiedades en las aristas | AC-05 |
+| ADR-002 | La ontología se proyecta al grafo con código propio, guiado por la correspondencia del Anexo K | Plugin neosemantics | Convierte tripletas de forma genérica y no permite decidir dónde se garantiza cada restricción | AC-01 |
+| ADR-003 | El modelo de lenguaje solo devuelve hechos candidatos en salida tipada; no genera consultas ni accede a la base | Que el modelo genere consultas o actúe como agente sobre la base | No habría forma de acotar lo que se escribe ni de reproducir el resultado | AC-01 |
+| ADR-004 | Ante un cambio, el grafo se reconstruye: se carga la capa de referencia y se reaplican los hechos guardados | Reconciliación incremental | Es un subsistema propio, desproporcionado para el prototipo, con estados intermedios difíciles de auditar | AC-04 |
+| ADR-005 | Cada regla se impide al escribir y se comprueba con una consulta de auditoría al cierre de cada carga, ingesta y reaplicación | Restricciones del motor o disparadores | Las restricciones necesarias son exclusivas de la edición Enterprise; los disparadores solo frenan escrituras externas | AC-01 |
+| ADR-006 | La ingesta no borra nada; la procedencia se fija al crear cada elemento | Retirar lo que la nueva versión de un documento ya no afirma | Exige comparar versiones, la reconciliación que descarta ADR-004 | AC-03 |
+| ADR-007 | La API lanza el worker si no hay otro activo; este procesa las ingestas una tras otra y se detiene si la última auditoría tiene violaciones | Un servicio aparte invocado por HTTP, o un proceso residente | Un proceso hijo serializa las escrituras sin otro servicio que desplegar | AC-01 |
+| ADR-008 | Lo que el grafo admite se declara una sola vez, y lo leen el extractor, el validador, las escrituras y la auditoría | Generar esa declaración desde el archivo de la ontología | Exige interpretar uniones anónimas, inversas y subpropiedades para una T-Box que no cambia, y la dirección de cada par inverso igual se escribe a mano | AC-01 |
+| ADR-009 | Todo recurso institucional es un documento subido que el sistema sirve; el operador declara su tipo y su curso | Que el modelo de lenguaje extraiga el código del curso | Un error de lectura crearía otro curso sin aviso | AC-03 |
+| ADR-010 | El lote es el documento: si una regla falla, no se escribe nada y se guardan las violaciones con el lote candidato; hay un solo reintento que devuelve el error al modelo | Lotes por tema o hecho a hecho | Exigen ordenar dependencias y resolver las aristas que cruzan lotes | AC-01 |
+| ADR-011 | Cada ingesta lee al inicio todos los nodos; el extractor recibe ese vocabulario completo y el validador trabaja sobre él | Recuperar solo los nodos candidatos | A escala piloto el vocabulario cabe completo; la selección sería otro componente que diseñar y medir | AC-01 |
+| ADR-012 | Cada ingesta guarda en un archivo propio lo que escribió, con claves y procedencia resueltas | Un solo archivo acumulado | Una escritura a medias dañaría todo el historial | AC-04 |
+| ADR-013 | Una máquina virtual con Docker Compose; los almacenes que no se reconstruyen, en carpetas del host; token fijo para el operador | Todos los almacenes en volúmenes administrados | Borrar los volúmenes perdería lo que no se puede reconstruir, y respaldarlos exigiría pasar por Docker | AC-04 |
+| ADR-014 | Las reglas de integridad se escriben en Python y Cypher sobre el esquema declarado; la especificación es el esquema y el catálogo de reglas | SHACL, sobre la base de grafos o sobre el TTL de la capa de referencia | No alcanza al validador de la ingesta, que trabaja en memoria sobre el lote, y la aciclicidad exige extensiones SPARQL | AC-02 |
+| ADR-015 | La corrida final usa gpt-6.1-sol de OpenAI y le pide la salida en modo estricto contra el esquema | DeepSeek | Acepta el esquema de salida, pero no lo hace cumplir | AC-01 |
+
+Ocho de las quince decisiones responden principalmente a AC-01: el riesgo central del módulo es mantener íntegro un grafo que puebla un modelo de lenguaje. AC-02 es el atributo principal solo de ADR-014, que fija qué parte de las reglas es especificación; por lo demás, se obtiene de las mismas decisiones que sostienen AC-01, como la auditoría y el registro de descartes.
+
+1. #### **Contexto del sistema** {#contexto-del-sistema}
+
+La Figura 6 muestra el sistema en su entorno. Lo usan dos actores. El estudiante consulta y navega el grafo, sin escribir en él. El operador del grafo sube documentos académicos, declarando su tipo y el curso al que pertenecen, y revisa el resultado de cada ingesta, pero no decide sobre el contenido: no aprueba hechos ni edita elementos. La única dependencia externa es el proveedor del modelo de lenguaje, que recibe texto y devuelve hechos candidatos, y que nunca escribe en el grafo (ADR-003).
+
+**![][image6]**
+
+##### **Figura 6\. Diagrama de contexto del sistema (nivel 1 del modelo C4). Fuente: elaboración propia.** {#figura-6.-diagrama-de-contexto-del-sistema-(nivel-1-del-modelo-c4).-fuente:-elaboración-propia.}
+
+El diagrama no incluye los sílabos ni el estándar CS2023 como sistemas, porque son documentos de entrada y no software con el que el sistema se comunique.
+
+2. #### **Contenedores** {#contenedores}
+
+La Figura 7 descompone el sistema en contenedores, es decir, en unidades que ejecutan código o almacenan datos.
+
+**![][image7]**
+
+##### **Figura 7\. Diagrama de contenedores del sistema (nivel 2 del modelo C4). Fuente: elaboración propia.** {#figura-7.-diagrama-de-contenedores-del-sistema-(nivel-2-del-modelo-c4).-fuente:-elaboración-propia.}
+
+Cuatro contenedores ejecutan código. La aplicación web es la única superficie del sistema: reúne la navegación del estudiante y el panel del operador, y se diseña en R5. La API atiende las consultas de la navegación, registra cada ingesta que solicita el operador y sirve los documentos; nunca escribe en el grafo. El worker de ingesta ejecuta el pipeline que convierte un documento en hechos del grafo: la API lo lanza si no hay otro activo, y el worker procesa una tras otra las ingestas pendientes y termina (ADR-007). Los procesos de construcción cargan la capa de referencia y reaplican los hechos guardados. No son funcionalidad del producto, sino herramientas que el desarrollador ejecuta desde la línea de comandos; por eso el diagrama no les asigna un actor.
+
+Los otros cuatro almacenan datos: la base de grafos; el almacén operacional, con el estado de cada ingesta, la salida del modelo que la originó, los hechos descartados y los reportes de auditoría; el almacén de documentos, con los documentos subidos; y el almacén de hechos, con lo que cada ingesta escribió en el grafo.
+
+Hay cuatro decisiones de este nivel que sostienen los atributos de calidad:
+
+La primera es que el grafo tiene un único escritor. Mientras el sistema está en servicio, solo el *worker* escribe en él, y los procesos de construcción se ejecutan con el sistema detenido. Impedir al escribir las reglas que dependen de nodos ya existentes, como RI-05 y RI-08, exige que el grafo no cambie entre el momento en que la corrida lo lee y el momento en que escribe (AC-01, ADR-005, ADR-007).
+
+La segunda es que el grafo no es la fuente de verdad de ningún dato. La capa de referencia proviene del archivo versionado de la ontología, y la institucional, del almacén de hechos, donde cada ingesta guarda lo que escribió con sus claves y su procedencia ya resueltas. Eso permite reconstruir el grafo en dos pasos que se activan por separado: volver a cargar la capa de referencia, lo que vacía la base, y reaplicar los hechos guardados en su orden original. Ninguno invoca al modelo de lenguaje. Así, una corrección de la capa de referencia no obliga a reprocesar los documentos (AC-04, ADR-004). Para que la reaplicación produzca lo mismo que produjo la ingesta, ambas usan las mismas escrituras. La reconstrucción no cubre los cambios de clave ni los de la T-Box, que exigen una migración propia.
+
+La tercera es que el estado operativo vive fuera del grafo. Como la carga vacía la base de grafos, el registro de ingestas, descartes y reportes de auditoría se guarda en el almacén operacional; de lo contrario, cada reconstrucción borraría la evidencia de AC-01 y AC-02.
+
+La cuarta es que toda fuente puede abrirse. Todo recurso de aprendizaje institucional es un documento subido al sistema, que lo guarda en el almacén de documentos y lo sirve en la dirección que registra su localizador. De ese modo, el documento del que procede cada afirmación institucional está siempre al alcance del estudiante (AC-03, ADR-009).
+
+3. #### **Componentes** {#componentes}
+
+El nivel de componentes se documenta para la API, el worker y los procesos de construcción. La aplicación web se descompone en R5, y los almacenes no se descomponen.
+
+La API tiene dos componentes (Figura 8). Las rutas de navegación ejecutan las consultas derivadas y sirven los documentos; las rutas de operación reciben cada documento con su tipo y el código y el nombre de su curso, acuñan la clave de su recurso de aprendizaje, de la que se deriva su localizador, registran la corrida y lanzan el worker.
+
+**![][image8]**
+
+##### **Figura 8\. Componentes de la API (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-8.-componentes-de-la-api-(nivel-3-del-modelo-c4).-fuente:-elaboración-propia.}
+
+La Figura 9 muestra el worker. Sus componentes propios son dos: el orquestador, que conduce cada corrida y registra su resultado, y el extractor, que convierte el documento en hechos candidatos y los enlaza a los nodos existentes. Los otros tres (el validador, el repositorio del grafo y el auditor) forman un núcleo compartido con los procesos de construcción. El núcleo no es un contenedor: es el mismo código, que cada contenedor ejecuta en su propio proceso. De que sea el mismo dependen dos garantías: que la reaplicación reproduzca lo que hizo la ingesta (AC-04) y que las reglas se comprueben igual en los tres caminos de escritura (AC-01).
+
+**![][image9]**
+
+##### **Figura 9\. Componentes del worker de ingesta (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-9.-componentes-del-worker-de-ingesta-(nivel-3-del-modelo-c4).-fuente:-elaboración-propia.}
+
+Al empezar cada corrida, el repositorio lee una instantánea del grafo: todos sus nodos, con la información que necesitan el extractor y el validador. El extractor recibe ese vocabulario completo, de modo que el modelo de lenguaje propone hechos sobre nodos que existen y el enlace puede reconocer lo que ya está en el grafo (ADR-011). El validador trabaja sobre la instantánea y el lote, sin consultar la base. Las tres partes leen una misma declaración de lo que el grafo admite, el esquema del grafo, de modo que no pueden contradecirse (ADR-008).
+
+Con estos componentes, el mecanismo que impide cada regla en la ingesta queda repartido como muestra la Tabla 21\.
+
+###### **Tabla 21\. Mecanismo que impide cada regla en la ingesta** {#tabla-21.-mecanismo-que-impide-cada-regla-en-la-ingesta}
+
+| Mecanismo | Reglas |
+| :---- | :---- |
+| El validador rechaza el lote antes de escribir | RI-05, RI-08, RI-10, RM-02, RM-04, RM-05 |
+| La forma de la escritura no puede expresar la violación | RI-02, RI-03, RI-04, RI-06, RI-09, RM-01, RM-03 |
+| La restricción de unicidad de la base | RI-01 |
+| No aplica | RI-07 |
+
+La primera fila reúne las reglas que dependen del contenido del lote o de lo que ya existe en el grafo. La segunda, las que dependen solo de cómo se escribe: una escritura de forma fija no puede poner una etiqueta ajena, una propiedad no declarada ni una arista duplicada, y es ella la que fija la capa y la procedencia.
+
+La Figura 10 muestra los procesos de construcción. Tienen un solo componente propio, los comandos de construcción, que ejecutan la carga y la reaplicación y cierran cada una con una auditoría; el resto es el núcleo. En las Figuras 9 y 10, los componentes del núcleo se distinguen por color.
+
+**![][image10]**
+
+##### **Figura 10\. Componentes de los procesos de construcción (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-10.-componentes-de-los-procesos-de-construcción-(nivel-3-del-modelo-c4).-fuente:-elaboración-propia.}
+
+4. #### **Flujo de la ingesta** {#flujo-de-la-ingesta}
+
+La Figura 11 describe la ingesta de un documento como vista de secuencia, con una línea de vida por componente.
+
+**![][image11]**
+
+##### **Figura 11\. Flujo de la ingesta de un documento. Fuente: elaboración propia.** {#figura-11.-flujo-de-la-ingesta-de-un-documento.-fuente:-elaboración-propia.}
+
+La corrida termina en uno de cinco estados. Queda terminada si todo se escribe y la auditoría no encuentra violaciones. Queda rechazada si la salida del modelo no se ajusta al esquema del grafo, aun después de un reintento que le devuelve el error, o si el validador encuentra violaciones; en ambos casos no se escribe nada del documento y se registra cada violación junto con el lote candidato completo (ADR-010). Queda fallida si el proveedor no responde o si la escritura no produce lo esperado; no hay juicio sobre el contenido y no se registra descarte. Queda escrita sin persistir si el worker se interrumpe después de confirmar la escritura y antes de guardar el lote en el almacén de hechos, y queda detenida por auditoría si la auditoría encuentra una violación después de escribir. En este último caso se suspenden las ingestas pendientes.
+
+La carga de la capa de referencia y la reaplicación usan el mismo núcleo y no tienen ramas propias: la carga lee el archivo de la ontología, valida y escribe; la reaplicación escribe los lotes guardados en el orden de las corridas, sin volver a validar. Ambas terminan en una auditoría.
+
+5. #### **Despliegue** {#despliegue}
+
+La Figura 12 muestra el despliegue del prototipo en una máquina virtual de la especialidad.
+
+**![][image12]**
+
+##### **Figura 12\. Diagrama de despliegue del prototipo. Fuente: elaboración propia.** {#figura-12.-diagrama-de-despliegue-del-prototipo.-fuente:-elaboración-propia.}
+
+La API, el worker y los procesos de construcción salen de una sola imagen. La API lanza el worker como proceso hijo dentro de su contenedor, y los procesos de construcción usan la misma imagen con el sistema detenido; así, la ingesta y la reaplicación ejecutan siempre la misma versión del núcleo. La aplicación web se sirve en un contenedor aparte, de modo que modificarla no reinicia la API ni interrumpe una ingesta en curso (ADR-007). Los tres almacenes de archivos son carpetas del host, y la base de grafos usa un volumen propio, porque se reconstruye con una carga seguida de una reaplicación (ADR-013).
+
+Los localizadores llevan escrita la dirección del host. Por eso el almacén de hechos no se reutiliza en otro host: en uno nuevo, los documentos se vuelven a ingestar (ADR-009).
+
+5. ### **Casos de prueba de la ingesta automatizada** {#casos-de-prueba-de-la-ingesta-automatizada}
+
+Esta sección especifica los casos de prueba con los que se valida la ingesta automatizada del pipeline: qué se mide, contra qué referencia y con qué reglas de conteo. La ejecución de los casos y los valores obtenidos se reportan en la sección de R4, donde se mide el indicador de precisión de extracción de entidades.
+
+1. #### **Objeto y alcance** {#objeto-y-alcance}
+
+Se evalúa la extracción de temas y conceptos de los sílabos, por su precisión y su exhaustividad, y la corrección de las relaciones que el pipeline establece entre nodos y con la capa de referencia.
+
+Cada sílabo se mide sobre una sola ingesta aceptada, de modo que cada ingesta parte del grafo que dejaron las anteriores. El orden es, por tanto, una variable del experimento, y se fija con un criterio independiente del contenido de los sílabos: el nivel del curso en el plan de estudios y, dentro de un mismo nivel, su código.
+
+El código del *pipeline* se congela antes del primer caso de prueba, y con él se registran la configuración del modelo de lenguaje (el nombre que devuelve el proveedor y los parámetros de generación) y la versión del prompt, que forma parte del código. Esos valores se reportan con los resultados. Lo que se mide es el sistema en su tarea, no solo el LLM, y el sistema incluye un reintento (interno) que ocurre dentro de una corrida (ADR-010). Una corrida **fallida** no produce contenido que juzgar, así que se repite sin contar como intento. Una corrida **rechazada** sí cuenta: el sílabo se vuelve a ingestar con el mismo código, hasta un máximo de tres intentos fijado antes de la medición, y se conserva la primera corrida que el sistema acepta, **sin juicio alguno sobre su contenido**. Cada caso reporta cuántos intentos necesitó, y la precisión de los intentos rechazados se reporta aparte, a partir del lote candidato que el sistema guarda (ADR-010), cuando ese lote es legible. Si un sílabo no obtiene un lote aceptado en tres intentos, queda fuera del grafo, los casos siguientes se ejecutan sin sus nodos y se reporta. Si una corrida queda detenida por auditoría, el error es de código: se corrige, se vuelve a cargar la capa de referencia y la medición se reinicia desde el primer caso de prueba.
+
+El prompt se ajusta antes de congelar el código, contra la anotación de referencia ya congelada y con 11 de los 13 sílabos, cada uno ingestado por separado sobre la capa de referencia sola. Los cambios de estructura se prueban con un modelo de desarrollo, y el ajuste fino, con el modelo de la medición, porque el rendimiento de un prompt se transfiere mal entre modelos (Sclar et al., 2024). Los otros dos sílabos, 1INF37 y 1INF27, son los que extraen los participantes del contraste y no se ingestan hasta la medición: quedan como conjunto retenido, que ningún paso del ajuste usa (Hastie et al., 2009, p. 222). Antes de congelar, una sola ingesta en cadena de los 11, en el orden de la medición, comprueba el enlace con nodos existentes y los conceptos requeridos. Como el ajuste usa la anotación de esos 11 sílabos, la precisión sobre los 13, que es la del indicador, puede sobrestimar la que el pipeline obtendría con sílabos nuevos (Perez et al., 2021); por eso se reporta aparte la precisión de los dos retenidos.
+
+La unidad de evaluación es cada tema o concepto que el lote de ingesta aceptado de un sílabo ubica en la estructura de ese sílabo: los nodos que la ingesta crea y los nodos existentes que enlaza como parte de uno de sus temas, una vez superada la validación previa a la escritura. El lote alcanza además conceptos existentes solo por una relación: el concepto que el curso requiere, y el que es extremo de un prerrequisito o de una especialización. Esos conceptos no se cuentan, porque la anotación de referencia registra lo que el sílabo contiene y ellos son, precisamente, lo que el sílabo no enseña; sus aristas se evalúan en CP-16.
+
+El lote aceptado de cada ingesta se guarda tal cual y la evaluación se hace sobre él, no sobre el grafo. El motivo es que el grafo conserva una sola procedencia por nodo: si un sílabo posterior vuelve a afirmar un nodo existente, el grafo no lo registra.
+
+Las relaciones se evalúan aparte, en los casos CP-15 y CP-16.
+
+2. #### **Anotación de referencia** {#anotación-de-referencia}
+
+La referencia contra la que se compara la extracción es una anotación de los 13 sílabos. Por cada sílabo registra todos los temas y conceptos que contiene, aunque otro sílabo ya los contenga.
+
+La anotó un modelo de lenguaje (Claude, de Anthropic), un sílabo por sesión, siguiendo la guía de anotación del Anexo L y sin acceso a las salidas del pipeline. Las decisiones que la guía no resolvía se escalaron al autor, que las adjudicó.
+
+Cada entrada de la anotación registra:
+
+* El tipo, asignado por la estructura del sílabo. Es tema el título de una unidad o capítulo que agrupa ítems; es concepto cada ítem dentro de un tema.  
+* El nivel: Una entrada es obligatoria si el sílabo la nombra literalmente en la sumilla o en los contenidos. Es aceptable si se infiere sin ambigüedad o si aparece solo en otras secciones, como los resultados de aprendizaje.  
+* La etiqueta tal como figura en el sílabo, junto con sus nombres alternativos: siglas, traducción, singular y variantes de uso común.  
+* El fragmento del sílabo que sustenta la entrada.
+
+Terminada la anotación de los 13 sílabos, una pasada de consolidación hizo dos cosas:
+
+* Revisó que las reglas de la guía se hubieran aplicado igual en todos los sílabos y registró cada corrección.  
+* Asignó un identificador global a cada noción. Las entradas de distintos sílabos que nombran lo mismo comparten identificador, aunque una sea tema y otra concepto.
+
+Se escalaron 13 decisiones, y la consolidación registró 73 correcciones. Antes de congelar la anotación, una revisión de coherencia completó con su núcleo la etiqueta de 9 entradas que nombraban partes que no se entienden solas (por ejemplo, «estructura» pasó a «estructura de directorios»). Para contrastar la anotación con un criterio humano, dos personas ajenas a su elaboración, con los cursos aprobados, extraen por separado los temas y conceptos de dos sílabos, sin la guía de anotación y sin ver la anotación ni las salidas del pipeline. Los dos sílabos se eligieron antes de la extracción, sobre la anotación congelada, por ser los extremos de la anotación entre los cursos que no son de proyecto, cuyo sílabo describe sobre todo el proyecto y nombra pocos saberes: 1INF37, el de más entradas (89), y 1INF27, el de mayor proporción de aceptables (10 de 39). Juntos sumaban 128 entradas, el 17 % del total. La anotación se congela antes de la comparación, y el contraste se reporta contra esa versión. Terminada la adjudicación, y antes de ingestar los dos sílabos en la medición, se corrige solo lo que la adjudicación clasifica como falla de la anotación: resultó una entrada aceptable de 1INF27, retirada por ser un implícito que no es inequívoco. El autor compara cada extracción con la anotación por noción, sin considerar el tipo ni el nivel, con la normalización de las reglas de emparejamiento. En la extracción del segundo participante, además, clasifica cada discrepancia en una categoría fijada antes de recibir las extracciones; las del primero se reportan sin clasificar, como cota inferior del acuerdo. Se reportan, por participante, la proporción de lo extraído que la anotación registra y la proporción de las nociones de la anotación que el participante extrajo; para el segundo, también el conteo de cada categoría, y, como referencia, el acuerdo entre los dos participantes. Tras la ejecución de los casos de prueba, las mismas extracciones permiten medir la precisión del pipeline en esos dos sílabos sin pasar por la anotación. Las constancias de los participantes y sus extracciones están en el Anexo N; el protocolo completo, en el repositorio del proyecto.
+
+3. #### **Casos de prueba** {#casos-de-prueba}
+
+Cada sílabo constituye un caso de prueba (identificadores “CP-01” a “CP-13”), con la misma estructura:
+
+* Entrada: el PDF del sílabo.
+
+* Precondición: el grafo contiene la capa de referencia y lo escrito por los casos anteriores.
+
+* Resultado esperado: las entradas de la anotación de referencia para ese sílabo.
+
+* Medida: los aciertos, los falsos positivos y las nociones obligatorias recuperadas del lote aceptado, según las reglas de emparejamiento, y la concordancia de tipo de los aciertos.
+
+La precisión que reporta el indicador de R4 es la suma de aciertos de CP-01 a CP-13 dividida entre la suma de ítems de sus lotes aceptados. El conjunto de casos se aprueba si esa precisión es mayor o igual a 75 %, el umbral del indicador de R4 (Tabla 3).
+
+De forma complementaria, y sin cambiar el indicador, se reportan la exhaustividad y la F1, por caso y en total. La exhaustividad es la proporción de nociones que el sílabo nombra en al menos una entrada obligatoria y que el lote recupera; una noción cuenta como recuperada si se consumió alguna de sus entradas. Las entradas aceptables no se exigen, porque la guía las marca como opcionales: suman como acierto, pero no penalizan si faltan. Como la precisión, la exhaustividad depende de la coincidencia de nombres y es una cota inferior.
+
+Un caso adicional, CP-14, se evalúa sobre el grafo final, una vez ejecutado CP-13, y mide la fusión entre sílabos.
+
+La Tabla 22 lista los trece primeros casos en el orden de ingesta, con el resultado esperado de cada uno.
+
+###### **Tabla 22\. Casos de prueba de extracción y resumen de la anotación de referencia** {#tabla-22.-casos-de-prueba-de-extracción-y-resumen-de-la-anotación-de-referencia}
+
+| Caso | Sílabo | Entradas | Temas | Conceptos | Obligatorias | Aceptables |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| CP-01 | 1INF25 | 80 | 11 | 69 | 78 | 2 |
+| CP-02 | 1INF27 | 38 | 4 | 34 | 29 | 9 |
+| CP-03 | 1INF33 | 73 | 8 | 65 | 67 | 6 |
+| CP-04 | 1INF49 | 60 | 6 | 54 | 46 | 14 |
+| CP-05 | 1INF29 | 76 | 6 | 70 | 71 | 5 |
+| CP-06 | 1INF30 | 80 | 14 | 66 | 71 | 9 |
+| CP-07 | 1INF31 | 48 | 6 | 42 | 40 | 8 |
+| CP-08 | 1INF32 | 24 | 6 | 18 | 18 | 6 |
+| CP-09 | 1INF24 | 84 | 17 | 67 | 73 | 11 |
+| CP-10 | 1INF50 | 25 | 3 | 22 | 20 | 5 |
+| CP-11 | 1INF37 | 89 | 15 | 74 | 84 | 5 |
+| CP-12 | 1INF54 | 35 | 7 | 28 | 28 | 7 |
+| CP-13 | 1INF47 | 32 | 3 | 29 | 17 | 15 |
+| **Total** |  | **744** | **106** | **638** | **642** | **102** |
+
+La anotación suma 744 entradas: 642 obligatorias y 102 aceptables, 106 temas y 638 conceptos. Esas entradas corresponden a 663 nociones distintas.
+
+Solo 47 de esas nociones aparecen en más de un sílabo. Es el único conjunto sobre el que la ingesta puede enlazar correctamente nodos creados por sílabos anteriores, y por tanto la base de la medición de CP-14.
+
+Hay 28 nociones anotadas como tema en una entrada y como concepto en otra.
+
+El caso con mayor proporción de aceptables es CP-13: 15 de sus 32 entradas. Su sílabo describe sobre todo el proyecto del curso y nombra pocos saberes de forma literal en los contenidos.
+
+4. #### **Reglas de emparejamiento** {#reglas-de-emparejamiento}
+
+* Normalización: Antes de comparar, cada nombre se lleva a una forma común que reduce las diferencias de forma: mayúsculas, tildes, signos de puntuación, espacios y número gramatical.  
+* Nombres de una noción: Son las etiquetas y los nombres alternativos de todas sus entradas, en cualquier sílabo.  
+* Acierto: Un ítem del lote es acierto si su nombre normalizado está entre los nombres de una noción que tiene al menos una entrada en el sílabo del caso. Como se usan los nombres de todos los sílabos, el resultado no depende de qué sílabo creó un nodo que la ingesta enlaza.  
+* Correspondencia uno a uno: Cada acierto consume una entrada del sílabo. Si no quedan entradas libres de esa noción, el ítem es falso positivo; así, un nodo repetido dentro de una misma ingesta cuenta como error.  
+* Desempate: Si un ítem puede consumir más de una entrada, se prefiere la entrada cuya etiqueta coincide con el nombre del ítem. Si ninguna coincide por etiqueta, se prefiere la del mismo tipo, y si el empate persiste, la de menor identificador.  
+* Aceptables: Una entrada aceptable extraída cuenta como acierto.  
+* Tipo: El tipo no interviene en el emparejamiento. La concordancia de tipo, es decir, el porcentaje de aciertos cuyo tipo coincide con el de la entrada consumida, se reporta aparte.
+
+Como el emparejamiento exige coincidencia de nombres, una extracción correcta con una redacción que la anotación no registra cuenta como falso positivo. La precisión obtenida es, por tanto, una cota inferior.
+
+5. #### **Medidas de fusión** {#medidas-de-fusión}
+
+Cada nodo del grafo final recibe los identificadores globales de las entradas que consumió en los casos donde apareció. Con ellos se cuentan tres situaciones:
+
+* Duplicado: dos nodos del mismo tipo con el mismo identificador global.  
+* Noción partida: dos nodos de distinto tipo con el mismo identificador global. No se cuenta como error, porque la ontología define tema y concepto como clases disjuntas.  
+* Fusión errónea: un nodo con dos o más identificadores globales distintos. Hay una excepción: no se cuenta como fusión errónea si, descontados los identificadores de encabezados que nombran más de un saber, queda uno solo. Las partes de esos encabezados figuran a la vez como nombres alternativos del encabezado y como nociones propias, así que un mismo nodo puede emparejar con ambos sin que la ingesta haya fusionado mal. Los casos exceptuados se reportan aparte.
+
+Estas medidas son descriptivas y no tienen umbral.
+
+6. #### **Casos de prueba de relaciones** {#casos-de-prueba-de-relaciones}
+
+La precisión de entidades no muestra si el grafo está bien conectado: un tema enlazado a una unidad equivocada de CS2023, o un prerrequisito sin sentido entre dos conceptos bien extraídos, no la alteran. Por eso dos casos adicionales evalúan, sobre el grafo final, las relaciones cuyo contenido decide el modelo de lenguaje. Las demás aristas registran la procedencia, el tipo de recurso o la pertenencia de cada elemento a su curso y a su tema, y siguen la estructura del sílabo.
+
+Ambos casos se juzgan sobre la salida, sin anotación previa: el autor decide para cada arista si es correcta según el criterio indicado y registra el motivo de cada arista que juzga incorrecta.
+
+- CP-15, enlace con CS2023: todas las aristas de partonomía entre un tema y una unidad de CS2023. La arista es correcta si la descripción o los tópicos de la unidad cubren el contenido del tema; aceptable, si otra unidad lo cubre mejor pero la asignada lo cubre en parte; e incorrecta, en otro caso. Como todo tema tiene al menos una de estas aristas, el caso mide la exactitud del enlace.  
+- CP-16, relaciones entre conceptos: una muestra aleatoria, con semilla fija, de 30 aristas de cada tipo (prerrequisito, especialización y concepto requerido por un curso), o todas si hay menos. Una arista de prerrequisito es correcta si comprender el concepto de origen exige conocer el de destino; una de especialización, si el concepto de origen es un tipo del de destino; y una de concepto requerido, si el curso necesita ese concepto como entrada y no lo enseña.
+
+Ambas medidas son descriptivas y no tienen umbral: complementan el indicador de R4, que no cambia.
+
+6. ### **Verificación de R3** {#verificación-de-r3}
+
+   1. #### **Verificación y mediciones** {#verificación-y-mediciones-1}
+
+R3 se comprometió a especificar el modelo de datos del grafo, los componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. Su medio de verificación son los documentos de arquitectura y el documento de casos de prueba de la ingesta (Tabla 3). Cada parte se encuentra en:
+
+* El modelo de datos del grafo: Tablas 16 a 19 y Anexo K.
+
+* Los componentes internos: los diagramas C4 de las Figuras 6 a 12, vistas de un único modelo escrito en LikeC4 y publicado en el repositorio del proyecto.
+
+* Las decisiones de diseño y arquitectura: ADR-001 a ADR-015, en el repositorio, junto con el catálogo de requisitos funcionales que citan.
+
+* Los casos de prueba de la ingesta: la sección anterior, la guía de anotación del Anexo L y el protocolo de revisión de la anotación, en el repositorio.
+
+La Tabla 23 cierra la verificación: por cada atributo de calidad, las decisiones que lo atienden, los componentes y reglas que lo implementan y la prueba o medida con que se comprobará en R4.
+
+###### **Tabla 23\. Trazabilidad de los atributos de calidad** {#tabla-23.-trazabilidad-de-los-atributos-de-calidad}
+
+| Atributo | Decisiones | Componentes y reglas | Verificación en R4 |
+| :---- | :---- | :---- | :---- |
+| AC-01 | ADR-002, ADR-003, ADR-005, ADR-007, ADR-008, ADR-010, ADR-011, ADR-015 | Validador, repositorio del grafo y restricción de unicidad, que impiden RI-01 a RI-10 y RM-01 a RM-05 según la Tabla 21 | Reporte de auditoría sin violaciones al cierre de la corrida de medición; hechos rechazados por documento y por regla, del registro de descartes |
+| AC-02 | ADR-005, ADR-007, ADR-010, ADR-014, ADR-015 | Auditor, con una consulta por cada una de las 15 reglas; almacén operacional, con reportes y descartes | Una prueba negativa por regla: se inserta una violación en una base de prueba y se comprueba que el reporte la detecta; el reporte cubre las 15 reglas en una sola ejecución |
+| AC-03 | ADR-006, ADR-009 | Repositorio del grafo, que fija la procedencia al crear; almacén de documentos y rutas de navegación, que sirven cada documento; RM-03, RM-05 y RI-10 | RM-03 sin violaciones tras la corrida de medición; en R6, la prueba de aceptación abre el documento del que procede una afirmación |
+| AC-04 | ADR-004, ADR-007, ADR-012, ADR-013 | Comandos de construcción, almacén de hechos y núcleo compartido; RM-02 | Se corrige una etiqueta de la capa de referencia, se carga y se reaplica: ninguna llamada al modelo de lenguaje, la capa institucional queda igual (mismos nodos y aristas) y la auditoría no encuentra violaciones |
+| AC-05 | ADR-001 | Base de grafos y rutas de navegación | El protocolo de la Tabla 15: los cinco patrones desde todos sus nodos de partida, diez ejecuciones tras el calentamiento, mediana y percentil 95 bajo un segundo por patrón |
+
+Cada atributo queda atendido por al menos una decisión y tiene una verificación definida. AC-02 se demuestra forzando una violación de cada regla, porque un reporte sin violaciones no prueba por sí solo que la auditoría sea capaz de detectarlas.
+
+2. #### **Validación de experto** {#validación-de-experto}
+
+La documentación fue revisada y aprobada por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión cubrió los atributos de calidad, el modelo de datos, las reglas de integridad, la arquitectura con sus decisiones y los casos de prueba. El registro de esa validación se adjunta como evidencia **en el Anexo M**.
+
+3. #### **Indicador** {#indicador}
+
+El indicador comprometido para R3, la validación con respuesta positiva del experto en Ingeniería de Conocimiento, se cumple.
+
+3. ## **Discusión** {#discusión-1}
+
+Esta discusión cubre R3; la de R4 se incorporará con su implementación.
+
+1. ### **Resumen de los resultados** {#resumen-de-los-resultados}
+
+R3 especifica el módulo del grafo antes de implementarlo. Cinco atributos de calidad fijan lo que el módulo debe garantizar; los tres de prioridad alta exigen que el grafo cumpla lo que la ontología declara, que eso pueda demostrarse sin inspeccionar el código y que toda afirmación institucional remita al documento del que se derivó. El modelo de datos traduce la ontología a un grafo de propiedades con ocho tipos de arista y conserva como diez reglas de integridad lo que el razonador comprobaba; otras cinco reglas provienen de decisiones del propio módulo. La arquitectura se documenta en los tres niveles del modelo C4, junto con el flujo de la ingesta y el despliegue, y se sustenta en quince ADRs. Por último, dieciséis casos de prueba fijan cómo se medirá la ingesta: trece comparan la extracción con una anotación de referencia de 744 entradas sobre los 13 sílabos del piloto, que corresponden a 663 nociones distintas; uno mide la fusión entre sílabos y dos, la corrección de las relaciones. La documentación fue aprobada por el experto en Ingeniería del Conocimiento.
+
+2. ### **Interpretación de los resultados** {#interpretación-de-los-resultados}
+
+El capítulo 1 sitúa la diferencia entre el sistema propuesto y la IA generativa de propósito general en la distinción entre una respuesta plausible y una respuesta trazable. R3 traslada esa distinción al diseño: lo que el sistema presente debe cumplir la ontología y remitir a un documento que puede abrirse. Lo que estos resultados significan es que ninguna de esas dos propiedades depende del modelo de lenguaje que puebla el grafo. El modelo propone hechos, pero no escribe; lo que se escribe pasa antes por las reglas de las Tablas 18 y 19, y la procedencia la fija la escritura, no el modelo. En R1 y R2, la conformidad con la ontología la comprobaba HermiT (capítulo 4). Sin razonador en ejecución, R3 la conserva como reglas que se impiden al escribir y se comprueban en la auditoría, de modo que lo verificado en R1 y R2 no se pierde cuando el grafo empieza a crecer de forma automática.
+
+Conviene precisar qué garantiza este diseño y qué no. Las reglas aseguran que un hecho tenga una forma que la ontología admite, no que sea verdadero: un concepto que el sílabo no menciona puede cumplirlas todas. Por eso la medida del pipeline no es la conformidad con la ontología, que el diseño asegura de antemano, sino la precisión y la exhaustividad frente a la anotación de referencia y la corrección de las relaciones, reportadas junto con los hechos descartados. Esa separación entre lo que se garantiza por construcción y lo que se mide es la que da sentido al indicador de R4.
+
+La anotación de referencia ofrece, además, una primera lectura del corpus. Solo 47 de las 663 nociones aparecen en más de un sílabo: al nivel en que los sílabos nombran su contenido, la superposición entre cursos es escasa, y la fusión entre sílabos que mide el caso de prueba 14 depende de un conjunto pequeño de nodos. A su vez, las 28 nociones anotadas como tema en un sílabo y como concepto en otro muestran que esa distinción depende de cómo cada sílabo organiza su contenido y no de la noción misma, lo que justifica que el tipo no intervenga en el emparejamiento.
+
+3. ### **Los resultados en el contexto de la revisión de la literatura** {#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura}
+
+En cuanto a la arquitectura, el resultado es consistente con la literatura. La revisión identificó un patrón recurrente de cuatro capas (ingesta, extracción, almacenamiento en grafo y exposición) y la adopción casi general de Neo4j (Liu, 2024; Xu & Che, 2025; Wang, 2025; Z. Li et al., 2023), y los contenedores de R3 siguen ese patrón. El trabajo más cercano es el de S. Li et al. (2026), que combina Neo4j, SQLite y un modelo de lenguaje consumido por API; la diferencia está en el papel de SQLite, que allí guarda las cuentas de usuario y aquí el estado de las ingestas, los descartes y los reportes de auditoría. En la exposición del conocimiento, R3 se ubica junto al único trabajo que ofrece una API (Wang, 2025), frente al predominio de la visualización integrada.
+
+En cuanto al control de calidad del contenido, el resultado se separa de la mayoría. La revisión concluyó que la madurez arquitectónica de estos sistemas supera su capacidad de validar el conocimiento que representan, y que prácticamente todos mantienen la intervención humana como control de calidad (Pan et al., 2023; Xu & Che, 2025; Y. Liu et al., 2026). R3 desplaza ese control: los hechos no se revisan uno a uno, sino que se someten a las reglas del grafo antes de escribirse, y la revisión se concentra en la anotación de referencia contra la que se mide la extracción. Los formularios de extracción no registran cómo esos sistemas trasladan las restricciones de su ontología al grafo ni cómo comprueban que se cumplan, de modo que la comparación en ese punto no puede establecerse con el material disponible.
+
+En cuanto a la medición, el resultado responde a dos problemas que la revisión señala y comparte un tercero. Ante la escasez de conjuntos anotados para el dominio educativo (Y. Liu et al., 2026), la anotación de los 13 sílabos ofrece una referencia propia para el piloto. Ante la dificultad para controlar la granularidad que reportan Xu y Che (2025), la anotación fija esa granularidad por la estructura del sílabo, y lo que el pipeline extraiga fuera de ella cuenta como falso positivo. Comparte, en cambio, la limitación que señalan Lissandrini et al. (2025): una métrica que no considera la similitud semántica penaliza respuestas equivalentes. El emparejamiento por nombres tiene ese mismo sesgo, y por eso la precisión se declara como cota inferior.
+
+4. ### **Generalización de los resultados** {#generalización-de-los-resultados}
+
+Los resultados de R3 se generalizan de forma distinta. El procedimiento de transición, que convierte cada axioma que el razonador deja de comprobar en una regla que se impide al escribir y se detecta en la auditoría, no depende del dominio curricular: es aplicable a cualquier ontología que use los constructos que cubre el Anexo K y se cargue en un grafo de propiedades sin razonador. Lo mismo vale para las decisiones que sostienen los atributos de calidad, como el escritor único, el almacén de hechos o la reconstrucción sin modelo de lenguaje. Esa transferibilidad, sin embargo, es una propiedad del diseño y no un resultado comprobado, porque el módulo aún no se ha implementado.
+
+Los casos de prueba no se generalizan: la anotación es específica de los 13 sílabos del semestre 2026-2, y la precisión que se obtenga quedará atada al orden de ingesta fijado. Es transferible el protocolo con que se construyeron (anotación por sílabo, consolidación con identificadores globales y reglas de emparejamiento), aplicable a cualquier conjunto de documentos que organice su contenido en temas y conceptos.
+
+5. ### **Limitaciones de los resultados** {#limitaciones-de-los-resultados}
+
+En primer lugar, R3 especifica, pero no comprueba. Las medidas de los cinco atributos de calidad y la precisión de la extracción se obtienen en R4; hasta entonces, los atributos tienen medidas definidas, pero no valores. La validación experta, además, la realizó un único especialista que es también el asesor del proyecto, por lo que acredita la revisión de un experto del área, pero no un consenso sobre las decisiones tomadas.
+
+Segundo, varias garantías dependen de condiciones de operación que el sistema no impone, coherentes con un prototipo de un solo operador. El escritor único supone que la API corre en un solo proceso y que el operador sube un documento a la vez; nada impide que coincidan dos *workers*, o un proceso de construcción con un *worker* (ADR-007). Una interrupción del worker no se recupera automáticamente, y la corrida puede quedar en curso o escrita sin persistir (ADR-007). Una corrida ya escrita no puede retirarse (ADR-009), y lo que una versión nueva de un sílabo deja de afirmar permanece en el grafo con su procedencia anterior (ADR-006). Esta última es relevante porque los contenidos de un mismo curso varían entre ciclos (L. Flores, entrevista, 2026). Por último, los localizadores llevan escrita la dirección del host, de modo que el almacén de hechos no se reutiliza en otro (ADR-009).
+
+Tercero, dos decisiones de la ingesta valen solo para el piloto. El rechazo es de todo o nada por documento, lo que castiga más a los sílabos largos (ADR-010), y el extractor recibe el vocabulario completo del grafo en cada corrida, lo que es viable con 13 sílabos, pero no con el catálogo completo de la carrera (ADR-011).
+
+Cuarto, la anotación de referencia la produjo un modelo de lenguaje, un sílabo por sesión, y el autor adjudicó solo las decisiones que la guía no resolvía y la única entrada que el contraste mostró indebida. Dos personas independientes extraen dos sílabos por su cuenta, sin la guía, y sus extracciones se contrastan con la anotación. El contraste cubre el 17 % de las entradas, no es concluyente, clasifica las discrepancias de un solo participante y no examina los nombres alternativos de la anotación, que producen aciertos espurios si son demasiado generales. En 1INF37, el primer participante no extrajo de la bibliografía, por una indicación dada en la sesión de explicación; su acuerdo en ese sílabo se reporta con una cota que la considera. No hay un segundo anotador que siga la guía ni una medida de acuerdo sobre los trece. El prompt se ajustó con la anotación de 11 de los 13 sílabos, de modo que la precisión total es optimista respecto de sílabos nuevos; la de los dos retenidos es la lectura sin ese sesgo, pero son solo dos y no se eligieron al azar. El emparejamiento exige coincidencia de nombres, por lo que la precisión y la exhaustividad son cotas inferiores. Y repetir un sílabo rechazado, hasta tres veces, conserva la primera corrida que el sistema acepta; como la validación comprueba la forma y no la veracidad, esa selección no eleva la precisión de forma directa, y la precisión de los intentos rechazados se reporta para comprobarlo.
+
+Quinto, las relaciones se evalúan por juicio del autor sobre la salida, sin anotación previa. CP-15 cubre todos los enlaces con CS2023, pero CP-16 solo una muestra de las relaciones entre conceptos, y ninguno de los dos puede medir qué relaciones correctas dejó de establecer el pipeline.
+
+6. # **Mecanismo de navegación y descubrimiento semántico** {#mecanismo-de-navegación-y-descubrimiento-semántico}
+
+   1. ## **Introducción** {#introducción-4}
+
+Este capítulo presenta los resultados del objetivo específico O3: diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. Comprende dos resultados: la documentación del mecanismo de navegación (R5), que especifica sus casos de uso, sus flujos e interfaz, sus atributos de calidad, los componentes de la aplicación web y las decisiones de diseño evaluadas, y el prototipo funcional de navegación (R6). Con ellos, el grafo que el módulo del capítulo anterior construye y expone llega al estudiante, que es quien padece el problema que motiva esta tesis: la dificultad para identificar qué necesita saber antes de abordar un tema y con qué estudiarlo. El capítulo cubre por ahora R5; la implementación del prototipo y sus pruebas de aceptación (R6) se incorporarán con su desarrollo. La construcción del grafo y las consultas que lo recorren corresponden al objetivo O2 y quedan fuera de este capítulo.
+
+2. ## **Documentación del mecanismo de navegación** {#documentación-del-mecanismo-de-navegación}
+
+Este resultado se obtuvo con las dos fases del procedimiento descrito en el capítulo 1. En la primera se definieron los atributos de calidad del mecanismo, se especificaron los casos de uso, se evaluaron tres propuestas de interfaz sobre datos reales y se diseñaron los flujos y los wireframes de la elegida. En la segunda se documentó la arquitectura de la aplicación web con el modelo C4 y se registraron sus decisiones como ADRs. Las maquetas, los casos de uso, el modelo de arquitectura y los ADRs se publican en el repositorio del proyecto.
+
+1. ### **Atributos de calidad del mecanismo de navegación** {#atributos-de-calidad-del-mecanismo-de-navegación}
+
+Los cinco atributos de calidad del capítulo anterior son del módulo del grafo. De ellos, la interfaz hereda AC-03: el estudiante debe poder remitir a su fuente lo que el sistema le presenta. El diseño de la interfaz responde además a dos atributos propios, que la Tabla 24 define con el vocabulario de la norma ISO/IEC 25010:2023, en su característica de capacidad de interacción.
+
+###### **Tabla 24\. Atributos de calidad del mecanismo de navegación** {#tabla-24.-atributos-de-calidad-del-mecanismo-de-navegación}
+
+| ID | Propiedad | Origen | Prioridad | Verificación en R6 |
+| :---- | :---- | :---- | :---- | :---- |
+| AN-01 | El estudiante responde sus preguntas sobre un elemento del grafo desde un mismo lugar, sin conocer el lenguaje de consulta y sin perder de vista el elemento | Necesidades de la encuesta de orientación del aprendizaje (Anexo D) | Alta | Casos de prueba de aceptación, uno por caso de uso del estudiante |
+| AN-02 | Lo que la interfaz muestra no depende de un solo canal: ni solo del color, ni solo del dibujo, ni solo del cursor | La capa de cada elemento y la fuente de cada afirmación deben poder leerse siempre (AC-03) | Media | La procedencia de cada elemento se distingue por forma y texto, y todo lo dibujado está también como lista de texto |
+
+AN-01 corresponde a la operabilidad y a la capacidad de aprendizaje de la norma, y AN-02, a la inclusividad [FALTA: comprobar los términos contra el texto de ISO/IEC 25010:2023]. Cuando ambos chocan, el dibujo puede resumir lo que no cabe con nombre legible, pero lo resumido debe quedar completo en texto. Con AC-03, estos dos atributos son el criterio con que se evalúan las propuestas y se justifican las decisiones de las secciones siguientes.
+
+2. ### **Casos de uso** {#casos-de-uso}
+
+Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecnología, como casos de uso esenciales: cada uno enuncia la intención del actor y la respuesta del sistema [FALTA: cita de Constantine y Lockwood (1999), *Software for Use*; no está en las referencias]. Son once: diez del estudiante, que consulta y navega el grafo sin escribir en él, y uno del operador, que carga documentos y revisa su ingesta. La Tabla 25 los resume con la necesidad de la encuesta de orientación del aprendizaje que atiende cada uno (Anexo D) y la pregunta de competencia de la ontología a la que responde.
+
+###### **Tabla 25\. Casos de uso del mecanismo de navegación** {#tabla-25.-casos-de-uso-del-mecanismo-de-navegación}
+
+| Caso de uso | Actor | Necesidad que atiende (Anexo D) | Pregunta de competencia |
+| :---- | :---- | :---- | :---- |
+| CU-1. Encontrar por dónde empezar | Estudiante | Descubrir temas (52,6 %) | — |
+| CU-2. Explorar lo que rodea a un elemento | Estudiante | Entender cómo se conectan las áreas (61,0 %) | — |
+| CU-3. Saber qué conceptos necesito antes de aprender uno | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC1 |
+| CU-4. Saber qué pide un curso y qué curso conviene llevar antes | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC2 |
+| CU-5. Ubicar un concepto o tema dentro de la carrera | Estudiante | Entender cómo se conectan las áreas (61,0 %) | PC3 |
+| CU-6. Ver qué contiene un tema, una unidad o un área, y en qué orden aprenderlo | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC4 |
+| CU-7. Encontrar material de estudio sobre algo | Estudiante | Encontrar recursos de estudio (72,1 %) | PC5 |
+| CU-8. Ver el camino hasta una meta, por temas, cursos o áreas | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC6 |
+| CU-9. Ver de qué es un tipo un concepto y qué tipos tiene | Estudiante | Descubrir temas (52,6 %) | PC7 |
+| CU-10. Comprobar de dónde sale un dato | Estudiante | — | — |
+| CU-11. Cargar un documento y revisar su ingesta | Operador | — | — |
+
+Las siete preguntas de competencia de la ontología quedan cubiertas, cada una por un caso de uso. Los tres casos sin pregunta de competencia no consultan una relación del dominio: CU-1 y CU-2 son la entrada al grafo y su exploración de nodo en nodo, y CU-10 lleva al estudiante al documento del que procede una afirmación, que es lo que el atributo AC-03 exige al sistema.
+
+3. ### **Propuestas evaluadas** {#propuestas-evaluadas}
+
+Para elegir el enfoque de navegación se construyeron tres maquetas navegables, cada una con un enfoque distinto, más un panel del operador común. Las tres resuelven los mismos once casos de uso, usan el mismo vocabulario en pantalla y se alimentan de los mismos datos: las respuestas reales de la API del módulo sobre la capa de referencia y cuatro sílabos de desarrollo, capturadas el 29 de octubre de 2026. Lo que la API todavía no entrega se rotula en pantalla como simulado. Un mismo recorrido de seis pasos permite compararlas sobre la misma historia. La Tabla 26 resume la comparación.
+
+###### **Tabla 26\. Propuestas de navegación evaluadas** {#tabla-26.-propuestas-de-navegación-evaluadas}
+
+| Propuesta | Enfoque | Necesidad que atiende mejor | Punto débil | Esfuerzo de implementación |
+| :---- | :---- | :---- | :---- | :---- |
+| P1. Constelación | El lienzo del grafo es el protagonista: un elemento en foco, lo que lo rodea y una vista por cada pregunta sobre el mismo lienzo | Entender cómo se conectan las áreas y descubrir temas | Legibilidad y accesibilidad de un lienzo cuando la respuesta es grande | Alto |
+| P2. Catálogo | Fichas con dirección propia; el grafo es un mapa secundario del vecindario | Encontrar recursos de estudio | El grafo queda en segundo plano | Bajo |
+| P3. Itinerario | Se elige una meta y se ve el camino hasta ella como un mapa de líneas | Ver qué conceptos previos se necesitan | Depende de que la meta tenga camino: con los datos de desarrollo, 35 de 485 | Medio |
+
+Se eligió P1. Es la única que muestra el grafo como grafo y responde las siete preguntas de competencia sobre un mismo dibujo, sin que el estudiante pierda de vista el elemento, que es lo que AN-01 exige y lo que el objetivo O3 pide: explorar de forma visual las relaciones a distintos niveles. P2 responde qué hay sobre un elemento, pero no cómo se conecta con lo demás. P3 responde en una pantalla la necesidad más votada, pero su pantalla principal queda vacía para la mayoría de las metas, porque los caminos del grafo de desarrollo son pocos y no pasan de dos pasos. El costo de la elección es que P1 es la más exigente de construir y de leer, lo que se declara entre las limitaciones.
+
+4. ### **Flujos e interfaz** {#flujos-e-interfaz}
+
+En P1 siempre hay un elemento en foco, y el estudiante se mueve haciendo clic de punto en punto. Sobre el mapa, una cabecera nombra el foco y ofrece lo que se puede preguntar sobre él; cada pregunta reordena el mismo lienzo con la respuesta de una consulta del módulo y dibuja solo lo que la responde, con una frase que da la respuesta y otra que dice cómo leer el dibujo. A la derecha, un panel lee el foco como ficha, con las mismas secciones en texto. La interfaz no muestra códigos ni términos del modelo: la pregunta de competencia PC1, por ejemplo, aparece como «Qué necesitas antes».
+
+Para cada caso de uso del estudiante se escribió un flujo, es decir, los pasos con que esta interfaz lo resuelve, con ejemplos del grafo de desarrollo. Los wireframes son seis pantallas, tomadas de la maqueta: el inicio (A), los resultados de búsqueda (B), el foco con lo que lo rodea (C), la vista activa para una pregunta (D), el panel del foco (E) y la relación seleccionada con su fuente (F). La Figura 13 muestra la pantalla C y la Figura 14, la pantalla D para la pregunta «Qué necesitas antes».
+
+![Pantalla C](r5/p1-lienzo/capturas/C-foco-lo-que-lo-rodea.png)
+
+##### **Figura 13\. Wireframe de la pantalla C: un tema en foco con lo que lo rodea. Fuente: elaboración propia.** {#figura-13.-wireframe-de-la-pantalla-c}
+
+![Pantalla D](r5/p1-lienzo/capturas/D2-que-necesitas-antes.png)
+
+##### **Figura 14\. Wireframe de la pantalla D: la vista «Qué necesitas antes» de un concepto. Fuente: elaboración propia.** {#figura-14.-wireframe-de-la-pantalla-d}
+
+En la Figura 13, el tema en foco ocupa el centro y sus doce vecinos directos se reparten en dos alas, con el nombre de cada relación escrito sobre sus líneas; el panel de la derecha repite lo mismo como lista. En la Figura 14, los prerrequisitos del concepto se ordenan en columnas por distancia y las flechas van de lo que se aprende primero a lo que lo necesita; un clic en una flecha muestra el sílabo que la afirma. En ambas, la forma distingue la procedencia: hexágono para lo que viene de CS2023 y círculo para lo que viene de un sílabo. Los diez flujos y las quince capturas, con el caso de uso de cada una, pueden consultarse en el repositorio.
+
+5. ### **Arquitectura de la aplicación web** {#arquitectura-de-la-aplicación-web}
+
+Los niveles 1 y 2 del modelo C4 son los del capítulo anterior (Figuras 6 y 7): la aplicación web es uno de los contenedores del sistema, se despliega aparte de la API y solo presenta, porque la lógica de navegación vive en el módulo. Este resultado agrega su nivel 3, en el mismo modelo. La Figura 15 muestra sus nueve componentes.
+
+[FALTA: imagen del nivel 3 de la aplicación web; se exporta del modelo, vista `webComponents`]
+
+##### **Figura 15\. Componentes de la aplicación web (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-15.-componentes-de-la-aplicación-web-(nivel-3-del-modelo-c4)}
+
+El estado de la exploración es el centro: guarda el foco, la pregunta elegida y lo visitado, y de él dependen el lienzo del grafo, la cabecera de contexto, el panel del foco y la línea de paradas que resume un camino. El buscador y el inicio son los dos puntos de entrada. Un único componente, el cliente de la API, habla con las rutas de navegación del módulo; el panel del foco, además, abre el documento de cada sílabo. El panel del operador es un componente aparte, que usa las rutas de operación con su token.
+
+La Tabla 27 resume las cuatro decisiones de este resultado, con la alternativa principal que descartó cada una y el atributo al que responde. Entre ellas están las dos que el procedimiento pedía: el framework y la librería de visualización. El texto completo puede consultarse en el repositorio, junto con las demás decisiones del sistema.
+
+###### **Tabla 27\. Decisiones de diseño del mecanismo de navegación** {#tabla-27.-decisiones-de-diseño-del-mecanismo-de-navegación}
+
+| ADR | Decisión | Alternativa principal descartada | Justificación | Atributo principal |
+| :---- | :---- | :---- | :---- | :---- |
+| ADR-016 | Lienzo del grafo con un elemento en foco, una vista por pregunta y un panel lateral con la ficha | Catálogo de fichas con el grafo como mapa secundario (P2) | Responde las siete preguntas de competencia sobre el mismo dibujo, sin cambiar de pantalla; el catálogo no muestra cómo se conecta un elemento con lo demás | AN-01 |
+| ADR-017 | Svelte con Vite, como aplicación estática de una sola página | Vue | Un solo estado compartido entre el lienzo y el panel, con poca carga en ejecución y sin interferir con el dibujo que controla la librería de visualización | AN-01 |
+| ADR-018 | D3 dibujando en SVG, con una disposición propia por vista | Cytoscape.js, que dibuja en canvas | Las respuestas de la API van de decenas a unos 160 nodos; SVG permite una disposición por pregunta, forma por capa y que cada nodo sea un elemento accesible del documento | AN-01 |
+| ADR-019 | La capa se distingue por forma, y la fuente se muestra en el panel y a pedido sobre cada relación | Capa solo por color | La procedencia y la capa se leen en todas las pantallas sin depender del color ni saturar el lienzo con las relaciones de procedencia | AC-03 |
+
+Los dos criterios que el procedimiento nombraba para elegir la librería se resolvieron con medidas del grafo de desarrollo. La escala es moderada, porque la API acota cada respuesta: la mayor que se midió tiene 158 nodos, muy por debajo de los cerca de mil a partir de los cuales SVG se vuelve lento. El *drill-down* no es una función de la librería sino del diseño: es el cambio de foco y la expansión a pedido de un vecino. La propuesta pide además una ruta nueva al módulo, que entregue las áreas y los cursos para el inicio; se agregará junto con el prototipo.
+
+6. ### **Verificación de R5** {#verificación-de-r5}
+
+   1. #### **Verificación y mediciones** {#verificación-y-mediciones-2}
+
+R5 se comprometió a especificar las tecnologías a emplear, los componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. Su medio de verificación es el reporte técnico del mecanismo de navegación (Tabla 4), que es esta sección. Cada parte se encuentra en:
+
+* Las tecnologías: ADR-017 y ADR-018, resumidos en la Tabla 27.
+
+* Los componentes internos: la Figura 15, vista del mismo modelo que las Figuras 6 a 12.
+
+* Las decisiones de diseño y arquitectura evaluadas: las tres propuestas de la Tabla 26 y ADR-016 a ADR-019, en el repositorio.
+
+* Los flujos y los wireframes: las Figuras 13 y 14 y, en el repositorio, los diez flujos y las quince capturas.
+
+Cada atributo de la Tabla 24 queda atendido por al menos una decisión y tiene una verificación definida en R6: el plan de pruebas de aceptación tiene un caso por cada caso de uso del estudiante, y el caso que corresponde a CU-10 abre el documento del que procede una afirmación, que es la comprobación de AC-03 anunciada en la Tabla 23.
+
+2. #### **Validación de experto** {#validación-de-experto-1}
+
+[FALTA: validación pendiente. Al obtenerla: «La documentación fue revisada y aprobada por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión cubrió los casos de uso, las propuestas evaluadas, los flujos y wireframes, los atributos de calidad y la arquitectura con sus decisiones. El registro de esa validación se adjunta como evidencia **en el Anexo O**.»]
+
+3. #### **Indicador** {#indicador-1}
+
+[FALTA: veredicto del indicador de R5, la validación con respuesta positiva del experto en Ingeniería de Conocimiento. Depende de la validación anterior.]
+
+3. ## **Discusión** {#discusión-2}
+
+Esta discusión cubre R5; la de R6 se incorporará con su implementación.
+
+1. ### **Resumen de los resultados** {#resumen-de-los-resultados-1}
+
+R5 especifica el mecanismo de navegación antes de implementarlo. Dos atributos de calidad fijan lo que la interfaz debe garantizar. Once casos de uso fijan lo que el estudiante y el operador pueden hacer, y cada pregunta de competencia de la ontología tiene el suyo. De tres propuestas de interfaz evaluadas sobre los mismos datos reales se eligió la que pone el grafo en el centro, y para ella se diseñaron diez flujos y seis pantallas. Esos atributos, más la procedencia heredada del módulo, motivan cuatro decisiones, entre ellas el framework y la librería de visualización, y la aplicación web queda descompuesta en nueve componentes.
+
+2. ### **Interpretación de los resultados** {#interpretación-de-los-resultados-1}
+
+Lo que estos resultados significan es que el diseño de la interfaz se decidió frente a datos y no frente a supuestos. Las tres propuestas se probaron con las respuestas reales del módulo, y fueron esos datos los que descartaron una de ellas: un diseño centrado en caminos de aprendizaje parecía el más alineado con la necesidad más votada de la encuesta, pero el grafo de desarrollo solo ofrece camino para 35 de 485 metas. Los mismos datos mostraron que casi ningún elemento tiene descripción, de modo que ninguna pantalla depende de ella.
+
+El segundo significado es que la interfaz no agrega conocimiento al que el módulo entrega. Cada vista dibuja la respuesta de una consulta y nada más, y la única reordenación que hace, los pasos en que conviene aprender los conceptos de un tema, se calcula con relaciones que la respuesta ya trae. Por eso lo que el estudiante ve conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse.
+
+3. ### **Los resultados en el contexto de la revisión de la literatura** {#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1}
+
+La revisión del capítulo 3 identificó la desorientación del usuario en grafos grandes como un problema transversal: Tytenko (2025) reporta inconsistencias en niveles profundos de navegación jerárquica, y Dong et al. (2023), la dificultad de los estudiantes para localizar conceptos clave cuando el grafo crece en densidad. El diseño de R5 responde a ese problema de forma explícita y es consistente con él: nunca dibuja el grafo entero, sino la respuesta a una pregunta sobre un elemento en foco; nombra siempre el foco y la pregunta; y resume lo que no cabe con nombre legible. Que eso baste es algo que R5 no puede afirmar: lo comprobarán las pruebas de aceptación de R6, y solo para el tamaño del conjunto piloto.
+
+La revisión señaló también que las interfaces del corpus operan sobre un curso o una disciplina, con datos sintéticos o de prueba (Dong et al., 2023; Chen et al., 2023; Gunarathne et al., 2018). En esto el resultado difiere: las propuestas se evaluaron sobre datos reales de cuatro cursos enlazados a un estándar curricular, y el prototipo operará sobre trece. La diferencia es de grado y no de naturaleza, porque trece sílabos siguen siendo una fracción del plan de estudios.
+
+4. ### **Generalización de los resultados** {#generalización-de-los-resultados-1}
+
+Los casos de uso no dependen de la interfaz ni de la carrera: se derivan de las preguntas de competencia de la ontología, y valdrían para cualquier currículo modelado con ella. La elección de la propuesta, en cambio, depende de los datos con que se evaluó. Con un grafo en el que la mayoría de las metas tuviera caminos largos, la comparación entre P1 y P3 podría resolverse de otro modo, y no hay evidencia suficiente para afirmar que P1 seguiría siendo la mejor. Tampoco los umbrales con que la interfaz resume lo que no cabe se pueden generalizar: salen de cuatro sílabos y deben revisarse con el grafo del conjunto piloto.
+
+5. ### **Limitaciones de los resultados** {#limitaciones-de-los-resultados-1}
+
+Primero, la escala. El diseño se probó con cuatro sílabos; con trece, un área puede reunir decenas de temas, y dos vistas, la de prerrequisitos y la del camino hasta una meta, todavía no tienen regla para resumir respuestas grandes, porque los caminos de hoy no pasan de dos pasos.
+
+Segundo, la accesibilidad. Cada elemento del lienzo puede recorrerse con el teclado y tiene un texto accesible, y el panel repite como lista todo lo que el lienzo dibuja, pero no se ha hecho un recorrido con un lector de pantalla real. En pantallas pequeñas, las vistas más altas dejan las etiquetas en el límite de lo legible.
+
+Tercero, la exigencia al estudiante. La propuesta elegida es la que más pide leer un grafo, y para encontrar material de estudio es más lenta que un catálogo. Un mapa que cambia de disposición con cada pregunta puede desorientar, y las medidas que el diseño toma contra ello no se han probado con usuarios.
+
+Cuarto, la evaluación de las propuestas la hizo el autor, con el visto bueno del asesor. No se compararon con estudiantes, de modo que la elección descansa en el análisis de los casos de uso y de los datos, no en una preferencia medida.
+
+7. # **Conclusiones y trabajos futuros** {#conclusiones-y-trabajos-futuros}
+
+   1. ## **Conclusiones** {#conclusiones-1}
+
+   2. ## **Trabajos futuros** {#trabajos-futuros}
+
+Esta tesis comprueba que el grafo es fiel a los documentos de los que procede (R4) y que el prototipo responde a los casos de exploración previstos (R6), pero no mide si su uso cambia la forma en que los estudiantes se orientan en la carrera. Esa medida es la que conecta el sistema con el problema que lo motiva: la dificultad para identificar los conocimientos previos de un tema nuevo, el tiempo que toma hacerlo y la dependencia de canales informales para planificar el recorrido formativo (Anexo D). Obtenerla exige un estudio con estudiantes, con tareas de orientación definidas, un grupo de comparación que no use el sistema y medidas del aprendizaje y de la metacognición, además de las aprobaciones éticas que requiere un estudio con personas. Un diseño así corresponde a la investigación educativa más que a la ingeniería informática, por lo que se propone como un proyecto interdisciplinario, con especialistas en educación y en psicología educativa, que tome el sistema de esta tesis como instrumento.
+
+# **Referencias** {#referencias}
+
+Alavi, M., & Leidner, D. E. (2001). *Review*: Knowledge Management and Knowledge Management Systems: Conceptual Foundations And Research Issues1,2. *MIS Quarterly*, *25*(1), 107-136. [https\://doi.org/10.2307/3250961](https://doi.org/10.2307/3250961)
+
+Angles, R., Thakkar, H., & Tomaszuk, D. (2019). *RDF and Property Graphs Interoperability: Status and Issues*.
+
+Barron, J., Feldhausen, R., & Bean, N. H. (2026). *Towards a Computer Science Topics Ontology*. 101-106. Scopus. [https\://doi.org/10.1145/3770762.3772566](https://doi.org/10.1145/3770762.3772566)
+
+Bass, L., Clements, Paul, & Kazman, Rick. (s. f.). Software Architecture in Practice, 4th Edition. Recuperado 1 de septiembre de 2026, de [https\://www\.oreilly.com/library/view/software-architecture-in/9780136885979/](https://www.oreilly.com/library/view/software-architecture-in/9780136885979/) 
+
+Bin, Q., Zuhairi, M. F., Morcos, J., & Zhengqiu, L. (2025). *A Ontology Construction Method of Course Knowledge Graph Based on Dependency of Knowledge Points*. Scopus. Proceedings of the 2025 19th International Conference on Ubiquitous Information Management and Communication, IMCOM 2025\. [https\://doi.org/10.1109/IMCOM64595.2025.10857583](https://doi.org/10.1109/IMCOM64595.2025.10857583)
+
+Brown, S. (s. f.). *Home*. C4 Model. Recuperado 15 de mayo de 2026, de [https\://c4model.com/](https://c4model.com/)
+
+Buitrago, M., & Chiappe, A. (2019). Representation of knowledge in digital educational environments: A systematic review of literature. *Australasian Journal of Educational Technology*, *35*(4). [https\://doi.org/10.14742/ajet.4041](https://doi.org/10.14742/ajet.4041)
+
+Cc2020 Task Force. (2020). *Computing Curricula 2020: Paradigms for Global Computing Education*. ACM. [https\://doi.org/10.1145/3467967](https://doi.org/10.1145/3467967)
+
+Chen, C., Zhu, S., Tao, Q., Wu, Q., & Shi, Y. (2023). *Design and Development of a Knowledge Service Platform in the Field of Computer Science: Knowledge Service Platform in Computer Science: Design and Development*. 57-65. Scopus. [https\://doi.org/10.1145/3606094.3606108](https://doi.org/10.1145/3606094.3606108)
+
+Chen, X., Yin, C., Chen, H., Rong, W., Ouyang, Y., & Chai, Y. (2024). *Course Recommendation System Based on Course Knowledge Graph Generated by Large Language Models*. Scopus. 2024 IEEE International Conference on Teaching, Assessment and Learning for Engineering, TALE 2024 \- Proceedings. [https\://doi.org/10.1109/TALE62452.2024.10834324](https://doi.org/10.1109/TALE62452.2024.10834324)
+
+Dong, J., Li, W., Wang, Y., Li, Q., Baciu, G., Cao, J., Huang, X., Li, R. C., & Ng, P. H. F. (2023). *Gradual Study Advising with Course Knowledge Graphs*. *14409 LNCS*, 125-138. Scopus. [https\://doi.org/10.1007/978-981-99-8385-8\_10](https://doi.org/10.1007/978-981-99-8385-8_10)
+
+Ehrlinger, L., & Wöß, W. (2016). *Towards a Definition of Knowledge Graphs*. International Conference on Semantic Systems. [https\://www\.semanticscholar.org/paper/Towards-a-Definition-of-Knowledge-Graphs-Ehrlinger-W%C3%B6%C3%9F/b18e4272a7b9fa2e1c970d258ab5ea99ed5e2284](https://www.semanticscholar.org/paper/Towards-a-Definition-of-Knowledge-Graphs-Ehrlinger-W%C3%B6%C3%9F/b18e4272a7b9fa2e1c970d258ab5ea99ed5e2284)
+
+Garrison, D. (1997). Self-Directed Learning: Toward a Comprehensive Model. *Adult Education Quarterly \- ADULT EDUC QUART*, *48*, 18-33. [https\://doi.org/10.1177/074171369704800103](https://doi.org/10.1177/074171369704800103)
+
+Giacomo, G. D., & Lenzerini, M. (1996). *TBox and ABox Reasoning in Expressive Description Logics*.
+
+*GitHub*. (s. f.). GitHub Docs. Recuperado 15 de mayo de 2026, de [https\://docs-internal.github.com/es](https://docs-internal.github.com/es)
+
+Glimm, B., Horrocks, I., Motik, B., Stoilos, G., & Wang, Z. (2014). HermiT: An OWL 2 Reasoner. *Journal of Automated Reasoning*, *53*(3), 245-269. [https\://doi.org/10.1007/s10817-014-9305-1](https://doi.org/10.1007/s10817-014-9305-1)
+
+Gruber, T. R. (1993). A translation approach to portable ontology specifications. *Knowledge Acquisition*, *5*(2), 199-220. [https\://doi.org/10.1006/knac.1993.1008](https://doi.org/10.1006/knac.1993.1008)
+
+Gunarathne, W. K. T. M., Chootong, C., Sommool, W., Ochirbat, A., Chen, Y.-C., Reisman, S., & Shih, T. K. (2018). *Web-Based Learning Object Search Engine Solution Together with Data Visualization: The Case of MERLOT II*. *1*, 1026-1031. Scopus. [https\://doi.org/10.1109/COMPSAC.2018.00179](https://doi.org/10.1109/COMPSAC.2018.00179)
+
+Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The elements of statistical learning: Data mining, inference, and prediction* (2.ª ed.). Springer. [https\://doi.org/10.1007/978-0-387-84858-7](https://doi.org/10.1007/978-0-387-84858-7)
+
+Huang, J., Lai, F., Zheng, Z., Lai, R., Chen, X., Tian, J., & Zheng, Y. (2026). Design and Evaluation of a Question-Answering System Based on Knowledge Graph-Augmented Large Language Models in K–12 Artificial Intelligence Curriculum. *Applied Sciences*, *16*(7), 3552\. [https\://doi.org/10.3390/app16073552](https://doi.org/10.3390/app16073552)
+
+International Organization for Standardization & International Electrotechnical Commission. (2023). *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model* (ISO/IEC 25010:2023).
+
+Kitchenham, B., & Charters, S. (2007). *Guidelines for performing Systematic Literature Reviews in Software Engineering*. *2*.
+
+Kumar, A. N., Raj, R. K., Aly, S. G., Anderson, M. D., Becker, B. A., Blumenthal, R. L., Eaton, E., Epstein, S. L., Goldweber, M., Jalote, P., Lea, D., Oudshoorn, M., Pias, M., Reiser, S., Servin, C., Simha, R., Winters, T., & Xiang, Q. (2024). *Computer Science Curricula 2023*. ACM. [https\://doi.org/10.1145/3664191](https://doi.org/10.1145/3664191)
+
+*LangChain: Observe, Evaluate, and Deploy Reliable AI Agents*. (s. f.). Recuperado 15 de mayo de 2026, de [https\://www\.langchain.com/](https://www.langchain.com/)
+
+Li, S., Xiao, Y., Li, J., & Li, Y. (2026). *Automatic Construction System for Curriculum Knowledge Graphs Based on Large Language Models LLM-Based Curriculum Map Construction*. 252-257. Scopus. [https\://doi.org/10.1145/3785987.3786028](https://doi.org/10.1145/3785987.3786028)
+
+Li, Y., Qu, S., Shen, J., Min, S., & Yu, Z. (2024). Curriculum-Driven Edubot: A Framework for Developing Language Learning Chatbots through Synthesizing Conversational Data. En T. Kawahara, V. Demberg, S. Ultes, K. Inoue, S. Mehri, D. Howcroft, & K. Komatani (Eds.), *Proceedings of the 25th Annual Meeting of the Special Interest Group on Discourse and Dialogue* (pp. 400-419). Association for Computational Linguistics. [https\://doi.org/10.18653/v1/2024.sigdial-1.35](https://doi.org/10.18653/v1/2024.sigdial-1.35)
+
+Li, Y., Zhao, J., Yang, L., & Zhang, Y. (2019). *Construction, visualization and application of knowledge graph of computer science major*. 43-47. Scopus. [https\://doi.org/10.1145/3322134.3322153](https://doi.org/10.1145/3322134.3322153)
+
+Li, Z., Cheng, L., Zhang, C., Zhu, X., & Zhao, H. (2023). *Multi-Source Education Knowledge Graph Construction and Fusion for College Curricula*. 359-363. Scopus. [https\://doi.org/10.1109/ICALT58122.2023.00111](https://doi.org/10.1109/ICALT58122.2023.00111)
+
+Li, Z., Wang, Z., Wang, W., Hung, K., Xie, H., & Wang, F. L. (2025). Retrieval-augmented generation for educational application: A systematic survey. *Computers and Education: Artificial Intelligence*, *8*, 100417\. [https\://doi.org/10.1016/j.caeai.2025.100417](https://doi.org/10.1016/j.caeai.2025.100417)
+
+Lissandrini, M., Prando, G., & Silvello, G. (2025). The ESW of Wikidata: Exploratory search workflows on Knowledge Graphs. *Journal of Web Semantics*, *85*. Scopus. [https\://doi.org/10.1016/j.websem.2024.100860](https://doi.org/10.1016/j.websem.2024.100860)
+
+Liu, L. (2024). *Construction of Programming Knowledge Graph Based on Student Knowledge Needs*. 120-123. Scopus. [https\://doi.org/10.1109/ICCECE61317.2024.10504170](https://doi.org/10.1109/ICCECE61317.2024.10504170)
+
+Liu, P., & Zhan, C. (2025). *Research on Visual Learning Platform for Database Principles Knowledge Points Integrating Knowledge Graph and Deep Learning*. 276-280. Scopus. [https\://doi.org/10.1145/3768421.3768468](https://doi.org/10.1145/3768421.3768468)
+
+Liu, Y., Zuo, Q., Zhang, S., Li, Y., Wang, C., Han, F., & Cheng, X. (2026). *Research on Triple Joint Extraction Method of Knowledge Graph for Education Domain*. 134-139. Scopus. [https\://doi.org/10.1145/3785987.3786009](https://doi.org/10.1145/3785987.3786009)
+
+Livathinos, N., Auer, C., Lysak, M., Nassar, A., Dolfi, M., Vagenas, P., Berrospi Ramis, C., Omenetti, M., Dinkla, K., Kim, Y., Gupta, S., Teixeira de Lima, R., Weber, V., Morin, L., Meijer, I., Kuropiatnyk, V., & Staar, P. W. J. (2025). *Docling: An efficient open-source toolkit for AI-driven document conversion*. AAAI 25 Workshop on Open-Source AI for Mainstream Use. [https\://arxiv.org/abs/2501.17887](https://arxiv.org/abs/2501.17887)
+
+Millman, K., & Aivazis, M. (2011). Python for Scientists and Engineers. *Computing in Science & Engineering*, *13*, 9-12. [https\://doi.org/10.1109/MCSE.2011.36](https://doi.org/10.1109/MCSE.2011.36)
+
+National Research Council. (2000). *How People Learn: Brain, Mind, Experience, and School: Expanded Edition*. National Academies Press.
+
+*Neo4j documentation*. (s. f.). Neo4j Graph Data Platform. Recuperado 15 de mayo de 2026, de [https\://neo4j.com/docs/](https://neo4j.com/docs/)
+
+Nguyen, T., Vu, N., & Ly, B. (2022). *An approach to constructing a graph data repository for course recommendation based on IT career goals in the context of big data*. 301-308. Scopus. [https\://doi.org/10.1109/BigData55660.2022.10020436](https://doi.org/10.1109/BigData55660.2022.10020436)
+
+Nygard, M. (2011, noviembre 15). *Documenting Architecture Decisions*. Cognitect.Com. [https\://www\.cognitect.com/blog/2011/11/15/documenting-architecture-decisions](https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
+
+Oprea, M. (2020). *An Educational Ontology for Formal Languages and Compilers*. 54-60. Scopus. [https\://www\.scopus.com/pages/publications/85103847070?origin=resultslist](https://www.scopus.com/pages/publications/85103847070?origin=resultslist)
+
+*OWL 2 Web Ontology Language Document Overview 2nd Edition*. (2012). [https\://www\.w3.org/TR/owl2-overview/](https://www.w3.org/TR/owl2-overview/)
+
+Pan, J., Liu, J., Wei, D., Zhuang, J., Qiu, S., & Du, J. (2023). *Knowledge Graph for University Course Construction Based on Gated Graph Attention Networks*. 60-65. Scopus. [https\://doi.org/10.1109/MLCR61158.2023.00021](https://doi.org/10.1109/MLCR61158.2023.00021)
+
+Perez, E., Kiela, D., & Cho, K. (2021). True few-shot learning with language models. En M. Ranzato, A. Beygelzimer, Y. Dauphin, P. S. Liang, & J. Wortman Vaughan (Eds.), *Advances in Neural Information Processing Systems* (Vol. 34, pp. 11054–11070). Curran Associates. [https\://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html](https://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html)
+
+*Protégé*. (s. f.). Recuperado 15 de mayo de 2026, de [https\://protege.stanford.edu/](https://protege.stanford.edu/)
+
+Pydantic. (2026). *Pydantic/pydantic-ai* \[Python\]. [https\://github.com/pydantic/pydantic-ai](https://github.com/pydantic/pydantic-ai) (Obra original publicada en 2024\)
+
+Ramírez, S. (s. f.). *FastAPI*. Recuperado 15 de mayo de 2026, de [https\://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
+
+*RDF 1.1 Concepts and Abstract Syntax*. (2014). [https\://www\.w3.org/TR/rdf11-concepts/](https://www.w3.org/TR/rdf11-concepts/)
+
+Sclar, M., Choi, Y., Tsvetkov, Y., & Suhr, A. (2024). Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. En *The Twelfth International Conference on Learning Representations (ICLR 2024)*. [https\://arxiv.org/abs/2310.11324](https://arxiv.org/abs/2310.11324)
+
+Singhal, A. (2012, mayo 16). *Introducing the Knowledge Graph: Things, not strings*. Google. [https\://blog.google/products-and-platforms/products/search/introducing-knowledge-graph-things-not/](https://blog.google/products-and-platforms/products/search/introducing-knowledge-graph-things-not/)
+
+Tsidylo, I. M., & Kozibroda, S. V. (2024). *Ontology-based representation and design of subject domains for Computer Science education*. *3820*, 56-62. Scopus. [https\://www\.scopus.com/pages/publications/85209346746?origin=resultslist](https://www.scopus.com/pages/publications/85209346746?origin=resultslist)
+
+Tytenko, S. (2025). *AI-driven Interactive Hierarchical Concept Maps for Digital Learning Environments and Intelligent Textbooks*. *4010*, 3-16. Scopus. [https\://www\.scopus.com/pages/publications/105013470614?origin=resultslist](https://www.scopus.com/pages/publications/105013470614?origin=resultslist)
+
+Wang, C. (2025a). *Study on Multi-source Heterogeneous Data Fusion and Knowledge Graph Construction Techniques in Higher Education Institutions*. 506-510. Scopus. [https\://doi.org/10.1145/3765325.3765409](https://doi.org/10.1145/3765325.3765409)
+
+Wang, Y., Wang, Z., Hu, X., Bai, T., Yang, S., & Huang, L. (2019). *A Courses Ontology System for Computer Science Education*. 251-254. Scopus. [https\://doi.org/10.1109/CSEI47661.2019.8938930](https://doi.org/10.1109/CSEI47661.2019.8938930)
+
+Xu, J., & Che, M. (2025). *LLM-Powered Construction of Course Knowledge-Competency Graphs*. 66-73. Scopus. [https\://doi.org/10.1145/3766557.3766569](https://doi.org/10.1145/3766557.3766569)
+
+Yang, M., Diao, M., Luo, J., Shen, W., & Zhang, C. (2025). GLM-4-Based Method for Automatic Construction of Content Graph. *IEEE Access*, *13*, 197300-197311. Scopus. [https\://doi.org/10.1109/ACCESS.2025.3548590](https://doi.org/10.1109/ACCESS.2025.3548590)
+
+# **Anexos**
+
+# **Anexo A: Formulario de extracción de la pregunta 1 de investigación**
+
+| Título de la publicación | Autor | Año | ¿Qué entidades modela? | ¿Qué tecnología de representación usa? | ¿Cómo se alinea a un estándar disciplinar? | ¿Qué limitaciones declara el autor? |
+| :---- | :---- | ----- | :---- | :---- | :---- | :---- |
+| A Courses Ontology System for Computer Science Education | Wang, Y., Wang, Z., Hu, X., Bai, T., Yang, S., & Huang, L. | 2019 | El sistema modela cursos (courses), unidades (units) y puntos de conocimiento (knowledge points). Estos se organizan en una estructura jerárquica donde los cursos incluyen unidades y estas, a su vez, contienen puntos de conocimiento. También se consideran términos de computación y diversas relaciones entre ellos, como liderazgo (leading), seguimiento (trailing), inclusión (inclusion) y propiedad (ownership) | Utiliza OWL (Web Ontology Language), implementado específicamente a través de la Protégé OWL API y el framework Jena para la construcción automática de la ontología. El sistema completo está desarrollado en Java. | El sistema no menciona alineación con estándares internacionales como CC2020, ACM o IEEE. En su lugar, la ontología se construye a partir de los catálogos de cursos de veinte universidades famosas de China y sitios web de educación en red. | El autor menciona que existen cursos individuales donde no es posible verificar la relevancia al seleccionar pares de palabras clave relacionados. Asimismo, se señala la necesidad de expandir la cobertura de los datos para mejorar el rendimiento y la integridad del sistema. No se mencionan explícitamente limitaciones de escalabilidad o falta de validación formal en los fragmentos analizados. |
+| A Ontology Construction Method of Course Knowledge Graph Based on Dependency of Knowledge Points | Bin, Q., Zuhairi, M. F., Morcos, J., & Zhengqiu, L. | 2025 | Modela principalmente puntos de conocimiento (knowledge points), conceptos, y cursos (específicamente el curso "Desarrollo de Aplicaciones Móviles"). También integra atributos relacionados con el estudiante, como su nivel cognitivo y su grado de maestría sobre cada punto de conocimiento | ¿Qué tecnología de representación usa?: Utiliza OWL (Web Ontology Language) como lenguaje de representación y la herramienta Protégé para el diseño de la jerarquía de la ontología. Para la recolección de datos, emplea scripts en Python con las librerías urllib.request y bs4 | El documento indica que la estructura jerárquica y el alcance de la ontología se definen basándose específicamente en el sílabo del curso (course syllabus), libros de texto y la validación de expertos en la materia, sin mencionar alineación con estándares externos. | Escalabilidad y rendimiento: El autor declara que la escala actual del grafo es relativamente pequeña y advierte que, al construir grafos a gran escala, podrían surgir desafíos de rendimiento, mayor consumo de recursos computacionales y una posible disminución en la eficiencia de las consultas.Carga de trabajo: El proceso de búsqueda manual y extracción de conceptos a partir de libros de texto implica una carga de trabajo manual sustancial y laboriosa. Complejidad de relaciones: Aunque el modelo es flexible, el autor señala que otros cursos con relaciones más intrincadas podrían requerir modificar o dividir las categorías de relación actuales. |
+| An Educational Ontology for Formal Languages and Compilers | Oprea, M. | 2020 | Modela conceptos básicos y avanzados de los dominios de Lenguajes Formales, Compiladores y Lenguajes de Programación, junto con sus relaciones jerárquicas y semánticas. | Utiliza el formato OWL (Web Ontology Language) y fue desarrollada con la herramienta Protégé 4.3. | Propio. Se basa en las especificaciones y recursos (libros de texto y notas de clase) del curso de la Universidad Petroleum-Gas de Ploiesti. | Se presenta como un prototipo diseñado para una primera etapa de uso como vocabulario. El autor indica que requiere ser extendida con más conceptos en trabajos futuros. |
+| Ontology-based representation and design of subject domains for Computer Science education | Tsidylo, I. M., & Kozibroda, S. V. | 2024 | DataDomain, Competencias (universales, profesionales, científicas, instrumentales, socio-personales), Conceptos, Habilidades, Capacidades, Estudiante, Recursos Educativos (Curso, Lección, Lab, Tarea, Test) y Lenguaje. | OWL, RDF y el entorno Protégé. | Propio (basado en el currículo de la disciplina y la matriz de competencias específica) | No especificado (se enfoca en los beneficios experimentales y solo menciona trabajo futuro sobre integración en sistemas de tutoría) |
+| Towards a Computer Science Topics Ontology | Barron, J., Feldhausen, R., & Bean, N. H. | 2026 | Knowledge Area (Área de conocimiento), Knowledge Unit (Unidad), Learning Outcomes (Resultados de aprendizaje), Topic (Tema), Subtopic, Skill Level (Nivel de habilidad), Competency Area, Programming Language, Lesson (Lección), Evaluation Criteria y Learning Goal | Estándares de la Web Semántica de la W3C (triples), OWL (vía Owlready2), SPARQL para consultas y Protégé | ACM Computer Science Curricula 2023 y la Taxonomía de Bloom revisada | Uso de datos sintéticos (placeholders) para lecciones y criterios de evaluación, cobertura limitada (enfocado solo en CS1 y el área de "Software Development Fundamentals") y falta de una definición para el proceso de evaluación de maestría de los estudiantes. |
+
+# **Anexo B: Formulario de extracción de la pregunta 2 de investigación**
+
+| Título de la publicación | Autor | Año | ¿Qué componentes tiene el sistema? | ¿Cómo se integra/ingesta el contenido? | ¿Qué tecnología de almacenamiento usa? | ¿Cómo expone el conocimiento (API, consulta, otro)? | ¿Qué limitaciones declara el autor? |
+| :---- | :---- | ----- | :---- | :---- | :---- | :---- | :---- |
+| An approach to constructing a graph data repository for course recommendation based on IT career goals in the context of big data | Nguyen, T., Vu, N., & Ly, B. | 2022 | Ingesta (Web Scraper, Competency Handler), Almacenamiento (Neo4j), UI (aplicación web con dashboards de gestión) y módulo de exportación | Scraping (vía framework Scrapy), NLP/Deep Learning (modelo BERT para reconocimiento de entidades \- NER) y filtrado Manual opcional por expertos. | Neo4j (bajo el modelo de datos Labeled Property Graph \- LPG) | UI (interfaz gráfica del sistema) y Exportación de datos en formatos JSON y CSV. (No se especifica una API o lenguaje de consulta para usuarios externos). | Necesidad de mejorar la precisión del componente de Deep Learning, requerimiento de integrar más plataformas de Big Data para aumentar el rendimiento y falta de determinación de los pesos (weights) en las propiedades de las relaciones |
+| Automatic Construction System for Curriculum Knowledge Graphs Based on Large Language Models LLM-Based Curriculum Map Construction | Li, S., Xiao, Y., Li, J., & Li, Y. | 2026 | Marco de trabajo web Flask, motor de base de datos de grafos (Neo4j), base de datos relacional para usuarios (SQLite) y la API de DeepSeek Chat (LLM) | Procesamiento automático de documentos docx mediante LLM (DeepSeek), segmentación de documentos basada en optimización y algoritmos de extracción de entidades/relaciones basados en aprendizaje profundo. | Neo4j para el grafo de conocimiento y SQLite para la gestión de cuentas de usuario. | Visualización de mapas de conocimiento y funciones de recuperación inteligente a través de una interfaz web- | Capacidad limitada para reconocer conceptos abstractos, baja tasa de recuperación en relaciones ambiguas o dispersas entre capítulos, y alta sensibilidad a la calidad y cobertura de los datos de pre-entrenamiento del modelo. |
+| Construction of Programming Knowledge Graph Based on Student Knowledge Needs | Liu, L. | 2024 | Ingesta (rastreadores/crawlers), Procesamiento (modelo BiLSTM+CRF para extracción), Almacenamiento (base de datos de grafos) y Consulta (lenguaje Cypher) | Scraping (vía crawlers de sitios como CSDN y Zhihu), NLP (identificación de entidades y relaciones con BiLSTM+CRF) y Manual (corrección de textos obtenidos de libros mediante reconocimiento de caracteres) | Neo4j | Consulta mediante el lenguaje Cypher y uso de la librería py2neo de Python.. | No especificado (el autor concluye que el sistema es efectivo y satisface las necesidades de los estudiantes sin detallar debilidades finales) |
+| Course Recommendation System Based on Course Knowledge Graph Generated by Large Language Models | Chen, X., Yin, C., Chen, H., Rong, W., Ouyang, Y., & Chai, Y. ( | 2024 | Ingesta (rastreadores web/crawlers), módulo de Extracción de información (NLP/LLM) y un Módulo de recomendación (que integra BiLSTM, mecanismos de atención y MLP) | Scraping (mediante rastreadores a plataformas como MOOC de la Universidad de China y NetEase Cloud Classroom) , Reglas (para identificar relaciones de prerrequisitos) y LLM (uso de ChatGLM-6B para generar datos de entrenamiento y LlaMa para el reconocimiento de entidades) | No especificado (el documento describe la estructura como una red semántica de tripletas y utiliza técnicas de embedding como TransD, pero no menciona un software de base de datos específico). | A través de un Algoritmo de recomendación personalizada que genera puntuaciones para cursos sugeridos basándose en el historial del estudiante. | Cobertura limitada por falta de descripciones textuales en algunos cursos, escalabilidad y adaptabilidad limitadas de los métodos basados en reglas y un rendimiento en la métrica MRR@10 ligeramente inferior al de algunos modelos de referencia. |
+| GLM-4-Based Method for Automatic Construction of Content Graph | Yang, M., Diao, M., Luo, J., Shen, W., & Zhang, C. | 2025 | Ingesta (importación de recursos no estructurados), Procesamiento (GLM-4, GQA), Almacenamiento (Neo4j) y UI/Visualización (integrado en la plataforma SuperStar) | LLM (uso de GLM-4 para análisis semántico y extracción de entidades), NLP (mecanismo de atención GQA para inferir relaciones) y Reglas (módulo de análisis lógico basado en reglas del dominio educativo) | Neo4j | Consulta (vía lenguaje Cypher) y Visualización interactiva para navegación de cursos y recomendaciones de rutas de aprendizaje. | Precisión inferior a la extracción manual experta y rendimiento relativamente bajo en la identificación de relaciones específicas de prerrequisitos y sucesores en comparación con otros tipos de entidades. |
+| Knowledge Graph for University Course Construction Based on Gated Graph Attention Networks | Pan, J., Liu, J., Wei, D., Zhuang, J., Qiu, S., & Du, J. | 2023 | Ingesta (extractores de características BERT y GGAT, más etiquetador CRF), Almacenamiento (base de datos de grafos) y UI (módulo de visualización) | Reglas (para texto de libros y detalles), Deep Learning (modelo GGAT para extracción de entidades y relaciones) y Manual (anotación parcial para entrenamiento y diseño de ontología top-down) | Neo4j | Visualización interactiva (permitiendo navegación multidimensional y de niveles). (No menciona una API o lenguaje de consulta para el usuario final). | No especificado. (El autor se centra en demostrar la superioridad del modelo propuesto sobre métodos previos como CNN, LSTM y GCN). |
+| LLM-Powered Construction of Course Knowledge-Competency Graphs | Xu, J., & Che, M. | 2025 | Ingesta (adquisición y limpieza de datos), Procesamiento (extracción de conocimiento y fusión de capas), Almacenamiento (base de datos de grafos) y Aplicación/Visualización. | LLM (uso de modelos como Qwen o DeepSeek mediante ingeniería de prompts), Reglas (para la fusión entre las capas de conocimiento y competencia) y Manual (validación experta de la ontología y selección docente de objetivos). | Neo4j | ¿Cómo expone el conocimiento?: Visualización de grafos multidimensionales (KWA) y soporte para sistemas de recomendación de rutas de aprendizaje y evaluación de competencias. | Dificultades en el control de granularidad (sobre-extracción), posibles inconsistencias en la extracción y falta de exhaustividad (Recall) en puntos de conocimiento fragmentados o con límites ambiguos. |
+| Multi-Source Education Knowledge Graph Construction and Fusion for College Curricula | Li, Z., Cheng, L., Zhang, C., Zhu, X., & Zhao, H. | 2023 | Ingesta (extracción y limpieza), Almacenamiento (Neo4j), Fusión de grafos, UI/Visualización y un módulo de Estadísticas (cálculo de relevancia de currículo y ranking de conceptos) | NLP (Reconocimiento de Entidades Nombradas \- NER), Reglas (expresiones regulares para dividir documentos), Deep Learning (modelo de corrección de errores lingüísticos) y conversión automática de libros de texto y diapositivas. | Neo4j | UI (búsqueda de conceptos, visualización interactiva de nodos/atributos) y visualización de estadísticas auxiliares (popularidad de conceptos y correlación entre cursos) | Errores en la conversión de texto, problemas de codificación de formato, anomalías en entidades (como fórmulas o símbolos incompletos) y limitaciones algorítmicas de los modelos NER y expresiones regulares. |
+| Research on Triple Joint Extraction Method of Knowledge Graph for Education Domain | Liu, Y., Zuo, Q., Zhang, S., Li, Y., Wang, C., Han, F., & Cheng, X. | 2026 | El framework comprende tres módulos principales: un módulo de recolección de corpus, un módulo de extracción de conocimiento (reconocimiento de entidades, relaciones y atributos) y un módulo de corrección (desambiguación semántica, fusión de conocimiento y evaluación de calidad) | Se basa en la recolección de diversos tipos de datos (materiales de enseñanza, puntos de conocimiento y datos de docentes/alumnos). La extracción se realiza mediante un modelo de extracción conjunta basado en redes neuronales múltiples que combina BERT, BiGRU y CNN. También menciona la construcción de un dataset mediante anotación manual de recursos educativos | No especificado (el documento describe el proceso para generar el grafo y muestra un repositorio de datos en su arquitectura, pero no menciona un software específico) | No especificado. El autor indica que el sistema proporcionará soporte técnico para búsqueda y sistemas de preguntas y respuestas (Q\&A), pero no especifica una tecnología de exposición (como API o lenguajes de consulta) para el usuario final | El dominio educativo presenta una alta complejidad por el anidamiento de palabras (word nesting) y abundancia de términos profesionales . Además, señala la escasez de datasets públicos de extracción conjunta para este dominio y la dificultad de la anotación manual |
+| Study on Multi-source Heterogeneous Data Fusion and Knowledge Graph Construction Techniques in Higher Education Institutions | Wang, C. | 2025 | Ingesta (herramientas ETL, adquisición, preprocesamiento), Procesamiento (alineación de entidades, extracción de relaciones), Almacenamiento (gestión de grafos), Interfaz de servicio (arquitectura de microservicios) y Visualización (framework ECharts). | ETL (desde bases de datos, archivos de texto y hojas de cálculo), NLP/Deep Learning (modelos BERT, word2vec y Bi-LSTM con atención), Supervisión remota, Reglas (expresiones regulares) y Manual (etiquetado previo de datos para entrenamiento). | Neo4j (para la gestión eficiente del grafo) y tripletas RDF (para el almacenamiento de conocimiento). Utiliza además un clúster de Redis como capa de caché. | Consultas SPARQL, RESTful APIs y Visualización interactiva (implementando 12 métodos de visualización). | El autor indica que el trabajo futuro debe centrarse en mejorar las capacidades de razonamiento de conocimiento, incorporar algoritmos de aprendizaje automático más avanzados y desarrollar un análisis semántico más sofisticado para soportar la toma de decisiones complejas. |
+
+# **Anexo C: Formulario de extracción de la pregunta 3 de investigación**
+
+| Título de la publicación | Autor | Año | ¿Qué tipo de interfaz de exploración propone? | ¿Qué funcionalidades de navegación implementa? | ¿Cómo evalúa la efectividad? | ¿Qué resultado reporta? | ¿Qué limitaciones declara el autor? |
+| :---- | :---- | ----- | :---- | :---- | :---- | :---- | :---- |
+| Ejemplo |  |  | Visual/grafo, conversacional, lista, mixta, otros | Rutas de aprendizaje, filtros, búsqueda semántica, recomendación, otros | Experimento con usuarios, expertos, métricas automáticas, ninguna, otros | Mejora en orientación, satisfacción, tiempo, otros | Dominio acotado, sin validación, usabilidad limitada, etc. |
+| AI-driven Interactive Hierarchical Concept Maps for Digital Learning Environments and Intelligent Textbooks | Tytenko, S. | 2025 | Mapas de conceptos interactivos con nodos y enlaces jerárquicos. | Navegación jerárquica drill-down (permite expandir nodos para ver subtemas), drill-down infinito (generación dinámica de sub-mapas mediante IA), panel de información contextual (detalles del concepto al hacer clic) y exploración autodirigida. . | (Estudiantes universitarios de ingeniería de software y ciencia de datos). Mediante cuestionarios y encuestas de satisfacción | Satisfacción elevada (8.91/10), percepción de efectividad para aprender nuevos contenidos (8.31/10), mayor compromiso/disfrute (91.4%) y utilidad confirmada del 100% para la navegación en mapas anidados. Los estudiantes destacaron la mejora en la claridad de la estructura visual y las relaciones entre temas. | Desorientación del usuario en niveles profundos de navegación, deriva del tema (topic drift) por parte del LLM, inconsistencias estructurales entre mapas padre e hijo, dependencia de percepciones subjetivas en lugar de métricas de rendimiento objetivo y el tiempo requerido para el refinamiento manual por expertos. |
+| Construction, visualization and application of knowledge graph of computer science major | Li, Y., Zhao, J., Yang, L., & Zhang, Y. | 2019 | Mixta. Ofrece visualizaciones de grafos interactivos en 2D y 3D, una barra de navegación para entradas y una interfaz para recursos multimedia como videos. | Rutas de aprendizaje (cálculo del camino más corto entre dos puntos), búsqueda de nodos, resaltado de nodos adyacentes (contexto) y acceso directo a recursos educativos como videos, diapositivas y tests. | No especificado. El documento describe la implementación y funciones, pero no reporta un experimento formal con usuarios o métricas de validación externa en los fragmentos proporcionados. | Capacidad para realizar una planificación de aprendizaje eficiente, una visión general clara del área de Ciencias de la Computación y una alta precisión en la clasificación de grupos de conocimiento mediante algoritmos. | Se ignoran los tipos de relaciones por simplicidad, la eficiencia algorítmica de la Distancia de Google Normalizada (NGD) disminuye con grandes volúmenes de datos y persisten puntos de conocimiento aislados que afectan la construcción exacta del grafo. |
+| Design and Development of a Knowledge Service Platform in the Field of Computer Science: Knowledge Service Platform in Computer Science: Design and Development | Chen, C., Zhu, S., Tao, Q., Wu, Q., & Shi, Y. | 2023 | Mixta. Combina una visualización de grafo interactivo (usando la librería D3.js) con una interfaz de búsqueda por palabras clave y páginas de detalles para cada nodo de conocimiento | Búsqueda (fuzzy query) para localizar nodos, visualización de detalles (con soporte multimedia como video, PDF y VR), guía remedial (redirección automática a nodos de conocimiento tras errores en pruebas online) y navegación semántica a través de las relaciones del grafo. | El autor realiza una comparativa funcional frente a la enseñanza tradicional basada en PPTs, evaluando dimensiones como la representación, extracción, expansión y aplicación del conocimiento. | Mejora en la expresión, extensión y aplicación del conocimiento. Se reporta que la plataforma supera a los métodos tradicionales al ofrecer una visión estructurada y panorámica del sistema de computación, facilitando una mejor comprensión por parte de los estudiantes. | Riesgos de calidad en el contenido (posibilidad de contenido ilegal, plagiado o de baja calidad debido al modelo de crowdsourcing) y el alto costo de producción inicial para construir grafos de dominio de alta calidad de forma manual. |
+| Gradual Study Advising with Course Knowledge Graphs | Dong, J., Li, W., Wang, Y., Li, Q., Baciu, G., Cao, J., Huang, X., Li, R. C., & Ng, P. H. F. | 2023 | Mixta. Ofrece un sistema web interactivo con visualización de grafos (usando Neo4j y mapas mentales) y una interfaz de lista para visualizar rutas textuales que contienen cursos específicos. | Rutas de aprendizaje personalizadas, visualización de relaciones de prerrequisitos (red de cursos), centralidad de conceptos (usando métricas como Degree y PageRank para resaltar nodos clave) y un buscador de rutas relacionales. | El autor afirma la efectividad del sistema a través de "extensas ilustraciones" y casos de uso dentro del currículo de Ciencias de la Computación, pero no reporta un experimento formal con usuarios o métricas automáticas en los fragmentos proporcionados. | Mejora en la orientación académica y de carrera, facilitando la comprensión de la estructura del programa universitario y la identificación rápida de conceptos fundamentales dentro de un curso. | Sin validación experimental completa y funcionalidad incompleta (el algoritmo de recomendación de rutas de aprendizaje aún no está implementado y se deja como trabajo futuro). También señala la dificultad de los estudiantes para localizar conceptos clave en grafos grandes y complejos. |
+| Research on Visual Learning Platform for Database Principles Knowledge Points Integrating Knowledge Graph and Deep Learning | Liu, P., & Zhan, C. | 2025 | Utiliza una plataforma de aprendizaje visual inteligente con un diseño interactivo y una disposición jerárquica de capas. La interfaz permite expandir o colapsar nodos y ofrece una función de resaltado de rutas para trazar caminos conceptuales. | Rutas de aprendizaje personalizadas (optimizadas mediante GCN), filtros y sistema de búsqueda, recomendación inteligente de puntos de conocimiento, rastreo de prerrequisitos y vistas personalizadas basadas en el progreso del estudiante. | Experimento con usuarios (un estudio de 16 semanas con 180 estudiantes de pregrado divididos en grupos de control y experimental). También utiliza métricas automáticas (precisión, recall, F1-score) para evaluar el rendimiento del modelo de recomendación de aprendizaje profundo. | Mejora significativa en comparación con los métodos tradicionales: un incremento del 22.678% en el dominio del conocimiento, un 19.6% en la eficiencia del aprendizaje y un 32.1% en la satisfacción del usuario. | El autor señala como trabajo futuro la necesidad de expandir la cobertura del grafo de conocimiento, mejorar el rendimiento del algoritmo en el procesamiento de datos dispersos (sparse data) e integrar recursos de aprendizaje multimodales. |
+| The ESW of Wikidata: Exploratory search workflows on Knowledge Graphs | Lissandrini, M., Prando, G., & Silvello, G. | 2025 | El estudio propone y utiliza una interfaz de consulta directa mediante SPARQL integrada en Jupyter notebooks para la fase de recolección de datos. Para la exploración de la colección resultante (ESW), propone un punto final (endpoint) SPARQL y acceso a los datos en formato RDF y JSON | Implementa flujos de trabajo exploratorios divididos en tareas de búsqueda progresivas (sub-tareas) que guían al usuario en el descubrimiento de información. Ofrece funcionalidades de reformulación de consultas, secuenciación de tareas y la provisión de flujos de referencia (gold standards) para guiar la exploración. | Mediante métricas automáticas de Precisión, Recuperación (Recall) y F-score, comparando los resultados de las consultas de los usuarios con los flujos de referencia. También analiza los tiempos de ejecución de las consultas y utiliza una puntuación de calidad de los participantes basada en su desempeño académico. | La creación de una colección de referencia con 234 flujos de trabajo y 10,645 consultas SPARQL reales. Reporta que la efectividad es mayor en tareas de "completitud" que en tareas "informativas" y observa un aumento progresivo en la complejidad y el tiempo de ejecución de las consultas a medida que avanza la sesión exploratoria. | Generalización limitada debido al uso de estudiantes en un entorno controlado; dificultad para evaluar el recall en tareas con objetivos vagos; métricas de evaluación que pueden ser excesivamente penalizadoras al no considerar la similitud semántica; e inconsistencias derivadas de la falta de uniformidad en el almacenamiento de datos de Wikidata. |
+| Web-Based Learning Object Search Engine Solution Together with Data Visualization: The Case of MERLOT II | Gunarathne, W. K. T. M., Chootong, C., Sommool, W., Ochirbat, A., Chen, Y.-C., Reisman, S., & Shih, T. K. | 2018 | Visual/grafo (específicamente un grafo de conocimiento jerárquico interactivo de tres niveles que organiza los resultados de búsqueda en clusters | Exploración jerárquica por clusters (permite navegar desde la palabra clave raíz hacia grupos temáticos y luego a objetos de aprendizaje individuales), búsqueda por palabra clave única y acceso directo a las páginas de los recursos educativos al hacer clic en los nodos. | Métricas automáticas. Se utiliza el método del coeficiente de Silueta Promedio (Average Silhouette) para validar la precisión y calidad técnica del algoritmo de agrupamiento (clustering) SHRINK-H aplicado a los datos. | Mejora en la visión general (overview) de los resultados. El sistema permite obtener una estructura clara de los materiales de aprendizaje, eliminando datos irrelevantes que aparecen en las búsquedas tradicionales de MERLOT II y facilitando una navegación independiente de las calificaciones de usuarios o revisiones editoriales. | Tiempo de procesamiento elevado en la extracción de datos en tiempo real, dominio acotado (la demo se restringió a 10 palabras clave específicas de computación para las pruebas) y falta de claridad en el etiquetado (algunas etiquetas de clusters generadas automáticamente pueden no ser familiares o claras para el usuario). |
+
+# **Anexo D: Análisis estadístico (descriptivo) de los datos de encuesta sobre orientación de aprendizaje**
+
+[https\://docs.google.com/document/d/17Sz2ZTTspc6XKC1Jn5jP3O\_Y-\_xXs\_Er22Jdms2rmho/edit?tab=t.0\#heading=h.b3jfx56khh04](https://docs.google.com/document/d/17Sz2ZTTspc6XKC1Jn5jP3O_Y-_xXs_Er22Jdms2rmho/edit?tab=t.0#heading=h.b3jfx56khh04) 
+
+# **Anexo E: Análisis temático de entrevista semiestructurada al director Luis Flores y preguntas abiertas de encuesta sobre orientación de aprendizaje**
+
+[https\://docs.google.com/document/d/1RZvywLgE7mWeTRZI2Crsdl6KpSe7E29Th6m9G4Ja8cg/edit?tab=t.0](https://docs.google.com/document/d/1RZvywLgE7mWeTRZI2Crsdl6KpSe7E29Th6m9G4Ja8cg/edit?tab=t.0) 
+
+# **Anexo F: Plan de estudios de Ingeniería Informática PUCP, recuperado el 16 de junio del 2026**
+
+[https\://drive.google.com/file/d/1yO\_Cw0fxbb72hmbqk7mgl0NZIItq2\_W-/view?usp=drive\_link](https://drive.google.com/file/d/1yO_Cw0fxbb72hmbqk7mgl0NZIItq2_W-/view?usp=drive_link) 
+
+# **Anexo G: Documento de especificación de la ontología.**
+
+[https\://docs.google.com/document/d/1NNPbBKxT-8QtkLgzQCWGAnAMl9sn7XvpWnvfIcMzLcg/edit?tab=t.0](https://docs.google.com/document/d/1NNPbBKxT-8QtkLgzQCWGAnAMl9sn7XvpWnvfIcMzLcg/edit?tab=t.0) 
+
+# **Anexo H: Constancia de validación experta del Resultado 1**
+
+[https\://docs.google.com/document/d/1I\_0G-BFlAjpL33KI8Zy\_NAGJ\_X-jL2E7iPWTHG2Axc0/edit?tab=t.0\#heading=h.h3l5l0alhqcs](https://docs.google.com/document/d/1I_0G-BFlAjpL33KI8Zy_NAGJ_X-jL2E7iPWTHG2Axc0/edit?tab=t.0#heading=h.h3l5l0alhqcs) 
+
+# **Anexo I: Documento de decisiones de diseño de la ontología**
+
+[https\://docs.google.com/document/d/1xZYwS8VMiZj3fbcyX9nDIt3S-ul-Cgakw5VMzgZ4BAg/edit?tab=t.o4xqjhg9d2s0](https://docs.google.com/document/d/1xZYwS8VMiZj3fbcyX9nDIt3S-ul-Cgakw5VMzgZ4BAg/edit?tab=t.o4xqjhg9d2s0) 
+
+# **Anexo J: Plan de Proyecto**
+
+* **Proyecto**
+
+Sistema de gestión de conocimiento basado en grafos de conocimiento para el currículo de Ingeniería Informática de la PUCP.
+
+**Objetivos**
+
+* O1. Modelar el dominio del conocimiento de la carrera mediante una ontología formal.  
+* O2. Diseñar e implementar el módulo de gestión del grafo de conocimiento, con pipeline de ingesta automatizada e interfaz programática.  
+* O3. Diseñar e implementar el mecanismo de navegación y descubrimiento semántico.
+
+**Resultados**
+
+* R1. Modelo ontológico formal del dominio (T-Box).  
+* R2. Capa de referencia (instancias) curada desde el estándar CS2023.  
+* R3. Documentación del módulo del grafo de conocimiento.  
+* R4. Módulo del grafo implementado (pipeline de ingesta y API).  
+* R5. Documentación del mecanismo de navegación y descubrimiento.  
+* R6. Prototipo funcional de navegación del grafo.
+
+* **Justificación**
+
+El proyecto responde a una deficiencia estructural verificada: las relaciones del currículo de Ingeniería Informática (entre cursos, conceptos, temas y áreas) no están disponibles de forma articulada en un medio consultable, y los recursos académicos se encuentran dispersos sin unión semántica. 
+
+El beneficiario directo es el estudiante de la carrera. Al explicitar las dependencias conceptuales y vincularlas con sus recursos, el artefacto reduce el esfuerzo que hoy demanda reconstruir esas relaciones por cuenta propia: la evidencia recogida (Anexos D y E) registra que orientarse sobre qué estudiar antes de profundizar en un tema toma con frecuencia más de un día, que es habitual descubrir tarde la falta de una base de otro curso, y que la búsqueda de material se dispersa entre varias fuentes sin anclaje al currículo. El sistema no interviene la conducta del estudiante ni busca cambiar sus hábitos; ofrece un medio donde esa información está articulada y es navegable, de modo que el esfuerzo de reconstrucción deja de ser necesario.
+
+El beneficio alcanza también a la gestión académica: la coordinación y el cuerpo docente obtienen una vista del currículo como grafo consultable (prerrequisitos conceptuales, cobertura de temas por curso, recursos asociados) útil para revisar la articulación del plan más allá de los prerrequisitos formales entre asignaturas.
+
+Por último, el enfoque es escalable. El modelo del dominio es independiente del contenido particular de la PUCP y su capa de referencia se ancla a un estándar internacional (CS2023) que puede sustituirse por otro; en consecuencia, el método (formalizar un currículo como ontología y grafo, y poblarlo desde sus documentos) es trasladable a otras carreras o instituciones con un costo de adaptación acotado.
+
+* **Viabilidad**
+
+**Técnica**
+
+El proyecto es viable técnicamente porque se apoya en tecnologías maduras de web semántica y de bases de datos orientadas a grafos, cuyo comportamiento ya quedó comprobado en la primera fase del trabajo, donde el modelo del dominio se construyó y validó sin contratiempos. Para la gestión del grafo, una base orientada a grafos resuelve de forma natural las consultas de dependencia y de recorrido que en un modelo relacional resultarían costosas, y la extracción de información desde los sílabos es abordable mediante modelos de lenguaje con salidas estructuradas y verificables sobre un piloto acotado.
+
+**Temporal**
+
+El proyecto es viable en el tiempo disponible, distribuido en los dos semestres de tesis. La primera mitad, ya ejecutada, cubrió los fundamentos y el modelado del dominio, lo que reduce el riesgo del tramo restante; la segunda concentra la construcción del módulo y del mecanismo de navegación. El cronograma contempla un margen de reajuste: ante cualquier desviación, se recalcula y se acuerda con el asesor en las reuniones semanales, priorizando el cierre de los resultados centrales.
+
+**Económica** 
+
+El proyecto es de bajo costo. El desarrollo se sostiene casi por completo en herramientas de código abierto y en recursos propios o institucionales, de modo que el desembolso real es marginal. El único costo variable corresponde al uso de un modelo de lenguaje comercial para la ingesta automatizada, acotado al piloto y reducible mediante capas gratuitas, modelos más económicos o créditos académicos; su estimación se detalla en el costeo.
+
+* **Alcance**
+
+El proyecto comprende el modelado formal del dominio curricular, la construcción del módulo que gestiona el grafo de conocimiento (con su pipeline de ingesta y su interfaz de programación) y el desarrollo de un prototipo de navegación sobre ese grafo. El dominio se delimita al Modelo de Conocimiento del estándar CS2023, en su eje de Ciencias de la Computación e Ingeniería de Software, y se trabaja sobre un piloto de trece sílabos del plan de estudios, suficiente para validar la extracción.
+
+Quedan fuera del alcance el modelado de competencias y el modelado del estudiante (su perfil, su progreso o la recomendación personalizada), por corresponder a marcos conceptuales distintos que abren líneas de trabajo posteriores; el procesamiento del catálogo completo de la carrera, acotado deliberadamente al eje piloto; y la evaluación empírica del impacto en el aprendizaje, ya que la validación se concentra en la corrección del artefacto y no en un estudio con usuarios.
+
+* **Limitaciones** 
+
+De tiempo: dos semestres de curso acotan la profundidad del piloto. 
+
+De presupuesto: el consumo de LLM es el único costo variable y constituye un riesgo abierto. 
+
+De herramientas: la extracción depende de la calidad y heterogeneidad de los sílabos en PDF y del comportamiento no determinista del LLM. 
+
+De validación: la verificación es de consistencia (HermiT), de criterio de ingeniería (precisión mayor o igual a 75%) y de experto, no de efectividad pedagógica.
+
+* **Identificación de los riesgos del proyecto**
+
+Los riesgos fueron resumidos en la Tabla A.1.
+
+**Tabla A.1. Matriz de riesgos del proyecto**
+
+| Riesgo | Prob. | Impacto | Mitigación | Contingencia |
+| :---- | :---- | :---- | :---- | :---- |
+| Costo de créditos de LLM para la ingesta (R4) inasequibles para el tesista  | Media | Alta | Capas gratuitas, modelos más baratos o locales, gestión de créditos académicos; estimación acotada a 13 sílabos | Reducir el lote piloto o sustituir por modelo local/extracción semiautomática |
+| Calidad y heterogeneidad de los sílabos condicionan a no obtener el indicador objetivo (precisión por debajo del 75%) | Media | Alta | Preproceso robusto, prompts tipados con reintentos, curación previa | Acotar las entidades a extraer |
+| Carga académica y tiempo impiden cumplir con el cronograma | Media | Media | Priorización por resultado y avances parciales | Recalcular y comunicar el cronograma; diferir alcance no crítico |
+| Complejidad de la transición OWL a LPG que resulta en retrasos o no cumplimiento. | Media | Media | Prototipar la transición temprano en R3 | Buscar asesoría de otros expertos con trabajos similares |
+| Mantenimiento/obsolescencia del grafo (señalado por la dirección) | Alta | Media | Modelar semántica y no archivos; separar capa de referencia estable de la institucional | Registrar el modelo de mantenimiento como trabajo futuro; no comprometer actualización continua en el alcance |
+| Disponibilidad del asesor para validaciones | Baja | Media | Reuniones semanales agendadas y validaciones planificadas | Validación asíncrona por correo; reprogramar hitos |
+
+* **Estructura de descomposición del trabajo (EDT)**
+
+* 1.0 KMS basado en grafos para el currículo de Ingeniería Informática (PUCP)  
+* 1.1 Gestión del proyecto (transversal)  
+  * 1.1.1 Planificación, plan, EDT y cronograma  
+  * 1.1.2 Reuniones de asesoría (semanales, 30 min)  
+  * 1.1.3 Entregables y observaciones del curso  
+*  1.2 Fundamentos del proyecto   
+  * 1.2.1 Problemática y formulación de objetivos  
+  *  1.2.2 Marco conceptual  
+  * 1.2.3 Estado del arte (revisión sistemática)  
+*  1.3 O1 \- Modelado del dominio  
+  * 1.3.1 R1 \- Modelo ontológico T-Box  
+  * 1.3.2 R2 \- Capa de referencia curada desde CS2023  
+* 1.4 O2 \- Módulo de gestión del grafo  
+  * 1.4.1 R3 \- Documentación del módulo (C4, ADRs, casos de prueba)   
+  * 1.4.2 R4 \- Módulo: pipeline de ingesta y API   
+* 1.5 O3 \- Mecanismo de navegación  
+  * 1.5.1 R5 \- Documentación del mecanismo (C4, ADRs)   
+  * 1.5.2 R6 \- Prototipo funcional   
+* 1.6 Cierre y documentación  
+  * 1.6.1 Redacción de cierre  
+  * 1.6.2 Revisión final y sustentación
+
+* **Lista de tareas y cronograma**
+
+Las tareas se derivan directamente de la estructura de descomposición del trabajo: cada resultado se descompone en las fases de su procedimiento, que son la unidad de estimación, y los paquetes menos complejos se colocan directamente como tareas. La lista incluye las actividades de verificación y validación, las reuniones de asesoría y los entregables del curso, e indica para cada tarea su duración, esfuerzo en horas-persona, costo, dependencias y periodo programado.
+
+La Figura A.1. presenta el diagrama de Gantt del cronograma del proyecto y la Tabla A.2. presenta la lista de tareas con las dependencias, duración, esfuerzo, costo y periodo.
+
+![][image13]
+
+**Figura A.1. Diagrama de Gantt del cronograma del proyecto**
+
+**Tabla A.2. Cronograma con lista de tareas**
+
+| ID | Tarea | Dependencias | Duración | Esfuerzo (h) | Costo (S/.) | Periodo |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| T04 | Problemática y formulación de objetivos | \- | 12.7 sem | 50 | 1000 | T1: 23/03–20/06 |
+| T07 | Estado del arte (SLR) | T4 | 0.6 sem | 24 | 480 | T1: 13/04–17/04 |
+| T05 | Marco conceptual | \- | 3 sem | 35 | 700 | T1: 20/04–11/05 |
+| T06 | Métodos y procedimientos | \- | 3 sem | 30 | 600 | T1: 20/04–11/05 |
+| T08 | R1 · Especificación y conceptualización | T6 | 0.9 sem | 20 | 400 | T1: 18/05–24/05 |
+| T09 | R1 · Formalización en OWL | T7 | 1.9 sem | 36 | 720 | T1: 25/05–07/06 |
+| T10 | R1 · Validación de la T-Box (V\&V) | T8 | 1 sem | 6 | 120 | T1: 08/06–15/06 |
+| T01 | Planificación, plan, EDT y cronograma | \- | 0.9 sem | 24 | 480 | T1: 15/06–21/06 |
+| T11 | R2 · Curación de la taxonomía de ref. | T9 | 1.7 sem | 8 | 160 | T1: 29/06–11/07 |
+| T12 | R2 · Carga y validación del backbone | T10 | 0.9 sem | 4 | 80 | T1: 12/07–18/07 |
+| T13 | R3 · Definición de atributos de calidad | T11 | 0.9 sem | 10 | 200 | T2: 17/08–23/08 |
+| T14 | R3 · Modelado C4 | T11 | 1.9 sem | 28 | 560 | T2: 17/08–30/08 |
+| T15 | R3 · Especificación del esquema LPG | T12, T13 | 1.3 sem | 24 | 480 | T2: 31/08–09/09 |
+| T16 | R3 · ADRs | T11 | 3.9 sem | 16 | 320 | T2: 17/08–13/09 |
+| T17 | R3 · Casos de prueba de la ingesta | T14 | 0.9 sem | 16 | 320 | T2: 14/09–20/09 |
+| T18 | R4 · Entorno y carga del backbone | T11, T15 | 0.9 sem | 80 | 1600 | T2: 21/09–27/09 |
+| T19 | R4 · Pipeline de ingesta (LLM) | T11, T16, T17 | 3.9 sem | 40 | 800 | T2: 28/09–25/10 |
+| T20 | R4 · API REST | T18 | 1.9 sem | 22 | 440 | T2: 19/10–01/11 |
+| T22 | R5 · Diseño de flujos y wireframes | T14 | 1.4 sem | 24 | 480 | T2: 02/11–12/11 |
+| T21 | R4 · Validación del pipeline (V\&V) | T18, T19 | 1.4 sem | 14 | 280 | T2: 02/11–12/11 |
+| T23 | R5 · Documentación C4 y ADRs | T21 | 0.9 sem | 12 | 240 | T2: 13/11–19/11 |
+| T24 | R6 · Implementación del prototipo | T20, T22 | 2.9 sem | 70 | 1400 | T2: 16/11–06/12 |
+| T25 | R6 · Pruebas de aceptación (V\&V) | T24, T14 | 0.9 sem | 12 | 240 | T2: 30/11–06/12 |
+| T26 | Redacción de cierre | \- | 1.7 sem | 35 | 700 | T2: 30/11–12/12 |
+| T27 | Revisión final y sustentación | T25 | 0.7 sem | 30 | 600 | T2: 07/12–12/12 |
+| T28 | Reuniones de asesoría (semanales, 30 min) | \- | 37.7 sem | 14 | 280 | T1 y T2: 23/03–12/12 |
+| T29 | Entregables y observaciones del curso | \- | 37.7 sem | 26 | 520 | T1 y T2: 23/03–12/12 |
+|  | Total tesista |  |  | 710 | 14200 |  |
+
+Cabe resaltar que se está considerando un costo por hora del tesista de S/. 20 y del asesor de S/. 150\.
+
+* **Lista de recursos**
+
+**Personas y capacitación**
+
+Tesista (1), responsable de diseño, implementación y validación, participa en todas las tareas; requiere profundización autodirigida en tecnologías de web semántica y frameworks de desarrollo (PydanticAI, web). 
+
+Asesor de tesis, Andrés Melgar: orientación técnica y de ingeniería de conocimiento; validaciones (T10, T12, T21, T25). 
+
+Docente del curso de tesis 1, Claudia Zapata: orientación metodológica y de rúbrica. 
+
+Docente del curso de tesis 2: orientación metodológica y de rúbrica. 
+
+No aplican necesidades de capacitación para los asesores.
+
+**Estándares**
+
+CS2023 (ACM/IEEE) como fuente de capa de referencia; OWL 2 y RDF/Turtle (W3C); Modelo C4 (Brown) y ADR (Nygard, 2011\) para documentación de arquitectura; Kitchenham y Charters para la revisión sistemática; APA 7.ª para citas; Git con versionado para el repositorio.
+
+**Herramientas**
+
+Protégé, HermiT, OWL 2/Turtle (R1 y R2); Neo4j Community, Cypher (R3 y R4); Python, FastAPI, Docling, PydanticAI y LLM vía API de OpenAI (R4); Git y GitHub (R3–R6); Zotero y bases de datos académicas.
+
+**Equipamiento**
+
+Laptop propia (uso intensivo en T8 y T17–T24) y almacenamiento en la nube para respaldo (capa gratuita).
+
+**Materiales**
+
+No aplica; el proyecto es de naturaleza computacional.
+
+* **Costeo del Proyecto**
+
+Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lineal) y software/servicios (TCO). Cifras referenciales; el desembolso real es mínimo porque los recursos son propios, institucionales o gratuitos, salvo el consumo de LLM. La información se visualiza en la Tabla A.3.
+
+**Tabla A.3. Costeo del proyecto**
+
+| Ítem | Descripción | Costo (S/.) |
+| :---- | :---- | :---- |
+| **0** | **Costo total del proyecto** | **18,725** |
+| **1** | **Equipo humano** | **17,350** |
+| 1.1 | Tesista: 710 h × S/.20/h | 14,200 |
+| 1.2 | Asesores: 21h × S/.150/h  | 3,150 |
+| **2** | **Equipamiento (depreciación lineal)** | **675** |
+| 2.1 | Laptop propia: S/.3,600 aproximados a 48 meses, 9 meses de uso | 675 |
+| **3** | **Software y servicios (TCO)** | **700** |
+| 3.1 | API de LLM razonador para la ingesta de R4 (13 sílabos; desarrollo y corrida final, precio estándar OpenAI; reducible con capas gratuitas o créditos académicos) | 700 |
+| 3.2 | Protégé, Neo4j Community, Python/FastAPI, Git | 0 |
+| **4** | **Materiales e insumos** | **0** |
+
+# **Anexo K: Transición del modelo ontológico al grafo de propiedades**
+
+[https\://docs.google.com/document/d/1tJMaYRH0KESKDBWxAtMJbKGH\_xSokobwWWj8\_CnNe7w/edit?tab=t.0](https://docs.google.com/document/d/1tJMaYRH0KESKDBWxAtMJbKGH_xSokobwWWj8_CnNe7w/edit?tab=t.0) 
+
+# **Anexo L: Guía de anotación**
+
+[https\://docs.google.com/document/d/1fV5rCKMafLwNL-Cq4IpAwGLgIGMxtfHaAKVXZv-Qyt4/edit?tab=t.0](https://docs.google.com/document/d/1fV5rCKMafLwNL-Cq4IpAwGLgIGMxtfHaAKVXZv-Qyt4/edit?tab=t.0) 
+
+# **Anexo M: Constancia de validación experta del Resultado 3**
+
+[https\://docs.google.com/document/d/193MHBTOlNBeFatEnz5Z-\_LPeSHaMczmdDygtr5KEmsA/edit?tab=t.0\#heading=h.fa5bf78t35tm](https://docs.google.com/document/d/193MHBTOlNBeFatEnz5Z-_LPeSHaMczmdDygtr5KEmsA/edit?tab=t.0#heading=h.fa5bf78t35tm) 
+
+# **Anexo N: Contraste de la anotación con extracciones humanas independientes**
+
+[https\\://docs.google.com/document/d/1n-tMKDott1UGmUxnQLSqqUM6BHzsU3cDsfdwSpA0Jq4/edit?tab=t.0\\#heading=h.fa5bf78t35tm]\([https://docs.google.com/document/d/1n-tMKDott1UGmUxnQLSqqUM6BHzsU3cDsfdwSpA0Jq4/edit?tab=t.0#heading=h.fa5bf78t35tm](https://docs.google.com/document/d/1n-tMKDott1UGmUxnQLSqqUM6BHzsU3cDsfdwSpA0Jq4/edit?tab=t.0#heading=h.fa5bf78t35tm))
+
+# **Anexo O: Constancia de validación experta del Resultado 5**
+
+[Enlace pendiente: constancia firmada.]
+
+[^1]:  Recuperado el 18 de junio del 2026 a las 20:40 h (UTC-5) de [https\://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee\_INFORMATICA-2026-1.pdf](https://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee_INFORMATICA-2026-1.pdf)y visible en el anexo F.
+
+[^2]:  El umbral de al menos 5 clases y al menos 3 tipos de relación va de acuerdo a la aplicación de la metodología Ontology Development 101 de Noy y McGuinness
+
+[^3]: Umbral fijado por debajo de la precisión de extracción de entidades que reportan los trabajos más cercanos con modelos de lenguaje: entre 80 % y 85 % sobre tres sílabos (S. Li et al., 2026) y entre 82 % y 88 % sobre un curso (Xu & Che, 2025). El margen cubre la diferencia de idioma y de formato de entrada, y un emparejamiento más estricto: por etiqueta normalizada contra una anotación adjudicada, sin sinónimos no registrados.
+
+[^4]:  OntoGraf representa la jerarquía de subsunción y no rotula las propiedades de objeto, que se detallan en la Tabla 13\. Por esa misma limitación no se visualizan las relaciones de Recurso de Aprendizaje con Curso y con Elemento de Conocimiento (isAbout/hasResource y wasDerivedFrom).
+
+[^5]: Las seis propiedades de la columna Inversa se declaran explícitamente en la ontología; con ellas el total asciende a diecisiete propiedades de objeto. «Simple» indica una propiedad no transitiva, condición que OWL exige para admitir restricciones de cardinalidad. hasPart hereda dominio y rango de isPartOf por inversión.
+
+[image1]: 
+
+[image2]: 
+
+[image3]: 
+
+[image4]: 
+
+[image5]: 
+
+[image6]: 

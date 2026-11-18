@@ -1,0 +1,47 @@
+// Vocabulario C4: los tipos de elemento que el modelo puede usar.
+// Identificadores en inglés; texto visible en español.
+specification {
+  element person {
+    notation "Persona"
+    style { shape person }
+  }
+  element softwareSystem {
+    notation "Sistema de software"
+  }
+  element externalSystem {
+    notation "Sistema externo"
+    style { color gray }
+  }
+  element container {
+    notation "Contenedor"
+  }
+  element buildTool {
+    notation "Contenedor: proceso de construcción"
+    style {
+      border dashed
+      color muted
+    }
+  }
+  element dataStore {
+    notation "Contenedor: almacén de datos"
+    style { shape storage }
+  }
+  element component {
+    notation "Componente"
+    style { color sky }
+  }
+
+  deploymentNode host {
+    notation "Nodo de despliegue"
+  }
+  deploymentNode runtime {
+    notation "Entorno de ejecución"
+  }
+
+  // Componente del núcleo del grafo: el mismo código en cada contenedor
+  // que lo ejecuta.
+  tag nucleo
+  // Relación del despliegue que resume varias del modelo, porque la vista
+  // de despliegue no permite renombrar una arista agrupada.
+  tag resumen
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catálogo del conocimiento · Ingeniería Informática</title>
+  <meta name="description" content="Maqueta P2 de R5: catálogo de fichas sobre el grafo de conocimiento (CS2023 y sílabos), con mini mapa secundario.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div id="app"><p style="font-family: Georgia, serif; padding: 40px; color: #7a756c;">Cargando el catálogo…</p></div>
+
+  <noscript><p style="padding: 40px;">La maqueta necesita JavaScript.</p></noscript>
+
+  <!-- Datos reales capturados de la API de R4 (define IEKG_DATOS, IEKG_OPERACION, IEKG_SIMULADO). -->
+  <script src="../datos/datos.js"></script>
+
+  <!-- Librerías: versión exacta, verificada el 2026-10-29 en el registro de npm (ver adr/). -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.5.44/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-router@5.4.0/dist/vue-router.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+
+  <!-- Maqueta: acceso a datos, modelo de fichas, mini mapa y aplicación. -->
+  <script src="api.js"></script>
+  <script src="modelo.js"></script>
+  <script src="minimapa.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

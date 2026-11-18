@@ -1,0 +1,535 @@
+/* InfoKnows: tokens, base and the styles of the canvas, whose SVG is drawn by
+   D3 and so is outside the scope of any component.
+
+   Color has two jobs and no others: the hue of a point is its class, and the
+   hue of a line is its relationship. The layer is told by shape. What the
+   interface marks (selection, keyboard focus) is white, so it never reads as
+   a class. */
+
+:root {
+  color-scheme: dark;
+
+  --ground: oklch(0.145 0.03 275);
+  --ground-deep: oklch(0.105 0.028 275);
+  --space: oklch(0.085 0.025 275);
+  --surface: oklch(0.165 0.034 275);
+  --raised: oklch(0.235 0.034 275);
+  --hover: oklch(0.275 0.04 275);
+  --line: oklch(0.31 0.04 275);
+  --line-strong: oklch(0.42 0.05 275);
+
+  --text: oklch(0.96 0.01 275);
+  --text-2: oklch(0.84 0.025 275);
+  --text-3: oklch(0.72 0.035 275);
+  --mark: oklch(0.99 0 0);
+  --danger: oklch(0.76 0.15 25);
+  --warning: oklch(0.84 0.14 80);
+  --success: oklch(0.84 0.14 160);
+
+  --c-area: oklch(0.76 0.15 305);
+  --c-unit: oklch(0.77 0.12 268);
+  --c-topic: oklch(0.83 0.12 215);
+  --c-concept: oklch(0.87 0.14 165);
+  --c-course: oklch(0.85 0.14 80);
+  --c-resource: oklch(0.79 0.15 0);
+  --c-type: oklch(0.78 0.03 275);
+
+  --r-part: oklch(0.74 0.09 268);
+  --r-prerequisite: oklch(0.89 0.15 100);
+  --r-kind: oklch(0.82 0.11 195);
+  --r-teaches: oklch(0.83 0.13 80);
+  --r-requires: oklch(0.78 0.14 50);
+  --r-about: oklch(0.78 0.14 0);
+  --r-type: oklch(0.74 0.03 275);
+  --r-source: oklch(0.74 0.03 275);
+
+  --font: 'Atkinson Hyperlegible Next Variable', 'Segoe UI', system-ui, sans-serif;
+  --mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 0.875rem;
+  --step-1: 1rem;
+  --step-2: 1.125rem;
+  --step-3: 1.375rem;
+
+  --radius: 10px;
+  --radius-small: 6px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow: 0 12px 32px -8px oklch(0.05 0.02 275 / 0.7);
+}
+
+/* How much of the record a phone shows under the map (see Sheet.svelte). */
+@media (max-width: 900px) {
+  :root {
+    --peek: calc(150px + env(safe-area-inset-bottom));
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--mark);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
+}
+
+::selection {
+  background: oklch(0.77 0.12 268 / 0.45);
+  color: var(--mark);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Shared controls ------------------------------------------------------------ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-small);
+  background: var(--raised);
+  color: var(--text);
+  font-weight: 550;
+  transition: background 160ms, border-color 160ms;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--hover);
+  border-color: var(--text-3);
+}
+
+.button:disabled {
+  color: var(--text-3);
+  border-color: var(--line);
+}
+
+.button.primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--ground-deep);
+}
+
+.button.primary:hover:not(:disabled) {
+  background: var(--mark);
+}
+
+.button.quiet {
+  background: none;
+  border-color: transparent;
+  color: var(--text-2);
+}
+
+.button.quiet:hover:not(:disabled) {
+  background: var(--raised);
+  color: var(--text);
+}
+
+.text-button {
+  color: var(--text);
+  font-weight: 550;
+  text-decoration: underline;
+  text-decoration-color: var(--text-3);
+  text-underline-offset: 3px;
+}
+
+.text-button:hover {
+  text-decoration-color: var(--text);
+}
+
+.class-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid color-mix(in oklch, var(--c) 55%, transparent);
+  border-radius: 999px;
+  color: var(--c);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.skeleton {
+  display: block;
+  height: 0.9em;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--raised), var(--hover), var(--raised));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* The canvas ----------------------------------------------------------------- */
+
+svg.graph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+  --k: 1;
+}
+
+svg.graph:active {
+  cursor: grabbing;
+}
+
+.graph .node {
+  cursor: pointer;
+  outline: none;
+  animation: appear 420ms var(--ease) backwards;
+}
+
+.graph .node-focus {
+  cursor: default;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The syllabi: a filled circle, lit from above like a small sphere. The fill
+   is the gradient of its class, set by the renderer. */
+.graph .shape {
+  fill: var(--c);
+  stroke: oklch(1 0 0 / 0.5);
+  stroke-width: 0.9;
+  transition: filter 200ms;
+}
+
+/* Light is for what matters now: the focus, what the pointer or the keyboard
+   is on, and the areas the syllabi already reach. */
+.graph .node-focus .shape,
+.graph .node-lit .shape,
+.graph .node:hover .shape,
+.graph .node:focus-visible .shape {
+  filter: url(#glow);
+}
+
+/* CS2023: a hexagon with a double outline and a translucent fill (ADR-019). */
+.graph .layer-reference .shape {
+  fill: color-mix(in oklch, var(--c) 16%, var(--ground));
+  stroke: var(--c);
+  stroke-width: 1.8;
+}
+
+.graph .core {
+  fill: color-mix(in oklch, var(--c) 34%, var(--ground));
+  stroke: var(--c);
+  stroke-width: 1.3;
+  pointer-events: none;
+}
+
+.graph .core.glyph {
+  fill: none;
+  stroke: var(--ground-deep);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.graph .layer-reference .core.glyph {
+  stroke: var(--c);
+}
+
+.graph .halo {
+  fill: none;
+  stroke: var(--c);
+  stroke-width: 1.5;
+  opacity: 0.7;
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    transform: scale(1.12);
+    opacity: 0.3;
+  }
+}
+
+.graph .ring {
+  fill: none;
+  stroke: var(--mark);
+  stroke-width: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.graph .node:focus-visible .ring {
+  opacity: 1;
+}
+
+.graph .layer-reference.node:hover:not(.node-focus) .shape {
+  fill: color-mix(in oklch, var(--c) 34%, var(--ground));
+}
+
+.graph .node-far {
+  opacity: 0.55;
+}
+
+.graph .node-far:hover,
+.graph .node-far:focus-visible {
+  opacity: 1;
+}
+
+.graph .node-dot .shape {
+  stroke-width: 1;
+}
+
+/* When a large map is fitted small, the names shrink less than the map. */
+.graph .label {
+  transform: scale(calc(1 / clamp(var(--floor, 0.85), var(--k), 1)));
+}
+
+.graph .caption-row {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(calc(1 / clamp(var(--floor, 0.85), var(--k), 1)));
+}
+
+.graph .label text {
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--text);
+  paint-order: stroke;
+  stroke: var(--space);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.graph .node-focus .label .name {
+  font-size: 16px;
+  font-weight: 700;
+  fill: var(--mark);
+}
+
+.graph .node-far .label .name {
+  fill: var(--text-2);
+}
+
+.graph .label .sub {
+  font-size: 11.5px;
+  fill: var(--text-3);
+}
+
+.graph .plus circle {
+  fill: var(--mark);
+  stroke: var(--ground);
+  stroke-width: 2;
+}
+
+.graph .plus path {
+  stroke: var(--ground-deep);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.graph .plus circle.plus-hit {
+  fill: transparent;
+  stroke: none;
+}
+
+@media (pointer: fine) {
+  .graph .plus circle.plus-hit {
+    display: none;
+  }
+}
+
+.graph .plus:hover circle:not(.plus-hit) {
+  fill: var(--r-prerequisite);
+}
+
+.graph .edge-line {
+  fill: none;
+  stroke: var(--c, var(--line-strong));
+  stroke-width: 1.4;
+  opacity: 0.62;
+  pointer-events: none;
+  transition: opacity 160ms, stroke-width 160ms;
+}
+
+/* The order to learn in is the line the map is read by: it carries light.
+   A CSS shadow, because an SVG filter does not paint an exactly horizontal line. */
+.graph .edge-main.rel-HAS_PREREQUISITE .edge-line {
+  stroke-width: 2;
+  opacity: 0.92;
+  filter: drop-shadow(0 0 3px color-mix(in oklch, var(--c) 70%, transparent));
+}
+
+.graph .edge-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: calc(24px / var(--k));
+  cursor: pointer;
+}
+
+.graph .edge-bundle .edge-hit {
+  cursor: default;
+}
+
+.graph .edge-bundle .edge-line {
+  stroke-width: 5;
+  opacity: 0.3;
+  stroke-linecap: round;
+}
+
+.graph .edge-far .edge-line {
+  opacity: 0.3;
+  stroke-width: 1.1;
+}
+
+.graph .edge-source .edge-line {
+  stroke-dasharray: 2 5;
+  opacity: 0.5;
+}
+
+.graph .edge:hover .edge-line,
+.graph .edge.is-near .edge-line {
+  opacity: 1;
+  stroke-width: 2;
+}
+
+.graph .edge.is-selected .edge-line {
+  stroke: var(--mark);
+  stroke-width: 2.6;
+  opacity: 1;
+  filter: drop-shadow(0 0 4px oklch(1 0 0 / 0.6));
+}
+
+/* The head of an arrow takes the color of its line. */
+.graph .arrow path {
+  fill: context-stroke;
+}
+
+.graph .caption {
+  font-size: 12.5px;
+  font-weight: 650;
+  fill: var(--text-2);
+  paint-order: stroke;
+  stroke: var(--space);
+  stroke-width: 4px;
+  animation: appear 500ms var(--ease) backwards;
+}
+
+.graph .caption-relation {
+  fill: var(--c, var(--text-2));
+}
+
+.graph .caption-note {
+  font-weight: 400;
+  fill: var(--text-3);
+}
+
+.graph .boxes rect {
+  fill: oklch(0.2 0.04 275 / 0.4);
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 5 5;
+}
+
+.graph-tip {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  gap: 2px;
+  max-width: 320px;
+  padding: 8px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-small);
+  background: var(--ground-deep);
+  box-shadow: var(--shadow);
+  font-size: var(--step--1);
+  pointer-events: none;
+}
+
+.graph-tip strong {
+  font-size: var(--step-0);
+  font-weight: 650;
+}
+
+.graph-tip span {
+  color: var(--text-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

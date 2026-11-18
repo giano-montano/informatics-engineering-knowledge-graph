@@ -8,15 +8,11 @@
 
 <http://www.informatics-engineering-kms.org/ontology/informatic-engineering#> rdf:type owl:Ontology ;
                                                                                owl:imports <http://www.informatics-engineering-kms.org/ontology/cs2023-backbone> ;
-                                                                               rdfs:comment "Invariante de cuatro niveles afirmado por los axiomas existenciales: todo Concept pertenece a ≥1 Topic; todo Topic a ≥1 KnowledgeUnit; toda KnowledgeUnit a ≥1 KnowledgeArea. Bajo mundo abierto, HermiT no detecta su incumplimiento; los nodos huérfanos se verifican mediante consultas de integridad en R3." .
+                                                                               rdfs:comment "Invariante de cuatro niveles afirmado por los axiomas existenciales: todo Concept pertenece a ≥1 Topic; todo Topic a ≥1 KnowledgeUnit; toda KnowledgeUnit a ≥1 KnowledgeArea. Bajo mundo abierto, HermiT no detecta su incumplimiento; los nodos huérfanos se verifican mediante consultas de integridad en R4." .
 
 #################################################################
 #    Annotation properties
 #################################################################
-
-###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#description
-:description rdf:type owl:AnnotationProperty .
-
 
 ###  http://www.informatics-engineering-kms.org/ontology/informatic-engineering#layer
 :layer rdf:type owl:AnnotationProperty .

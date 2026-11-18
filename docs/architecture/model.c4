@@ -1,0 +1,508 @@
+// Modelo único del sistema. Cada elemento se declara una sola vez; las
+// vistas de views.c4 son proyecciones de este modelo.
+//
+// Regla de prosa: el .c4 dice qué es cada elemento, qué responsabilidad
+// tiene y a qué atributo o decisión responde; el porqué vive en el ADR.
+// `summary` se muestra sobre el diagrama: una línea.
+//
+// Las relaciones se declaran en el nivel más bajo en que existen; LikeC4
+// deriva las de los niveles superiores.
+//
+// Excepción a «una sola vez»: el validador, el repositorio y el auditor son
+// un mismo código, el núcleo del grafo, que corre en el worker y en los
+// procesos de construcción. C4 ubica cada componente en el proceso que lo
+// ejecuta, así que se declaran en ambos con la etiqueta #nucleo. La
+// descripción completa vive en el worker.
+model {
+
+  student = person 'Estudiante' {
+    summary 'Consulta y navega el grafo. No escribe.'
+    description '''
+      Busca elementos del currículo, recorre sus relaciones y accede a los
+      recursos asociados. Ve el documento del que procede cada afirmación
+      institucional y distingue la capa a la que pertenece cada elemento.
+
+      Interesado de AC-03 y AC-05.
+    '''
+  }
+
+  operator = person 'Operador del grafo' {
+    summary 'Incorpora material y observa el resultado de la ingesta.'
+    description '''
+      Sube documentos académicos declarando su tipo de recurso y el código
+      y el nombre del curso al que pertenecen, sigue el estado de cada
+      corrida, revisa los hechos descartados y consulta el reporte de
+      auditoría.
+
+      No decide sobre el contenido del grafo: no aprueba hechos, no edita
+      elementos y no reingresa descartes. Ante una violación de integridad
+      dispone de la evidencia, no del remedio.
+
+      Interesado de AC-01, AC-02 y AC-04.
+    '''
+  }
+
+  llm = externalSystem 'Proveedor de modelo de lenguaje' {
+    summary 'Extrae hechos candidatos estructurados a partir de texto.'
+    description '''
+      Única dependencia externa del sistema. Recibe el texto de un documento
+      junto con el vocabulario del grafo y devuelve hechos candidatos
+      conformes a un esquema.
+
+      Nunca escribe en la base de grafos ni compone sentencias de escritura
+      (ADR-003).
+    '''
+  }
+
+  kms = softwareSystem 'Sistema de gestión de conocimiento curricular' {
+    summary 'Hace navegables las relaciones del currículo de Ingeniería Informática.'
+    description '''
+      Representa como grafo de propiedades las áreas, unidades, temas,
+      conceptos, cursos y recursos de aprendizaje de la carrera, y expone
+      consultas que derivan prerrequisitos, ubicación estructural y recursos
+      asociados.
+
+      El contenido institucional se incorpora ingestando documentos
+      académicos con asistencia de un modelo de lenguaje. Toda afirmación
+      institucional conserva el documento del que se derivó.
+
+      Responde a las preguntas de competencia de R1 y a los atributos AC-01
+      a AC-05.
+    '''
+
+    // ── Contenedores que ejecutan código ──────────────────────────────
+
+    web = container 'Aplicación web' {
+      technology 'SPA, Svelte 5'
+      summary 'Única superficie del sistema: navegación del estudiante y panel del operador.'
+      description '''
+        Un solo desplegable con dos zonas. La navegación permite buscar,
+        explorar el grafo y abrir recursos; el panel del operador permite
+        subir un documento con su tipo y el código de su curso, seguir el
+        estado de la corrida, revisar descartes y consultar el reporte de
+        auditoría.
+
+        Se despliega aparte de la API (ADR-007). Se descompone en R5
+        (ADR-016 a ADR-019). Solo presenta: la lógica de navegación vive en
+        la API. El panel del operador queda fuera de la prueba de
+        aceptación de R6.
+      '''
+
+      // Navegación del estudiante: un lienzo con un elemento en foco (ADR-016).
+
+      explorationState = component 'Estado de la exploración' {
+        technology 'Svelte 5 (runes)'
+        summary 'Foco, lente, «ver por», expansiones y rastro; los refleja en la URL.'
+        description '''
+          Única fuente del estado compartido entre el lienzo, la cabecera,
+          el panel y la línea de paradas. Al cambiar el foco o la lente,
+          pide el subgrafo y decide la disposición (ADR-016, ADR-017).
+        '''
+      }
+
+      apiClient = component 'Cliente de la API' {
+        technology 'fetch'
+        summary 'Única puerta a la API: codifica las claves y devuelve el subgrafo.'
+        description '''
+          Codifica las claves (IRI con «#») y devuelve cada respuesta con su
+          estado. Ningún otro componente de la navegación habla con la API.
+        '''
+      }
+
+      search = component 'Buscador' {
+        summary 'Punto de entrada por nombre, con teclado.'
+        description '''
+          Combobox con resultados por clase y por capa, y un estado vacío que
+          ofrece recorrer las áreas.
+        '''
+      }
+
+      home = component 'Inicio' {
+        summary 'Punto de entrada sin buscar: las 17 áreas y los cursos.'
+        description '''
+          Distingue las áreas que ya tienen temas de los sílabos, y las
+          lista también como texto. Pide las áreas, con sus conteos, y los
+          cursos a la ruta de inicio de la API.
+        '''
+      }
+
+      canvas = component 'Lienzo del grafo' {
+        technology 'D3, SVG'
+        summary 'Dibuja lo que responde la lente activa, con forma por capa y una disposición por lente.'
+        description '''
+          Recibe el subgrafo tal como llega y dibuja solo lo que responde la
+          pregunta en curso; lo que no cabe con nombre legible se resume.
+          Cada nodo es un botón con texto accesible (ADR-018). La capa se
+          distingue por forma: hexágono para CS2023, círculo para los
+          sílabos (ADR-019).
+        '''
+      }
+
+      contextHeader = component 'Cabecera de contexto' {
+        summary 'Ofrece las lentes que aplican al foco y responde la elegida en una frase.'
+      }
+
+      focusPanel = component 'Panel del foco' {
+        summary 'Ficha del foco: fuente, ubicación, contenido, prerrequisitos, material y conexiones.'
+        description '''
+          Lee el foco como texto y es la alternativa accesible al lienzo:
+          replica cada vecino y cada relación como lista. Muestra la fuente
+          de cada elemento y de cada relación, con su enlace (ADR-019).
+        '''
+      }
+
+      stopsLine = component 'Línea de paradas' {
+        summary 'Resume el camino hasta la meta en una línea, con el porqué de cada parada.'
+      }
+
+      // Operación.
+
+      operatorPanel = component 'Panel del operador' {
+        summary 'Token tecleado, carga de documentos, corridas, descartes y reporte.'
+        description '''
+          Común a la navegación elegida y a cualquier otra: solo comparte la
+          aplicación. Envía el token de ADR-013 en cada petición.
+        '''
+      }
+    }
+
+    api = container 'API' {
+      technology 'Python, FastAPI'
+      summary 'Consultas de lectura, alta de corridas y entrega de documentos.'
+      description '''
+        Atiende las consultas de la navegación, registra cada corrida que
+        solicita el operador y sirve los documentos de los recursos
+        institucionales en la dirección que registra su localizador.
+
+        Nunca escribe en la base de grafos.
+      '''
+
+      navRoutes = component 'Rutas de navegación' {
+        technology 'FastAPI'
+        summary 'Consultas derivadas y entrega de documentos.'
+        description '''
+          Ejecuta los cinco patrones de consulta derivados (DD-07 y DD-08),
+          los prerrequisitos de un concepto, la búsqueda por
+          nombre y el detalle de un nodo, y sirve el documento de cada
+          recurso institucional.
+
+          Responde a AC-05 y AC-03.
+        '''
+      }
+
+      opsRoutes = component 'Rutas de operación' {
+        technology 'FastAPI'
+        summary 'Alta de corrida, estado, descartes y reporte.'
+        description '''
+          Recibe el documento con su tipo y el código y el nombre de su
+          curso, acuña la clave de su recurso de aprendizaje, de la que se
+          deriva su localizador, guarda el archivo, registra la corrida
+          como pendiente y lanza un
+          worker si no hay uno activo (ADR-007, ADR-009). Expone el estado
+          de cada corrida, sus descartes y su reporte de auditoría.
+
+          Protegidas por un token fijo de operador (ADR-013). Responden a
+          AC-02.
+        '''
+      }
+    }
+
+    worker = container 'Worker de ingesta' {
+      technology 'Python'
+      summary 'Ejecuta el pipeline de ingesta; único escritor del grafo mientras el sistema está en servicio.'
+      description '''
+        Se lanza como proceso hijo de la API si no hay uno activo, procesa
+        una tras otra las corridas pendientes y termina. No toma corridas
+        mientras el último reporte de auditoría tenga violaciones (ADR-007).
+
+        Único escritor del grafo mientras el sistema está en servicio
+        (ADR-005). El extractor y los componentes del núcleo leen el esquema
+        del grafo, la declaración única de lo que el grafo admite (ADR-008).
+      '''
+
+      orchestrator = component 'Orquestador de corridas' {
+        technology 'Python'
+        summary 'Conduce cada corrida de principio a fin y registra su resultado.'
+        description '''
+          Mientras la compuerta de auditoría esté abierta, toma la corrida
+          pendiente más antigua (ADR-007). La conduce:
+          lee la instantánea, obtiene los hechos extraídos, les agrega los
+          hechos declarados, valida el lote, lo escribe, persiste los hechos
+          en el almacén y audita. Registra estados, descartes y reporte.
+
+          Estados: pendiente, en curso, terminada, rechazada, fallida,
+          escrita sin persistir y detenida por auditoría (ADR-010).
+
+          Limitación declarada: si el worker se interrumpe entre confirmar
+          el lote y persistirlo, la corrida queda escrita sin persistir y
+          una reaplicación posterior no la reproduce.
+        '''
+      }
+
+      extractor = component 'Extractor' {
+        technology 'Python, Docling, PydanticAI'
+        summary 'Documento e instantánea → hechos candidatos con claves resueltas.'
+        description '''
+          Parsea el documento, obtiene del proveedor hechos candidatos en
+          salida tipada contra el esquema del grafo y enlaza cada mención:
+          con la clave de un nodo existente o con una clave acuñada si es
+          nueva (ADR-003, ADR-011).
+
+          Reintenta de forma acotada ante errores transitorios del
+          proveedor y una sola vez, informando el error, ante una salida no
+          conforme (ADR-010): EX-01 si no se ajusta al esquema de salida,
+          EX-02 si trae una clave que no está en la instantánea y EX-03 si
+          una clave existente es de otra clase que la que exige su lugar en
+          la salida.
+        '''
+      }
+
+      validator = component 'Validador' {
+        #nucleo
+        technology 'Python'
+        summary 'Esquema, instantánea y lote → lista de violaciones.'
+        description '''
+          Comprueba en memoria, sin consultar la base, las reglas que
+          dependen del contenido del lote o de lo que ya existe en el grafo:
+          RI-05, RI-08, RI-10, RM-02, RM-04 y RM-05. Acumula todas las
+          violaciones del lote (ADR-005, ADR-011).
+        '''
+      }
+
+      repository = component 'Repositorio del grafo' {
+        #nucleo
+        technology 'Python, Neo4j driver'
+        summary 'Lee la instantánea, escribe lotes con forma fija e inicializa la base.'
+        description '''
+          Lee la instantánea al empezar cada corrida. Escribe cada lote en
+          una sola transacción, con plantillas de forma fija que solo
+          reciben valores, fija la procedencia al crear y compara los
+          contadores con lo esperado. Vacía la base y crea las restricciones
+          de unicidad para la carga.
+
+          Garantiza por la forma de la escritura RI-02, RI-03, RI-04, RI-06,
+          RI-09, RM-01 y RM-03, y con la restricción de unicidad, RI-01
+          (ADR-003, ADR-005, ADR-006).
+        '''
+      }
+
+      auditor = component 'Auditor' {
+        #nucleo
+        technology 'Python, Cypher'
+        summary 'Una consulta por regla sobre el grafo completo y su reporte.'
+        description '''
+          Ejecuta, al cierre de la carga, de cada ingesta y de la
+          reaplicación, una consulta por regla de integridad y del módulo, y
+          devuelve un reporte identificado con el código de cada regla
+          (AC-02, RF-09, ADR-005).
+        '''
+      }
+    }
+
+    // Sin flecha entrante a propósito: el desarrollador no se modela como
+    // actor; la invocación se describe en la prosa.
+    buildTools = buildTool 'Procesos de construcción del grafo' {
+      technology 'Python, línea de comandos'
+      summary 'Carga la capa de referencia y reaplica los hechos guardados. No es funcionalidad en línea.'
+      description '''
+        Se ejecutan con el sistema detenido (ADR-007). Ninguno invoca al
+        modelo de lenguaje (AC-04, ADR-004).
+
+        Comparten con el worker el núcleo del grafo: por ser el mismo
+        código, la reaplicación reproduce lo que hizo la ingesta y las
+        reglas se comprueban igual en todos los caminos de escritura.
+      '''
+
+      commands = component 'Comandos de construcción' {
+        technology 'Python, línea de comandos'
+        summary 'Carga y reaplicación, cada una cerrada con su auditoría.'
+        description '''
+          La carga vacía la base, la inicializa y escribe la capa de
+          referencia desde el TTL del backbone. La reaplicación se activa
+          por separado, solo después de una carga, y escribe los lotes del
+          almacén de hechos en el orden de las corridas, saltando las
+          detenidas por auditoría. La reproyección es el procedimiento de
+          ejecutar ambas (ADR-004, ADR-012).
+        '''
+      }
+
+      validator = component 'Validador' {
+        #nucleo
+        technology 'Python'
+        summary 'El mismo código que el validador del worker.'
+      }
+
+      repository = component 'Repositorio del grafo' {
+        #nucleo
+        technology 'Python, Neo4j driver'
+        summary 'El mismo código que el repositorio del worker.'
+      }
+
+      auditor = component 'Auditor' {
+        #nucleo
+        technology 'Python, Cypher'
+        summary 'El mismo código que el auditor del worker.'
+      }
+    }
+
+    // ── Contenedores que almacenan datos ──────────────────────────────
+
+    neo4j = dataStore 'Base de grafos' {
+      technology 'Neo4j Community, Cypher 5'
+      summary 'Grafo de propiedades con la capa de referencia y la institucional.'
+      description '''
+        Una sola base. Ocho etiquetas de clase, ocho tipos de arista y una
+        única propiedad de clave por nodo: el IRI en la capa de referencia;
+        en la institucional, un uuid que se fija antes de escribir y viaja
+        en el lote, acuñado al azar o derivado de un identificador estable.
+
+        Se reconstruye por completo con una carga seguida de una
+        reaplicación; ningún dato tiene aquí su fuente de verdad (ADR-004).
+      '''
+    }
+
+    sqlite = dataStore 'Almacén operacional' {
+      technology 'SQLite'
+      summary 'Estado de corridas, salidas del modelo, descartes y reportes de auditoría.'
+      description '''
+        Escrito por la API al dar de alta una corrida, por el worker durante
+        su ejecución y por los procesos de construcción, que registran su
+        reporte de auditoría y leen el estado de las corridas para
+        reaplicar.
+
+        Su contenido sobrevive a la carga. Sostiene las medidas de AC-01 y
+        AC-02 y la compuerta de auditoría del worker (ADR-007). Por cada
+        corrida rechazada guarda una fila por violación y el lote candidato
+        completo (ADR-010).
+
+        Modo WAL y espera ante bloqueo.
+      '''
+    }
+
+    documentStore = dataStore 'Almacén de documentos' {
+      technology 'Sistema de archivos'
+      summary 'Documentos ingestados, hospedados por el sistema.'
+      description '''
+        Cada archivo se nombra con la clave del recurso de aprendizaje que
+        acuña la API (ADR-009). La API escribe al recibirlo y lee al
+        servirlo; el worker lee para parsearlo.
+      '''
+    }
+
+    factStore = dataStore 'Almacén de hechos' {
+      technology 'Sistema de archivos'
+      summary 'Lote escrito por cada corrida, fuente de la reaplicación.'
+      description '''
+        Un archivo por corrida que escribió, nombrado con su identificador y
+        escrito una sola vez, después de confirmar la transacción. Contiene
+        exactamente el lote que recibió el escritor, con las claves ya
+        resueltas (ADR-012).
+
+        Sus archivos llevan el host en los localizadores, así que no se
+        reutilizan en otro host (ADR-009).
+      '''
+    }
+  }
+
+  // ── Relaciones ──────────────────────────────────────────────────────
+
+  // Actores y sistema externo
+  // Las vistas de nivel 1 y 2 fijan el título de las relaciones derivadas.
+  student -> kms.web.search 'Busca por nombre'
+  student -> kms.web.home 'Elige por dónde empezar'
+  student -> kms.web.canvas 'Recorre el grafo de punto en punto'
+  student -> kms.web.contextHeader 'Elige qué preguntar del foco'
+  student -> kms.web.focusPanel 'Lee la ficha y abre el documento'
+  operator -> kms.web.operatorPanel 'Sube documentos, sigue corridas, revisa descartes y el reporte'
+
+  // Aplicación web
+  kms.web.search -> kms.web.explorationState 'Fija el foco'
+  kms.web.home -> kms.web.explorationState 'Fija el foco'
+  kms.web.canvas -> kms.web.explorationState 'Cambia el foco o agrega conexiones'
+  kms.web.contextHeader -> kms.web.explorationState 'Cambia la lente y el «ver por»'
+  kms.web.focusPanel -> kms.web.explorationState 'Cambia el foco o la lente, o fija una relación'
+  kms.web.stopsLine -> kms.web.explorationState 'Abre el porqué de una parada o cambia el foco'
+  kms.web.explorationState -> kms.web.canvas 'Subgrafo y disposición'
+  kms.web.explorationState -> kms.web.focusPanel 'Foco en curso'
+  kms.web.explorationState -> kms.web.stopsLine 'Respuesta de la lente'
+  kms.web.explorationState -> kms.web.apiClient 'Pide subgrafos'
+  kms.web.search -> kms.web.apiClient 'Busca por nombre'
+  kms.web.home -> kms.web.apiClient 'Pide las áreas y los cursos'
+  kms.web.focusPanel -> kms.web.apiClient 'Pide fuente, ubicación, prerrequisitos y material'
+
+  // Aplicación web → API
+  kms.web.apiClient -> kms.api.navRoutes 'Búsqueda, detalle, patrones de consulta e inicio' {
+    technology 'HTTP/JSON'
+  }
+  kms.web.focusPanel -> kms.api.navRoutes 'Abre el documento del sílabo' {
+    technology 'HTTP (PDF)'
+  }
+  kms.web.operatorPanel -> kms.api.opsRoutes 'Alta de corrida, estado, descartes y reporte' {
+    technology 'HTTP/JSON, Bearer'
+  }
+  kms.web.operatorPanel -> kms.api.navRoutes 'Abre el documento de la corrida' {
+    technology 'HTTP (PDF)'
+  }
+
+  // API
+  kms.api.navRoutes -> kms.neo4j 'Consulta' {
+    technology 'Cypher'
+    description '''
+      Solo lectura. El tiempo de ejecución de los cinco patrones de DD-07 en
+      esta relación es lo que mide AC-05, sin serialización ni transporte.
+    '''
+  }
+  kms.api.navRoutes -> kms.documentStore 'Lee el documento a servir'
+  kms.api.opsRoutes -> kms.documentStore 'Guarda el documento subido'
+  kms.api.opsRoutes -> kms.sqlite 'Registra la corrida; lee estado, descartes y reporte' {
+    technology 'SQL'
+  }
+  kms.api.opsRoutes -> kms.worker.orchestrator 'Lanza un worker si no hay uno activo' {
+    technology 'Proceso hijo'
+  }
+
+  // Worker
+  kms.worker.orchestrator -> kms.sqlite 'Comprueba la compuerta y toma la corrida pendiente; registra estado, descartes y reporte' {
+    technology 'SQL'
+  }
+  kms.worker.orchestrator -> kms.worker.extractor 'Documento e instantánea'
+  kms.worker.orchestrator -> kms.worker.repository 'Lee la instantánea; escribe el lote'
+  kms.worker.orchestrator -> kms.worker.validator 'Valida el lote'
+  kms.worker.orchestrator -> kms.worker.auditor 'Audita al cierre'
+  kms.worker.orchestrator -> kms.factStore 'Persiste el lote escrito'
+  kms.worker.extractor -> kms.documentStore 'Lee el documento a parsear'
+  kms.worker.extractor -> llm 'Solicita extracción' {
+    technology 'HTTPS'
+    description '''
+      Envía el texto del documento y el vocabulario del grafo; recibe
+      hechos candidatos en salida tipada. Lo recibido nunca se incorpora al
+      grafo sin pasar la validación.
+    '''
+  }
+
+  kms.worker.repository -> kms.neo4j 'Lee y escribe' {
+    technology 'Cypher'
+    description '''
+      Una lectura al empezar cada corrida y una transacción por lote, con
+      sentencias de forma fija que solo reciben valores.
+    '''
+  }
+  kms.worker.auditor -> kms.neo4j 'Consultas de integridad' {
+    technology 'Cypher'
+  }
+
+  // Procesos de construcción
+  kms.buildTools.commands -> kms.buildTools.repository 'Vacía, inicializa y escribe'
+  kms.buildTools.commands -> kms.buildTools.validator 'Valida la capa de referencia'
+  kms.buildTools.commands -> kms.buildTools.auditor 'Audita al cierre'
+  kms.buildTools.commands -> kms.factStore 'Lee los lotes a reaplicar'
+  kms.buildTools.commands -> kms.sqlite 'Lee el estado de las corridas; registra el reporte' {
+    technology 'SQL'
+  }
+  kms.buildTools.repository -> kms.neo4j 'Vacía, carga y reaplica' {
+    technology 'Cypher'
+  }
+  kms.buildTools.auditor -> kms.neo4j 'Consultas de integridad' {
+    technology 'Cypher'
+  }
+}

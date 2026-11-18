@@ -1,0 +1,82 @@
+# silabo=1INF25 | curso=Programación 2 | anotador=Claude Opus 5.5 | guia=v2.1 | fecha=2026-10-01
+id	tipo	nivel	etiqueta	alias	tema_padre	seccion	evidencia	nota
+1INF25-001	tema	obligatoria	Funciones	función|functions		contenidos	FUNCIONES	
+1INF25-002	concepto	obligatoria	Variables estáticas	variable estática|static variables	1INF25-001	contenidos	Variables estáticas	También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-003	concepto	obligatoria	Parámetros con valores por defecto	parámetro con valor por defecto|parámetros por defecto|argumentos por defecto|default arguments|default parameters	1INF25-001	contenidos	Parámetros con valores por defecto	
+1INF25-004	concepto	obligatoria	Sobrecarga de funciones	function overloading	1INF25-001	contenidos	Sobrecarga de funciones y operadores no ligados a objetos	
+1INF25-005	concepto	obligatoria	Sobrecarga de operadores no ligados a objetos	sobrecarga de operadores no miembro|non-member operator overloading	1INF25-001	contenidos	Sobrecarga de funciones y operadores no ligados a objetos	
+1INF25-006	concepto	obligatoria	Plantillas de funciones	plantilla de funciones|plantillas de función|function templates	1INF25-001	contenidos	Plantillas de funciones	También en cap. 7; tema_padre de la primera aparición.
+1INF25-007	concepto	aceptable	Funciones genéricas	función genérica|generic functions	1INF25-001	otra	Diseña software empleando funciones genéricas	Solo en RA3. Ambigua entre plantillas de funciones (cap. 1/7) y funciones con punteros genéricos (cap. 2): fila propia, no alias de ninguna.
+1INF25-008	concepto	obligatoria	Bibliotecas estáticas de funciones	biblioteca estática de funciones|bibliotecas estáticas|biblioteca estática|static libraries	1INF25-001	contenidos	Bibliotecas estáticas de funciones	
+1INF25-009	tema	obligatoria	Arreglos y punteros	arreglos|arreglo|punteros|puntero|arrays|pointers|manejo de punteros		contenidos	ARREGLOS Y PUNTEROS	'Manejo de punteros' (sumilla) es la mitad 'punteros' con fórmula de actividad: misma fila, como alias.
+1INF25-010	concepto	obligatoria	Arreglos vs. punteros	arreglos versus punteros|arrays vs pointers	1INF25-009	contenidos	Arreglos Vs. Punteros	Comparación tratada como un solo saber; 'arreglos' y 'punteros' sueltos ya son alias del tema.
+1INF25-011	concepto	obligatoria	Aritmética de punteros	pointer arithmetic	1INF25-009	contenidos	Aritmética de punteros	
+1INF25-012	concepto	obligatoria	Punteros a punteros	puntero a puntero|punteros dobles|puntero doble|pointers to pointers	1INF25-009	contenidos	Punteros a punteros	
+1INF25-013	tema	obligatoria	Métodos dinámica de asignación dinámica de memoria	métodos de asignación dinámica de memoria|método de asignación dinámica de memoria|métodos de asignación de memoria dinámica		contenidos	Métodos dinámica de asignación dinámica de memoria: Asignación exacta y asignación por incrementos	Errata del sílabo: etiqueta literal, forma corregida como alias. Encabezado en línea ('X: a y b') tratado como subunidad que agrupa ítems: tema.
+1INF25-014	concepto	obligatoria	Asignación dinámica de memoria	asignación de memoria dinámica|dynamic memory allocation	1INF25-009	contenidos	asignación dinámica de memoria	Núcleo nombrado literal dentro del encabezado 'Métodos ... de asignación dinámica de memoria' (y en RA1): concepto aparte del tema, con padre en el capítulo.
+1INF25-015	concepto	obligatoria	Asignación exacta	asignación exacta de memoria	1INF25-013	contenidos	Asignación exacta y asignación por incrementos	
+1INF25-016	concepto	obligatoria	Asignación por incrementos	asignación de memoria por incrementos|asignación incremental	1INF25-013	contenidos	Asignación exacta y asignación por incrementos	
+1INF25-017	concepto	obligatoria	Punteros genéricos	puntero genérico|punteros void|puntero void|void pointers	1INF25-009	contenidos	Punteros genéricos	
+1INF25-018	concepto	obligatoria	Punteros a funciones	puntero a función|punteros a función|function pointers	1INF25-009	contenidos	Punteros a funciones	
+1INF25-019	concepto	obligatoria	Argumentos en la línea de comandos	argumento en la línea de comandos|argumentos de línea de comandos|command-line arguments	1INF25-009	contenidos	Argumentos en la línea de comandos	
+1INF25-020	concepto	obligatoria	Manejo de memoria dinámica	gestión de memoria dinámica|dynamic memory management	1INF25-009	sumilla	manejo de memoria dinámica	
+1INF25-021	concepto	obligatoria	Manejo de memoria	gestión de memoria|memory management	1INF25-009	sumilla	manejo de memoria	Fila aparte de la anterior por el calificador. Aquí es memoria en programación, no la gestión de memoria del SO: revisar antes de fusionar con 1INF29.
+1INF25-022	tema	obligatoria	Programación orientada a objetos	POO|object-oriented programming|OOP|paradigma de programación orientado a objetos|paradigma orientado a objetos		contenidos	PROGRAMACIÓN ORIENTADA A OBJETOS	
+1INF25-023	concepto	obligatoria	Clases	clase|classes	1INF25-022	contenidos	Definición de clases y creación de objetos	
+1INF25-024	concepto	obligatoria	Objetos	objeto|objects	1INF25-022	contenidos	Definición de clases y creación de objetos	
+1INF25-025	concepto	obligatoria	Definición de clases	definición de clase|class definition	1INF25-022	contenidos	Definición de clases y creación de objetos	
+1INF25-026	concepto	obligatoria	Creación de objetos	instanciación de objetos|instanciación|object creation	1INF25-022	contenidos	Definición de clases y creación de objetos	También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-027	concepto	obligatoria	Implementación de clases	implementación de clase	1INF25-022	sumilla	implementación de clases	
+1INF25-028	concepto	obligatoria	Atributos	atributo|attributes	1INF25-022	contenidos	Atributos y métodos	
+1INF25-029	concepto	obligatoria	Métodos	método|methods	1INF25-022	contenidos	Atributos y métodos	
+1INF25-030	concepto	obligatoria	Atributos estáticos	atributo estático|static attributes	1INF25-022	contenidos	Atributos estáticos	
+1INF25-031	tema	obligatoria	Especificadores de acceso a miembros	especificador de acceso a miembros|especificadores de acceso|especificador de acceso|modificadores de acceso|modificador de acceso|access specifiers|access modifiers		contenidos	Especificadores de acceso a miembros: públicos y privados	Encabezado en línea ('X: a y b') tratado como subunidad que agrupa ítems: tema. Reaparece en cap. 5 (protegido) y cap. 8.
+1INF25-032	concepto	obligatoria	Especificador de acceso público	acceso público|public	1INF25-031	contenidos	Especificadores de acceso a miembros: públicos y privados	'públicos' no se nombra por sí solo: etiqueta completada con el núcleo del encabezado. También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-033	concepto	obligatoria	Especificador de acceso privado	acceso privado|private	1INF25-031	contenidos	Especificadores de acceso a miembros: públicos y privados	'privados' no se nombra por sí solo: etiqueta completada con el núcleo del encabezado. También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-034	concepto	obligatoria	Constructores	constructor|constructors	1INF25-022	contenidos	Constructores y destructores	También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-035	concepto	obligatoria	Destructores	destructor|destructors	1INF25-022	contenidos	Constructores y destructores	También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-036	concepto	obligatoria	Agregación	aggregation	1INF25-022	contenidos	Concepto de agregación	
+1INF25-037	tema	obligatoria	Operadores sobrecargados	operador sobrecargado|sobrecarga de operadores|operator overloading|overloaded operators		contenidos	OPERADORES SOBRECARGADOS	La 'sobrecarga de ... operadores' de la sumilla es la misma noción que el encabezado: misma fila.
+1INF25-038	concepto	obligatoria	Implementación de sobrecarga de operadores en clases	sobrecarga de operadores en clases	1INF25-037	contenidos	Implementación de sobrecarga de operadores en clases	
+1INF25-039	tema	obligatoria	Herencia	inheritance		contenidos	HERENCIA	
+1INF25-040	concepto	obligatoria	Herencia	inheritance	1INF25-039	contenidos	Concepto de herencia	También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-041	concepto	obligatoria	Herencia simple	single inheritance	1INF25-039	contenidos	Herencia simple	
+1INF25-042	concepto	obligatoria	Jerarquía de clases	jerarquías de clases|class hierarchy	1INF25-039	contenidos	Jerarquía de clases	
+1INF25-043	concepto	obligatoria	Sobre escritura de métodos	sobreescritura de métodos|sobrescritura de métodos|method overriding	1INF25-039	contenidos	Sobre escritura de métodos	Variante ortográfica del sílabo: etiqueta literal, formas correctas como alias.
+1INF25-044	concepto	obligatoria	Llamadas a constructores	llamada a constructores	1INF25-039	contenidos	Llamadas a constructores	
+1INF25-045	concepto	obligatoria	Especificador de acceso protegido	acceso protegido|protected	1INF25-031	contenidos	Especificador de acceso a miembros: protegido	'protegido' no se nombra por sí solo: etiqueta completada con el núcleo del encabezado.
+1INF25-046	concepto	obligatoria	Modificadores de ámbito en la herencia	modificador de ámbito en la herencia	1INF25-039	contenidos	Modificadores de ámbito en la herencia	
+1INF25-047	concepto	obligatoria	Herencia múltiple	multiple inheritance	1INF25-039	contenidos	Herencia Múltiple	
+1INF25-048	concepto	obligatoria	Clase base virtual en la herencia múltiple	clase base virtual|clases base virtuales|virtual base class|herencia virtual|virtual inheritance	1INF25-039	contenidos	Clase base virtual en la herencia múltiple	
+1INF25-049	tema	obligatoria	Punteros a objetos	puntero a objetos|punteros a objeto|pointers to objects		contenidos	PUNTEROS A OBJETOS	
+1INF25-050	concepto	obligatoria	Punteros a objetos	puntero a objetos|punteros a objeto|pointers to objects	1INF25-049	contenidos	Punteros a objetos, nomenclatura	
+1INF25-051	concepto	obligatoria	El puntero this	puntero this|this pointer	1INF25-049	contenidos	El puntero this	
+1INF25-052	concepto	obligatoria	Punteros en herencia	puntero en herencia	1INF25-049	contenidos	Punteros en herencia	
+1INF25-053	concepto	obligatoria	Métodos virtuales	método virtual|funciones virtuales|función virtual|virtual methods|virtual functions	1INF25-049	contenidos	Métodos virtuales	
+1INF25-054	concepto	obligatoria	Polimorfismo	polymorphism	1INF25-049	contenidos	Polimorfismo	También en cap. 8 (Java); tema_padre de la primera aparición.
+1INF25-055	concepto	obligatoria	Clases abstractas	clase abstracta|abstract classes	1INF25-049	contenidos	Clases abstractas	
+1INF25-056	tema	obligatoria	Clases auto referenciadas	clase auto referenciada|clases autorreferenciadas|clase autorreferenciada|self-referential classes		contenidos	Clases auto referenciadas: Listas ligadas, árboles	Encabezado en línea ('X: a y b') tratado como subunidad que agrupa ítems: tema.
+1INF25-057	concepto	obligatoria	Listas ligadas	lista ligada|listas enlazadas|lista enlazada|linked lists	1INF25-056	contenidos	Listas ligadas	
+1INF25-058	concepto	obligatoria	Árboles	árbol|trees	1INF25-056	contenidos	Listas ligadas, árboles	
+1INF25-059	tema	obligatoria	Plantillas y biblioteca estándar de plantillas	plantillas|plantilla|templates|biblioteca estándar de plantillas|bibliotecas estándar de plantillas|STL|standard template library		contenidos	PLANTILLAS Y BIBLIOTECA ESTÁNDAR DE PLANTILLAS	
+1INF25-060	concepto	obligatoria	Plantillas de clases	plantilla de clases|plantillas de clase|class templates	1INF25-059	contenidos	Plantillas de funciones y plantillas de clases	
+1INF25-061	concepto	obligatoria	Contenedores	contenedor|containers	1INF25-059	contenidos	Contenedores	
+1INF25-062	concepto	obligatoria	Iteradores	iterador|iterators	1INF25-059	contenidos	Iteradores	
+1INF25-063	concepto	obligatoria	Algoritmos	algoritmo|algoritmos de la STL|algoritmos de la biblioteca estándar de plantillas|STL algorithms	1INF25-059	contenidos	Contenedores. Iteradores. Algoritmos	Etiqueta genérica conservada literal; en contexto es 'algoritmos de la STL', que va como alias. Riesgo de colisión en consolidación: no fusionar sin revisar evidencia.
+1INF25-064	tema	obligatoria	Lenguaje de programación Java	Java|lenguaje Java|Java programming language		contenidos	LENGUAJE DE PROGRAMACIÓN JAVA	
+1INF25-065	concepto	obligatoria	Historia de Java	historia del lenguaje Java	1INF25-064	contenidos	Introducción al lenguaje de programación Java: Historia	'Historia' no se nombra por sí solo: etiqueta completada con el núcleo del encabezado.
+1INF25-066	concepto	obligatoria	Características de Java	características del lenguaje Java	1INF25-064	contenidos	Introducción al lenguaje de programación Java: Historia, características	'características' no se nombra por sí solo: etiqueta completada con el núcleo del encabezado.
+1INF25-067	concepto	obligatoria	Compilación de un programa desde la línea de comandos	compilación desde la línea de comandos	1INF25-064	contenidos	compilación y ejecución de un programa desde la línea de comandos	
+1INF25-068	concepto	obligatoria	Ejecución de un programa desde la línea de comandos	ejecución desde la línea de comandos	1INF25-064	contenidos	compilación y ejecución de un programa desde la línea de comandos	
+1INF25-069	concepto	obligatoria	JDK	Java Development Kit	1INF25-064	contenidos	concepto de JDK	
+1INF25-070	concepto	obligatoria	Bytecode	bytecodes|código de bytes	1INF25-064	contenidos	Bytecode	
+1INF25-071	concepto	obligatoria	Virtual Machine	Java Virtual Machine|JVM|máquina virtual de Java	1INF25-064	contenidos	Bytecode y Virtual Machine	Etiqueta genérica conservada literal; en contexto es la máquina virtual de Java, que va como alias. Riesgo de colisión en consolidación: no fusionar sin revisar evidencia.
+1INF25-072	concepto	obligatoria	Declaración de clases	declaración de clase|class declaration	1INF25-064	contenidos	Declaración de clases y creación de objetos	Fila aparte de 'Definición de clases' (cap. 3): en C++ declaración y definición son nociones distintas.
+1INF25-073	concepto	obligatoria	Garbage Collector	recolector de basura	1INF25-064	contenidos	concepto de Garbage Collector	
+1INF25-074	concepto	obligatoria	Ingreso y salida de datos en consola	entrada y salida de datos en consola|entrada y salida por consola|ingreso y salida de datos	1INF25-064	contenidos	Ingreso y salida de datos en consola	El sílabo repite la línea ('Ingreso y salida de dato.'): una fila; la forma sin 'en consola' es esa misma línea y va como alias.
+1INF25-075	concepto	obligatoria	Interfaces	interfaz|interfaces de Java|Java interfaces	1INF25-064	contenidos	Interfaces	Etiqueta genérica conservada literal; en contexto es la construcción 'interface' de Java, que va como alias. Riesgo de colisión en consolidación: no fusionar sin revisar evidencia.
+1INF25-076	concepto	obligatoria	ArrayList	clase ArrayList	1INF25-064	contenidos	ArrayList	
+1INF25-077	concepto	obligatoria	Paquetes	paquete|paquetes de Java|Java packages	1INF25-064	contenidos	Paquetes	Etiqueta genérica conservada literal; en contexto es los paquetes de Java, que va como alias. Riesgo de colisión en consolidación: no fusionar sin revisar evidencia.
+1INF25-078	concepto	obligatoria	GUI	interfaz gráfica de usuario|interfaces gráficas de usuario|graphical user interface		sumilla	implementación de GUI	Solo en la sumilla; ningún capítulo del programa analítico la cubre: tema_padre vacío.
+1INF25-079	concepto	obligatoria	Implementación de GUI	implementación de interfaces gráficas de usuario|implementación de interfaz gráfica de usuario		sumilla	implementación de GUI	Solo en la sumilla; ningún capítulo la cubre: tema_padre vacío.
+1INF25-080	concepto	aceptable	C++	lenguaje C++|lenguaje de programación C++		contenidos	PLANTILLAS Y BIBLIOTECA ESTÁNDAR DE PLANTILLAS	Implícito inequívoco (b): STL, clase base virtual y sobrecarga de operadores solo existen así en C++. Abarca caps. 1-7: tema_padre vacío. La normalización reduce 'C++' a 'c'.

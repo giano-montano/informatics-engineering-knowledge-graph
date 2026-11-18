@@ -1,0 +1,593 @@
+{
+ "GET /api/runs": [
+  {
+   "id": 1,
+   "status": "completed",
+   "created_at": "2026-10-17T02:35:25+00:00",
+   "finished_at": "2026-10-17T02:36:39+00:00",
+   "resource_type": "Sílabo",
+   "course_code": "1INF01",
+   "course_name": "Fundamentos de Programación",
+   "file_name": "1INF01-2026-2-SILABO.PDF"
+  },
+  {
+   "id": 2,
+   "status": "completed",
+   "created_at": "2026-10-17T02:37:53+00:00",
+   "finished_at": "2026-10-17T02:38:35+00:00",
+   "resource_type": "Sílabo",
+   "course_code": "INF144",
+   "course_name": "Técnicas de Programación",
+   "file_name": "INF144-2026-2-SILABO.PDF"
+  },
+  {
+   "id": 3,
+   "status": "completed",
+   "created_at": "2026-10-17T02:39:04+00:00",
+   "finished_at": "2026-10-17T02:39:51+00:00",
+   "resource_type": "Sílabo",
+   "course_code": "INF238",
+   "course_name": "Redes de Computadoras",
+   "file_name": "INF238-2026-2-SILABO.PDF"
+  },
+  {
+   "id": 4,
+   "status": "completed",
+   "created_at": "2026-10-17T02:40:27+00:00",
+   "finished_at": "2026-10-17T02:41:01+00:00",
+   "resource_type": "Sílabo",
+   "course_code": "1INF35",
+   "course_name": "Administración de Sistemas Operativos",
+   "file_name": "1INF35-2026-2-SILABO.PDF"
+  }
+ ],
+ "GET /api/runs/1": {
+  "id": 1,
+  "status": "completed",
+  "created_at": "2026-10-17T02:35:25+00:00",
+  "started_at": "2026-10-17T02:35:25+00:00",
+  "finished_at": "2026-10-17T02:36:39+00:00",
+  "resource_key": "5a791a78-36df-4f95-9eba-c2aed325c871",
+  "resource_type": "Sílabo",
+  "course_code": "1INF01",
+  "course_name": "Fundamentos de Programación",
+  "file_name": "1INF01-2026-2-SILABO.PDF",
+  "model": "claude-sonnet-5-5",
+  "model_settings": {
+   "base_url": "http://127.0.0.1:8765/v1",
+   "max_retries": 3,
+   "reasoning_effort": "medium",
+   "requested_model": "sonnet",
+   "temperature": null
+  },
+  "prompt_version": "67a014887826",
+  "content_retries": 0,
+  "error": null,
+  "audit_report": {
+   "id": 2,
+   "created_at": "2026-10-17T02:36:37+00:00",
+   "origin": "ingestion",
+   "run_id": "1",
+   "completed": true,
+   "violations": 0,
+   "rules": [
+    {
+     "rule": "RI-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-05",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-06",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-07",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-08",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-09",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-10",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-05",
+     "violations": 0,
+     "sample": []
+    }
+   ]
+  }
+ },
+ "GET /api/runs/1/discards": {
+  "discards": [],
+  "batch": null,
+  "raw_output": null
+ },
+ "GET /api/runs/2": {
+  "id": 2,
+  "status": "completed",
+  "created_at": "2026-10-17T02:37:53+00:00",
+  "started_at": "2026-10-17T02:37:53+00:00",
+  "finished_at": "2026-10-17T02:38:35+00:00",
+  "resource_key": "eb48adb4-e91b-42d5-a4fe-17abe8b7b0fd",
+  "resource_type": "Sílabo",
+  "course_code": "INF144",
+  "course_name": "Técnicas de Programación",
+  "file_name": "INF144-2026-2-SILABO.PDF",
+  "model": "claude-sonnet-5-5",
+  "model_settings": {
+   "base_url": "http://127.0.0.1:8765/v1",
+   "max_retries": 3,
+   "reasoning_effort": "medium",
+   "requested_model": "sonnet",
+   "temperature": null
+  },
+  "prompt_version": "67a014887826",
+  "content_retries": 0,
+  "error": null,
+  "audit_report": {
+   "id": 3,
+   "created_at": "2026-10-17T02:38:34+00:00",
+   "origin": "ingestion",
+   "run_id": "2",
+   "completed": true,
+   "violations": 0,
+   "rules": [
+    {
+     "rule": "RI-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-05",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-06",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-07",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-08",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-09",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-10",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-05",
+     "violations": 0,
+     "sample": []
+    }
+   ]
+  }
+ },
+ "GET /api/runs/2/discards": {
+  "discards": [],
+  "batch": null,
+  "raw_output": null
+ },
+ "GET /api/runs/3": {
+  "id": 3,
+  "status": "completed",
+  "created_at": "2026-10-17T02:39:04+00:00",
+  "started_at": "2026-10-17T02:39:04+00:00",
+  "finished_at": "2026-10-17T02:39:51+00:00",
+  "resource_key": "c668d1a9-c7f3-467f-b6e5-a0f9ce69dae7",
+  "resource_type": "Sílabo",
+  "course_code": "INF238",
+  "course_name": "Redes de Computadoras",
+  "file_name": "INF238-2026-2-SILABO.PDF",
+  "model": "claude-sonnet-5-5",
+  "model_settings": {
+   "base_url": "http://127.0.0.1:8765/v1",
+   "max_retries": 3,
+   "reasoning_effort": "medium",
+   "requested_model": "sonnet",
+   "temperature": null
+  },
+  "prompt_version": "67a014887826",
+  "content_retries": 0,
+  "error": null,
+  "audit_report": {
+   "id": 4,
+   "created_at": "2026-10-17T02:39:49+00:00",
+   "origin": "ingestion",
+   "run_id": "3",
+   "completed": true,
+   "violations": 0,
+   "rules": [
+    {
+     "rule": "RI-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-05",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-06",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-07",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-08",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-09",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-10",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-05",
+     "violations": 0,
+     "sample": []
+    }
+   ]
+  }
+ },
+ "GET /api/runs/3/discards": {
+  "discards": [],
+  "batch": null,
+  "raw_output": null
+ },
+ "GET /api/runs/4": {
+  "id": 4,
+  "status": "completed",
+  "created_at": "2026-10-17T02:40:27+00:00",
+  "started_at": "2026-10-17T02:40:27+00:00",
+  "finished_at": "2026-10-17T02:41:01+00:00",
+  "resource_key": "3d39267e-b10a-4627-91c3-78e204a215d1",
+  "resource_type": "Sílabo",
+  "course_code": "1INF35",
+  "course_name": "Administración de Sistemas Operativos",
+  "file_name": "1INF35-2026-2-SILABO.PDF",
+  "model": "claude-sonnet-5-5",
+  "model_settings": {
+   "base_url": "http://127.0.0.1:8765/v1",
+   "max_retries": 3,
+   "reasoning_effort": "medium",
+   "requested_model": "sonnet",
+   "temperature": null
+  },
+  "prompt_version": "67a014887826",
+  "content_retries": 0,
+  "error": null,
+  "audit_report": {
+   "id": 5,
+   "created_at": "2026-10-17T02:41:00+00:00",
+   "origin": "ingestion",
+   "run_id": "4",
+   "completed": true,
+   "violations": 0,
+   "rules": [
+    {
+     "rule": "RI-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-05",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-06",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-07",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-08",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-09",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-10",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-05",
+     "violations": 0,
+     "sample": []
+    }
+   ]
+  }
+ },
+ "GET /api/runs/4/discards": {
+  "discards": [],
+  "batch": null,
+  "raw_output": null
+ },
+ "GET /api/audit-reports/latest": {
+  "gate": {
+   "state": "open",
+   "reason": null
+  },
+  "report": {
+   "id": 5,
+   "created_at": "2026-10-17T02:41:00+00:00",
+   "origin": "ingestion",
+   "run_id": "4",
+   "completed": true,
+   "violations": 0,
+   "rules": [
+    {
+     "rule": "RI-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-05",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-06",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-07",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-08",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-09",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RI-10",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-01",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-02",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-03",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-04",
+     "violations": 0,
+     "sample": []
+    },
+    {
+     "rule": "RM-05",
+     "violations": 0,
+     "sample": []
+    }
+   ]
+  }
+ },
+ "GET /api/runs (sin token)": [
+  401,
+  {
+   "detail": "missing or wrong operator token"
+  }
+ ]
+}

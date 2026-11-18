@@ -1,0 +1,67 @@
+[project]
+name = "iekg"
+version = "0.1.0"
+description = "Grafo de conocimiento del curriculo de Ingenieria Informatica: proyeccion ontologia->LPG y pipeline de ingesta"
+requires-python = ">=3.11"
+
+# Lo que hace falta para el nucleo -leer la ontologia y hablar con Neo4j- y
+# para la ingesta. El esquema del grafo es un modulo de Python (ADR-008), asi
+# que no hace falta leer ningun archivo de especificacion. Las dependencias de
+# la ingesta entraron con ella, no antes: una dependencia declarada y no usada
+# es una decision tomada por inercia.
+dependencies = [
+    # Driver oficial. Se pinea la linea 5.28 LTS, no la 6.x, para que
+    # acompanhe al servidor 5.26 LTS: mismo criterio de estabilidad que
+    # se uso para elegir la version del servidor.
+    "neo4j>=5.28,<6",
+    # Parseo de Turtle. rdflib es la libreria estandar de RDF en Python;
+    # parsear el TTL a mano seria fragil y no sustentable.
+    "rdflib>=7.1",
+    # Lectura de .env (credenciales de Neo4j fuera del codigo).
+    "python-dotenv>=1.0",
+    # Salida tipada del modelo de lenguaje, con el cliente de OpenAI: sirve
+    # cualquier proveedor con la API Chat Completions (ADR-003, ADR-010).
+    "pydantic-ai-slim[openai]>=2.54,<3",
+    # Lectura de los PDF subidos (ADR-009).
+    "docling>=2.135,<3",
+    # La API (ADR-007). Se fija la linea menor: FastAPI sigue en 0.x y rompe
+    # compatibilidad entre menores. 0.142 y no 0.143, que salio el mismo dia
+    # en que se agrego.
+    "fastapi>=0.142.4,<0.143",
+    # FastAPI la necesita para recibir el documento como multipart.
+    "python-multipart>=0.0.32,<0.1",
+    # Servidor de la API, con un solo proceso (ADR-007).
+    "uvicorn>=0.54,<0.55",
+]
+
+[dependency-groups]
+dev = [
+    # Lo usa el TestClient de FastAPI en las pruebas de la API.
+    "httpx>=0.28,<0.29",
+    "pytest>=8.3",
+    # Lee la hoja de extraccion del revisor en scripts/evaluate_ingestion.py.
+    "openpyxl>=3.1,<4",
+]
+
+[project.scripts]
+# Punto de entrada de los procesos de construccion (ADR-007).
+iekg-build = "iekg.build_tools.commands:main"
+# El worker de ingesta, que la API lanza como proceso hijo (ADR-007).
+iekg-worker = "iekg.ingestion.worker:main"
+# La API, en un solo proceso (ADR-007).
+iekg-api = "iekg.api.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/iekg"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The development scripts are not part of the package; their tests import them.
+pythonpath = ["scripts"]
+markers = [
+    "neo4j: needs a running Neo4j; writes only inside a transaction that is rolled back",
+]

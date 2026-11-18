@@ -2,7 +2,7 @@
 
 Cómo está desplegado InfoKnows, cómo se apaga, se enciende, se actualiza y se
 reconstruye el grafo. El despliegue en sí (servicios, `.env`, `load` y
-`reapply`) está en la sección «Desplegar con Docker» del `README.md`; aquí va
+`reapply`) está en la sección «Desplegar con Docker» de `docs/operacion.md`; aquí va
 solo lo propio del servidor de AWS.
 
 Los identificadores concretos (IP, instancia, grupo de seguridad) están en la

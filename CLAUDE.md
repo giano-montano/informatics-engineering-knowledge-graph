@@ -82,7 +82,10 @@ pequeño; nada hardcodeado, nada de ORM.**
 Lo que hay:
 
 ```
-README.md                      Cómo levantar el sistema y qué se puede probar.
+README.md                      La presentación del proyecto: problema, resultados,
+                               arquitectura y cómo probarlo.
+docs/operacion.md              Cómo levantar, cargar, ingestar, reconstruir, medir
+                               y probar el sistema, con la API y la configuración.
 DEPLOYMENT.md                  El despliegue en AWS (Learner Lab): recursos,
                                HTTPS con Caddy en el host, apagar y encender,
                                actualizar, reconstruir el grafo y costos.
@@ -218,7 +221,7 @@ modo ensayo (`IEKG_REHEARSAL=1`) no escribe nada, pero tampoco ejercita la
 ingesta; para una ingesta de ensayo completa está `scripts/replay_provider.py`.
 
 Para reconstruir desde un historial guardado (por ejemplo, una cadena de Sonnet
-o GPT), consulta [Reaplicar los hechos](README.md#reaplicar-los-hechos): allí se
+o GPT), consulta [Reaplicar los hechos](docs/operacion.md#reaplicar-los-hechos): allí se
 explica cómo seleccionar los almacenes mediante variables de entorno.
 
 La contraseña vive en `.env`, ignorado por git. Si falta: copiar `.env.example`,

@@ -8,6 +8,11 @@ import * as d3 from 'd3';
 import { CHAR_WIDTH, LABEL_FLOOR, LINE_HEIGHT, lineWidth } from './layouts.js';
 import { CLASSES, RELATIONS, accessibleName, classColor, className, layerOf } from './vocabulary.js';
 
+// On a phone the map is not fitted smaller than PHONE_SCALE, and its names
+// grow up to 1 / PHONE_FLOOR as it shrinks: about 11 px on screen at the least.
+const PHONE_SCALE = 0.6;
+const PHONE_FLOOR = 0.7;
+
 function hexagon(r) {
   const points = d3.range(6).map((i) => {
     const angle = (Math.PI / 3) * i - Math.PI / 2;
@@ -90,17 +95,39 @@ export function createCanvas(container, handlers) {
   });
   svg.call(zoom).on('dblclick.zoom', null);
 
-  function fit(duration = 520) {
+  function fit(duration = 520, all = false) {
     const { width, height } = container.getBoundingClientRect();
     if (!current.nodes.length || !width || !height) return;
     // Fitted once with the names at their size, and again with the size they
     // take at that zoom: a map fitted small enlarges its names.
+    const floor = narrow(width) ? Math.min(labelFloor, PHONE_FLOOR) : labelFloor;
     const first = fitScale(width, height, 1);
-    const { scale, x0, x1, y0, y1, pad } = fitScale(width, height, 1 / Math.min(1, Math.max(labelFloor, first.scale)));
-    const tx = pad.x + (width - 2 * pad.x) / 2 - ((x0 + x1) / 2) * scale;
-    const ty = pad.top + (height - pad.top - pad.bottom) / 2 - ((y0 + y1) / 2) * scale;
+    let { scale, x0, x1, y0, y1, pad } = fitScale(width, height, 1 / Math.min(1, Math.max(floor, first.scale)));
+    let tx = pad.x + (width - 2 * pad.x) / 2 - ((x0 + x1) / 2) * scale;
+    let ty = pad.top + (height - pad.top - pad.bottom) / 2 - ((y0 + y1) / 2) * scale;
+    // A phone does not shrink the map past where its names can be read: it
+    // keeps the focus in the middle, and the rest is reached by dragging.
+    // «Encuadrar todo» still shows the whole of it.
+    if (!all && narrow(width) && scale < PHONE_SCALE) {
+      scale = PHONE_SCALE;
+      const focus = current.nodes.find((d) => d.key === current.focusKey);
+      const cx = focus ? focus.tx : (x0 + x1) / 2;
+      const cy = focus ? focus.ty : (y0 + y1) / 2;
+      const along = (size, low, high, start, end, center) => {
+        const free = size - low - high;
+        if ((end - start) * scale <= free) return low + free / 2 - ((start + end) / 2) * scale;
+        const wanted = low + free / 2 - center * scale;
+        return Math.min(low - start * scale, Math.max(size - high - end * scale, wanted));
+      };
+      tx = along(width, pad.x, pad.x, x0, x1, cx);
+      ty = along(height, pad.top, pad.bottom, y0, y1, cy);
+    }
     const target = d3.zoomIdentity.translate(tx, ty).scale(scale);
     (reduced.matches || !duration ? svg : svg.transition().duration(duration).ease(d3.easeCubicOut)).call(zoom.transform, target);
+  }
+
+  function narrow(width) {
+    return width < 600;
   }
 
   function fitScale(width, height, grow) {
@@ -116,7 +143,8 @@ export function createCanvas(container, handlers) {
     const y0 = Math.min(...boxes.map((b) => b.y0));
     const y1 = Math.max(...boxes.map((b) => b.y1));
     // The bottom clears the trail, the legend and the controls that sit on the canvas.
-    const pad = { x: 40, top: 24, bottom: 112 };
+    // A phone has one row of controls and no legend of colors.
+    const pad = narrow(width) ? { x: 14, top: 14, bottom: 96 } : { x: 40, top: 24, bottom: 112 };
     const k = Math.min(1.15, (width - 2 * pad.x) / Math.max(1, x1 - x0), (height - pad.top - pad.bottom) / Math.max(1, y1 - y0));
     return { scale: Math.max(0.3, k), x0, x1, y0, y1, pad };
   }
@@ -261,7 +289,7 @@ export function createCanvas(container, handlers) {
   function render(scene, options = {}) {
     // How small the names may get when the map is fitted small (see app.css).
     labelFloor = scene.labelFloor ?? LABEL_FLOOR;
-    svg.style('--floor', labelFloor);
+    svg.style('--floor', narrow(container.getBoundingClientRect().width) ? Math.min(labelFloor, PHONE_FLOOR) : labelFloor);
     const hadFocus = svg.node().contains(document.activeElement);
     const anchor = placed.get(options.enterFrom) ?? placed.get(scene.focusKey) ?? { x: 0, y: 0 };
     const nodes = scene.nodes.map((target) => {
@@ -293,7 +321,10 @@ export function createCanvas(container, handlers) {
     edges
       .attr('class', (d) => `edge edge-${d.tone} rel-${d.type}${d.edge ? '' : ' edge-bundle'}${d.id === selectedEdge ? ' is-selected' : ''}`)
       .style('--c', (d) => RELATIONS[d.type]?.color)
-      .on('pointermove', (event, d) => showTip(edgeTip(d), event.clientX, event.clientY))
+      .on('pointermove', (event, d) => {
+        // A finger has no hover: the tap opens the relation in the record.
+        if (event.pointerType !== 'touch') showTip(edgeTip(d), event.clientX, event.clientY);
+      })
       .on('pointerleave', hideTip)
       .on('click', (event, d) => {
         if (d.edge) handlers.onEdge?.(d);
@@ -325,6 +356,7 @@ export function createCanvas(container, handlers) {
       })
       .on('keydown', onNodeKey)
       .on('pointerenter', (event, d) => {
+        if (event.pointerType === 'touch') return;
         showTip(nodeTip(d), event.clientX, event.clientY);
         edgeLayer.selectAll('g.edge').classed('is-near', (e) => e.from === d.key || e.to === d.key);
       })
@@ -374,6 +406,8 @@ export function createCanvas(container, handlers) {
       if (!d.expandable) return;
       const offset = d.r * 0.82 + 5;
       const button = g.append('g').attr('class', 'plus').attr('transform', `translate(${offset},${-offset})`);
+      // A finger needs more than the drawn button: an invisible ring around it.
+      button.append('circle').attr('class', 'plus-hit').attr('r', 17);
       button.append('circle').attr('r', 8.5);
       button.append('path').attr('d', 'M-4,0h8M0,-4v8');
       button.append('title').text('Traer sus conexiones sin cambiar de lugar');

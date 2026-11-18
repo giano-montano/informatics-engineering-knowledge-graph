@@ -86,13 +86,22 @@
   async function showSource(edge, subgraph) {
     exploration.selectRelation(relation(edge, subgraph));
     await tick();
-    document.getElementById('selected-relation')?.focus();
+    document.getElementById('selected-relation')?.focus({ preventScroll: true });
   }
 
-  // A card that opens from the map is brought into view.
+  // A card that opens from the map is brought into view. Only the panel
+  // scrolls: on a phone it sits in a sheet that nothing else may move.
   $effect(() => {
     if (exploration.selectedRelation || why) {
-      tick().then(() => document.querySelector('.card')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
+      tick().then(() => {
+        const card = scroller?.querySelector('.card');
+        if (!card) return;
+        const top = card.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 8;
+        const bottom = top + card.offsetHeight + 16;
+        const view = scroller.scrollTop;
+        if (top < view) scroller.scrollTo({ top, behavior: 'smooth' });
+        else if (bottom > view + scroller.clientHeight) scroller.scrollTo({ top: Math.min(top, bottom - scroller.clientHeight), behavior: 'smooth' });
+      });
     }
   });
 
@@ -733,5 +742,27 @@
     gap: 14px;
     padding: 18px 0;
     border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 900px) {
+    .record {
+      padding: 14px;
+    }
+
+    .record h2 {
+      font-size: var(--step-2);
+    }
+  }
+
+  @media (pointer: coarse) {
+    .source {
+      min-height: 36px;
+      padding: 2px 8px;
+    }
+
+    .close {
+      min-width: 36px;
+      min-height: 36px;
+    }
   }
 </style>

@@ -72,6 +72,12 @@ como el de CS2023, queda como está.
   cercano, Enter pone un punto en foco y `+` trae sus conexiones.
   `Alt ←` vuelve al elemento anterior. Todo lo que el mapa dibuja está también
   como lista en la ficha de la derecha.
+- **En el teléfono.** Hasta 900 px de ancho, el mapa ocupa la pantalla y la
+  ficha va en una hoja que asoma abajo: se sube deslizándola o tocándola, y
+  vuelve a bajar sola cuando el mapa cambia. Las preguntas son una franja que
+  se desliza de lado. El mapa no se encoge hasta volver ilegibles los nombres:
+  queda centrado en el foco y el resto se ve arrastrando o pellizcando; el
+  botón de encuadre lo muestra entero. El panel del operador no se ofrece.
 - **Operador.** El botón «Operador» abre el panel. Pide el token, que se teclea
   y se guarda solo en la pestaña: no está en el código ni en el compilado.
 
@@ -97,6 +103,8 @@ Los componentes siguen la vista `webComponents` del modelo C4
 
 Lo demás es apoyo de esos componentes:
 
+- `src/components/Sheet.svelte` y `src/lib/screen.svelte.js`: la hoja de la
+  ficha en el teléfono y el ancho a partir del cual se usa.
 - `src/lib/vocabulary.js`: cómo se llama en pantalla cada clase, capa, relación
   y pregunta.
 - `src/lib/graph-reading.js`: lecturas de una respuesta `{nodes, edges}`. Solo

@@ -57,6 +57,13 @@
   --shadow: 0 12px 32px -8px oklch(0.05 0.02 275 / 0.7);
 }
 
+/* How much of the record a phone shows under the map (see Sheet.svelte). */
+@media (max-width: 900px) {
+  :root {
+    --peek: calc(150px + env(safe-area-inset-bottom));
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -391,7 +398,18 @@ svg.graph:active {
   stroke-linecap: round;
 }
 
-.graph .plus:hover circle {
+.graph .plus circle.plus-hit {
+  fill: transparent;
+  stroke: none;
+}
+
+@media (pointer: fine) {
+  .graph .plus circle.plus-hit {
+    display: none;
+  }
+}
+
+.graph .plus:hover circle:not(.plus-hit) {
   fill: var(--r-prerequisite);
 }
 

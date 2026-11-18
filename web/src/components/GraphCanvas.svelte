@@ -145,12 +145,12 @@
           title="Dibuja la línea de cada elemento a su documento" onclick={() => exploration.toggleSources()}>
           <span class="track"><span class="thumb"></span></span>Fuentes
         </button>
-        <button class="tool wide" type="button" popovertarget="full-legend"><Icon name="list" />Leyenda</button>
+        <button class="tool wide legend-button" type="button" popovertarget="full-legend" aria-label="Leyenda"><Icon name="list" /><span class="tool-word">Leyenda</span></button>
         <span class="split" aria-hidden="true"></span>
-        <button class="tool" type="button" aria-label="Alejar" title="Alejar" onclick={() => canvas?.zoomBy(1 / 1.3)}><Icon name="minus" /></button>
-        <span class="zoom" aria-label={`Zoom ${Math.round(zoom * 100)} por ciento`}>{Math.round(zoom * 100)} %</span>
-        <button class="tool" type="button" aria-label="Acercar" title="Acercar" onclick={() => canvas?.zoomBy(1.3)}><Icon name="plus" /></button>
-        <button class="tool" type="button" aria-label="Encuadrar todo" title="Encuadrar todo" onclick={() => canvas?.fit()}><Icon name="fit" /></button>
+        <button class="tool zooming" type="button" aria-label="Alejar" title="Alejar" onclick={() => canvas?.zoomBy(1 / 1.3)}><Icon name="minus" /></button>
+        <span class="zoom zooming" aria-label={`Zoom ${Math.round(zoom * 100)} por ciento`}>{Math.round(zoom * 100)} %</span>
+        <button class="tool zooming" type="button" aria-label="Acercar" title="Acercar" onclick={() => canvas?.zoomBy(1.3)}><Icon name="plus" /></button>
+        <button class="tool" type="button" aria-label="Encuadrar todo" title="Encuadrar todo" onclick={() => canvas?.fit(520, true)}><Icon name="fit" /></button>
       </div>
     </div>
   </div>
@@ -175,8 +175,9 @@
       {/each}
     </ul>
     <p>Una flecha sale de lo que se aprende primero. Elige una línea para ver qué documento la afirma.</p>
-    <h3>Con el teclado</h3>
-    <p>Tab recorre los puntos; las flechas pasan al punto más cercano; Enter pone un punto en foco y + trae sus conexiones. Ctrl K busca y Alt + ← vuelve al anterior.</p>
+    <p class="by-touch">Toca un punto para ponerlo en foco y + para traer sus conexiones. Con dos dedos acercas o alejas el mapa.</p>
+    <h3 class="by-keyboard">Con el teclado</h3>
+    <p class="by-keyboard">Tab recorre los puntos; las flechas pasan al punto más cercano; Enter pone un punto en foco y + trae sus conexiones. Ctrl K busca y Alt + ← vuelve al anterior.</p>
   </div>
 </section>
 
@@ -609,5 +610,99 @@
 
   .stroke.dashed {
     border-top-style: dotted;
+  }
+
+  .by-touch {
+    display: none;
+  }
+
+  /* A phone: the trail keeps its chips, the controls keep what a finger
+     needs (pinching zooms), and the legend names only the two shapes. */
+  @media (max-width: 900px) {
+    .bar {
+      inset: auto 10px 10px;
+      gap: 8px;
+    }
+
+    .trail {
+      flex: 1 1 auto;
+      height: 44px;
+      padding: 0 6px 0 3px;
+    }
+
+    .step-back {
+      width: 38px;
+      height: 38px;
+    }
+
+    .trail-title,
+    .trail-empty {
+      display: none;
+    }
+
+    /* Nothing visited yet: no trail to show. */
+    .trail:has(.trail-empty) {
+      visibility: hidden;
+    }
+
+    .trail li button {
+      min-height: 32px;
+      max-width: 150px;
+    }
+
+    .controls {
+      height: 44px;
+      padding: 0 3px;
+    }
+
+    .tool,
+    .toggle {
+      min-width: 38px;
+      height: 38px;
+    }
+
+    .toggle {
+      padding: 0 8px;
+    }
+
+    .legend-button {
+      padding: 0;
+    }
+
+    .tool-word,
+    .zooming,
+    .split {
+      display: none;
+    }
+
+    .tools .legend {
+      gap: 10px;
+      padding: 6px 10px;
+    }
+
+    .legend .divider,
+    .legend li:has(i) {
+      display: none;
+    }
+
+    .notice {
+      left: 10px;
+      bottom: 62px;
+      max-width: calc(100% - 20px);
+    }
+
+    .full-legend {
+      inset: auto 10px max(10px, env(safe-area-inset-bottom)) 10px;
+      width: auto;
+      max-height: 78dvh;
+    }
+
+    .by-keyboard {
+      display: none;
+    }
+
+    .by-touch {
+      display: block;
+    }
   }
 </style>

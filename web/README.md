@@ -16,7 +16,7 @@ presenta: toda la lógica de navegación vive en la API.
 ## Levantarla en desarrollo
 
 Hace falta Node 20.19, 22.12 o 24 en adelante (ADR-017), y la API respondiendo en el puerto 8000 con
-el grafo cargado (ver el [README de la raíz](../README.md)).
+el grafo cargado (ver la [guía de operación](../docs/operacion.md)).
 
 ```powershell
 # En la raíz del repositorio: la base y la API
@@ -46,8 +46,8 @@ El contenedor `web` compila la aplicación y la sirve con nginx, que reenvía
 `/api` y `/resources` a la API bajo el mismo origen
 ([ADR-007](../docs/decisiones/0007-invocacion-de-la-ingesta-y-escritor-unico.md)):
 por eso no hay CORS ni ninguna dirección con el host escrito. El puerto, el 80 por omisión, se elige
-con `IEKG_WEB_PORT` en `.env`. Los pasos completos están en el README de la
-raíz, sección «Desplegar con Docker».
+con `IEKG_WEB_PORT` en `.env`. Los pasos completos están en la guía de
+operación ([`docs/operacion.md`](../docs/operacion.md)), sección «Desplegar con Docker».
 
 Los documentos subidos guardan en el grafo un localizador con el host
 ([ADR-009](../docs/decisiones/0009-documentos-subidos-localizador-y-datos-declarados.md)).

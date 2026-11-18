@@ -144,4 +144,4 @@ Claves: `"GET /api/runs"`, `"GET /api/runs/1"` … `"GET /api/runs/4"`, `"GET /a
   rotulado **ejemplo, no real**.
 - `GET /api/audit-reports/latest`: `{gate: {state, reason}, report}`; hoy `gate.state = "open"`, 15 reglas, 0 violaciones.
 - `POST /api/runs` (no se llamó): multipart con el archivo, tipo de recurso, código y nombre del curso;
-  responde 202. Ver `src/iekg/api/app.py` y el `README.md` raíz para los campos exactos.
+  responde 202. Ver `src/iekg/api/app.py` y `docs/operacion.md` para los campos exactos.

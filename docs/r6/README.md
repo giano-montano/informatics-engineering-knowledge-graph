@@ -1,6 +1,6 @@
 # R6 · InfoKnows: capturas y recorrido técnico
 
-**Fecha:** 2026-11-17 · **Grafo:** corrida final de R4 (CS2023 y los 13 sílabos; hoja de datos 2 del
+**Fecha:** 2026-11-17, repetido el 2026-11-21 (sección 2) · **Grafo:** corrida final de R4 (CS2023 y los 13 sílabos; hoja de datos 2 del
 plan) · **Navegador:** Chromium sin interfaz, con Playwright 1.65.1, a 1440 × 900. Las capturas O1 a
 O6 son de un grafo de ensayo con las trece corridas de la cadena final (sección 4).
 
@@ -51,7 +51,16 @@ hoja de datos 2, y donde el plan pide un dato lo compara con lo que responde la 
 Se corrió contra el despliegue con Docker Compose, detrás de nginx: **66 de 66 comprobaciones
 cumplen**. Tras corregir dos solapamientos de nombres en el mapa, se repitió con el compilado de
 producción servido por `vite preview` contra la API de ese mismo despliegue, con el mismo resultado,
-y las capturas de la sección 1 son de esa corrida.
+y las capturas de la sección 1 eran de esa corrida.
+
+**Repetido el 2026-11-21**, tras plegar la frase de «cómo leer el dibujo» y acortar las respuestas
+de la cabecera que repetían el nombre del foco. Esa frase se ve abierta la primera vez que aparece
+cada vista en la pestaña y después queda tras «Cómo leerlo» (`web/README.md`, «Cómo se usa»). Se
+corrió contra el despliegue local con Docker Compose, con Neo4j Community y el grafo reconstruido
+con `load` y `reapply` desde `var/despliegue-local/`: **66 de 66 comprobaciones cumplen**. La tabla
+y las capturas A a F de la sección 1 son de esta corrida; en cada captura, la frase sale abierta o
+plegada según fuera o no la primera visita a esa vista. Las O1 a O6 no cambian: el panel del
+operador no usa la cabecera. La corrida del 17-11 queda en el historial de git.
 
 El paso 4 de CA-10 no está en el plan: comprueba el interruptor «Fuentes» del flujo de CU-10.
 
@@ -60,8 +69,8 @@ El paso 4 de CA-10 no está en el plan: comprueba el interruptor «Fuentes» del
 | CA-01 | 1 | El inicio muestra las 17 áreas y los cursos con sílabo; las áreas con temas se distinguen, con sus cifras | cumple | cumple | 17 áreas, 13 cursos, 10 áreas con temas; 2 temas · 17 conceptos |
 | CA-01 | 2 | La búsqueda lista hasta 20 coincidencias, cada una con su clase y su origen en texto | cumple | cumple | 11 resultados para «memoria»: Memoria virtual (Concepto, Sílabo PUCP); Hardware de manejo de memoria (Concepto, Sílabo PUCP); ADMINISTRACIÓN DE MEMORIA (Tema, Sílabo PUCP); Archivos mapeados a memoria (Concepto, Sílabo PUCP); Memoria (Concepto, Sílabo PUCP); Memoria dinámica (Concepto, Sílabo PUCP); Memoria física (Con |
 | CA-01 | 3 | Elegir el tema lo pone en foco, en el mapa y en la ficha | cumple | cumple | Tema ADMINISTRACIÓN DE MEMORIA, de un sílabo. En foco |
-| CA-01 | 4 | Un texto sin coincidencias: el sistema lo dice y ofrece ver las áreas | cumple | cumple | Ningún sílabo cargado trata «compiladores»  Tampoco hay un área o una unidad de CS2023 con ese nombre. Prueba con otra palabra o recorre las áreas.  Ver las áreas PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS HTML Clases Plan de riesgo |
-| CA-02 | 1 | Vecinos directos con el nombre de cada relación, y algunos vecinos de esos vecinos, apagados; cada vecino del mapa está en «Conexiones» | cumple | cumple | Aquí ves con qué se relaciona ADMINISTRACIÓN DE MEMORIA: 9 elementos conectados directamente, agrupados por tipo de relación. Rótulos: Es parte de, Material de estudio, Contiene · 7. Apagados: 9. Fuera de «Conexiones»: ninguno |
+| CA-01 | 4 | Un texto sin coincidencias: el sistema lo dice y ofrece ver las áreas | cumple | cumple | Ningún sílabo cargado trata «compiladores»  Tampoco hay un área o una unidad de CS2023 con ese nombre. Prueba con otra palabra o recorre las áreas.  Ver las áreas Ejecución del Proyecto Requerimientos de calidad VERIFICACIÓN, VALIDACIÓN Y PRUEBAS DE SOFTWARE Modificación de tablas |
+| CA-02 | 1 | Vecinos directos con el nombre de cada relación, y algunos vecinos de esos vecinos, apagados; cada vecino del mapa está en «Conexiones» | cumple | cumple | ADMINISTRACIÓN DE MEMORIA: 9 elementos conectados directamente, agrupados por tipo de relación. Rótulos: Es parte de, Material de estudio, Contiene · 7. Apagados: 9. Fuera de «Conexiones»: ninguno |
 | CA-02 | 2 | Pasar a uno de sus conceptos lo pone en foco y lo visitado suma un paso | cumple | cumple | Visitado: ADMINISTRACIÓN DE MEMORIA › Memoria virtual |
 | CA-02 | 3 | Volver al tema lo pone otra vez en foco, con sus vecinos | cumple | cumple | ADMINISTRACIÓN DE MEMORIA |
 | CA-02 | 4 | El + de un vecino agrega sus conexiones al mapa, con nombre, y el foco no cambia | cumple | cumple | + en «Sílabo 1INF29»: de 19 a 20 puntos; Conexiones de «Sílabo 1INF29» · 7 |
@@ -71,9 +80,9 @@ El paso 4 de CA-10 no está en el plan: comprueba el interruptor «Fuentes» del
 | CA-04 | 1 | Lo que el curso pide y lo que enseña, con su nombre en la ficha | cumple | cumple | Pide: Memoria, Programación. Enseña: 63, todos con nombre en la ficha |
 | CA-04 | 2 | Los cursos que conviene llevar antes, cada uno con los conceptos que lo justifican y la fuente de cada uno | cumple | cumple | Algoritmia y Estructura de Datos 1INF27 porque enseña lo que este curso pide Programación fuente · Programación 2 1INF25 porque enseña lo que este curso pide Memoria fuente · tarjeta: Relación seleccionada Algoritmia y Estructura de Datos 1INF27 enseña Programación Lo dice Sílabo 1INF27 (abre el documento en una pestañ |
 | CA-05 | 1 | La cadena área › unidad › tema, y cada eslabón con su capa | cumple | cumple | Memoria virtual está en Sistemas Operativos › Gestión de Memoria › ADMINISTRACIÓN DE MEMORIA. Mapa: Concepto Memoria virtual, de un sílabo / Área Sistemas Operativos, de CS2023 / Unidad Gestión de Memoria, de CS2023 / Tema ADMINISTRACIÓN DE MEMORIA, de un sílabo |
-| CA-06 | 1 | Los conceptos del tema | cumple | cumple | ADMINISTRACIÓN DE MEMORIA tiene 7 conceptos, y conviene aprenderlos en 6 pasos. |
+| CA-06 | 1 | Los conceptos del tema | cumple | cumple | ADMINISTRACIÓN DE MEMORIA: 7 conceptos, que conviene aprender en 6 pasos. |
 | CA-06 | 2 | Los conceptos en pasos según sus prerrequisitos internos; ninguno antes que uno de sus prerrequisitos | cumple | cumple | Paso 1: Caching, Memoria física · Paso 2: Hardware de manejo de memoria · Paso 3: Paginación · Paso 4: Memoria virtual · Paso 5: Conjuntos de trabajo (working sets ) · Paso 6: Hiperpaginación (thrashing ) |
-| CA-06 | 3 | El área, nivel por nivel, con sus cifras; si no cabe, el mapa llega hasta los temas y lo dice | cumple | cumple | Sistemas Operativos contiene 14 unidades, 6 temas y 63 conceptos. Con más de 24 conceptos, el mapa llega hasta los temas para que se pueda leer. Entra a un tema para ver sus conceptos y en qué orden aprenderlos. Las unidades sin temas están en «Conexiones», en la ficha. |
+| CA-06 | 3 | El área, nivel por nivel, con sus cifras; si no cabe, el mapa llega hasta los temas y lo dice | cumple | cumple | Sistemas Operativos: Contiene 14 unidades, 6 temas y 63 conceptos. Con más de 24 conceptos, el mapa llega hasta los temas para que se pueda leer. Entra a un tema para ver sus conceptos y en qué orden aprenderlos. Las unidades sin temas están en «Conexiones», en la ficha. |
 | CA-07 | 1 | El material del tema, con su tipo | cumple | cumple | Material de estudio Ver en el mapa Abrir Sílabo 1INF29 (abre el documento en una pestaña nueva) Sílabo |
 | CA-07 | 2 | El PDF del sílabo abre en una pestaña nueva, y es el del curso indicado | cumple | cumple | /resources/0473349f-1344-4e98-b6a7-75c36ca223a9 → 200 application/pdf; pestaña nueva: sí |
 | CA-07 | 3 | Un concepto no tiene material propio: se ofrece el de su tema | cumple | cumple | Material de estudio Ver en el mapa Un concepto no tiene material propio: los sílabos describen temas. Ver el material de su tema, «ADMINISTRACIÓN DE MEMORIA» |
@@ -81,7 +90,7 @@ El paso 4 de CA-10 no está en el plan: comprueba el interruptor «Fuentes» del
 | CA-08 | 1 | Por cursos: los cursos por los que conviene pasar, por distancia, y los conceptos que se necesitan antes | cumple | cumple | Paradas: Programación 2 1INF25 · Sistemas Operativos 1INF29 (2 distancias). Abajo: Hardware de manejo de memoria, Memoria, Memoria física, Paginación |
 | CA-08 | 2 | Por temas y por áreas; una parada que contiene a la meta lo dice; los conceptos no cambian | cumple | cumple | Temas: ARREGLOS Y PUNTEROS · ADMINISTRACIÓN DE MEMORIA el mismo tema. Áreas: Fundamentos de los Lenguajes de Programación · Sistemas Operativos la misma área. Conceptos en las tres: Hardware de manejo de memoria, Memoria, Memoria física, Paginación |
 | CA-08 | 3 | Por qué pasar por un curso: las relaciones que lo justifican, cada una con su fuente | cumple | cumple | Programación 2 1INF25 enseña Memoria Lo dice Sílabo 1INF25 (abre el documento en una pestaña nueva) · Memoria física necesita antes Memoria Lo dice Sílabo 1INF29 (abre el documento en una pestaña nueva) · Hardware de manejo de memoria necesita antes Memoria física Lo dice Sílabo 1INF29 (abre el documento en una pestaña |
-| CA-08 | 4 | Con un curso como meta: el camino, o el aviso de que sale vacío, y la remisión a «Cursos que conviene llevar antes» | cumple | cumple | Para llegar a Sistemas Operativos conviene pasar antes por 3 cursos: ahí se enseña lo que necesitas saber antes (3 conceptos). Sale de lo que necesitan antes los conceptos que el curso enseña; lo que el curso pide de entrada es otra pregunta. Ver «Cursos que conviene llevar antes» |
+| CA-08 | 4 | Con un curso como meta: el camino, o el aviso de que sale vacío, y la remisión a «Cursos que conviene llevar antes» | cumple | cumple | Sistemas Operativos: Conviene pasar antes por 3 cursos: ahí se enseña lo que necesitas saber antes (3 conceptos). Sale de lo que necesitan antes los conceptos que el curso enseña; lo que el curso pide de entrada es otra pregunta. Ver «Cursos que conviene llevar antes» |
 | CA-09 | 1 | Buscar el concepto general y abrirlo lo pone en foco | cumple | cumple | Llamadas al sistema |
 | CA-09 | 2 | Sus tipos | cumple | cumple | Llamadas al sistema tiene 3 tipos. Mapa: Llamadas al sistema para manejo de archivos, Llamadas al sistema para manejo de directorios, Llamadas al sistema para manejo de procesos |
 | CA-09 | 3 | Pasar a uno de sus tipos: es un tipo del concepto general | cumple | cumple | Llamadas al sistema para manejo de archivos es un tipo de Llamadas al sistema. |

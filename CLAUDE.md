@@ -172,9 +172,14 @@ es **InfoKnows**: va en la interfaz y en los README. «Constelación» es el
 nombre de la propuesta en los documentos de R5, que no se renombran; InfoKnows
 no va en los ADR ni en el modelo C4.
 
-Del despliegue: Neo4j es Community (un volumen creado con Enterprise no abre
-con Community; `NEO4J_IMAGE` en `.env` conserva Enterprise), la web publica el
-80 (`IEKG_WEB_PORT`) y los puertos de Neo4j se publican solo en el loopback.
+Del despliegue: Neo4j es Community, también en local desde el 2026-11-21 (un
+volumen creado con Enterprise queda en formato `block` y no abre con
+Community), la web publica el 80 (`IEKG_WEB_PORT`) y los puertos de Neo4j se
+publican solo en el loopback. El `.env` local fija `NEO4J_IMAGE` y
+`IEKG_DATA_DIR=./var/despliegue-local`, para que el compose levante siempre lo
+mismo; `var/medicion-r4/` no se monta: es la evidencia de R4. Una variable con
+el mismo nombre en la terminal manda sobre el `.env`: `docker compose config`
+dice qué se va a levantar.
 
 ## 7. Comandos
 

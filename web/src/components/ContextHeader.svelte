@@ -17,14 +17,36 @@
     if (!node) return overviewSummary(scene.info);
     return lensSummary({ lens: exploration.lens, grain: exploration.grain, node, response: exploration.response, scene });
   });
-  // On a phone the chosen question stays in sight in its strip, and the note
-  // on how to read the drawing folds to two lines.
-  let strip = $state(null);
+  // The note on how to read the drawing shows open the first time a view is
+  // seen in this tab, and folded behind «Cómo leerlo» from then on. A view is
+  // a lens on a class of element, because the drawing of «Qué contiene»
+  // differs between an area and a topic.
+  const READ_KEY = 'infoknows.read-views';
+  function firstReading(view) {
+    try {
+      const read = JSON.parse(window.sessionStorage.getItem(READ_KEY) ?? '[]');
+      if (read.includes(view)) return false;
+      window.sessionStorage.setItem(READ_KEY, JSON.stringify([...read, view]));
+    } catch {
+      // Without session storage the note stays folded, still a click away.
+      return false;
+    }
+    return true;
+  }
+
+  const view = $derived(node ? `${exploration.lens}:${node.label}` : 'overview');
+  const hasHow = $derived(Boolean(summary.how));
   let howOpen = $state(false);
+  $effect(() => {
+    exploration.focusKey;
+    howOpen = hasHow && firstReading(view);
+  });
+
+  // On a phone the chosen question stays in sight in its strip.
+  let strip = $state(null);
   $effect(() => {
     exploration.lens;
     exploration.focusKey;
-    howOpen = false;
     const chosen = strip?.querySelector('[aria-selected="true"]');
     if (chosen && strip.scrollWidth > strip.clientWidth) {
       const left = chosen.offsetLeft - strip.offsetLeft;
@@ -90,18 +112,27 @@
     </div>
   {/if}
 
-  <div class="answer" aria-live="polite">
-    {#if summary.answer}
-      <p class="says">
-        {@html summary.answer}
-        {#if summary.offer}
-          <button class="text-button" type="button" onclick={() => exploration.setLens(summary.offer)}>
-            Ver «{LENSES[summary.offer].name}»
-          </button>
-        {/if}
-      </p>
-    {:else if exploration.status !== 'error'}
-      <p class="says"><span class="skeleton" style:width="62%"></span></p>
+  <div class="answer">
+    <div aria-live="polite">
+      {#if summary.answer}
+        <p class="says">
+          {@html summary.answer}
+          {#if summary.offer}
+            <button class="text-button" type="button" onclick={() => exploration.setLens(summary.offer)}>
+              Ver «{LENSES[summary.offer].name}»
+            </button>
+          {/if}
+        </p>
+      {:else if exploration.status !== 'error'}
+        <p class="says"><span class="skeleton" style:width="62%"></span></p>
+      {/if}
+    </div>
+    {#if summary.how}
+      <button class="text-button how-toggle" type="button" aria-expanded={howOpen} aria-controls="how-to-read"
+        onclick={() => (howOpen = !howOpen)}>{howOpen ? 'Ocultar' : 'Cómo leerlo'}</button>
+    {/if}
+    {#if node && exploration.expansions.size && exploration.lens === 'neighborhood'}
+      <button class="text-button" type="button" onclick={() => exploration.clearExpansions()}>Quitar lo que trajiste con +</button>
     {/if}
   </div>
 
@@ -124,19 +155,8 @@
     </div>
   {/if}
 
-  {#if summary.how || exploration.expansions.size}
-    <div class="how-row">
-      <p class="how" class:open={howOpen} id="how-to-read">
-        {@html summary.how}
-        {#if exploration.expansions.size && exploration.lens === 'neighborhood'}
-          <button class="text-button" type="button" onclick={() => exploration.clearExpansions()}>Quitar lo que trajiste con +</button>
-        {/if}
-      </p>
-      {#if summary.how}
-        <button class="text-button how-toggle" type="button" aria-expanded={howOpen} aria-controls="how-to-read"
-          onclick={() => (howOpen = !howOpen)}>{howOpen ? 'Menos' : 'Cómo leerlo'}</button>
-      {/if}
-    </div>
+  {#if summary.how}
+    <p class="how" id="how-to-read" hidden={!howOpen}>{@html summary.how}</p>
   {/if}
 </header>
 
@@ -284,12 +304,29 @@
     vertical-align: 1px;
   }
 
-  .how-toggle {
-    display: none;
+  /* The answer, and beside it the controls that belong to it: the note on how
+     to read the drawing and, after a +, the way back. */
+  .answer {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
   }
 
-  /* A phone: one line of title, the questions in a strip that scrolls
-     sideways, and the note on how to read folded. */
+  /* The sentence wraps inside its own box, so the controls never take a line
+     of their own. */
+  .answer > div {
+    min-width: 0;
+  }
+
+  .how-toggle {
+    flex: none;
+    color: var(--text-2);
+    font-size: var(--step--1);
+    white-space: nowrap;
+  }
+
+  /* A phone: one line of title and the questions in a strip that scrolls
+     sideways. */
   @media (max-width: 900px) {
     .context {
       grid-template-columns: minmax(0, 1fr);
@@ -394,30 +431,8 @@
       white-space: nowrap;
     }
 
-    .how-row {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-    }
-
-    .how {
-      flex: 1;
-      display: -webkit-box;
-      overflow: hidden;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
-      line-clamp: 1;
-    }
-
-    .how.open {
-      display: block;
-    }
-
     .how-toggle {
-      display: inline;
-      flex: none;
-      color: var(--text-2);
-      font-size: var(--step--1);
+      min-height: 32px;
     }
   }
 </style>

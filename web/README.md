@@ -64,7 +64,9 @@ como el de CS2023, queda como está.
   resultados y Enter abre uno.
 - **Foco y preguntas.** El elemento elegido queda al centro. Las pestañas de la
   cabecera son las preguntas que aplican a su clase; la cabecera responde la
-  elegida en una frase y dice cómo leer el dibujo.
+  elegida en una frase y dice cómo leer el dibujo. Esa segunda frase se ve
+  abierta la primera vez que aparece cada vista en la pestaña del navegador;
+  después queda plegada tras «Cómo leerlo».
 - **Capa y fuente.** Un hexágono con contorno es de CS2023 y un círculo relleno,
   de un sílabo; el color es la clase. Una línea, o el enlace «fuente» de la
   ficha, muestra qué documento afirma esa relación, con el enlace para abrirlo.

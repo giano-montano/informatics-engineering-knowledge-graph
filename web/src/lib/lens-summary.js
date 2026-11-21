@@ -14,6 +14,11 @@ export function escapeHtml(text) {
 
 const strong = (text) => `<strong>${escapeHtml(text)}</strong>`;
 
+// The title right above already names the focus, so a sentence that would only
+// repeat it leaves the name to the screen reader, which announces the sentence
+// on its own.
+const unseen = (node) => `<span class="sr-only">${escapeHtml(node.name_es)}: </span>`;
+
 function joined(parts) {
   if (parts.length < 2) return parts.join('');
   return `${parts.slice(0, -1).join(', ')} y ${parts.at(-1)}`;
@@ -21,8 +26,7 @@ function joined(parts) {
 
 export function overviewSummary(info) {
   return {
-    answer: `Alrededor, las ${strong(plural(info.areas, 'área', 'áreas'))} de la carrera según el estándar CS2023: `
-      + `las ${info.filled} que se ven encendidas ya tienen temas de los sílabos cargados. `
+    answer: `Alrededor, las ${strong(plural(info.areas, 'área', 'áreas'))} de CS2023; las ${info.filled} encendidas ya tienen temas de los sílabos. `
       + `Al centro, ${info.courses === 1 ? 'el' : 'los'} ${strong(plural(info.courses, 'curso', 'cursos'))} con sílabo.`,
     how: 'Elige un área o un curso, o busca por nombre arriba.',
   };
@@ -40,7 +44,7 @@ export function lensSummary({ lens, grain, node, response, scene }) {
       if (info.far) how.push('Los puntos apagados de arriba están un paso más lejos.');
       how.push('El <b class="plus-sign">+</b> trae las conexiones de un punto sin cambiar de lugar.');
       return {
-        answer: `Aquí ves con qué se relaciona ${name}: ${plural(info.direct, 'elemento conectado', 'elementos conectados')} directamente, agrupados por tipo de relación.`,
+        answer: `${unseen(node)}${plural(info.direct, 'elemento conectado', 'elementos conectados')} directamente, agrupados por tipo de relación.`,
         how: how.join(' '),
       };
     }
@@ -51,7 +55,7 @@ export function lensSummary({ lens, grain, node, response, scene }) {
       }
       const distance = info.maxDepth > 1 ? `, el más lejano a ${info.maxDepth} pasos.` : info.total > 1 ? ', todos justo antes.' : ', justo antes.';
       return {
-        answer: `Aquí ves lo que te falta saber antes de aprender ${name}: ${plural(info.total, 'concepto', 'conceptos')}${distance}`,
+        answer: `${unseen(node)}Necesitas saber antes ${plural(info.total, 'concepto', 'conceptos')}${distance}`,
         how: 'Se lee de izquierda a derecha: cada flecha sale de lo que se aprende primero y llega a lo que lo necesita. Elige una flecha, o «fuente» en la ficha, para ver qué sílabo lo dice.',
       };
     }
@@ -68,7 +72,7 @@ export function lensSummary({ lens, grain, node, response, scene }) {
       // concepts need before; the other, what the course itself asks for.
       const course = node.label === 'Course';
       return {
-        answer: `Para llegar a ${name} conviene pasar antes por ${plural(info.stops.length, g.name, g.plural)}: ahí ${where} lo que necesitas saber antes (${plural(info.prerequisites.length, 'concepto', 'conceptos')}).`
+        answer: `${unseen(node)}Conviene pasar antes por ${plural(info.stops.length, g.name, g.plural)}: ahí ${where} lo que necesitas saber antes (${plural(info.prerequisites.length, 'concepto', 'conceptos')}).`
           + (course ? ' Sale de lo que necesitan antes los conceptos que el curso enseña; lo que el curso pide de entrada es otra pregunta.' : ''),
         offer: course ? 'courses' : undefined,
         how: `Abajo, los conceptos que necesitas antes; arriba, ${rows} donde se aprenden. «¿Por qué?» muestra la relación exacta y su fuente.`
@@ -106,7 +110,7 @@ export function lensSummary({ lens, grain, node, response, scene }) {
           return { answer: `${name} tiene ${plural(info.concepts, 'concepto', 'conceptos')}. Ninguno depende de otro: se pueden aprender en cualquier orden.`, how: 'Elige un concepto para ver qué necesita antes.' };
         }
         return {
-          answer: `${name} tiene ${plural(info.concepts, 'concepto', 'conceptos')}, y conviene aprenderlos en ${plural(info.steps, 'paso', 'pasos')}.`,
+          answer: `${unseen(node)}${plural(info.concepts, 'concepto', 'conceptos')}, que conviene aprender en ${plural(info.steps, 'paso', 'pasos')}.`,
           how: 'Cada columna es un paso: lo de una columna usa lo de la anterior. Las flechas dicen exactamente qué necesita qué.',
         };
       }
@@ -120,7 +124,7 @@ export function lensSummary({ lens, grain, node, response, scene }) {
         ? 'De izquierda a derecha, de lo más general a lo más específico. Entra a un tema para ver en qué orden aprender sus conceptos.'
         : `Con más de ${MAX_CONCEPTS_IN_TREE} conceptos, el mapa llega hasta los temas para que se pueda leer. Entra a un tema para ver sus conceptos y en qué orden aprenderlos.`;
       return {
-        answer: `${name} contiene ${joined(parts)}.`,
+        answer: `${unseen(node)}Contiene ${joined(parts)}.`,
         how: how + (info.summarized ? ' Las unidades sin temas están en «Conexiones», en la ficha.' : ''),
       };
     }

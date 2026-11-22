@@ -6,7 +6,8 @@ minutos.
 
 ## Antes de la sesión
 
-- La aplicación desplegada responde, con el grafo de la hoja 2.
+- La aplicación desplegada responde, con el grafo de la corrida final de R4: la «Hoja 2» de
+  `plan-de-pruebas-de-aceptacion-r6.md`, en esta misma carpeta.
 - El participante tiene abierta una ventana privada de al menos 1366 × 768, en el inicio.
 - Están abiertos el registro de la sesión y el enlace al formulario.
 - No hay ninguna ingesta corriendo.
@@ -41,7 +42,7 @@ repite los pasos 2 a 4 por su cuenta.
 5. **Un tema**, «SQL DML»: «Qué contiene», con el orden en que conviene aprender sus conceptos, y
    «Material de estudio», que abre el PDF del sílabo.
 6. **Un curso**, «Bases de Datos»: «Cursos que conviene llevar antes» y «Camino hasta aquí», con
-   el cambio de agrupación y el «¿Por qué?» de una parada.
+   el selector «Ver por» (tema, curso, área) arriba del mapa y el «¿Por qué?» de una parada.
 7. **De dónde sale un dato.** Se selecciona una relación y se muestra su fuente. El interruptor
    «Fuentes» une cada elemento con su documento.
 
@@ -54,16 +55,35 @@ anterior. Si pide repetir, se repite igual. Se vuelve al inicio solo si la tarea
 
 | Caso | Se lee |
 |---|---|
-| CA-01 | «Quieres repasar cómo administra la memoria un sistema operativo. Encuentra el tema ADMINISTRACIÓN DE MEMORIA y ábrelo.» Después: «Ahora busca "compiladores".» |
-| CA-02 | «Mira con qué se relaciona el tema ADMINISTRACIÓN DE MEMORIA, pasa a su concepto Memoria virtual y vuelve al tema. Después, trae las conexiones de uno de sus vecinos sin cambiar el foco.» |
+| CA-01 | «Quieres repasar cómo administra la memoria un sistema operativo. Encuentra el tema ADMINISTRACIÓN DE MEMORIA y ábrelo.» Después: «Ahora quieres saber si hay algo sobre compiladores. Búscalo.» |
+| CA-02 | «Mira con qué se relaciona el tema ADMINISTRACIÓN DE MEMORIA, pasa a su concepto Memoria virtual y vuelve al tema. Después, sin que el tema deje de estar en el centro, haz que el mapa muestre también con qué se relaciona uno de sus vecinos.» |
 | CA-03 | «Antes de estudiar Memoria virtual, averigua qué deberías saber, y por qué una de esas cosas va antes.» Después: «Haz lo mismo con el concepto Memoria, del sílabo de Programación 2.» |
-| CA-04 | «Vas a llevar Sistemas Operativos. Averigua qué conocimientos asume y qué curso te conviene llevar antes.» |
+| CA-04 | «Vas a llevar Sistemas Operativos. Averigua qué conceptos te pide su sílabo saber al empezar, y qué otro curso enseña esos conceptos, para llevarlo antes.» |
 | CA-05 | «Averigua en qué parte de la carrera está Memoria virtual.» |
 | CA-06 | «Mira qué conceptos tiene el tema ADMINISTRACIÓN DE MEMORIA y en qué orden conviene aprenderlos. Después, mira qué contiene el área Sistemas Operativos.» |
 | CA-07 | «Busca material para estudiar el tema ADMINISTRACIÓN DE MEMORIA y ábrelo. Luego intenta lo mismo con Memoria virtual.» Después: «Ahora busca material del área Fundamentos Algorítmicos.» |
-| CA-08 | «Quieres llegar a entender Memoria virtual. Averigua por qué cursos te conviene pasar antes, y por qué.» Después, una a una: «Míralo por temas y por áreas.» · «¿Por qué pasar por Programación 2?» · «Ahora haz lo mismo con el curso Sistemas Operativos como meta.» |
+| CA-08 | «Quieres llegar a entender Memoria virtual. Contando no solo lo que necesita justo antes, sino también lo que necesita eso, y así hacia atrás, averigua por qué cursos te conviene pasar antes, y por qué.» Después, una a una: «Mira ese mismo camino agrupado por temas, y luego por áreas.» · «¿Por qué pasar por Programación 2?» · «Ahora pon como meta el curso Sistemas Operativos: ¿por qué cursos conviene pasar antes, siguiendo la misma cadena hacia atrás?» |
 | CA-09 | «Averigua qué tipos de Llamadas al sistema hay, y de qué es un tipo uno de ellos.» Después: «Mira los tipos de Memoria virtual.» |
 | CA-10 | «El sistema dice que Memoria virtual necesita antes Paginación. Comprueba en qué documento se dice eso y ábrelo.» Después: «¿Y de dónde sale la unidad Gestión de Memoria?» |
+
+**Para el evaluador, no se lee.** Algunas partes no tienen resultado a propósito: prueban cómo
+responde el sistema cuando no hay nada que mostrar. Lo que
+debe verse en cada paso está en `plan-de-pruebas-de-aceptacion-r6.md`, sección «Hoja de datos» ›
+«Hoja 2 · Grafo de la corrida final» › «Resultados esperados».
+
+- **CA-01.** «compiladores» no está en ningún sílabo ni en CS2023. Lo esperado: el aviso de que
+  nada coincide y la oferta de ver las áreas.
+- **CA-02.** Es el botón **+** del vecino en el mapa: sus conexiones se agregan al mapa y el tema
+  sigue en el centro. Seleccionar una relación y leer su ficha no cuenta: eso es CA-10.
+- **CA-04.** Es la pregunta de un solo paso, «Cursos que conviene llevar antes»: lo que el sílabo
+  de 1INF29 pide («Memoria» y «Programación») y los cursos que lo enseñan (1INF25 y 1INF27).
+  «Camino hasta aquí» no es esta respuesta.
+- **CA-07.** Que Memoria virtual no tenga material es lo esperado: el sistema dice que un concepto
+  no tiene material propio y remite al de su tema.
+- **CA-08.** Es «Camino hasta aquí», que sigue los prerrequisitos hacia atrás todos los pasos.
+  «Por temas y por áreas» es el selector «Ver por», arriba del mapa, que solo aparece en esa
+  vista. Con el curso como meta, el camino (1INF25, 1INF27 y 1INF30) no coincide con CA-04, y el
+  sistema lo dice; que difieran no reprueba el caso.
 
 Durante las tareas, el evaluador no ofrece ayuda. Si el participante la pide, da la indicación
 mínima para que siga y la anota: el caso queda reprobado por uso. A «¿así?» responde «haz lo que

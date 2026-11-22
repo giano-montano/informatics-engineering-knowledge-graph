@@ -559,7 +559,7 @@ El objetivo de este procedimiento es producir la documentación de diseño y arq
 
 **Fase 1 \- Diseño de flujos e interfaz**
 
-Primero se definen los atributos de calidad del mecanismo de navegación, a partir de las necesidades de los estudiantes y de los atributos del módulo que la interfaz hereda. Luego, a partir del esquema del grafo definido en R3 y del conjunto de datos piloto disponible tras la ingesta de R4, se diseñan los flujos de interacción principales del mecanismo y se especifican sus casos de uso. Esta fase produce los wireframes de las pantallas principales.
+Primero se definen los atributos de calidad del mecanismo de navegación, a partir de las necesidades de los estudiantes y de los atributos del módulo que la interfaz hereda. Luego, a partir del esquema del grafo definido en R3, se especifican sus casos de uso como casos de uso esenciales (Constantine & Lockwood, 1999). Con los datos de desarrollo del módulo de R4, se construyen maquetas navegables de varias propuestas de interfaz y se elige una frente a esos atributos. Para la elegida se diseñan los flujos de interacción principales y los wireframes de las pantallas principales.
 
 **Fase 2 \- Documentación arquitectónica**
 
@@ -575,7 +575,7 @@ Se implementa el mecanismo como una aplicación web que consume los endpoints de
 
 **Fase 2 \- Verificación del prototipo**
 
-Las funcionalidades del prototipo se verifican con un plan de pruebas en el que cada caso especifica la entrada, la acción esperada y el criterio de aprobación, y que comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El plan se aplica de dos formas. Primero, el asesor de tesis, como experto en Ingeniería de Conocimiento, revisa el recorrido de todos los casos, grabado en video, y lo valida por escrito. Después, al menos tres usuarios reales, estudiantes de Ingeniería Informática, ejecutan los casos del estudiante tras una capacitación breve en el uso del prototipo. Un caso se aprueba si el participante completa la tarea sin indicaciones del evaluador y el sistema muestra el resultado esperado. El criterio es que se apruebe al menos el 80 % de los casos ejecutados con los usuarios. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados y sus resultados.
+Las funcionalidades del prototipo se verifican con un plan de pruebas en el que cada caso especifica la entrada, la acción esperada y el criterio de aprobación, y que comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El plan se aplica de dos formas. Primero, el asesor de tesis, como experto en Ingeniería de Conocimiento, revisa el recorrido de todos los casos, grabado en video, y lo valida por escrito. Después, al menos tres usuarios reales, estudiantes de Ingeniería Informática, ejecutan los casos del estudiante tras una capacitación breve en el uso del prototipo. Un caso se aprueba si el participante completa la tarea sin indicaciones del evaluador y el sistema muestra el resultado esperado. El criterio es que se apruebe al menos el 80 % de los casos ejecutados con los usuarios. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados, sus resultados y el video del recorrido.
 
 2. ### **Herramientas** {#herramientas}
 
@@ -1474,7 +1474,7 @@ Este capítulo presenta los resultados del objetivo específico O3: diseñar e i
 
 2. ## **Documentación del mecanismo de navegación** {#documentación-del-mecanismo-de-navegación}
 
-Este resultado se obtuvo con las dos fases del procedimiento descrito en el capítulo 1\. En la primera se definieron los atributos de calidad del mecanismo, se especificaron los casos de uso, se evaluaron tres propuestas de interfaz sobre datos reales y se diseñaron los flujos y los wireframes de la elegida. En la segunda se documentó la arquitectura de la aplicación web con el modelo C4 y se registraron sus decisiones como ADRs. Las maquetas, los casos de uso, el modelo de arquitectura y los ADRs se publican en el repositorio del proyecto.
+Este resultado se obtuvo con las dos fases del procedimiento descrito en el capítulo 1\. En la primera se definieron los atributos de calidad del mecanismo, se especificaron los casos de uso, se evaluaron tres propuestas de interfaz sobre datos reales y se diseñaron los flujos y los wireframes de la elegida. En la segunda se documentó la arquitectura de la aplicación web con el modelo C4 y se registraron sus decisiones como ADRs. Las maquetas y los casos de uso se publican en el repositorio del proyecto, en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5); el modelo de arquitectura y los ADRs, junto con los del capítulo anterior.
 
 1. ### **Atributos de calidad del mecanismo de navegación** {#atributos-de-calidad-del-mecanismo-de-navegación}
 
@@ -1491,7 +1491,7 @@ AN-01 corresponde a la operabilidad y a la capacidad de aprendizaje de la norma,
 
 2. ### **Casos de uso** {#casos-de-uso}
 
-Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecnología, como casos de uso esenciales: cada uno enuncia la intención del actor y la respuesta del sistema (Constantine & Lockwood, 1999). Son once: diez del estudiante, que consulta y navega el grafo sin escribir en él, y uno del operador, que carga documentos y revisa su ingesta. La Tabla 25 los resume con la necesidad de la encuesta de orientación del aprendizaje que atiende cada uno (Anexo D) y la pregunta de competencia de la ontología a la que responde.
+Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecnología, como casos de uso esenciales: cada uno enuncia la intención del actor y la respuesta del sistema (Constantine & Lockwood, 1999). Son once: diez del estudiante, que consulta y navega el grafo sin escribir en él, y uno del operador, que carga documentos y revisa su ingesta. La Tabla 25 los resume con la necesidad que atiende cada uno y la pregunta de competencia de la ontología a la que responde. Las necesidades son funcionalidades de la encuesta de orientación del aprendizaje (Anexo D), y el porcentaje que las acompaña es la proporción de los 154 encuestados que eligió cada una entre las que querría en el sistema.
 
 ###### **Tabla 25\. Casos de uso del mecanismo de navegación**
 
@@ -1521,7 +1521,7 @@ Para elegir el enfoque de navegación se construyeron tres maquetas navegables, 
 | :---- | :---- | :---- | :---- | :---- |
 | P1. Constelación | El lienzo del grafo es el protagonista: un elemento en foco, lo que lo rodea y una vista por cada pregunta sobre el mismo lienzo | Entender cómo se conectan las áreas y descubrir temas | Legibilidad y accesibilidad de un lienzo cuando la respuesta es grande | Alto |
 | P2. Catálogo | Fichas con dirección propia; el grafo es un mapa secundario del vecindario | Encontrar recursos de estudio | El grafo queda en segundo plano | Bajo |
-| P3. Itinerario | Se elige una meta y se ve el camino hasta ella como un mapa de líneas | Ver qué conceptos previos se necesitan | Depende de que la meta tenga camino: con los datos de desarrollo, 35 de 485 | Medio |
+| P3. Itinerario | Se elige una meta y se ve el camino hasta ella como un mapa de líneas | Ver qué conceptos previos se necesitan | Depende de que el elemento elegido como meta tenga prerrequisitos: con los datos de desarrollo, solo 35 de 485 los tienen | Medio |
 
 Se eligió P1. Es la única que muestra el grafo como grafo y responde las siete preguntas de competencia sobre un mismo dibujo, sin que el estudiante pierda de vista el elemento, que es lo que AN-01 exige y lo que el objetivo O3 pide: explorar de forma visual las relaciones a distintos niveles. P2 responde qué hay sobre un elemento, pero no cómo se conecta con lo demás. P3 responde en una pantalla la necesidad más votada, pero su pantalla principal queda vacía para la mayoría de las metas, porque los caminos del grafo de desarrollo son pocos y no pasan de dos pasos. El costo de la elección es que P1 es la más exigente de construir y de leer, lo que se declara entre las limitaciones.
 
@@ -1539,7 +1539,7 @@ Para cada caso de uso del estudiante se escribió un flujo, es decir, los pasos 
 
 ##### **Figura 14\. Wireframe de la pantalla D: la vista «Qué necesitas antes» de un concepto. Fuente: elaboración propia.**
 
-En la Figura 13, el tema en foco ocupa el centro y sus doce vecinos directos se reparten en dos alas, con el nombre de cada relación escrito sobre sus líneas; el panel de la derecha repite lo mismo como lista. En la Figura 14, los prerrequisitos del concepto se ordenan en columnas por distancia y las flechas van de lo que se aprende primero a lo que lo necesita; un clic en una flecha muestra el sílabo que la afirma. En ambas, la forma distingue la procedencia: hexágono para lo que viene de CS2023 y círculo para lo que viene de un sílabo. Los diez flujos y las quince capturas, con el caso de uso de cada una, pueden consultarse en el repositorio.
+En la Figura 13, el tema en foco ocupa el centro y sus doce vecinos directos se reparten en dos alas, con el nombre de cada relación escrito sobre sus líneas; el panel de la derecha repite lo mismo como lista. En la Figura 14, los prerrequisitos del concepto se ordenan en columnas por distancia y las flechas van de lo que se aprende primero a lo que lo necesita; un clic en una flecha muestra el sílabo que la afirma. En ambas, la forma distingue la procedencia: hexágono para lo que viene de CS2023 y círculo para lo que viene de un sílabo. Cada elemento del lienzo se puede recorrer con el teclado y lleva un texto que lo nombra, y el panel repite como lista todo lo dibujado. Los diez flujos y las quince capturas, con el caso de uso de cada una, están en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5/p1-lienzo](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5/p1-lienzo).
 
 5. ### **Arquitectura de la aplicación web** {#arquitectura-de-la-aplicación-web}
 
@@ -1551,18 +1551,18 @@ Los niveles 1 y 2 del modelo C4 son los del capítulo anterior (Figuras 6 y 7): 
 
 El estado de la exploración es el centro: guarda el foco, la pregunta elegida y lo visitado, y de él dependen el lienzo del grafo, la cabecera de contexto, el panel del foco y la línea de paradas que resume un camino. El buscador y el inicio son los dos puntos de entrada. Un único componente, el cliente de la API, habla con las rutas de navegación del módulo; el panel del foco, además, abre el documento de cada sílabo. El panel del operador es un componente aparte, que usa las rutas de operación con su token.
 
-La Tabla 27 resume las cuatro decisiones de este resultado, con la alternativa principal que descartó cada una y el atributo al que responde. Entre ellas están las dos que el procedimiento pedía: el framework y la librería de visualización. El texto completo puede consultarse en el repositorio, junto con las demás decisiones del sistema.
+La Tabla 27 resume las cuatro decisiones de este resultado, con la alternativa principal que descartó cada una y los atributos a los que responde, el principal primero. Entre ellas están las dos que el procedimiento pedía: el framework y la librería de visualización. El texto completo puede consultarse junto con las demás decisiones del sistema, en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones).
 
 ###### **Tabla 27\. Decisiones de diseño del mecanismo de navegación**
 
-| ADR | Decisión | Alternativa principal descartada | Justificación | Atributo principal |
+| ADR | Decisión | Alternativa principal descartada | Justificación | Atributos |
 | :---- | :---- | :---- | :---- | :---- |
 | ADR-016 | Lienzo del grafo con un elemento en foco, una vista por pregunta y un panel lateral con la ficha | Catálogo de fichas con el grafo como mapa secundario (P2) | Responde las siete preguntas de competencia sobre el mismo dibujo, sin cambiar de pantalla; el catálogo no muestra cómo se conecta un elemento con lo demás | AN-01 |
 | ADR-017 | Svelte con Vite, como aplicación estática de una sola página | Vue | Un solo estado compartido entre el lienzo y el panel, con poca carga en ejecución y sin interferir con el dibujo que controla la librería de visualización | AN-01 |
-| ADR-018 | D3 dibujando en SVG, con una disposición propia por vista | Cytoscape.js, que dibuja en canvas | Las respuestas de la API van de decenas a unos 160 nodos; SVG permite una disposición por pregunta, forma por capa y que cada nodo sea un elemento accesible del documento | AN-01 |
-| ADR-019 | La capa se distingue por forma, y la fuente se muestra en el panel y a pedido sobre cada relación | Capa solo por color | La procedencia y la capa se leen en todas las pantallas sin depender del color ni saturar el lienzo con las relaciones de procedencia | AC-03 |
+| ADR-018 | D3 dibujando en SVG, con una disposición propia por vista | Cytoscape.js, que dibuja en canvas | Las respuestas de la API van de decenas a unos 160 nodos; SVG permite una disposición por pregunta, forma por capa y que cada nodo sea un elemento accesible del documento | AN-01, AN-02 |
+| ADR-019 | La capa se distingue por forma, y la fuente se muestra en el panel y a pedido sobre cada relación | Capa solo por color | La procedencia y la capa se leen en todas las pantallas sin depender del color ni saturar el lienzo con las relaciones de procedencia | AC-03, AN-02 |
 
-Los dos criterios que el procedimiento nombraba para elegir la librería se resolvieron con medidas del grafo de desarrollo. La escala es moderada, porque la API acota cada respuesta: la mayor que se midió tiene 158 nodos, muy por debajo de los cerca de mil a partir de los cuales SVG se vuelve lento. El drill-down no es una función de la librería sino del diseño: es el cambio de foco y la expansión a pedido de un vecino. La propuesta pide además una ruta nueva al módulo, que entregue las áreas y los cursos para el inicio; se agregará junto con el prototipo.
+Los dos criterios que el procedimiento nombraba para elegir la librería se resolvieron con medidas del grafo de desarrollo. La escala es moderada, porque la API acota cada respuesta: la mayor que se midió tiene 158 nodos, de modo que no hace falta una librería pensada para miles de nodos y cada uno puede dibujarse como un elemento del documento. El drill-down no es una función de la librería sino del diseño: es el cambio de foco y la expansión a pedido de un vecino. La propuesta pide además una ruta nueva al módulo, que entregue las áreas y los cursos para el inicio; se agregará junto con el prototipo.
 
 3. ## **Verificación de R5** {#verificación-de-r5}
 
@@ -1598,9 +1598,11 @@ R5 especifica el mecanismo de navegación antes de implementarlo. Dos atributos 
 
 2. ### **Interpretación de los resultados** {#interpretación-de-los-resultados-1}
 
-Lo que estos resultados significan es que el diseño de la interfaz se decidió frente a datos y no frente a supuestos. Las tres propuestas se probaron con las respuestas reales del módulo, y fueron esos datos los que descartaron una de ellas: un diseño centrado en caminos de aprendizaje parecía el más alineado con la necesidad más votada de la encuesta, pero el grafo de desarrollo solo ofrece camino para 35 de 485 metas. Los mismos datos mostraron que casi ningún elemento tiene descripción, de modo que ninguna pantalla depende de ella.
+El problema que motiva esta tesis se manifiesta en tres efectos: el tiempo que el estudiante dedica a identificar los prerrequisitos de un tema, la búsqueda dispersa de material sin anclaje al currículo y la planificación del recorrido por canales informales. R5 asigna a cada efecto los casos de uso que lo atienden: los prerrequisitos de un concepto y el camino hasta una meta (CU-3 y CU-8) para el primero; el material de estudio y su fuente (CU-7 y CU-10) para el segundo; y lo que pide un curso y la ubicación de un elemento en la carrera (CU-4 y CU-5) para el tercero. Que la interfaz reduzca esos efectos no lo demuestra R5, sino las pruebas con usuarios de R6.
 
-El segundo significado es que la interfaz no agrega conocimiento al que el módulo entrega. Cada vista dibuja la respuesta de una consulta y nada más, y la única reordenación que hace, los pasos en que conviene aprender los conceptos de un tema, se calcula con relaciones que la respuesta ya trae. Por eso lo que el estudiante ve conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse.
+Lo que estos resultados significan, además, es que el diseño de la interfaz se decidió frente a datos y no frente a supuestos. Las tres propuestas se probaron con las respuestas reales del módulo, y fueron esos datos los que descartaron una de ellas: un diseño centrado en caminos de aprendizaje parecía el más alineado con la necesidad más votada de la encuesta, pero en el grafo de desarrollo solo 35 de 485 metas posibles tienen camino (Tabla 26).
+
+También significan que la interfaz no agrega conocimiento al que el módulo entrega. Cada vista dibuja la respuesta de una consulta y no agrega relaciones propias. Por eso lo que el estudiante ve conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse.
 
 3. ### **Los resultados en el contexto de la revisión de la literatura** {#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1}
 
@@ -1616,7 +1618,7 @@ Los casos de uso no dependen de la interfaz ni de la carrera: se derivan de las 
 
 Primero, la escala. El diseño se probó con cuatro sílabos; con trece, un área puede reunir decenas de temas, y dos vistas, la de prerrequisitos y la del camino hasta una meta, todavía no tienen regla para resumir respuestas grandes, porque los caminos de hoy no pasan de dos pasos.
 
-Segundo, la accesibilidad. Cada elemento del lienzo puede recorrerse con el teclado y tiene un texto accesible, y el panel repite como lista todo lo que el lienzo dibuja, pero no se ha hecho un recorrido con un lector de pantalla real. En pantallas pequeñas, las vistas más altas dejan las etiquetas en el límite de lo legible.
+Segundo, la accesibilidad. El recorrido con el teclado y la lista del panel atienden AN-02, pero no se ha hecho un recorrido con un lector de pantalla real.
 
 Tercero, la exigencia al estudiante. La propuesta elegida es la que más pide leer un grafo, y para encontrar material de estudio es más lenta que un catálogo. Un mapa que cambia de disposición con cada pregunta puede desorientar, y las medidas que el diseño toma contra ello no se han probado con usuarios.
 

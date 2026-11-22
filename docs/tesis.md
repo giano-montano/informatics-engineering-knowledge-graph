@@ -64,7 +64,7 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 [1.3.1.5 Procedimiento para la documentación del mecanismo de navegación \- R5	33](#procedimiento-para-la-documentación-del-mecanismo-de-navegación---r5)
 
-[1.3.1.6 Procedimiento para el prototipo de navegación \- R6	33](#procedimiento-para-el-prototipo-de-navegación---r6)
+[1.3.1.6 Procedimiento para el prototipo de navegación \- R6	34](#procedimiento-para-el-prototipo-de-navegación---r6)
 
 [1.3.2 Herramientas	34](#herramientas)
 
@@ -170,57 +170,93 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 [5.2.4 Arquitectura del módulo	86](#arquitectura-del-módulo)
 
-[5.2.4.1 Contexto del sistema	88](#contexto-del-sistema)
+[5.2.4.1 Contexto del sistema	89](#contexto-del-sistema)
 
-[5.2.4.2 Contenedores	90](#contenedores)
+[5.2.4.2 Contenedores	91](#contenedores)
 
-[5.2.4.3 Componentes	92](#componentes)
+[5.2.4.3 Componentes	93](#componentes)
 
-[5.2.4.4 Flujo de la ingesta	95](#flujo-de-la-ingesta)
+[5.2.4.4 Flujo de la ingesta	96](#flujo-de-la-ingesta)
 
-[5.2.4.5 Despliegue	97](#despliegue)
+[5.2.4.5 Despliegue	98](#despliegue)
 
-[5.2.5 Casos de prueba de la ingesta automatizada	98](#casos-de-prueba-de-la-ingesta-automatizada)
+[5.2.5 Casos de prueba de la ingesta automatizada	99](#casos-de-prueba-de-la-ingesta-automatizada)
 
-[5.2.5.1 Objeto y alcance	98](#objeto-y-alcance)
+[5.2.5.1 Objeto y alcance	99](#objeto-y-alcance)
 
-[5.2.5.2 Anotación de referencia	99](#anotación-de-referencia)
+[5.2.5.2 Anotación de referencia	101](#anotación-de-referencia)
 
-[5.2.5.3 Casos de prueba	101](#casos-de-prueba)
+[5.2.5.3 Casos de prueba	103](#casos-de-prueba)
 
-[5.2.5.4 Reglas de emparejamiento	103](#reglas-de-emparejamiento)
+[5.2.5.4 Reglas de emparejamiento	105](#reglas-de-emparejamiento)
 
-[5.2.5.5 Medidas de fusión	104](#medidas-de-fusión)
+[5.2.5.5 Medidas de fusión	106](#medidas-de-fusión)
 
-[5.2.5.6 Casos de prueba de relaciones	104](#casos-de-prueba-de-relaciones)
+[5.2.5.6 Casos de prueba de relaciones	106](#casos-de-prueba-de-relaciones)
 
-[5.2.6 Verificación de R3	105](#verificación-de-r3)
+[5.2.6 Verificación de R3	107](#verificación-de-r3)
 
-[5.2.6.1 Verificación y mediciones	105](#verificación-y-mediciones-1)
+[5.2.6.1 Verificación y mediciones	107](#verificación-y-mediciones-1)
 
-[5.2.6.2 Validación de experto	107](#validación-de-experto)
+[5.2.6.2 Validación de experto	109](#validación-de-experto)
 
-[5.2.6.3 Indicador	107](#indicador)
+[5.2.6.3 Indicador	109](#indicador)
 
-[5.3 Discusión	107](#discusión-1)
+[5.3 Discusión	109](#discusión-1)
 
-[5.3.1 Resumen de los resultados	107](#resumen-de-los-resultados)
+[5.3.1 Resumen de los resultados	110](#resumen-de-los-resultados)
 
-[5.3.2 Interpretación de los resultados	108](#interpretación-de-los-resultados)
+[5.3.2 Interpretación de los resultados	110](#interpretación-de-los-resultados)
 
-[5.3.3 Los resultados en el contexto de la revisión de la literatura	109](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura)
+[5.3.3 Los resultados en el contexto de la revisión de la literatura	111](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura)
 
-[5.3.4 Generalización de los resultados	110](#generalización-de-los-resultados)
+[5.3.4 Generalización de los resultados	112](#generalización-de-los-resultados)
 
-[5.3.5 Limitaciones de los resultados	111](#limitaciones-de-los-resultados)
+[5.3.5 Limitaciones de los resultados	113](#limitaciones-de-los-resultados)
 
-[**Capítulo 6\. Conclusiones y trabajos futuros	112**](#conclusiones-y-trabajos-futuros)
+[**Capítulo 6\. Mecanismo de navegación y descubrimiento semántico	115**](#mecanismo-de-navegación-y-descubrimiento-semántico)
 
-[6.1 Conclusiones	112](#conclusiones-1)
+[6.1 Introducción	115](#introducción-4)
 
-[6.2 Trabajos futuros	112](#trabajos-futuros)
+[6.2 Documentación del mecanismo de navegación	115](#documentación-del-mecanismo-de-navegación)
 
-[**Referencias	113**](#referencias)
+[6.2.1 Atributos de calidad del mecanismo de navegación	116](#atributos-de-calidad-del-mecanismo-de-navegación)
+
+[6.2.2 Casos de uso	117](#casos-de-uso)
+
+[6.2.3 Propuestas evaluadas	118](#propuestas-evaluadas)
+
+[6.2.4 Flujos e interfaz	119](#flujos-e-interfaz)
+
+[6.2.5 Arquitectura de la aplicación web	122](#arquitectura-de-la-aplicación-web)
+
+[6.3 Verificación de R5	124](#verificación-de-r5)
+
+[6.3.1 Verificación y mediciones	124](#verificación-y-mediciones-2)
+
+[6.3.2 Validación de experto	125](#validación-de-experto-1)
+
+[6.3.3 Indicador	125](#indicador-1)
+
+[6.4 Discusión	125](#discusión-2)
+
+[6.4.1 Resumen de los resultados	125](#resumen-de-los-resultados-1)
+
+[6.4.2 Interpretación de los resultados	126](#interpretación-de-los-resultados-1)
+
+[6.4.3 Los resultados en el contexto de la revisión de la literatura	126](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1)
+
+[6.4.4 Generalización de los resultados	127](#generalización-de-los-resultados-1)
+
+[6.4.5 Limitaciones de los resultados	127](#limitaciones-de-los-resultados-1)
+
+[**Capítulo 7\. Conclusiones y trabajos futuros	128**](#conclusiones-y-trabajos-futuros)
+
+[7.1 Conclusiones	128](#conclusiones-1)
+
+[7.2 Trabajos futuros	128](#trabajos-futuros)
+
+[**Referencias	129**](#referencias)
 
 # **Índice de figuras**
 
@@ -327,7 +363,7 @@ Por otro lado, la entrevista semiestructurada con el director de carrera de Inge
 
 | Problemas efectos | Tiempo significativo en identificar prerrequisitos conceptuales para abordar temas nuevos, con detección tardía de brechas de conocimiento una vez iniciado el estudio.  | Búsqueda dispersa de material para un mismo tema, con uso frecuente de IA generativa de propósito general como apoyo conceptual sin anclaje al currículo institucional. | Planificación del recorrido curricular guiada principalmente por canales informales (recomendaciones, horario disponible), con dificultad para articular el itinerario de forma autónoma. |  |
 | :---- | :---- | :---- | :---- | ----- |
-| **Problema central** | Los elementos del currículo de Ingeniería Informática PUCP (cursos, conceptos, recursos, etc.) no están disponibles de forma articulada en un medio digital integrado que permita consultarlos de forma transversal.  |  |  |  |
+| **Problema central** | Los elementos del currículo de Ingeniería Informática PUCP (cursos, conceptos, recursos, etc.) no están disponibles de forma articulada en un medio digital integrado que permita consultarlos de forma transversal. |  |  |  |
 | **Problemas causa** | Las dependencias entre los contenidos de la carrera están especificadas a nivel de cursos (prerrequisitos formales entre asignaturas), pero no a nivel de los conceptos y temas subyacentes.  | Los recursos académicos de la carrera se encuentran distribuidos entre múltiples plataformas y formatos, sin vinculación explícita con los elementos del currículo que abordan.  | La información sobre las relaciones entre los elementos del currículo (entre cursos, entre conceptos, entre recursos) se encuentra repartida entre múltiples documentos institucionales. |  |
 
 ##### **Figura 2\. Árbol de problemas** {#figura-2.-árbol-de-problemas}
@@ -399,8 +435,8 @@ Diseñar e implementar un sistema de gestión de conocimiento basado en grafos d
 | Objetivo: O 3: Diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. |  |  |
 | :---- | :---- | :---- |
 | **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
-| R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Reporte técnico del mecanismo de navegación | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
-| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | \- Pasa exitosamente el 100% de las pruebas de aceptación (con **asesor de tesis**), donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. \- Pasa exitosamente el 100% de las pruebas de aceptación con al menos 3 usuarios reales para validar la construcción del grafo de conocimiento. |
+| R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Reporte técnico  | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
+| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. Pasa exitosamente el 100% de las pruebas con al menos 3 usuarios reales, donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. |
 
 3. ## **Métodos, procedimientos y herramientas** {#métodos,-procedimientos-y-herramientas}
 
@@ -415,7 +451,7 @@ En esta sección se detallarán los métodos y procedimientos necesarios para ob
 | R3 \- Documentación del módulo | Modelo C4 (Brown, 2018\) Git y Github  | Diseño arquitectónico iterativo Documentación con niveles 1-3 del Modelo C4 Registro de decisiones técnicas mediante Architecture Decision Records.  Diseño y documentación de los casos de prueba de la ingesta |
 | R4 \- Módulo KG y pipeline | Neo4j Python (FastAPI) Docling PydanticAI LLM de OpenAI Git y Github Cypher (lenguaje de consulta de grafos) Git y Github  | Procedimiento de *Ontology Population* mediante extracción de información asistida por LLM y curación de contenido previa. |
 | R5 \- Documentación del mecanismo | Modelo C4 Git/GitHub | Diseño documentado con C4 (niveles 1-3) y ADRs; diseño de flujos de interacción y wireframes |
-| R6 \- Mecanismo de navegación | Svelte y Vite (framework frontend) D3 (librería de visualización de grafos) Git y Github  | Prototipado iterativo a partir de los flujos y wireframes de R5; pruebas de aceptación de funcionalidades core. |
+| R6 \- Mecanismo de navegación | D3 (librería de visualización de grafos) Svelte y Vite (framework frontend) Git y Github  | Prototipado iterativo a partir de los flujos y wireframes de R5 |
 
 1. ### **Métodos y procedimientos** {#métodos-y-procedimientos}
 
@@ -582,7 +618,6 @@ Para automatizar la extracción de información desde sílabos y otros documento
 Esta elección resulta más adecuada que una aproximación más generalista con LangChain para el núcleo de poblamiento ontológico. LangChain ofrece una arquitectura de agente preconstruida e integraciones amplias; sin embargo, allí la salida estructurada es una capacidad dentro de un ecosistema más amplio, mientras que en PydanticAI la validación tipada y el control del esquema constituyen el centro del diseño (LangChain, s. f.; Pydantic, 2024/2026). Para un pipeline cuyo foco es la consistencia semántica, la normalización y la trazabilidad, esa diferencia es metodológicamente relevante.
 
 La conversión de los sílabos a texto se realizará con Docling (Livathinos et al., 2025), que convierte el PDF en Markdown y conserva sus encabezados y listas mediante modelos de análisis de diseño. La extracción depende de esa estructura, porque un tema es el encabezado que agrupa ítems. Se prefiere a los extractores de texto plano, que la pierden, y a los servicios en la nube, que envían el documento a un tercero: Docling corre localmente y su licencia es MIT.
-
 Extracción con LLM: Se prioriza el uso de modelos con alta capacidad de razonamiento para identificar relaciones complejas que no siempre son explícitas en el texto del sílabo.
 
 7. #### **Git y Github para versionado y repositorio de código y documentación** {#git-y-github-para-versionado-y-repositorio-de-código-y-documentación}
@@ -1439,29 +1474,29 @@ Este capítulo presenta los resultados del objetivo específico O3: diseñar e i
 
 2. ## **Documentación del mecanismo de navegación** {#documentación-del-mecanismo-de-navegación}
 
-Este resultado se obtuvo con las dos fases del procedimiento descrito en el capítulo 1. En la primera se definieron los atributos de calidad del mecanismo, se especificaron los casos de uso, se evaluaron tres propuestas de interfaz sobre datos reales y se diseñaron los flujos y los wireframes de la elegida. En la segunda se documentó la arquitectura de la aplicación web con el modelo C4 y se registraron sus decisiones como ADRs. Las maquetas, los casos de uso, el modelo de arquitectura y los ADRs se publican en el repositorio del proyecto.
+Este resultado se obtuvo con las dos fases del procedimiento descrito en el capítulo 1\. En la primera se definieron los atributos de calidad del mecanismo, se especificaron los casos de uso, se evaluaron tres propuestas de interfaz sobre datos reales y se diseñaron los flujos y los wireframes de la elegida. En la segunda se documentó la arquitectura de la aplicación web con el modelo C4 y se registraron sus decisiones como ADRs. Las maquetas, los casos de uso, el modelo de arquitectura y los ADRs se publican en el repositorio del proyecto.
 
 1. ### **Atributos de calidad del mecanismo de navegación** {#atributos-de-calidad-del-mecanismo-de-navegación}
 
 Los cinco atributos de calidad del capítulo anterior son del módulo del grafo. De ellos, la interfaz hereda AC-03: el estudiante debe poder remitir a su fuente lo que el sistema le presenta. El diseño de la interfaz responde además a dos atributos propios, que la Tabla 24 define con el vocabulario de la norma ISO/IEC 25010:2023, en su característica de capacidad de interacción.
 
-###### **Tabla 24\. Atributos de calidad del mecanismo de navegación** {#tabla-24.-atributos-de-calidad-del-mecanismo-de-navegación}
+###### **Tabla 24\. Atributos de calidad del mecanismo de navegación**
 
 | ID | Propiedad | Origen | Prioridad | Verificación en R6 |
 | :---- | :---- | :---- | :---- | :---- |
 | AN-01 | El estudiante responde sus preguntas sobre un elemento del grafo desde un mismo lugar, sin conocer el lenguaje de consulta y sin perder de vista el elemento | Necesidades de la encuesta de orientación del aprendizaje (Anexo D) | Alta | Casos de prueba de aceptación, uno por caso de uso del estudiante |
 | AN-02 | Lo que la interfaz muestra no depende de un solo canal: ni solo del color, ni solo del dibujo, ni solo del cursor | La capa de cada elemento y la fuente de cada afirmación deben poder leerse siempre (AC-03) | Media | La procedencia de cada elemento se distingue por forma y texto, y todo lo dibujado está también como lista de texto |
 
-AN-01 corresponde a la operabilidad y a la capacidad de aprendizaje de la norma, y AN-02, a la inclusividad [FALTA: comprobar los términos contra el texto de ISO/IEC 25010:2023]. Cuando ambos chocan, el dibujo puede resumir lo que no cabe con nombre legible, pero lo resumido debe quedar completo en texto. Con AC-03, estos dos atributos son el criterio con que se evalúan las propuestas y se justifican las decisiones de las secciones siguientes.
+AN-01 corresponde a la operabilidad y a la capacidad de aprendizaje de la norma, y AN-02, a la inclusividad \[FALTA: comprobar los términos contra el texto de ISO/IEC 25010:2023\]. Cuando ambos chocan, el dibujo puede resumir lo que no cabe con nombre legible, pero lo resumido debe quedar completo en texto. Con AC-03, estos dos atributos son el criterio con que se evalúan las propuestas y se justifican las decisiones de las secciones siguientes.
 
 2. ### **Casos de uso** {#casos-de-uso}
 
-Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecnología, como casos de uso esenciales: cada uno enuncia la intención del actor y la respuesta del sistema [FALTA: cita de Constantine y Lockwood (1999), *Software for Use*; no está en las referencias]. Son once: diez del estudiante, que consulta y navega el grafo sin escribir en él, y uno del operador, que carga documentos y revisa su ingesta. La Tabla 25 los resume con la necesidad de la encuesta de orientación del aprendizaje que atiende cada uno (Anexo D) y la pregunta de competencia de la ontología a la que responde.
+Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecnología, como casos de uso esenciales: cada uno enuncia la intención del actor y la respuesta del sistema \[FALTA: cita de Constantine y Lockwood (1999), Software for Use; no está en las referencias\]. Son once: diez del estudiante, que consulta y navega el grafo sin escribir en él, y uno del operador, que carga documentos y revisa su ingesta. La Tabla 25 los resume con la necesidad de la encuesta de orientación del aprendizaje que atiende cada uno (Anexo D) y la pregunta de competencia de la ontología a la que responde.
 
-###### **Tabla 25\. Casos de uso del mecanismo de navegación** {#tabla-25.-casos-de-uso-del-mecanismo-de-navegación}
+###### **Tabla 25\. Casos de uso del mecanismo de navegación**
 
 | Caso de uso | Actor | Necesidad que atiende (Anexo D) | Pregunta de competencia |
-| :---- | :---- | :---- | :---- |
+| :---: | :---: | :---: | :---: |
 | CU-1. Encontrar por dónde empezar | Estudiante | Descubrir temas (52,6 %) | — |
 | CU-2. Explorar lo que rodea a un elemento | Estudiante | Entender cómo se conectan las áreas (61,0 %) | — |
 | CU-3. Saber qué conceptos necesito antes de aprender uno | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC1 |
@@ -1471,16 +1506,16 @@ Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecno
 | CU-7. Encontrar material de estudio sobre algo | Estudiante | Encontrar recursos de estudio (72,1 %) | PC5 |
 | CU-8. Ver el camino hasta una meta, por temas, cursos o áreas | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC6 |
 | CU-9. Ver de qué es un tipo un concepto y qué tipos tiene | Estudiante | Descubrir temas (52,6 %) | PC7 |
-| CU-10. Comprobar de dónde sale un dato | Estudiante | — | — |
-| CU-11. Cargar un documento y revisar su ingesta | Operador | — | — |
+| CU-10. Comprobar de dónde sale un dato | Estudiante | \- | \- |
+| CU-11. Cargar un documento y revisar su ingesta | Operador | \- | \- |
 
 Las siete preguntas de competencia de la ontología quedan cubiertas, cada una por un caso de uso. Los tres casos sin pregunta de competencia no consultan una relación del dominio: CU-1 y CU-2 son la entrada al grafo y su exploración de nodo en nodo, y CU-10 lleva al estudiante al documento del que procede una afirmación, que es lo que el atributo AC-03 exige al sistema.
 
 3. ### **Propuestas evaluadas** {#propuestas-evaluadas}
 
-Para elegir el enfoque de navegación se construyeron tres maquetas navegables, cada una con un enfoque distinto, más un panel del operador común. Las tres resuelven los mismos once casos de uso, usan el mismo vocabulario en pantalla y se alimentan de los mismos datos: las respuestas reales de la API del módulo sobre la capa de referencia y cuatro sílabos de desarrollo, capturadas el 29 de octubre de 2026. Lo que la API todavía no entrega se rotula en pantalla como simulado. Un mismo recorrido de seis pasos permite compararlas sobre la misma historia. La Tabla 26 resume la comparación.
+Para elegir el enfoque de navegación se construyeron tres maquetas navegables, cada una con un enfoque distinto, más un panel del operador común. Las tres resuelven los mismos once casos de uso, usan el mismo vocabulario en pantalla y se alimentan de los mismos datos: las respuestas reales de la API del módulo sobre la capa de referencia y cuatro sílabos de desarrollo, capturadas el 29 de octubre de 2026\. Lo que la API todavía no entrega se rotula en pantalla como simulado. Un mismo recorrido de seis pasos permite compararlas sobre la misma historia. La Tabla 26 resume la comparación.
 
-###### **Tabla 26\. Propuestas de navegación evaluadas** {#tabla-26.-propuestas-de-navegación-evaluadas}
+###### **Tabla 26\. Propuestas de navegación evaluadas**
 
 | Propuesta | Enfoque | Necesidad que atiende mejor | Punto débil | Esfuerzo de implementación |
 | :---- | :---- | :---- | :---- | :---- |
@@ -1496,13 +1531,13 @@ En P1 siempre hay un elemento en foco, y el estudiante se mueve haciendo clic de
 
 Para cada caso de uso del estudiante se escribió un flujo, es decir, los pasos con que esta interfaz lo resuelve, con ejemplos del grafo de desarrollo. Los wireframes son seis pantallas, tomadas de la maqueta: el inicio (A), los resultados de búsqueda (B), el foco con lo que lo rodea (C), la vista activa para una pregunta (D), el panel del foco (E) y la relación seleccionada con su fuente (F). La Figura 13 muestra la pantalla C y la Figura 14, la pantalla D para la pregunta «Qué necesitas antes».
 
-![Pantalla C](r5/p1-lienzo/capturas/C-foco-lo-que-lo-rodea.png)
+![][image13]
 
-##### **Figura 13\. Wireframe de la pantalla C: un tema en foco con lo que lo rodea. Fuente: elaboración propia.** {#figura-13.-wireframe-de-la-pantalla-c}
+##### **Figura 13\. Wireframe de la pantalla C: un tema en foco con lo que lo rodea. Fuente: elaboración propia.**
 
-![Pantalla D](r5/p1-lienzo/capturas/D2-que-necesitas-antes.png)
+![][image14]
 
-##### **Figura 14\. Wireframe de la pantalla D: la vista «Qué necesitas antes» de un concepto. Fuente: elaboración propia.** {#figura-14.-wireframe-de-la-pantalla-d}
+##### **Figura 14\. Wireframe de la pantalla D: la vista «Qué necesitas antes» de un concepto. Fuente: elaboración propia.**
 
 En la Figura 13, el tema en foco ocupa el centro y sus doce vecinos directos se reparten en dos alas, con el nombre de cada relación escrito sobre sus líneas; el panel de la derecha repite lo mismo como lista. En la Figura 14, los prerrequisitos del concepto se ordenan en columnas por distancia y las flechas van de lo que se aprende primero a lo que lo necesita; un clic en una flecha muestra el sílabo que la afirma. En ambas, la forma distingue la procedencia: hexágono para lo que viene de CS2023 y círculo para lo que viene de un sílabo. Los diez flujos y las quince capturas, con el caso de uso de cada una, pueden consultarse en el repositorio.
 
@@ -1510,15 +1545,15 @@ En la Figura 13, el tema en foco ocupa el centro y sus doce vecinos directos se 
 
 Los niveles 1 y 2 del modelo C4 son los del capítulo anterior (Figuras 6 y 7): la aplicación web es uno de los contenedores del sistema, se despliega aparte de la API y solo presenta, porque la lógica de navegación vive en el módulo. Este resultado agrega su nivel 3, en el mismo modelo. La Figura 15 muestra sus nueve componentes.
 
-[FALTA: imagen del nivel 3 de la aplicación web; se exporta del modelo, vista `webComponents`]
+![][image15]
 
-##### **Figura 15\. Componentes de la aplicación web (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-15.-componentes-de-la-aplicación-web-(nivel-3-del-modelo-c4)}
+##### **Figura 15\. Componentes de la aplicación web (nivel 3 del modelo C4). Fuente: elaboración propia.**
 
 El estado de la exploración es el centro: guarda el foco, la pregunta elegida y lo visitado, y de él dependen el lienzo del grafo, la cabecera de contexto, el panel del foco y la línea de paradas que resume un camino. El buscador y el inicio son los dos puntos de entrada. Un único componente, el cliente de la API, habla con las rutas de navegación del módulo; el panel del foco, además, abre el documento de cada sílabo. El panel del operador es un componente aparte, que usa las rutas de operación con su token.
 
 La Tabla 27 resume las cuatro decisiones de este resultado, con la alternativa principal que descartó cada una y el atributo al que responde. Entre ellas están las dos que el procedimiento pedía: el framework y la librería de visualización. El texto completo puede consultarse en el repositorio, junto con las demás decisiones del sistema.
 
-###### **Tabla 27\. Decisiones de diseño del mecanismo de navegación** {#tabla-27.-decisiones-de-diseño-del-mecanismo-de-navegación}
+###### **Tabla 27\. Decisiones de diseño del mecanismo de navegación**
 
 | ADR | Decisión | Alternativa principal descartada | Justificación | Atributo principal |
 | :---- | :---- | :---- | :---- | :---- |
@@ -1527,33 +1562,33 @@ La Tabla 27 resume las cuatro decisiones de este resultado, con la alternativa p
 | ADR-018 | D3 dibujando en SVG, con una disposición propia por vista | Cytoscape.js, que dibuja en canvas | Las respuestas de la API van de decenas a unos 160 nodos; SVG permite una disposición por pregunta, forma por capa y que cada nodo sea un elemento accesible del documento | AN-01 |
 | ADR-019 | La capa se distingue por forma, y la fuente se muestra en el panel y a pedido sobre cada relación | Capa solo por color | La procedencia y la capa se leen en todas las pantallas sin depender del color ni saturar el lienzo con las relaciones de procedencia | AC-03 |
 
-Los dos criterios que el procedimiento nombraba para elegir la librería se resolvieron con medidas del grafo de desarrollo. La escala es moderada, porque la API acota cada respuesta: la mayor que se midió tiene 158 nodos, muy por debajo de los cerca de mil a partir de los cuales SVG se vuelve lento. El *drill-down* no es una función de la librería sino del diseño: es el cambio de foco y la expansión a pedido de un vecino. La propuesta pide además una ruta nueva al módulo, que entregue las áreas y los cursos para el inicio; se agregará junto con el prototipo.
+Los dos criterios que el procedimiento nombraba para elegir la librería se resolvieron con medidas del grafo de desarrollo. La escala es moderada, porque la API acota cada respuesta: la mayor que se midió tiene 158 nodos, muy por debajo de los cerca de mil a partir de los cuales SVG se vuelve lento. El drill-down no es una función de la librería sino del diseño: es el cambio de foco y la expansión a pedido de un vecino. La propuesta pide además una ruta nueva al módulo, que entregue las áreas y los cursos para el inicio; se agregará junto con el prototipo.
 
-6. ### **Verificación de R5** {#verificación-de-r5}
+3. ## **Verificación de R5** {#verificación-de-r5}
 
-   1. #### **Verificación y mediciones** {#verificación-y-mediciones-2}
+   1. ### **Verificación y mediciones** {#verificación-y-mediciones-2}
 
 R5 se comprometió a especificar las tecnologías a emplear, los componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. Su medio de verificación es el reporte técnico del mecanismo de navegación (Tabla 4), que es esta sección. Cada parte se encuentra en:
 
-* Las tecnologías: ADR-017 y ADR-018, resumidos en la Tabla 27.
+* Las tecnologías: ADR-017 y ADR-018, resumidos en la Tabla 27\.
 
-* Los componentes internos: la Figura 15, vista del mismo modelo que las Figuras 6 a 12.
+* Los componentes internos: la Figura 15, vista del mismo modelo que las Figuras 6 a 12\.
 
 * Las decisiones de diseño y arquitectura evaluadas: las tres propuestas de la Tabla 26 y ADR-016 a ADR-019, en el repositorio.
 
 * Los flujos y los wireframes: las Figuras 13 y 14 y, en el repositorio, los diez flujos y las quince capturas.
 
-Cada atributo de la Tabla 24 queda atendido por al menos una decisión y tiene una verificación definida en R6: el plan de pruebas de aceptación tiene un caso por cada caso de uso del estudiante, y el caso que corresponde a CU-10 abre el documento del que procede una afirmación, que es la comprobación de AC-03 anunciada en la Tabla 23.
+Cada atributo de la Tabla 24 queda atendido por al menos una decisión y tiene una verificación definida en R6: el plan de pruebas de aceptación tiene un caso por cada caso de uso del estudiante, y el caso que corresponde a CU-10 abre el documento del que procede una afirmación, que es la comprobación de AC-03 anunciada en la Tabla 23\.
 
-2. #### **Validación de experto** {#validación-de-experto-1}
+2. ### **Validación de experto** {#validación-de-experto-1}
 
-[FALTA: validación pendiente. Al obtenerla: «La documentación fue revisada y aprobada por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión cubrió los casos de uso, las propuestas evaluadas, los flujos y wireframes, los atributos de calidad y la arquitectura con sus decisiones. El registro de esa validación se adjunta como evidencia **en el Anexo O**.»]
+\[FALTA: validación pendiente. Al obtenerla: «La documentación fue revisada y aprobada por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión cubrió los casos de uso, las propuestas evaluadas, los flujos y wireframes, los atributos de calidad y la arquitectura con sus decisiones. El registro de esa validación se adjunta como evidencia en el Anexo O».\]
 
-3. #### **Indicador** {#indicador-1}
+3. ### **Indicador** {#indicador-1}
 
-[FALTA: veredicto del indicador de R5, la validación con respuesta positiva del experto en Ingeniería de Conocimiento. Depende de la validación anterior.]
+\[FALTA: veredicto del indicador de R5, la validación con respuesta positiva del experto en Ingeniería de Conocimiento. Depende de la validación anterior.\]
 
-3. ## **Discusión** {#discusión-2}
+4. ## **Discusión** {#discusión-2}
 
 Esta discusión cubre R5; la de R6 se incorporará con su implementación.
 
@@ -1637,7 +1672,7 @@ Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The elements of statistical 
 
 Huang, J., Lai, F., Zheng, Z., Lai, R., Chen, X., Tian, J., & Zheng, Y. (2026). Design and Evaluation of a Question-Answering System Based on Knowledge Graph-Augmented Large Language Models in K–12 Artificial Intelligence Curriculum. *Applied Sciences*, *16*(7), 3552\. [https\://doi.org/10.3390/app16073552](https://doi.org/10.3390/app16073552)
 
-International Organization for Standardization & International Electrotechnical Commission. (2023). *Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model* (ISO/IEC 25010:2023).
+International Organization for Standardization & International Electrotechnical Commission. (2023). Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model (ISO/IEC 25010:2023).
 
 Kitchenham, B., & Charters, S. (2007). *Guidelines for performing Systematic Literature Reviews in Software Engineering*. *2*.
 
@@ -1877,7 +1912,7 @@ Las tareas se derivan directamente de la estructura de descomposición del traba
 
 La Figura A.1. presenta el diagrama de Gantt del cronograma del proyecto y la Tabla A.2. presenta la lista de tareas con las dependencias, duración, esfuerzo, costo y periodo.
 
-![][image13]
+![][image16]
 
 **Figura A.1. Diagrama de Gantt del cronograma del proyecto**
 
@@ -1979,30 +2014,18 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 
 # **Anexo N: Contraste de la anotación con extracciones humanas independientes**
 
-[https\\://docs.google.com/document/d/1n-tMKDott1UGmUxnQLSqqUM6BHzsU3cDsfdwSpA0Jq4/edit?tab=t.0\\#heading=h.fa5bf78t35tm]\([https://docs.google.com/document/d/1n-tMKDott1UGmUxnQLSqqUM6BHzsU3cDsfdwSpA0Jq4/edit?tab=t.0#heading=h.fa5bf78t35tm](https://docs.google.com/document/d/1n-tMKDott1UGmUxnQLSqqUM6BHzsU3cDsfdwSpA0Jq4/edit?tab=t.0#heading=h.fa5bf78t35tm))
+[https\://docs.google.com/document/d/1UEdXBhDHKFx9fo\_4i3gzrzQJ4fPiUoOKbTtKm33e02c/edit?tab=t.0](https://docs.google.com/document/d/1UEdXBhDHKFx9fo_4i3gzrzQJ4fPiUoOKbTtKm33e02c/edit?tab=t.0) 
 
 # **Anexo O: Constancia de validación experta del Resultado 5**
 
-[Enlace pendiente: constancia firmada.]
+[https\://docs.google.com/document/d/1AVbPspoit6JVOu0WLpDcpRDDPpwQuCnsdDxGbrkwBUU/edit?usp=sharing](https://docs.google.com/document/d/1AVbPspoit6JVOu0WLpDcpRDDPpwQuCnsdDxGbrkwBUU/edit?usp=sharing) 
 
 [^1]:  Recuperado el 18 de junio del 2026 a las 20:40 h (UTC-5) de [https\://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee\_INFORMATICA-2026-1.pdf](https://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee_INFORMATICA-2026-1.pdf)y visible en el anexo F.
 
 [^2]:  El umbral de al menos 5 clases y al menos 3 tipos de relación va de acuerdo a la aplicación de la metodología Ontology Development 101 de Noy y McGuinness
 
-[^3]: Umbral fijado por debajo de la precisión de extracción de entidades que reportan los trabajos más cercanos con modelos de lenguaje: entre 80 % y 85 % sobre tres sílabos (S. Li et al., 2026) y entre 82 % y 88 % sobre un curso (Xu & Che, 2025). El margen cubre la diferencia de idioma y de formato de entrada, y un emparejamiento más estricto: por etiqueta normalizada contra una anotación adjudicada, sin sinónimos no registrados.
+[^3]: Umbral fijado por debajo de la precisión de extracción de entidades que reportan los trabajos más cercanos con modelos de lenguaje: entre 80 % y 85 % sobre tres sílabos (S. Li et al., 2026\) y entre 82 % y 88 % sobre un curso (Xu & Che, 2025). El margen cubre la diferencia de idioma y de formato de entrada, y un emparejamiento más estricto: por etiqueta normalizada contra una anotación adjudicada, sin sinónimos no registrados.
 
 [^4]:  OntoGraf representa la jerarquía de subsunción y no rotula las propiedades de objeto, que se detallan en la Tabla 13\. Por esa misma limitación no se visualizan las relaciones de Recurso de Aprendizaje con Curso y con Elemento de Conocimiento (isAbout/hasResource y wasDerivedFrom).
 
 [^5]: Las seis propiedades de la columna Inversa se declaran explícitamente en la ontología; con ellas el total asciende a diecisiete propiedades de objeto. «Simple» indica una propiedad no transitiva, condición que OWL exige para admitir restricciones de cardinalidad. hasPart hereda dominio y rango de isPartOf por inversión.
-
-[image1]: 
-
-[image2]: 
-
-[image3]: 
-
-[image4]: 
-
-[image5]: 
-
-[image6]: 

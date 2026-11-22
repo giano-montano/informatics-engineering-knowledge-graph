@@ -7,7 +7,7 @@ registro de la evaluación, descartadas en [ADR-016](../decisiones/0016-enfoque-
 - Decisiones de la propuesta elegida: [ADR-016 a ADR-019](../decisiones/).
 - Componentes de la aplicación web (C4, nivel 3): vista `webComponents` de `docs/architecture/`.
 - Wireframes: [`p1-lienzo/capturas/`](p1-lienzo/capturas/), con su índice en el README de P1, §3.
-- Plan de pruebas de aceptación de R6:
+- Plan de pruebas de R6:
   [`casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md`](../../casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md).
 
 Tres propuestas del mecanismo de navegación, cada una con un enfoque de navegación distinto, más

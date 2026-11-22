@@ -162,7 +162,7 @@ web/                           R6: InfoKnows, la aplicación web (#web del C4).
                                `web/tests/` tiene los recorridos técnicos de
                                CA-01 a CA-11 con Playwright.
 docs/r6/                       Capturas de R6 y el resultado del recorrido
-                               técnico previo a la prueba de aceptación.
+                               técnico previo a las pruebas con usuarios.
 var/                           Almacenes locales del sistema. Ignorado por git.
 ```
 

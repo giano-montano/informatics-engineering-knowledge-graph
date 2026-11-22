@@ -109,7 +109,7 @@ Enunciados en términos de capacidad, no de interacción. Los marcados como **pr
 | RF-22 | Distinguir de forma perceptible los elementos de la capa de referencia de los de la capa institucional. | AC-03 | DD-02 | **firme** |
 | RF-23 **(D)** | Ofrecer al operador una vista para cargar un documento, seguir el estado de su ingesta, revisar los descartes de esa ejecución y consultar su reporte de auditoría. | AC-02 | ADR-007 | **firme** |
 
-El alcance de RF-23 se agota en esas cuatro capacidades. La prueba de aceptación de R6 evalúa exploración y acceso a recursos por parte del estudiante; la vista del operador no forma parte de ella.
+El alcance de RF-23 se agota en esas cuatro capacidades. Las pruebas con usuarios de R6 evalúan exploración y acceso a recursos por parte del estudiante; la vista del operador no forma parte de ellas, y solo se muestra en el video que revisa el asesor.
 
 ---
 

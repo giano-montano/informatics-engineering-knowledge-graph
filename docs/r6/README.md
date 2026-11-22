@@ -6,11 +6,11 @@ O6 son de un grafo de ensayo con las trece corridas de la cadena final (sección
 
 La aplicación está en [`web/`](../../web/README.md). Aquí quedan las capturas de sus pantallas y el
 resultado de recorrer los casos del
-[plan de pruebas de aceptación](../../casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md).
+[plan de pruebas](../../casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md).
 
-> **Esto no es la prueba de aceptación.** Es un recorrido técnico previo y automático. La prueba de
-> aceptación la hacen personas, el asesor y tres usuarios, y es la única que cuenta para el indicador
-> de R6. Este recorrido solo dice que cada paso del plan se puede dar y que la interfaz muestra lo que
+> **Esto no es la prueba de R6.** Es un recorrido técnico previo y automático. Lo que cuenta para el
+> indicador de R6 lo hacen personas: la revisión del asesor, sobre un video del recorrido, y las
+> pruebas con tres usuarios reales. Este recorrido solo dice que cada paso del plan se puede dar y que la interfaz muestra lo que
 > responde la API.
 
 ## 1. Capturas
@@ -103,7 +103,7 @@ El paso 4 de CA-10 no está en el plan: comprueba el interruptor «Fuentes» del
 Lo que este recorrido no comprueba: que un PDF se dibuje en la pestaña nueva (el navegador sin
 interfaz no dibuja PDF; se comprueba que la pestaña se abre y que el servidor entrega un PDF en esa
 dirección), la lectura con un lector de pantalla real y si una persona encuentra sola cada paso, que
-es justo lo que mide la prueba de aceptación.
+es justo lo que miden las pruebas con usuarios.
 
 ## 3. Lo que el grafo final cambió respecto al de desarrollo
 

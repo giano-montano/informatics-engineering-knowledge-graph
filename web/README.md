@@ -129,10 +129,10 @@ nivel) están al inicio de `src/lib/layouts.js`.
 ## Recorrido técnico
 
 `tests/walkthrough.mjs` recorre con Playwright los casos CA-01 a CA-10 del
-[plan de pruebas de aceptación](../casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md)
+[plan de pruebas](../casos-de-prueba/plan-de-pruebas-de-aceptacion-r6.md)
 contra la API real, una vez con el puntero y otra solo con el teclado, y
 compara lo que se ve con lo que responde la API. Es una comprobación previa:
-la prueba de aceptación se hace con personas.
+las pruebas que cuentan para R6 se hacen con personas.
 
 ```powershell
 npx playwright install chromium      # una vez

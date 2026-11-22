@@ -1,21 +1,29 @@
-# Plan de pruebas de aceptación de R6
+# Plan de pruebas de R6
 
 ## Propósito
 
 Verifica que el prototipo de navegación (R6) responde correctamente a cada caso de uso del
 mecanismo de navegación. Es el medio de verificación de R6 («casos de prueba documentados y sus
 resultados», Tabla 4 de la tesis) y aplica la Fase 2 del procedimiento de R6 (§1.3.1.6): cada caso
-especifica la entrada, la acción esperada y el criterio de aceptación.
+especifica la entrada, la acción esperada y el criterio de aprobación.
 
 - **Un caso por flujo.** Cada caso es una tarea, y cada tarea es el flujo de un caso de uso de
   `docs/r5/casos-de-uso.md`: CA-01 a CA-10 para el estudiante (CU-1 a CU-10) y CA-11 para el
   operador (CU-11). Los flujos que se recorren son los de la propuesta elegida,
   `docs/r5/p1-lienzo/README.md` §2.
-- **El mismo plan con el asesor y con los 3 usuarios.** La tarea se lee tal cual, con los datos de
-  la hoja vigente, sin nombrar botones ni vistas. El evaluador sigue los pasos esperados para
-  observar, no para dictarlos.
-- **Criterio global:** el 100 % de los casos CA-01 a CA-10 aprobados, en cada sesión. CA-11 no
-  cuenta para ese 100 %.
+- **El mismo plan, aplicado de dos formas** (Tabla 4 de la tesis):
+  - **Revisión del asesor.** Un video recorre CA-01 a CA-11 con la hoja vigente y se le envía por
+    correo. El asesor, como experto en Ingeniería de Conocimiento, responde si lo valida. En el
+    video solo cuenta que el sistema muestre el resultado esperado de cada paso.
+  - **Pruebas con usuarios reales.** Al menos tres estudiantes de Ingeniería Informática ejecutan
+    CA-01 a CA-10 después de una capacitación, con el guion de
+    `guion-de-sesion-con-usuarios-r6.md`. La tarea se lee tal cual, con los datos de la hoja
+    vigente, sin nombrar botones ni vistas. El evaluador sigue los pasos esperados para observar,
+    no para dictarlos.
+- **Criterio global:** al menos el 80 % de los casos ejecutados con los usuarios, aprobados: 24 de
+  30 con tres usuarios. CA-11 no se ejecuta con ellos.
+- El archivo conserva su nombre porque lo enlazan el ADR-019, los README y el recorrido técnico.
+  Desde el 2026-11-21, a pedido del asesor, la prueba ya no se llama «de aceptación».
 
 ## Casos y datos
 
@@ -36,17 +44,26 @@ nombres de la hoja. La hoja se fija antes de la primera sesión y no cambia entr
 - R6 desplegado contra la API de R4, con el grafo de la hoja de datos cargado y reaplicado.
 - La API sirve los PDF de los sílabos (`/resources/{clave}`): CA-07 y CA-10 abren uno.
 - Navegador de escritorio, con la ventana de al menos 1366 × 768.
-- Cada sesión empieza en el inicio de la aplicación, sin historial.
+- Cada sesión empieza en el inicio de la aplicación, sin historial (ventana privada).
+- La sesión con un usuario puede ser remota: el participante maneja la aplicación desplegada en su
+  navegador y comparte su pantalla.
 
 ## Qué cuenta como aprobado
 
-Un caso se aprueba cuando el sistema muestra el resultado esperado de cada paso del caso, también
-el de los pasos alternativos. Se registra aparte si el participante llegó solo o necesitó una
-indicación del evaluador. La indicación no reprueba el caso, pero queda en el registro como
-observación de uso.
+**Con los usuarios**, un caso se aprueba si el participante completa la tarea sin indicación del
+evaluador y el sistema muestra el resultado esperado de cada paso, también el de los pasos
+alternativos. Se reprueba por una de dos causas, y el registro dice cuál:
 
-Un caso se reprueba si el sistema muestra algo distinto de lo esperado (un dato que falta, uno de
-más, una fuente equivocada, un enlace que no abre) o si falla (un error, una pantalla en blanco).
+- **Uso:** el participante pidió ayuda y recibió una indicación, o se rindió.
+- **Sistema:** el sistema mostró algo distinto de lo esperado (un dato que falta, uno de más, una
+  fuente equivocada, un enlace que no abre) o falló (un error, una pantalla en blanco).
+
+Una **indicación** es decir dónde hacer clic, qué vista o qué pregunta usar, o qué hacer a
+continuación. No lo es repetir la tarea, leer el texto de un paso alternativo ni aclarar una palabra
+de la tarea sin nombrar la interfaz.
+
+Si el participante pide ayuda, el evaluador da la indicación mínima para que siga, y la anota. El
+caso queda reprobado por uso, pero la sesión continúa con sus pasos siguientes.
 
 ## Cobertura
 
@@ -215,16 +232,16 @@ documento se dice eso y ábrelo.»
 | 2 | Lo abre. | Abre el PDF de ese sílabo en una pestaña nueva. |
 | 3 | Pregunta de dónde sale ⟨unidad⟩. | Nombra CS2023 y enlaza su publicación de ACM. |
 
-**Criterio.** Los tres resultados se cumplen. El paso 2 es la prueba de aceptación que cierra AC-03
-en R6 (Tabla 23 de la tesis).
+**Criterio.** Los tres resultados se cumplen. El paso 2 es la comprobación que cierra AC-03 en R6
+(Tabla 23 de la tesis).
 
 ---
 
 ## CA-11 · Cargar un documento y revisar su ingesta (CU-11)
 
-**Fuera del 100 %.** La prueba de aceptación de R6 evalúa la exploración y el acceso a recursos
-del estudiante. Este caso se ejecuta solo con el asesor, como demostración del panel del operador,
-y se registra aparte.
+**Solo en el video del asesor.** Las pruebas con usuarios evalúan la exploración y el acceso a
+recursos del estudiante. Este caso se muestra en el video del asesor, como demostración del panel
+del operador.
 
 **Condiciones propias.** Una carga escribe en el grafo: se ejecuta en un entorno de ensayo, no
 sobre el grafo de la hoja de datos que usan los demás casos. El caso verifica el panel, no la
@@ -311,18 +328,22 @@ grafo sobre el que se midió R4.
 
 ## Registro de una sesión
 
-Se llena uno por sesión, con el asesor o con cada usuario.
+Se llena uno por sesión con cada usuario. El participante va sin
+nombre: «usuario 1», «usuario 2», «usuario 3».
 
 ```markdown
-# Sesión de aceptación de R6 · <asesor | usuario N>
+# Sesión de R6 · usuario N
 
-**Fecha:** AAAA-MM-DD · **Evaluador:** … · **Participante:** <rol; ciclo, si es estudiante>
-**R6:** commit … · **Hoja de datos:** … · **Navegador y pantalla:** …
+**Fecha:** AAAA-MM-DD · **Evaluador:** … · **Participante:** <usuario N; ciclo>
+**R6:** commit … · **Hoja de datos:** … · **Navegador y pantalla:** … · **Remota:** sí / no
 
-| Caso | Resultado | Ayuda | Observaciones |
+| Caso | Resultado | Causa, si se reprueba | Observaciones |
 |---|---|---|---|
-| CA-01 | aprobado / reprobado | ninguna / indicación | |
+| CA-01 | aprobado / reprobado | uso / sistema | |
 | … | | | |
 
-**Aprobados:** n de 10 (…%), sin contar CA-11
+**Aprobados:** n de 10 (…%)
 ```
+
+Resultado global de las pruebas con usuarios: los aprobados de cada usuario y su suma frente a 24
+de 30.

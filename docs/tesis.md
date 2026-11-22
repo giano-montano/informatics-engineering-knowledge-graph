@@ -436,7 +436,7 @@ Diseñar e implementar un sistema de gestión de conocimiento basado en grafos d
 | :---- | :---- | :---- |
 | **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
 | R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Reporte técnico  | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
-| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. Pasa exitosamente el 100% de las pruebas con al menos 3 usuarios reales, donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. |
+| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. Pasa exitosamente el 80% de las pruebas con al menos 3 usuarios reales, donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. |
 
 3. ## **Métodos, procedimientos y herramientas** {#métodos,-procedimientos-y-herramientas}
 
@@ -573,9 +573,9 @@ Se aplica un enfoque de prototipado iterativo centrado en la exploración del gr
 
 Se implementa el mecanismo como una aplicación web que consume los endpoints de la API REST del módulo (R4) mediante llamadas HTTP. La lógica de navegación semántica permanece encapsulada en el backend de R4; el frontend es responsable únicamente de presentar los resultados de forma visual e interactiva, conforme a los flujos y wireframes definidos en R5.
 
-**Fase 2 \- Pruebas de aceptación**
+**Fase 2 \- Verificación del prototipo**
 
-Las funcionalidades del prototipo se verifican mediante un plan de pruebas de aceptación ejecutado con el asesor de tesis y con al menos tres usuarios reales. Cada caso de prueba especifica la entrada, la acción esperada y el criterio de aceptación, comprobando que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El criterio de aceptación es que se apruebe el 100 % de los casos. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados y sus resultados.
+Las funcionalidades del prototipo se verifican con un plan de pruebas en el que cada caso especifica la entrada, la acción esperada y el criterio de aprobación, y que comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El plan se aplica de dos formas. Primero, el asesor de tesis, como experto en Ingeniería de Conocimiento, revisa el recorrido de todos los casos, grabado en video, y lo valida por escrito. Después, al menos tres usuarios reales, estudiantes de Ingeniería Informática, ejecutan los casos del estudiante tras una capacitación breve en el uso del prototipo. Un caso se aprueba si el participante completa la tarea sin indicaciones del evaluador y el sistema muestra el resultado esperado. El criterio es que se apruebe al menos el 80 % de los casos ejecutados con los usuarios. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados y sus resultados.
 
 2. ### **Herramientas** {#herramientas}
 
@@ -1410,7 +1410,7 @@ La Tabla 23 cierra la verificación: por cada atributo de calidad, las decisione
 | :---- | :---- | :---- | :---- |
 | AC-01 | ADR-002, ADR-003, ADR-005, ADR-007, ADR-008, ADR-010, ADR-011, ADR-015 | Validador, repositorio del grafo y restricción de unicidad, que impiden RI-01 a RI-10 y RM-01 a RM-05 según la Tabla 21 | Reporte de auditoría sin violaciones al cierre de la corrida de medición; hechos rechazados por documento y por regla, del registro de descartes |
 | AC-02 | ADR-005, ADR-007, ADR-010, ADR-014, ADR-015 | Auditor, con una consulta por cada una de las 15 reglas; almacén operacional, con reportes y descartes | Una prueba negativa por regla: se inserta una violación en una base de prueba y se comprueba que el reporte la detecta; el reporte cubre las 15 reglas en una sola ejecución |
-| AC-03 | ADR-006, ADR-009 | Repositorio del grafo, que fija la procedencia al crear; almacén de documentos y rutas de navegación, que sirven cada documento; RM-03, RM-05 y RI-10 | RM-03 sin violaciones tras la corrida de medición; en R6, la prueba de aceptación abre el documento del que procede una afirmación |
+| AC-03 | ADR-006, ADR-009 | Repositorio del grafo, que fija la procedencia al crear; almacén de documentos y rutas de navegación, que sirven cada documento; RM-03, RM-05 y RI-10 | RM-03 sin violaciones tras la corrida de medición; en R6, un caso del plan de pruebas abre el documento del que procede una afirmación |
 | AC-04 | ADR-004, ADR-007, ADR-012, ADR-013 | Comandos de construcción, almacén de hechos y núcleo compartido; RM-02 | Se corrige una etiqueta de la capa de referencia, se carga y se reaplica: ninguna llamada al modelo de lenguaje, la capa institucional queda igual (mismos nodos y aristas) y la auditoría no encuentra violaciones |
 | AC-05 | ADR-001 | Base de grafos y rutas de navegación | El protocolo de la Tabla 15: los cinco patrones desde todos sus nodos de partida, diez ejecuciones tras el calentamiento, mediana y percentil 95 bajo un segundo por patrón |
 
@@ -1470,7 +1470,7 @@ Quinto, las relaciones se evalúan por juicio del autor sobre la salida, sin ano
 
    1. ## **Introducción** {#introducción-4}
 
-Este capítulo presenta los resultados del objetivo específico O3: diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. Comprende dos resultados: la documentación del mecanismo de navegación (R5), que especifica sus casos de uso, sus flujos e interfaz, sus atributos de calidad, los componentes de la aplicación web y las decisiones de diseño evaluadas, y el prototipo funcional de navegación (R6). Con ellos, el grafo que el módulo del capítulo anterior construye y expone llega al estudiante, que es quien padece el problema que motiva esta tesis: la dificultad para identificar qué necesita saber antes de abordar un tema y con qué estudiarlo. El capítulo cubre por ahora R5; la implementación del prototipo y sus pruebas de aceptación (R6) se incorporarán con su desarrollo. La construcción del grafo y las consultas que lo recorren corresponden al objetivo O2 y quedan fuera de este capítulo.
+Este capítulo presenta los resultados del objetivo específico O3: diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. Comprende dos resultados: la documentación del mecanismo de navegación (R5), que especifica sus casos de uso, sus flujos e interfaz, sus atributos de calidad, los componentes de la aplicación web y las decisiones de diseño evaluadas, y el prototipo funcional de navegación (R6). Con ellos, el grafo que el módulo del capítulo anterior construye y expone llega al estudiante, que es quien padece el problema que motiva esta tesis: la dificultad para identificar qué necesita saber antes de abordar un tema y con qué estudiarlo. El capítulo cubre por ahora R5; la implementación del prototipo y sus pruebas (R6) se incorporarán con su desarrollo. La construcción del grafo y las consultas que lo recorren corresponden al objetivo O2 y quedan fuera de este capítulo.
 
 2. ## **Documentación del mecanismo de navegación** {#documentación-del-mecanismo-de-navegación}
 
@@ -1484,7 +1484,7 @@ Los cinco atributos de calidad del capítulo anterior son del módulo del grafo.
 
 | ID | Propiedad | Origen | Prioridad | Verificación en R6 |
 | :---- | :---- | :---- | :---- | :---- |
-| AN-01 | El estudiante responde sus preguntas sobre un elemento del grafo desde un mismo lugar, sin conocer el lenguaje de consulta y sin perder de vista el elemento | Necesidades de la encuesta de orientación del aprendizaje (Anexo D) | Alta | Casos de prueba de aceptación, uno por caso de uso del estudiante |
+| AN-01 | El estudiante responde sus preguntas sobre un elemento del grafo desde un mismo lugar, sin conocer el lenguaje de consulta y sin perder de vista el elemento | Necesidades de la encuesta de orientación del aprendizaje (Anexo D) | Alta | Casos de prueba, uno por caso de uso del estudiante |
 | AN-02 | Lo que la interfaz muestra no depende de un solo canal: ni solo del color, ni solo del dibujo, ni solo del cursor | La capa de cada elemento y la fuente de cada afirmación deben poder leerse siempre (AC-03) | Media | La procedencia de cada elemento se distingue por forma y texto, y todo lo dibujado está también como lista de texto |
 
 AN-01 corresponde a la operabilidad y a la capacidad de aprendizaje de la norma, y AN-02, a la inclusividad \[FALTA: comprobar los términos contra el texto de ISO/IEC 25010:2023\]. Cuando ambos chocan, el dibujo puede resumir lo que no cabe con nombre legible, pero lo resumido debe quedar completo en texto. Con AC-03, estos dos atributos son el criterio con que se evalúan las propuestas y se justifican las decisiones de las secciones siguientes.
@@ -1578,7 +1578,7 @@ R5 se comprometió a especificar las tecnologías a emplear, los componentes int
 
 * Los flujos y los wireframes: las Figuras 13 y 14 y, en el repositorio, los diez flujos y las quince capturas.
 
-Cada atributo de la Tabla 24 queda atendido por al menos una decisión y tiene una verificación definida en R6: el plan de pruebas de aceptación tiene un caso por cada caso de uso del estudiante, y el caso que corresponde a CU-10 abre el documento del que procede una afirmación, que es la comprobación de AC-03 anunciada en la Tabla 23\.
+Cada atributo de la Tabla 24 queda atendido por al menos una decisión y tiene una verificación definida en R6: el plan de pruebas de R6 tiene un caso por cada caso de uso del estudiante, y el caso que corresponde a CU-10 abre el documento del que procede una afirmación, que es la comprobación de AC-03 anunciada en la Tabla 23\.
 
 2. ### **Validación de experto** {#validación-de-experto-1}
 
@@ -1604,7 +1604,7 @@ El segundo significado es que la interfaz no agrega conocimiento al que el módu
 
 3. ### **Los resultados en el contexto de la revisión de la literatura** {#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1}
 
-La revisión del capítulo 3 identificó la desorientación del usuario en grafos grandes como un problema transversal: Tytenko (2025) reporta inconsistencias en niveles profundos de navegación jerárquica, y Dong et al. (2023), la dificultad de los estudiantes para localizar conceptos clave cuando el grafo crece en densidad. El diseño de R5 responde a ese problema de forma explícita y es consistente con él: nunca dibuja el grafo entero, sino la respuesta a una pregunta sobre un elemento en foco; nombra siempre el foco y la pregunta; y resume lo que no cabe con nombre legible. Que eso baste es algo que R5 no puede afirmar: lo comprobarán las pruebas de aceptación de R6, y solo para el tamaño del conjunto piloto.
+La revisión del capítulo 3 identificó la desorientación del usuario en grafos grandes como un problema transversal: Tytenko (2025) reporta inconsistencias en niveles profundos de navegación jerárquica, y Dong et al. (2023), la dificultad de los estudiantes para localizar conceptos clave cuando el grafo crece en densidad. El diseño de R5 responde a ese problema de forma explícita y es consistente con él: nunca dibuja el grafo entero, sino la respuesta a una pregunta sobre un elemento en foco; nombra siempre el foco y la pregunta; y resume lo que no cabe con nombre legible. Que eso baste es algo que R5 no puede afirmar: lo comprobarán las pruebas con usuarios reales de R6, y solo para el tamaño del conjunto piloto.
 
 La revisión señaló también que las interfaces del corpus operan sobre un curso o una disciplina, con datos sintéticos o de prueba (Dong et al., 2023; Chen et al., 2023; Gunarathne et al., 2018). En esto el resultado difiere: las propuestas se evaluaron sobre datos reales de cuatro cursos enlazados a un estándar curricular, y el prototipo operará sobre trece. La diferencia es de grado y no de naturaleza, porque trece sílabos siguen siendo una fracción del plan de estudios.
 
@@ -1942,7 +1942,7 @@ La Figura A.1. presenta el diagrama de Gantt del cronograma del proyecto y la Ta
 | T21 | R4 · Validación del pipeline (V\&V) | T18, T19 | 1.4 sem | 14 | 280 | T2: 02/11–12/11 |
 | T23 | R5 · Documentación C4 y ADRs | T21 | 0.9 sem | 12 | 240 | T2: 13/11–19/11 |
 | T24 | R6 · Implementación del prototipo | T20, T22 | 2.9 sem | 70 | 1400 | T2: 16/11–06/12 |
-| T25 | R6 · Pruebas de aceptación (V\&V) | T24, T14 | 0.9 sem | 12 | 240 | T2: 30/11–06/12 |
+| T25 | R6 · Pruebas con usuarios (V\&V) | T24, T14 | 0.9 sem | 12 | 240 | T2: 30/11–06/12 |
 | T26 | Redacción de cierre | \- | 1.7 sem | 35 | 700 | T2: 30/11–12/12 |
 | T27 | Revisión final y sustentación | T25 | 0.7 sem | 30 | 600 | T2: 07/12–12/12 |
 | T28 | Reuniones de asesoría (semanales, 30 min) | \- | 37.7 sem | 14 | 280 | T1 y T2: 23/03–12/12 |

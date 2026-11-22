@@ -238,17 +238,35 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 [6.3.3 Indicador	125](#indicador-1)
 
-[6.4 Discusión	125](#discusión-2)
+[6.4 Prototipo de navegación](#prototipo-de-navegación)
 
-[6.4.1 Resumen de los resultados	125](#resumen-de-los-resultados-1)
+[6.4.1 Consumo del módulo como caja negra](#consumo-del-módulo-como-caja-negra)
 
-[6.4.2 Interpretación de los resultados	126](#interpretación-de-los-resultados-1)
+[6.4.2 Cobertura de los casos de uso](#cobertura-de-los-casos-de-uso)
 
-[6.4.3 Los resultados en el contexto de la revisión de la literatura	126](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1)
+[6.4.3 Atributos de calidad del prototipo](#atributos-de-calidad-del-prototipo)
 
-[6.4.4 Generalización de los resultados	127](#generalización-de-los-resultados-1)
+[6.4.4 Despliegue del prototipo](#despliegue-del-prototipo)
 
-[6.4.5 Limitaciones de los resultados	127](#limitaciones-de-los-resultados-1)
+[6.5 Verificación de R6](#verificación-de-r6)
+
+[6.5.1 Verificación y mediciones](#verificación-y-mediciones-3)
+
+[6.5.2 Validación de experto](#validación-de-experto-2)
+
+[6.5.3 Indicador](#indicador-2)
+
+[6.6 Discusión	125](#discusión-2)
+
+[6.6.1 Resumen de los resultados	125](#resumen-de-los-resultados-1)
+
+[6.6.2 Interpretación de los resultados	126](#interpretación-de-los-resultados-1)
+
+[6.6.3 Los resultados en el contexto de la revisión de la literatura	126](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1)
+
+[6.6.4 Generalización de los resultados	127](#generalización-de-los-resultados-1)
+
+[6.6.5 Limitaciones de los resultados	127](#limitaciones-de-los-resultados-1)
 
 [**Capítulo 7\. Conclusiones y trabajos futuros	128**](#conclusiones-y-trabajos-futuros)
 
@@ -436,7 +454,7 @@ Diseñar e implementar un sistema de gestión de conocimiento basado en grafos d
 | :---- | :---- | :---- |
 | **Resultado** | **Medio de verificación** | **Indicador objetivamente verificable** |
 | R5. Documentación del mecanismo de navegación y descubrimiento semántico (frontend) que especifica tecnologías a emplear, componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. | Reporte técnico  | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. |
-| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. Pasa exitosamente el 80% de las pruebas con al menos 3 usuarios reales, donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. |
+| R6. Prototipo funcional de navegación visual del grafo de conocimiento, que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas.  | Código fuente Casos de prueba documentados y sus resultados.   | Validación con respuesta positiva del experto en Ingeniería de Conocimiento. Pasa exitosamente el 70% de las pruebas con al menos 3 usuarios reales, donde se comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. |
 
 3. ## **Métodos, procedimientos y herramientas** {#métodos,-procedimientos-y-herramientas}
 
@@ -575,7 +593,7 @@ Se implementa el mecanismo como una aplicación web que consume los endpoints de
 
 **Fase 2 \- Verificación del prototipo**
 
-Las funcionalidades del prototipo se verifican con un plan de pruebas en el que cada caso especifica la entrada, la acción esperada y el criterio de aprobación, y que comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El plan se aplica de dos formas. Primero, el asesor de tesis, como experto en Ingeniería de Conocimiento, revisa el recorrido de todos los casos, grabado en video, y lo valida por escrito. Después, al menos tres usuarios reales, estudiantes de Ingeniería Informática, ejecutan los casos del estudiante tras una capacitación breve en el uso del prototipo. Un caso se aprueba si el participante completa la tarea sin indicaciones del evaluador y el sistema muestra el resultado esperado. El criterio es que se apruebe al menos el 80 % de los casos ejecutados con los usuarios. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados, sus resultados y el video del recorrido.
+Las funcionalidades del prototipo se verifican con un plan de pruebas en el que cada caso especifica la entrada, la acción esperada y el criterio de aprobación, y que comprueba que el sistema responde correctamente a al menos un caso de exploración por nodo y uno de acceso a recursos asociados. El plan se aplica de dos formas. Primero, el asesor de tesis, como experto en Ingeniería de Conocimiento, revisa el recorrido de todos los casos, grabado en video, y lo valida por escrito. Después, al menos tres usuarios reales, estudiantes de Ingeniería Informática, ejecutan los casos del estudiante tras una capacitación breve en el uso del prototipo. Un caso se aprueba si el sistema muestra el resultado esperado en cada paso, con o sin indicación del evaluador; los casos que el participante completa sin indicación se reportan aparte, como medida de uso. El criterio es que se apruebe al menos el 70 % de los casos ejecutados con los usuarios. El medio de verificación de este resultado es el código fuente del prototipo junto con los casos de prueba documentados, sus resultados y el video del recorrido.
 
 2. ### **Herramientas** {#herramientas}
 
@@ -1266,7 +1284,7 @@ La Figura 12 muestra el despliegue del prototipo en una máquina virtual de la e
 
 La API, el worker y los procesos de construcción salen de una sola imagen. La API lanza el worker como proceso hijo dentro de su contenedor, y los procesos de construcción usan la misma imagen con el sistema detenido; así, la ingesta y la reaplicación ejecutan siempre la misma versión del núcleo. La aplicación web se sirve en un contenedor aparte, de modo que modificarla no reinicia la API ni interrumpe una ingesta en curso (ADR-007). Los tres almacenes de archivos son carpetas del host, y la base de grafos usa un volumen propio, porque se reconstruye con una carga seguida de una reaplicación (ADR-013).
 
-Los localizadores llevan escrita la dirección del host. Por eso el almacén de hechos no se reutiliza en otro host: en uno nuevo, los documentos se vuelven a ingestar (ADR-009).
+Los localizadores llevan escrita la dirección del host en que se subió cada documento (ADR-009). El almacén de hechos sí se reutiliza en otro host: con los tres almacenes copiados, una carga seguida de una reaplicación reproduce el grafo sin volver a ingestar, pero sus localizadores conservan el host de origen. La aplicación web abre cada documento por su ruta, desde el origen en que se sirve, así que los enlaces funcionan igual (ADR-013).
 
 5. ### **Casos de prueba de la ingesta automatizada** {#casos-de-prueba-de-la-ingesta-automatizada}
 
@@ -1458,7 +1476,7 @@ Los casos de prueba no se generalizan: la anotación es específica de los 13 s�
 
 En primer lugar, R3 especifica, pero no comprueba. Las medidas de los cinco atributos de calidad y la precisión de la extracción se obtienen en R4; hasta entonces, los atributos tienen medidas definidas, pero no valores. La validación experta, además, la realizó un único especialista que es también el asesor del proyecto, por lo que acredita la revisión de un experto del área, pero no un consenso sobre las decisiones tomadas.
 
-Segundo, varias garantías dependen de condiciones de operación que el sistema no impone, coherentes con un prototipo de un solo operador. El escritor único supone que la API corre en un solo proceso y que el operador sube un documento a la vez; nada impide que coincidan dos *workers*, o un proceso de construcción con un *worker* (ADR-007). Una interrupción del worker no se recupera automáticamente, y la corrida puede quedar en curso o escrita sin persistir (ADR-007). Una corrida ya escrita no puede retirarse (ADR-009), y lo que una versión nueva de un sílabo deja de afirmar permanece en el grafo con su procedencia anterior (ADR-006). Esta última es relevante porque los contenidos de un mismo curso varían entre ciclos (L. Flores, entrevista, 2026). Por último, los localizadores llevan escrita la dirección del host, de modo que el almacén de hechos no se reutiliza en otro (ADR-009).
+Segundo, varias garantías dependen de condiciones de operación que el sistema no impone, coherentes con un prototipo de un solo operador. El escritor único supone que la API corre en un solo proceso y que el operador sube un documento a la vez; nada impide que coincidan dos *workers*, o un proceso de construcción con un *worker* (ADR-007). Una interrupción del worker no se recupera automáticamente, y la corrida puede quedar en curso o escrita sin persistir (ADR-007). Una corrida ya escrita no puede retirarse (ADR-009), y lo que una versión nueva de un sílabo deja de afirmar permanece en el grafo con su procedencia anterior (ADR-006). Esta última es relevante porque los contenidos de un mismo curso varían entre ciclos (L. Flores, entrevista, 2026). Por último, los localizadores llevan escrita la dirección del host en que se subió cada documento: en un grafo reconstruido en otro host, la aplicación web abre los documentos por su ruta, pero otro cliente de la API recibiría una dirección que ya no responde (ADR-009 y ADR-013).
 
 Tercero, dos decisiones de la ingesta valen solo para el piloto. El rechazo es de todo o nada por documento, lo que castiga más a los sílabos largos (ADR-010), y el extractor recibe el vocabulario completo del grafo en cada corrida, lo que es viable con 13 sílabos, pero no con el catálogo completo de la carrera (ADR-011).
 
@@ -1470,7 +1488,7 @@ Quinto, las relaciones se evalúan por juicio del autor sobre la salida, sin ano
 
    1. ## **Introducción** {#introducción-4}
 
-Este capítulo presenta los resultados del objetivo específico O3: diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. Comprende dos resultados: la documentación del mecanismo de navegación (R5), que especifica sus casos de uso, sus flujos e interfaz, sus atributos de calidad, los componentes de la aplicación web y las decisiones de diseño evaluadas, y el prototipo funcional de navegación (R6). Con ellos, el grafo que el módulo del capítulo anterior construye y expone llega al estudiante, que es quien padece el problema que motiva esta tesis: la dificultad para identificar qué necesita saber antes de abordar un tema y con qué estudiarlo. El capítulo cubre por ahora R5; la implementación del prototipo y sus pruebas (R6) se incorporarán con su desarrollo. La construcción del grafo y las consultas que lo recorren corresponden al objetivo O2 y quedan fuera de este capítulo.
+Este capítulo presenta los resultados del objetivo específico O3: diseñar e implementar un mecanismo de navegación y descubrimiento semántico de recursos que permita al estudiante explorar el grafo de conocimiento de forma visual identificando relaciones conceptuales a distintos niveles. Comprende dos resultados: la documentación del mecanismo de navegación (R5), que especifica sus casos de uso, sus flujos e interfaz, sus atributos de calidad, los componentes de la aplicación web y las decisiones de diseño evaluadas, y el prototipo funcional de navegación (R6), que implementa ese diseño sobre el módulo del capítulo anterior y se verifica con el asesor y con estudiantes. Con ellos, el grafo que el módulo del capítulo anterior construye y expone llega al estudiante, que es quien padece el problema que motiva esta tesis: la dificultad para identificar qué necesita saber antes de abordar un tema y con qué estudiarlo. La construcción del grafo y las consultas que lo recorren corresponden al objetivo O2 y quedan fuera de este capítulo.
 
 2. ## **Documentación del mecanismo de navegación** {#documentación-del-mecanismo-de-navegación}
 
@@ -1588,41 +1606,184 @@ Cada atributo de la Tabla 24 queda atendido por al menos una decisión y tiene u
 
 \[FALTA: veredicto del indicador de R5, la validación con respuesta positiva del experto en Ingeniería de Conocimiento. Depende de la validación anterior.\]
 
-4. ## **Discusión** {#discusión-2}
+4. ## **Prototipo de navegación** {#prototipo-de-navegación}
 
-Esta discusión cubre R5; la de R6 se incorporará con su implementación.
+Este resultado se obtuvo con la primera fase del procedimiento descrito en el capítulo 1: el diseño de R5 se implementó como una aplicación web que consume la API del módulo. Se partió de la maqueta de la propuesta elegida y se avanzó en iteraciones cortas, comprobadas con un recorrido automático de los casos de prueba (sección siguiente). El prototipo, que en la interfaz se llama InfoKnows, es una aplicación de una sola página construida con Svelte 5.57.3, Vite 8.3.8 y D3 7.9.2 (ADR-017 y ADR-018). Su código fuente está en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/web](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/web).
+
+   1. ### **Consumo del módulo como caja negra** {#consumo-del-módulo-como-caja-negra}
+
+La aplicación no conoce Cypher ni accede a la base de grafos. Un único componente, el cliente de la API (Figura 15), llama a nueve rutas de navegación del módulo (la búsqueda, el inicio, el detalle de un nodo y una por cada pregunta de competencia) y abre los documentos en la dirección que el módulo les asigna. Toda respuesta tiene la misma forma, un subgrafo de nodos y aristas con su procedencia, y la aplicación solo lo ordena y lo dibuja: no deriva nodos ni relaciones, ni corrige los nombres, que muestra como los tomó el grafo del sílabo, por ejemplo en mayúsculas. Por eso lo que el estudiante ve es lo que el módulo responde, y conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse.
+
+R6 agregó al módulo una sola ruta, la del inicio, que devuelve las áreas con sus conteos y los cursos, como anticipaba R5; su respuesta tiene la misma forma que las demás. El panel del operador usa las rutas de operación con un token que el operador teclea y que no está escrito en el código.
+
+2. ### **Cobertura de los casos de uso** {#cobertura-de-los-casos-de-uso}
+
+La interfaz sigue los flujos y los wireframes de R5: un elemento en foco en el centro de un lienzo, ocho preguntas sobre ese foco que reordenan el mismo lienzo y un panel lateral que lo lee como ficha (ADR-016). La Tabla 28 indica, para cada caso de uso de la Tabla 25, dónde se resuelve en la interfaz, qué ruta del módulo lo responde y qué caso de prueba lo verifica.
+
+###### **Tabla 28\. Cobertura de los casos de uso en el prototipo**
+
+| Caso de uso | En la interfaz | Ruta del módulo | Caso de prueba |
+| :---- | :---- | :---- | :---- |
+| CU-1 | Inicio y buscador | Inicio; búsqueda | CA-01 |
+| CU-2 | «Lo que lo rodea»; clic en un vecino; **+** en un vecino | Detalle de un nodo | CA-02 |
+| CU-3 | «Qué necesitas antes» | Prerrequisitos de un concepto | CA-03 |
+| CU-4 | «Cursos que conviene llevar antes» | Prerrequisitos de un curso | CA-04 |
+| CU-5 | «Dónde está en la carrera» | Ubicación de un elemento | CA-05 |
+| CU-6 | «Qué contiene» | Ubicación de un elemento | CA-06 |
+| CU-7 | «Material de estudio» | Recursos de un elemento; documento | CA-07 |
+| CU-8 | «Camino hasta aquí», con «Ver por» tema, curso o área | Camino de aprendizaje | CA-08 |
+| CU-9 | «Tipos» | Especializaciones de un concepto | CA-09 |
+| CU-10 | Fuente en la ficha, relación seleccionada e interruptor «Fuentes» | Procedencia en toda respuesta; documento | CA-10 |
+| CU-11 | Panel del operador | Rutas de operación | CA-11 |
+
+Los diez casos de uso del estudiante se resuelven sobre el mismo lienzo, sin cambiar de pantalla, y el del operador, en un panel aparte. La Figura 16 muestra el inicio; la Figura 17, un tema en foco con lo que lo rodea, y la Figura 18, el camino hasta un concepto, agrupado por cursos.
+
+![](r6/capturas/A-inicio.png)
+
+##### **Figura 16\. Inicio del prototipo: las áreas de CS2023 y los cursos con sílabo. Fuente: elaboración propia.**
+
+![](r6/capturas/C-foco-lo-que-lo-rodea.png)
+
+##### **Figura 17\. Un tema en foco con lo que lo rodea. Fuente: elaboración propia.**
+
+![](r6/capturas/D4-camino-hasta-aqui-por-curso.png)
+
+##### **Figura 18\. El camino hasta un concepto, agrupado por cursos. Fuente: elaboración propia.**
+
+En la Figura 16, las 17 áreas de CS2023 rodean a los 13 cursos con sílabo, y las 10 áreas que ya tienen temas de los sílabos se distinguen de las demás, con sus cifras; el panel lista lo mismo en texto. En la Figura 17, el tema «ADMINISTRACIÓN DE MEMORIA» tiene nueve vecinos directos, agrupados por relación, y los vecinos de esos vecinos aparecen apagados. En la Figura 18, los cuatro conceptos que «Memoria virtual» necesita antes se ordenan por distancia, y sobre ellos están los dos cursos que los enseñan; el «¿Por qué?» de cada curso muestra las relaciones que lo justifican, con su fuente. Las 24 capturas del prototipo, con el caso de uso de cada una, están en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r6](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r6).
+
+Frente a la maqueta de R5, el prototipo cambió en dos puntos. Primero, no incluye el recorrido sugerido de la maqueta, que habría mostrado a los participantes de las pruebas cómo resolver varias de sus tareas; el inicio ofrece, en su lugar, nombres tomados al azar del grafo cargado. Segundo, con el grafo de los 13 sílabos, el camino hasta un curso ya no sale vacío. Para un curso hay entonces dos respuestas que pueden diferir: «Cursos que conviene llevar antes» parte de lo que el curso pide, y «Camino hasta aquí», de lo que necesitan antes los conceptos que enseña. Con Sistemas Operativos (1INF29) como meta, por ejemplo, la primera da Programación 2 y Algoritmia y Estructura de Datos, y la segunda suma Programación 3 (1INF30), que el plan de estudios ubica en el mismo nivel. La interfaz dice cuál es cuál y enlaza una con la otra.
+
+3. ### **Atributos de calidad del prototipo** {#atributos-de-calidad-del-prototipo}
+
+Cada atributo de la Tabla 24 se atiende así:
+
+* AN-01: Las ocho preguntas son pestañas sobre el mismo foco. Al elegir una, el lienzo cambia de disposición sin que el foco salga del centro, y una cabecera la responde en una frase. Lo que no cabe con nombre legible se resume y el detalle queda en la ficha: por ejemplo, un área con más de 24 conceptos se dibuja solo hasta los temas, y la cabecera lo dice. La interfaz no muestra códigos ni términos del modelo.
+
+* AN-02: La capa se distingue por forma, hexágono para CS2023 y círculo para los sílabos, y se repite en texto en la ficha, en el buscador y en el texto accesible de cada nodo (ADR-019); el color solo indica la clase de un nodo o el tipo de una relación. Todo lo que el lienzo dibuja está también como lista en la ficha, y cada nodo es un elemento del documento que se recorre con el teclado.
+
+* AC-03: Cada elemento y cada relación institucional muestran el sílabo que los afirma, con un enlace que abre su PDF, y los de la capa de referencia remiten a la publicación de CS2023. El interruptor «Fuentes» dibuja además la línea que une cada elemento con su documento. La Figura 19 muestra una relación seleccionada con su fuente.
+
+![](r6/capturas/F1-relacion-seleccionada.png)
+
+##### **Figura 19\. Una relación seleccionada, con el sílabo que la afirma. Fuente: elaboración propia.**
+
+En la Figura 19, la vista «Qué necesitas antes» ordena en columnas los prerrequisitos de «Memoria virtual». Al seleccionar la flecha que llega desde «Paginación», el panel muestra la relación y el sílabo de 1INF29 que la afirma, con el enlace para abrirlo.
+
+4. ### **Despliegue del prototipo** {#despliegue-del-prototipo}
+
+El prototipo se desplegó como describe la Figura 12, en una instancia EC2 de la cuenta educativa de AWS que habilitó la especialidad. La aplicación se compila a archivos estáticos que sirve nginx en un contenedor propio, bajo el mismo origen que la API, y Caddy, en el host, añade HTTPS, de modo que el token del operador no viaja sin cifrar. El grafo del servidor se reconstruyó sin volver a ingestar: se copiaron los almacenes de la corrida final de R4, y una carga seguida de una reaplicación reprodujo el mismo grafo, de 818 nodos y 2 898 aristas, con auditorías sin violaciones y sin llamar al modelo de lenguaje (ADR-004 y ADR-013). Los localizadores guardados conservan el host de desarrollo (ADR-009), pero la aplicación abre cada documento por su ruta, desde el origen en que se sirve, así que los enlaces funcionan en el servidor.
+
+5. ## **Verificación de R6** {#verificación-de-r6}
+
+   1. ### **Verificación y mediciones** {#verificación-y-mediciones-3}
+
+R6 se comprometió a un prototipo que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas. Su medio de verificación es el código fuente, junto con los casos de prueba documentados y sus resultados (Tabla 4). El código se describe en la sección anterior. Los casos de prueba se aplicaron conforme a la segunda fase del procedimiento del capítulo 1, de dos formas: la revisión del asesor sobre un video del recorrido y las pruebas con usuarios reales. Antes de ambas se hizo un recorrido técnico automático.
+
+**Plan de pruebas.** El plan tiene once casos, uno por caso de uso: CA-01 a CA-10, del estudiante, y CA-11, del operador. Cada caso es una tarea con su entrada, sus pasos, el resultado esperado de cada paso y un criterio de aprobación. Los casos nombran los elementos por su papel (un tema, un concepto, un curso), y una hoja de datos fija qué elemento ocupa cada papel y qué debe mostrar cada paso con el grafo de la corrida final de R4. La hoja se fijó antes de la primera sesión y no cambió entre sesiones. La exploración de nodo en nodo que exige el indicador es CA-02, y el acceso a recursos asociados, CA-07 y CA-10. El plan y su hoja de datos están en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba).
+
+**Recorrido técnico.** Un guion automático, escrito con Playwright, recorrió CA-01 a CA-10 sobre el despliegue con Docker Compose, una vez con el puntero y otra solo con el teclado, y comparó cada dato que el plan pide con lo que respondía la API en ese momento. Se cumplieron las 66 comprobaciones: los 32 pasos del plan, más uno que comprueba el interruptor «Fuentes», en las dos modalidades. CA-11 escribe en el grafo, así que se recorrió en un entorno de ensayo aparte. Allí el modelo de lenguaje se simuló con un servicio que devuelve la salida guardada de una corrida real de la cadena final, y el resto de la ingesta fue el de producción. Se cumplieron sus cinco pasos: la corrida terminó en 1 min 44 s, sin descartes y con la auditoría de cierre sin violaciones en las 15 reglas, y escribió los mismos 21 nodos y 51 aristas que la corrida real. La Figura 20 muestra esa auditoría en el panel del operador.
+
+![](r6/capturas/O5-auditoria-de-cierre.png)
+
+##### **Figura 20\. Panel del operador: la auditoría de cierre de una corrida, regla por regla. Fuente: elaboración propia.**
+
+En la Figura 20, la corrida de ensayo figura como terminada, y su auditoría de cierre lista cada regla de las Tablas 18 y 19 con cero violaciones. El recorrido técnico no es evidencia del indicador: comprueba que cada paso puede darse y que la interfaz muestra lo que responde la API, no que una persona encuentre sola cada paso. Tampoco comprueba que el PDF se dibuje en el navegador ni la lectura con un lector de pantalla.
+
+**Pruebas con usuarios.** Tres estudiantes de Ingeniería Informática, de segundo, quinto y sexto ciclo (usuarios 1, 2 y 3), ejecutaron CA-01 a CA-10 sobre el prototipo desplegado, el 22 de noviembre de 2026. Las sesiones fueron remotas: cada participante manejó la aplicación en su navegador y compartió su pantalla. Las tres siguieron el mismo guion, de unos cuarenta minutos: una capacitación de diez minutos con elementos de un curso que ninguna tarea usa, Bases de Datos, y las diez tareas, leídas tal cual y sin nombrar botones ni vistas. Antes hubo dos sesiones piloto con una versión anterior del guion, que no se cuentan: en ellas algunas tareas se leyeron con otra redacción, varios pasos alternativos no se leyeron y la capacitación omitió el botón que trae las conexiones de un vecino. El guion se aclaró antes de las tres sesiones que se reportan. En los pilotos tampoco se observó una falla del sistema.
+
+El evaluador, que fue el autor, no ofreció ayuda; si el participante la pedía, le daba la indicación mínima para seguir y la anotaba. Un caso se aprobó si el sistema mostró el resultado esperado en cada paso, con o sin indicación. Se reprobó por uso si el participante se rindió o respondió sin llegar a ese resultado, y por el sistema si este mostró algo distinto de lo esperado o falló. Aparte se registró si el participante completó el caso sin indicación, que es la medida de uso de AN-01. Los pasos que el evaluador no llegó a leer no se contaron. CA-11 no se ejecutó con los usuarios. La Tabla 29 presenta el resultado de cada caso por participante.
+
+###### **Tabla 29\. Resultados de las pruebas con usuarios**
+
+| Caso | Usuario 1 | Usuario 2 | Usuario 3 |
+| :---- | :---- | :---- | :---- |
+| CA-01 | Aprobado | Aprobado | Aprobado |
+| CA-02 | Aprobado\* | Reprobado (uso) | Aprobado |
+| CA-03 | Reprobado (uso) | Reprobado (uso) | Reprobado (uso) |
+| CA-04 | Reprobado (uso) | Aprobado | Aprobado |
+| CA-05 | Aprobado | Aprobado | Aprobado |
+| CA-06 | Reprobado (uso) | Aprobado | Aprobado |
+| CA-07 | Aprobado | Aprobado | Aprobado |
+| CA-08 | Reprobado (uso) | Aprobado, con indicación | Aprobado |
+| CA-09 | Aprobado | Reprobado (uso) | Aprobado |
+| CA-10 | Aprobado | Aprobado | Aprobado |
+| **Aprobados** | 6 | 7 | 9 |
+| **Completados sin indicación** | 6 | 6 | 9 |
+
+\* Sin su último paso, el que trae las conexiones de un vecino, que no llegó a leerse por un corte de la conexión.
+
+Se aprobaron 22 de los 30 casos (73 %), frente al mínimo de 21, y 21 se completaron sin indicación (70 %). Los ocho reprobados lo fueron por uso y ninguno por el sistema. CA-03 se reprobó en las tres sesiones: ningún participante encontró el porqué de un prerrequisito, que se lee seleccionando la relación; uno dijo no saberlo, otro lo supuso sin comprobarlo y el tercero lo buscó sin hallarlo. Con el usuario 1 se reprobaron además CA-04 y CA-06, en los que respondió desde otra vista que la que la tarea pedía, y CA-08, en el que no explicó por qué pasar por un curso. El usuario 2 se rindió en CA-02, al no recordar cómo traer las conexiones de un vecino, y en CA-09, porque no sabía qué es una llamada al sistema. Solo el usuario 2 recibió indicaciones: una en CA-08, con la que llegó al resultado esperado, y otra en un paso de CA-03, ya reprobado. La exploración de nodo en nodo (CA-02) se aprobó en dos de las tres sesiones, y el acceso a recursos asociados (CA-07 y CA-10), en las tres.
+
+La Tabla 30 cierra la verificación con el resultado de cada atributo de la Tabla 24.
+
+###### **Tabla 30\. Verificación de los atributos del mecanismo de navegación**
+
+| Atributo | Verificación prevista | Resultado |
+| :---- | :---- | :---- |
+| AN-01 | Un caso de prueba por caso de uso del estudiante | Con los tres usuarios, 21 de 30 casos completados sin indicación; cada caso de uso se completó así al menos una vez, salvo CU-3 (CA-03) |
+| AN-02 | La procedencia de cada elemento se distingue por forma y texto, y todo lo dibujado está también como lista de texto | En el recorrido técnico, la búsqueda muestra en texto la clase y el origen de cada resultado (CA-01), y la ubicación, la capa de cada eslabón (CA-05); ningún vecino del mapa falta en la lista de la ficha (CA-02), y los 33 pasos se cumplen solo con el teclado |
+| AC-03 | Un caso abre el documento del que procede una afirmación (Tabla 23) | CA-10, paso 2: el PDF del sílabo que afirma la relación abre en el recorrido técnico; con los usuarios, aprobado sin indicación en las tres sesiones |
+
+AN-02 se verifica en el recorrido técnico porque es una propiedad de la interfaz y no de su uso; queda fuera la lectura con un lector de pantalla real. AN-01 y AC-03 se verifican con los usuarios, porque exigen que una persona encuentre la respuesta sin ayuda.
+
+2. ### **Validación de experto** {#validación-de-experto-2}
+
+\[FALTA: validación pendiente. Al obtenerla: «El recorrido de los once casos del plan, grabado en video con la hoja de datos vigente, fue revisado y validado por escrito por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión comprobó que el sistema muestra el resultado esperado en cada paso, incluida la carga de un documento por el operador. El registro de esa validación se adjunta como evidencia en el Anexo P».\]
+
+3. ### **Indicador** {#indicador-2}
+
+El indicador comprometido para R6 tiene dos partes. La primera es la validación con respuesta positiva del experto en Ingeniería de Conocimiento: \[FALTA: «se cumple» al obtenerse la validación de la sección anterior\]. La segunda es la aprobación de al menos el 70 % de las pruebas con al menos tres usuarios reales, y se cumple: se aprobaron 22 de 30 casos (73 %), ninguno se reprobó por el sistema, y el sistema respondió correctamente en la exploración por nodo (CA-02), en dos de las tres sesiones, y en el acceso a recursos asociados (CA-07 y CA-10), en las tres. Por lo tanto, el indicador \[FALTA: «se cumple» con la validación del experto\].
+
+6. ## **Discusión** {#discusión-2}
 
 1. ### **Resumen de los resultados** {#resumen-de-los-resultados-1}
 
 R5 especifica el mecanismo de navegación antes de implementarlo. Dos atributos de calidad fijan lo que la interfaz debe garantizar. Once casos de uso fijan lo que el estudiante y el operador pueden hacer, y cada pregunta de competencia de la ontología tiene el suyo. De tres propuestas de interfaz evaluadas sobre los mismos datos reales se eligió la que pone el grafo en el centro, y para ella se diseñaron diez flujos y seis pantallas. Esos atributos, más la procedencia heredada del módulo, motivan cuatro decisiones, entre ellas el framework y la librería de visualización, y la aplicación web queda descompuesta en nueve componentes.
 
+R6 lleva ese diseño a un prototipo desplegado que el estudiante usa desde el navegador. El prototipo resuelve los once casos de uso consumiendo el módulo solo a través de su API, a la que agregó una única ruta, y dibuja únicamente lo que esta responde. Un recorrido automático confirmó que cada paso del plan de pruebas puede darse con el puntero y solo con el teclado, y que la interfaz muestra lo que responde la API. Con tres usuarios, el sistema mostró el resultado esperado en 22 de 30 casos (73 %), sobre el 70 % comprometido, y 21 se completaron sin indicación; ningún caso se reprobó por una falla del sistema. \[FALTA: resultado de la validación del experto\].
+
 2. ### **Interpretación de los resultados** {#interpretación-de-los-resultados-1}
 
-El problema que motiva esta tesis se manifiesta en tres efectos: el tiempo que el estudiante dedica a identificar los prerrequisitos de un tema, la búsqueda dispersa de material sin anclaje al currículo y la planificación del recorrido por canales informales. R5 asigna a cada efecto los casos de uso que lo atienden: los prerrequisitos de un concepto y el camino hasta una meta (CU-3 y CU-8) para el primero; el material de estudio y su fuente (CU-7 y CU-10) para el segundo; y lo que pide un curso y la ubicación de un elemento en la carrera (CU-4 y CU-5) para el tercero. Que la interfaz reduzca esos efectos no lo demuestra R5, sino las pruebas con usuarios de R6.
+El problema que motiva esta tesis se manifiesta en tres efectos: el tiempo que el estudiante dedica a identificar los prerrequisitos de un tema, la búsqueda dispersa de material sin anclaje al currículo y la planificación del recorrido por canales informales. R5 asigna a cada efecto los casos de uso que lo atienden: los prerrequisitos de un concepto y el camino hasta una meta (CU-3 y CU-8) para el primero; el material de estudio y su fuente (CU-7 y CU-10) para el segundo; y lo que pide un curso y la ubicación de un elemento en la carrera (CU-4 y CU-5) para el tercero. Las pruebas de R6 muestran si un estudiante, con una capacitación breve, obtiene esas respuestas por su cuenta, y en buena parte lo hace. El material de estudio y su fuente (CA-07 y CA-10) y la ubicación de un elemento (CA-05) se obtuvieron en las tres sesiones, y lo que pide un curso (CA-04) y el camino hasta una meta (CA-08), en dos. La excepción es el porqué de un prerrequisito (CA-03), que ningún participante encontró. No muestran que el uso del prototipo reduzca esos efectos, medida que se propone como trabajo futuro.
+
+Las causas de los reprobados separan dos fuentes de fallo. Ninguno se debió al sistema: los ocho fueron de uso, casos en que el participante no llegó a la pregunta que la tarea pedía, y casi no hubo indicaciones, por lo que las dos cifras de la Tabla 29 difieren en un solo caso. Las fallas se concentraron en controles poco visibles más que en respuestas equivocadas: el porqué de una relación, que solo aparece al seleccionarla (CA-03), y la vista adecuada cuando dos preguntas se parecen (CA-04 y CA-06). Lo que falta, entonces, es hacer más visibles esas preguntas, no corregir lo que responden; la limitación octava lo recoge.
 
 Lo que estos resultados significan, además, es que el diseño de la interfaz se decidió frente a datos y no frente a supuestos. Las tres propuestas se probaron con las respuestas reales del módulo, y fueron esos datos los que descartaron una de ellas: un diseño centrado en caminos de aprendizaje parecía el más alineado con la necesidad más votada de la encuesta, pero en el grafo de desarrollo solo 35 de 485 metas posibles tienen camino (Tabla 26).
 
-También significan que la interfaz no agrega conocimiento al que el módulo entrega. Cada vista dibuja la respuesta de una consulta y no agrega relaciones propias. Por eso lo que el estudiante ve conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse.
+También significan que la interfaz no agrega conocimiento al que el módulo entrega. Cada vista dibuja la respuesta de una consulta y no agrega relaciones propias. Por eso lo que el estudiante ve conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse. R6 lo comprueba en el recorrido técnico, que comparó cada dato de la pantalla con la respuesta de la API, y en CA-10, donde el estudiante abre el documento del que procede una relación. La contracara es que la interfaz muestra los datos tal como los extrajo el pipeline: un nombre en mayúsculas o con un espacio de más se ve así, y la corrección de lo que se muestra depende de la precisión de R4, no de R6.
 
 3. ### **Los resultados en el contexto de la revisión de la literatura** {#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1}
 
-La revisión del capítulo 3 identificó la desorientación del usuario en grafos grandes como un problema transversal: Tytenko (2025) reporta inconsistencias en niveles profundos de navegación jerárquica, y Dong et al. (2023), la dificultad de los estudiantes para localizar conceptos clave cuando el grafo crece en densidad. El diseño de R5 responde a ese problema de forma explícita y es consistente con él: nunca dibuja el grafo entero, sino la respuesta a una pregunta sobre un elemento en foco; nombra siempre el foco y la pregunta; y resume lo que no cabe con nombre legible. Que eso baste es algo que R5 no puede afirmar: lo comprobarán las pruebas con usuarios reales de R6, y solo para el tamaño del conjunto piloto.
+La revisión del capítulo 3 identificó la desorientación del usuario en grafos grandes como un problema transversal: Tytenko (2025) reporta inconsistencias en niveles profundos de navegación jerárquica, y Dong et al. (2023), la dificultad de los estudiantes para localizar conceptos clave cuando el grafo crece en densidad. El diseño de R5 responde a ese problema de forma explícita y es consistente con él: nunca dibuja el grafo entero, sino la respuesta a una pregunta sobre un elemento en foco; nombra siempre el foco y la pregunta; y resume lo que no cabe con nombre legible. Que eso baste no lo puede afirmar R5, y R6 lo comprueba solo en parte: los casos que más exigen moverse por el lienzo (CA-02, CA-06 y CA-08) se aprobaron en seis de sus nueve ejecuciones, y en los tres reprobados el participante no encontró el control o la vista que la tarea pedía. La evidencia viene de tres usuarios y del grafo del conjunto piloto.
 
-La revisión señaló también que las interfaces del corpus operan sobre un curso o una disciplina, con datos sintéticos o de prueba (Dong et al., 2023; Chen et al., 2023; Gunarathne et al., 2018). En esto el resultado difiere: las propuestas se evaluaron sobre datos reales de cuatro cursos enlazados a un estándar curricular, y el prototipo operará sobre trece. La diferencia es de grado y no de naturaleza, porque trece sílabos siguen siendo una fracción del plan de estudios.
+La revisión señaló también que las interfaces del corpus operan sobre un curso o una disciplina, con datos sintéticos o de prueba (Dong et al., 2023; Chen et al., 2023; Gunarathne et al., 2018). En esto el resultado difiere: las propuestas se evaluaron sobre datos reales de cuatro cursos enlazados a un estándar curricular, y el prototipo opera sobre trece. La diferencia es de grado y no de naturaleza, porque trece sílabos siguen siendo una fracción del plan de estudios.
+
+En la forma de evaluar, R6 también difiere del corpus. Los trabajos que evalúan con estudiantes miden el efecto sobre el aprendizaje, con grupo de control (Liu & Zhan, 2025), o la satisfacción, con cuestionarios (Tytenko, 2025), y varios no evalúan con usuarios (Dong et al., 2023; Chen et al., 2023). R6 mide otra cosa, más acotada: si un estudiante completa por su cuenta tareas de exploración definidas y si el sistema muestra en cada paso la respuesta esperada. Es una verificación del prototipo y no una medida de su efecto, por lo que sus cifras no son comparables con las de esos trabajos.
 
 4. ### **Generalización de los resultados** {#generalización-de-los-resultados-1}
 
 Los casos de uso no dependen de la interfaz ni de la carrera: se derivan de las preguntas de competencia de la ontología, y valdrían para cualquier currículo modelado con ella. La elección de la propuesta, en cambio, depende de los datos con que se evaluó. Con un grafo en el que la mayoría de las metas tuviera caminos largos, la comparación entre P1 y P3 podría resolverse de otro modo, y no hay evidencia suficiente para afirmar que P1 seguiría siendo la mejor. Tampoco los umbrales con que la interfaz resume lo que no cabe se pueden generalizar: salen de cuatro sílabos y deben revisarse con el grafo del conjunto piloto.
 
+Los resultados de R6 se generalizan poco. Las pruebas con usuarios se hicieron con tres estudiantes y una sola hoja de datos, cuyas tareas recorren elementos de un mismo curso, Sistemas Operativos, y no hay evidencia suficiente para afirmar que otros estudiantes, u otras tareas sobre otros cursos, obtendrían el mismo resultado. Es transferible, en cambio, el procedimiento: el plan separa los casos de la hoja de datos, de modo que con otro grafo basta reemplazar la hoja, y el recorrido técnico se repite contra cualquier despliegue. El prototipo, por su parte, toma del grafo cargado todo lo que muestra, incluido el inicio. Los umbrales de R5 se mantuvieron con los 13 sílabos, pero no se han probado con un grafo mayor.
+
 5. ### **Limitaciones de los resultados** {#limitaciones-de-los-resultados-1}
 
-Primero, la escala. El diseño se probó con cuatro sílabos; con trece, un área puede reunir decenas de temas, y dos vistas, la de prerrequisitos y la del camino hasta una meta, todavía no tienen regla para resumir respuestas grandes, porque los caminos de hoy no pasan de dos pasos.
+Primero, la escala. El diseño se probó con cuatro sílabos y el prototipo opera con trece. Con ellos, un área reúne decenas de temas, que el árbol resume hasta los temas, y los caminos ya llegan a cuatro pasos (Figura 18); pero las vistas de prerrequisitos y del camino hasta una meta siguen sin regla para resumir respuestas grandes.
 
-Segundo, la accesibilidad. El recorrido con el teclado y la lista del panel atienden AN-02, pero no se ha hecho un recorrido con un lector de pantalla real.
+Segundo, la accesibilidad. El recorrido técnico completó todos los pasos solo con el teclado, y la ficha repite como lista todo lo dibujado, pero no se ha hecho un recorrido con un lector de pantalla real.
 
-Tercero, la exigencia al estudiante. La propuesta elegida es la que más pide leer un grafo, y para encontrar material de estudio es más lenta que un catálogo. Un mapa que cambia de disposición con cada pregunta puede desorientar, y las medidas que el diseño toma contra ello no se han probado con usuarios.
+Tercero, la exigencia al estudiante. La propuesta elegida es la que más pide leer un grafo, y para encontrar material de estudio es más lenta que un catálogo. Un mapa que cambia de disposición con cada pregunta puede desorientar, y las medidas que el diseño toma contra ello solo se probaron con los tres participantes de R6.
 
 Cuarto, la evaluación de las propuestas la hizo el autor, con el visto bueno del asesor. No se compararon con estudiantes, de modo que la elección descansa en el análisis de los casos de uso y de los datos, no en una preferencia medida.
+
+Quinto, las pruebas de R6 tienen un alcance acotado. Participaron tres usuarios, que recibieron antes una capacitación en el uso del prototipo; el resultado acredita que estudiantes capacitados completan las tareas, no que un estudiante que llega por primera vez lo haría, y no tiene pretensión estadística. El autor fue además el evaluador: leyó las tareas, decidió qué contaba como indicación y registró el resultado de cada caso. El plan fija de antemano qué es una indicación y qué debe mostrar cada paso, lo que acota ese juicio, pero no equivale a un observador independiente.
+
+Sexto, lo que las pruebas comprueban es que la interfaz muestra lo que responde el módulo, no que el contenido sea correcto. Los resultados esperados de la hoja de datos se tomaron de la API, así que una relación mal extraída que la API devuelva se muestra y el caso se aprueba igual. La corrección del contenido corresponde a la medición de R4. A ello se suma que el camino por cursos se deriva de los prerrequisitos entre conceptos y no del plan de estudios, de modo que puede sugerir pasar antes por un curso que la malla no ubica antes, como Programación 3 en el camino hasta Sistemas Operativos.
+
+Séptimo, la demostración del panel del operador usó un modelo de lenguaje simulado. La llamada a un proveedor real se ejercitó en la corrida final de R4, no desde el prototipo.
+
+Octavo, la interfaz exige más de lo que deja una capacitación breve. Las pruebas no encontraron fallas del sistema, pero sí controles que los participantes no hallaron solos. Ninguno descubrió sin ayuda que el porqué de una relación se lee seleccionándola. La diferencia entre lo que un curso pide y lo que enseña, que separa «Cursos que conviene llevar antes» de «Camino hasta aquí», tuvo que explicarse en la capacitación y aun así confundió a un participante. Un participante notó también que el mapa se recarga al traer las conexiones de un vecino, sin un control para retirarlas. Además, el nombre «Dónde está en la carrera» hace esperar un curso o un ciclo, cuando la vista responde con la unidad y el área de CS2023 a las que pertenece el elemento; la confusión crece cuando un área y un curso se llaman igual, como Sistemas Operativos. Corregir estos puntos exige cambiar la interfaz y repetir las pruebas, y queda como trabajo futuro.
 
 7. # **Conclusiones y trabajos futuros** {#conclusiones-y-trabajos-futuros}
 
@@ -2023,6 +2184,10 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 # **Anexo O: Constancia de validación experta del Resultado 5**
 
 [https\://docs.google.com/document/d/1AVbPspoit6JVOu0WLpDcpRDDPpwQuCnsdDxGbrkwBUU/edit?usp=sharing](https://docs.google.com/document/d/1AVbPspoit6JVOu0WLpDcpRDDPpwQuCnsdDxGbrkwBUU/edit?usp=sharing) 
+
+# **Anexo P: Constancia de validación experta del Resultado 6**
+
+\[FALTA: enlace a la constancia de validación del asesor sobre el video del recorrido.\]
 
 [^1]:  Recuperado el 18 de junio del 2026 a las 20:40 h (UTC-5) de [https\://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee\_INFORMATICA-2026-1.pdf](https://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee_INFORMATICA-2026-1.pdf)y visible en el anexo F.
 

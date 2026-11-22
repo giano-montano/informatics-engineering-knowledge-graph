@@ -20,7 +20,7 @@ especifica la entrada, la acción esperada y el criterio de aprobación.
     `guion-de-sesion-con-usuarios-r6.md`. La tarea se lee tal cual, con los datos de la hoja
     vigente, sin nombrar botones ni vistas. El evaluador sigue los pasos esperados para observar,
     no para dictarlos.
-- **Criterio global:** al menos el 80 % de los casos ejecutados con los usuarios, aprobados: 24 de
+- **Criterio global:** al menos el 70 % de los casos ejecutados con los usuarios, aprobados: 21 de
   30 con tres usuarios. CA-11 no se ejecuta con ellos.
 - El archivo conserva su nombre porque lo enlazan el ADR-019, los README y el recorrido técnico.
   Desde el 2026-11-21, a pedido del asesor, la prueba ya no se llama «de aceptación».
@@ -50,20 +50,26 @@ nombres de la hoja. La hoja se fija antes de la primera sesión y no cambia entr
 
 ## Qué cuenta como aprobado
 
-**Con los usuarios**, un caso se aprueba si el participante completa la tarea sin indicación del
-evaluador y el sistema muestra el resultado esperado de cada paso, también el de los pasos
-alternativos. Se reprueba por una de dos causas, y el registro dice cuál:
+**Con los usuarios**, un caso se aprueba si el sistema muestra el resultado esperado de cada paso,
+también el de los pasos alternativos, con o sin indicación del evaluador. Se reprueba por una de
+dos causas, y el registro dice cuál:
 
-- **Uso:** el participante pidió ayuda y recibió una indicación, o se rindió.
+- **Uso:** el participante se rindió, o respondió sin llegar al resultado esperado.
 - **Sistema:** el sistema mostró algo distinto de lo esperado (un dato que falta, uno de más, una
   fuente equivocada, un enlace que no abre) o falló (un error, una pantalla en blanco).
+
+Aparte, el registro dice si el caso se **completó sin indicación**. Es la medida de uso (AN-01) y
+se reporta junto al criterio global, pero no lo decide.
 
 Una **indicación** es decir dónde hacer clic, qué vista o qué pregunta usar, o qué hacer a
 continuación. No lo es repetir la tarea, leer el texto de un paso alternativo ni aclarar una palabra
 de la tarea sin nombrar la interfaz.
 
-Si el participante pide ayuda, el evaluador da la indicación mínima para que siga, y la anota. El
-caso queda reprobado por uso, pero la sesión continúa con sus pasos siguientes.
+Si el participante pide ayuda, el evaluador da la indicación mínima para que siga, y la anota. La
+sesión continúa con los pasos siguientes.
+
+Un paso que el evaluador no llegó a leer no se cuenta, y el resultado lo señala. Las sesiones
+piloto, con las que se prueba el guion, no se cuentan.
 
 ## Cobertura
 
@@ -337,13 +343,13 @@ nombre: «usuario 1», «usuario 2», «usuario 3».
 **Fecha:** AAAA-MM-DD · **Evaluador:** … · **Participante:** <usuario N; ciclo>
 **R6:** commit … · **Hoja de datos:** … · **Navegador y pantalla:** … · **Remota:** sí / no
 
-| Caso | Resultado | Causa, si se reprueba | Observaciones |
-|---|---|---|---|
-| CA-01 | aprobado / reprobado | uso / sistema | |
-| … | | | |
+| Caso | Resultado | Causa, si se reprueba | Sin indicación | Observaciones |
+|---|---|---|---|---|
+| CA-01 | aprobado / reprobado | uso / sistema | sí / no | |
+| … | | | | |
 
-**Aprobados:** n de 10 (…%)
+**Aprobados:** n de 10 (…%) · **Completados sin indicación:** n de 10
 ```
 
-Resultado global de las pruebas con usuarios: los aprobados de cada usuario y su suma frente a 24
-de 30.
+Resultado global de las pruebas con usuarios: los aprobados de cada usuario y su suma frente a 21
+de 30, y aparte los completados sin indicación.

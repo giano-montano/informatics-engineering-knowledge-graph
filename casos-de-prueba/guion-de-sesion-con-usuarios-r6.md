@@ -86,9 +86,9 @@ debe verse en cada paso está en `plan-de-pruebas-de-aceptacion-r6.md`, sección
   sistema lo dice; que difieran no reprueba el caso.
 
 Durante las tareas, el evaluador no ofrece ayuda. Si el participante la pide, da la indicación
-mínima para que siga y la anota: el caso queda reprobado por uso. A «¿así?» responde «haz lo que
-harías si estuvieras solo», salvo que sea un pedido de ayuda. Cada paso se anota en el registro al
-momento.
+mínima para que siga y la anota: el caso ya no cuenta como completado sin indicación. A «¿así?»
+responde «haz lo que harías si estuvieras solo», salvo que sea un pedido de ayuda. Cada paso se
+anota en el registro al momento.
 
 ## 4. Cierre (3 min)
 

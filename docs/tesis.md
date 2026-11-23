@@ -32,115 +32,115 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 # **Tabla de Contenido**
 
-[**Capítulo 1\. Generalidades	9**](#generalidades)
+[**Capítulo 1\. Generalidades	10**](#generalidades)
 
-[1.1 Problemática	9](#problemática)
+[1.1 Problemática	10](#problemática)
 
-[1.1.1 Árbol de Problemas	11](#árbol-de-problemas)
+[1.1.1 Árbol de Problemas	12](#árbol-de-problemas)
 
-[1.1.2 Descripción	12](#descripción)
+[1.1.2 Descripción	13](#descripción)
 
-[1.1.3 Problema seleccionado	20](#problema-seleccionado)
+[1.1.3 Problema seleccionado	21](#problema-seleccionado)
 
-[1.2 Objetivos	20](#objetivos)
+[1.2 Objetivos	21](#objetivos)
 
-[1.2.1 Objetivo general	20](#objetivo-general)
+[1.2.1 Objetivo general	21](#objetivo-general)
 
-[1.2.2 Objetivos específicos	21](#objetivos-específicos)
+[1.2.2 Objetivos específicos	22](#objetivos-específicos)
 
-[1.2.3 Resultados esperados y mapeo de verificación	21](#resultados-esperados-y-mapeo-de-verificación)
+[1.2.3 Resultados esperados y mapeo de verificación	22](#resultados-esperados-y-mapeo-de-verificación)
 
-[1.3 Métodos, procedimientos y herramientas	25](#métodos,-procedimientos-y-herramientas)
+[1.3 Métodos, procedimientos y herramientas	26](#métodos,-procedimientos-y-herramientas)
 
-[1.3.1 Métodos y procedimientos	27](#métodos-y-procedimientos)
+[1.3.1 Métodos y procedimientos	28](#métodos-y-procedimientos)
 
-[1.3.1.1 Procedimiento para el modelado ontológico \- R1	27](#procedimiento-para-el-modelado-ontológico---r1)
+[1.3.1.1 Procedimiento para el modelado ontológico \- R1	28](#procedimiento-para-el-modelado-ontológico---r1)
 
-[1.3.1.2 Procedimiento para la instanciación en capa de referencia \- R2	28](#procedimiento-para-la-instanciación-en-capa-de-referencia---r2)
+[1.3.1.2 Procedimiento para la instanciación en capa de referencia \- R2	29](#procedimiento-para-la-instanciación-en-capa-de-referencia---r2)
 
-[1.3.1.3 Procedimiento para la documentación del módulo del grafo \- R3	29](#procedimiento-para-la-documentación-del-módulo-del-grafo---r3)
+[1.3.1.3 Procedimiento para la documentación del módulo del grafo \- R3	30](#procedimiento-para-la-documentación-del-módulo-del-grafo---r3)
 
-[1.3.1.4 Procedimiento para la construcción del módulo de KG y pipeline \- R4	31](#procedimiento-para-la-construcción-del-módulo-de-kg-y-pipeline---r4)
+[1.3.1.4 Procedimiento para la construcción del módulo de KG y pipeline \- R4	32](#procedimiento-para-la-construcción-del-módulo-de-kg-y-pipeline---r4)
 
-[1.3.1.5 Procedimiento para la documentación del mecanismo de navegación \- R5	33](#procedimiento-para-la-documentación-del-mecanismo-de-navegación---r5)
+[1.3.1.5 Procedimiento para la documentación del mecanismo de navegación \- R5	34](#procedimiento-para-la-documentación-del-mecanismo-de-navegación---r5)
 
-[1.3.1.6 Procedimiento para el prototipo de navegación \- R6	34](#procedimiento-para-el-prototipo-de-navegación---r6)
+[1.3.1.6 Procedimiento para el prototipo de navegación \- R6	35](#procedimiento-para-el-prototipo-de-navegación---r6)
 
-[1.3.2 Herramientas	34](#herramientas)
+[1.3.2 Herramientas	36](#herramientas)
 
-[1.3.2.1 Base de datos orientada a grafos: Neo4j y Cypher	34](#base-de-datos-orientada-a-grafos:-neo4j-y-cypher)
+[1.3.2.1 Base de datos orientada a grafos: Neo4j y Cypher	36](#base-de-datos-orientada-a-grafos:-neo4j-y-cypher)
 
-[1.3.2.2 Lenguajes y estándares semánticos: OWL 2 y RDF	35](#lenguajes-y-estándares-semánticos:-owl-2-y-rdf)
+[1.3.2.2 Lenguajes y estándares semánticos: OWL 2 y RDF	36](#lenguajes-y-estándares-semánticos:-owl-2-y-rdf)
 
-[1.3.2.3 Edición y validación ontológica: Protégé y HermiT	35](#edición-y-validación-ontológica:-protégé-y-hermit)
+[1.3.2.3 Edición y validación ontológica: Protégé y HermiT	36](#edición-y-validación-ontológica:-protégé-y-hermit)
 
-[1.3.2.4 Estándares Disciplinares (CC2020, CS2023 y SWEBOK)	35](#estándares-disciplinares-\(cc2020,-cs2023-y-swebok\))
+[1.3.2.4 Estándares Disciplinares (CC2020, CS2023 y SWEBOK)	37](#estándares-disciplinares-\(cc2020,-cs2023-y-swebok\))
 
-[1.3.2.5 Python y FastAPI	36](#python-y-fastapi)
+[1.3.2.5 Python y FastAPI	37](#python-y-fastapi)
 
-[1.3.2.6 Orquestación y LLMs	37](#orquestación-y-llms)
+[1.3.2.6 Orquestación y LLMs	38](#orquestación-y-llms)
 
-[1.3.2.7 Git y Github para versionado y repositorio de código y documentación	38](#git-y-github-para-versionado-y-repositorio-de-código-y-documentación)
+[1.3.2.7 Git y Github para versionado y repositorio de código y documentación	39](#git-y-github-para-versionado-y-repositorio-de-código-y-documentación)
 
-[**Capítulo 2\. Marco Conceptual	38**](#marco-conceptual)
+[**Capítulo 2\. Marco Conceptual	40**](#marco-conceptual)
 
-[2.1 Introducción	38](#introducción)
+[2.1 Introducción	40](#introducción)
 
-[2.2 Desarrollo del marco conceptual	38](#desarrollo-del-marco-conceptual)
+[2.2 Desarrollo del marco conceptual	40](#desarrollo-del-marco-conceptual)
 
-[2.2.1 Dominio de la educación en informática	38](#dominio-de-la-educación-en-informática)
+[2.2.1 Dominio de la educación en informática	40](#dominio-de-la-educación-en-informática)
 
-[2.2.1.1 Currículo universitario y fragmentación	38](#currículo-universitario-y-fragmentación)
+[2.2.1.1 Currículo universitario y fragmentación	40](#currículo-universitario-y-fragmentación)
 
-[2.2.1.2 Dependencias conceptuales y relaciones de prerrequisito	39](#dependencias-conceptuales-y-relaciones-de-prerrequisito)
+[2.2.1.2 Dependencias conceptuales y relaciones de prerrequisito	41](#dependencias-conceptuales-y-relaciones-de-prerrequisito)
 
-[2.2.2 Representación formal del conocimiento	40](#representación-formal-del-conocimiento)
+[2.2.2 Representación formal del conocimiento	42](#representación-formal-del-conocimiento)
 
-[2.2.2.1 Ontología y sus componentes (T-Box, A-Box)	40](#ontología-y-sus-componentes-\(t-box,-a-box\))
+[2.2.2.1 Ontología y sus componentes (T-Box, A-Box)	42](#ontología-y-sus-componentes-\(t-box,-a-box\))
 
-[2.2.2.2 Grafo de conocimiento (Knowledge Graph)	41](#grafo-de-conocimiento-\(knowledge-graph\))
+[2.2.2.2 Grafo de conocimiento (Knowledge Graph)	42](#grafo-de-conocimiento-\(knowledge-graph\))
 
-[2.2.3 Gestión del conocimiento	41](#gestión-del-conocimiento)
+[2.2.3 Gestión del conocimiento	43](#gestión-del-conocimiento)
 
-[2.2.4 Aprendizaje y navegación	42](#aprendizaje-y-navegación)
+[2.2.4 Aprendizaje y navegación	43](#aprendizaje-y-navegación)
 
-[2.2.4.1 Aprendizaje autodirigido (self-directed learning)	42](#aprendizaje-autodirigido-\(self-directed-learning\))
+[2.2.4.1 Aprendizaje autodirigido (self-directed learning)	43](#aprendizaje-autodirigido-\(self-directed-learning\))
 
-[2.2.4.2 Navegación y descubrimiento de recursos educativos	42](#navegación-y-descubrimiento-de-recursos-educativos)
+[2.2.4.2 Navegación y descubrimiento de recursos educativos	44](#navegación-y-descubrimiento-de-recursos-educativos)
 
-[**Capítulo 3\. Estado del Arte	44**](#estado-del-arte)
+[**Capítulo 3\. Estado del Arte	45**](#estado-del-arte)
 
-[3.1 Introducción	44](#introducción-1)
+[3.1 Introducción	45](#introducción-1)
 
-[3.2 Objetivos de revisión	44](#objetivos-de-revisión)
+[3.2 Objetivos de revisión	45](#objetivos-de-revisión)
 
-[3.3 Preguntas de revisión	44](#preguntas-de-revisión)
+[3.3 Preguntas de revisión	45](#preguntas-de-revisión)
 
-[3.4 Estrategia de búsqueda	45](#estrategia-de-búsqueda)
+[3.4 Estrategia de búsqueda	46](#estrategia-de-búsqueda)
 
-[3.4.1 Motor de búsqueda a usar	46](#motor-de-búsqueda-a-usar)
+[3.4.1 Motor de búsqueda a usar	47](#motor-de-búsqueda-a-usar)
 
-[3.4.2 Cadenas de búsqueda a usar	46](#cadenas-de-búsqueda-a-usar)
+[3.4.2 Cadenas de búsqueda a usar	47](#cadenas-de-búsqueda-a-usar)
 
-[3.4.3 Documentos encontrados	47](#documentos-encontrados)
+[3.4.3 Documentos encontrados	48](#documentos-encontrados)
 
-[3.4.4 Criterios de inclusión	51](#criterios-de-inclusión)
+[3.4.4 Criterios de inclusión	52](#criterios-de-inclusión)
 
-[3.4.5 Criterios de exclusión	52](#criterios-de-exclusión)
+[3.4.5 Criterios de exclusión	53](#criterios-de-exclusión)
 
-[3.5 Formulario de extracción de datos	52](#formulario-de-extracción-de-datos)
+[3.5 Formulario de extracción de datos	53](#formulario-de-extracción-de-datos)
 
-[3.6 Resultados de la revisión	54](#resultados-de-la-revisión)
+[3.6 Resultados de la revisión	55](#resultados-de-la-revisión)
 
-[3.6.1 Respuesta a pregunta P1: modelado de currículos y dominios computacionales con ontologías y grafos	54](#respuesta-a-pregunta-p1:-modelado-de-currículos-y-dominios-computacionales-con-ontologías-y-grafos)
+[3.6.1 Respuesta a pregunta P1: modelado de currículos y dominios computacionales con ontologías y grafos	55](#respuesta-a-pregunta-p1:-modelado-de-currículos-y-dominios-computacionales-con-ontologías-y-grafos)
 
-[3.6.2 Respuesta a pregunta P2: arquitecturas de KMS basados en grafos e ingesta automatizada	56](#respuesta-a-pregunta-p2:-arquitecturas-de-kms-basados-en-grafos-e-ingesta-automatizada)
+[3.6.2 Respuesta a pregunta P2: arquitecturas de KMS basados en grafos e ingesta automatizada	57](#respuesta-a-pregunta-p2:-arquitecturas-de-kms-basados-en-grafos-e-ingesta-automatizada)
 
-[3.6.3 Respuesta a pregunta P3: mecanismos de navegación y descubrimiento semántico	58](#respuesta-a-pregunta-p3:-mecanismos-de-navegación-y-descubrimiento-semántico)
+[3.6.3 Respuesta a pregunta P3: mecanismos de navegación y descubrimiento semántico	59](#respuesta-a-pregunta-p3:-mecanismos-de-navegación-y-descubrimiento-semántico)
 
-[3.7 Conclusiones	61](#conclusiones)
+[3.7 Conclusiones	62](#conclusiones)
 
-[**Capítulo 4\. Modelo del dominio del conocimiento de Ingeniería Informática	63**](#modelo-del-dominio-del-conocimiento-de-ingeniería-informática)
+[**Capítulo 4\. Modelo del dominio del conocimiento de Ingeniería Informática	64**](#modelo-del-dominio-del-conocimiento-de-ingeniería-informática)
 
 [4.1 Introducción	64](#introducción-2)
 
@@ -202,153 +202,207 @@ Aquí se debe colocar una copia del tema aprobado por el Decano de la FCI. No es
 
 [5.2.6.3 Indicador	109](#indicador)
 
-[5.3 Discusión	109](#discusión-1)
+[5.3 Módulo de gestión del grafo de conocimiento implementado	110](#módulo-de-gestión-del-grafo-de-conocimiento-implementado)
 
-[5.3.1 Resumen de los resultados	110](#resumen-de-los-resultados)
+[5.3.1 Preparación del entorno de datos	110](#preparación-del-entorno-de-datos)
 
-[5.3.2 Interpretación de los resultados	110](#interpretación-de-los-resultados)
+[5.3.2 Pipeline de ingesta	111](#pipeline-de-ingesta)
 
-[5.3.3 Los resultados en el contexto de la revisión de la literatura	111](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura)
+[5.3.3 Interfaz programática	113](#interfaz-programática)
 
-[5.3.4 Generalización de los resultados	112](#generalización-de-los-resultados)
+[5.3.4 Verificación de R4	115](#verificación-de-r4)
 
-[5.3.5 Limitaciones de los resultados	113](#limitaciones-de-los-resultados)
+[5.3.4.1 Verificación y mediciones	115](#verificación-y-mediciones-2)
 
-[**Capítulo 6\. Mecanismo de navegación y descubrimiento semántico	115**](#mecanismo-de-navegación-y-descubrimiento-semántico)
+[5.3.4.2 Indicador	122](#indicador-1)
 
-[6.1 Introducción	115](#introducción-4)
+[5.4 Discusión	122](#discusión-1)
 
-[6.2 Documentación del mecanismo de navegación	115](#documentación-del-mecanismo-de-navegación)
+[5.4.1 Resumen de los resultados	122](#resumen-de-los-resultados)
 
-[6.2.1 Atributos de calidad del mecanismo de navegación	116](#atributos-de-calidad-del-mecanismo-de-navegación)
+[5.4.2 Interpretación de los resultados	123](#interpretación-de-los-resultados)
 
-[6.2.2 Casos de uso	117](#casos-de-uso)
+[5.4.3 Los resultados en el contexto de la revisión de la literatura	126](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura)
 
-[6.2.3 Propuestas evaluadas	118](#propuestas-evaluadas)
+[5.4.4 Generalización de los resultados	128](#generalización-de-los-resultados)
 
-[6.2.4 Flujos e interfaz	119](#flujos-e-interfaz)
+[5.4.5 Limitaciones de los resultados	129](#limitaciones-de-los-resultados)
 
-[6.2.5 Arquitectura de la aplicación web	122](#arquitectura-de-la-aplicación-web)
+[**Capítulo 6\. Mecanismo de navegación y descubrimiento semántico	131**](#mecanismo-de-navegación-y-descubrimiento-semántico)
 
-[6.3 Verificación de R5	124](#verificación-de-r5)
+[6.1 Introducción	131](#introducción-4)
 
-[6.3.1 Verificación y mediciones	124](#verificación-y-mediciones-2)
+[6.2 Documentación del mecanismo de navegación	132](#documentación-del-mecanismo-de-navegación)
 
-[6.3.2 Validación de experto	125](#validación-de-experto-1)
+[6.2.1 Atributos de calidad del mecanismo de navegación	132](#atributos-de-calidad-del-mecanismo-de-navegación)
 
-[6.3.3 Indicador	125](#indicador-1)
+[6.2.2 Casos de uso	133](#casos-de-uso)
 
-[6.4 Prototipo de navegación](#prototipo-de-navegación)
+[6.2.3 Propuestas evaluadas	135](#propuestas-evaluadas)
 
-[6.4.1 Consumo del módulo como caja negra](#consumo-del-módulo-como-caja-negra)
+[6.2.4 Flujos e interfaz	136](#flujos-e-interfaz)
 
-[6.4.2 Cobertura de los casos de uso](#cobertura-de-los-casos-de-uso)
+[6.2.5 Arquitectura de la aplicación web	138](#arquitectura-de-la-aplicación-web)
 
-[6.4.3 Atributos de calidad del prototipo](#atributos-de-calidad-del-prototipo)
+[6.3 Verificación de R5	141](#verificación-de-r5)
 
-[6.4.4 Despliegue del prototipo](#despliegue-del-prototipo)
+[6.3.1 Verificación y mediciones	141](#verificación-y-mediciones-3)
 
-[6.5 Verificación de R6](#verificación-de-r6)
+[6.3.2 Validación de experto	142](#validación-de-experto-1)
 
-[6.5.1 Verificación y mediciones](#verificación-y-mediciones-3)
+[6.3.3 Indicador	142](#indicador-2)
 
-[6.5.2 Validación de experto](#validación-de-experto-2)
+[6.4 Prototipo de navegación	142](#prototipo-de-navegación)
 
-[6.5.3 Indicador](#indicador-2)
+[6.4.1 Consumo del módulo como caja negra	142](#consumo-del-módulo-como-caja-negra)
 
-[6.6 Discusión	125](#discusión-2)
+[6.4.2 Cobertura de los casos de uso	143](#cobertura-de-los-casos-de-uso)
 
-[6.6.1 Resumen de los resultados	125](#resumen-de-los-resultados-1)
+[6.4.3 Atributos de calidad del prototipo	146](#atributos-de-calidad-del-prototipo)
 
-[6.6.2 Interpretación de los resultados	126](#interpretación-de-los-resultados-1)
+[6.4.4 Despliegue del prototipo	148](#despliegue-del-prototipo)
 
-[6.6.3 Los resultados en el contexto de la revisión de la literatura	126](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1)
+[6.5 Verificación de R6	148](#verificación-de-r6)
 
-[6.6.4 Generalización de los resultados	127](#generalización-de-los-resultados-1)
+[6.5.1 Verificación y mediciones	148](#verificación-y-mediciones-4)
 
-[6.6.5 Limitaciones de los resultados	127](#limitaciones-de-los-resultados-1)
+[6.5.2 Validación de experto	153](#validación-de-experto-2)
 
-[**Capítulo 7\. Conclusiones y trabajos futuros	128**](#conclusiones-y-trabajos-futuros)
+[6.5.3 Indicador	153](#indicador-3)
 
-[7.1 Conclusiones	128](#conclusiones-1)
+[6.6 Discusión	153](#discusión-2)
 
-[7.2 Trabajos futuros	128](#trabajos-futuros)
+[6.6.1 Resumen de los resultados	154](#resumen-de-los-resultados-1)
 
-[**Referencias	129**](#referencias)
+[6.6.2 Interpretación de los resultados	154](#interpretación-de-los-resultados-1)
+
+[6.6.3 Los resultados en el contexto de la revisión de la literatura	156](#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura-1)
+
+[6.6.4 Generalización de los resultados	157](#generalización-de-los-resultados-1)
+
+[6.6.5 Limitaciones de los resultados	157](#limitaciones-de-los-resultados-1)
+
+[**Capítulo 7\. Conclusiones y trabajos futuros	159**](#conclusiones-y-trabajos-futuros)
+
+[7.1 Conclusiones	159](#conclusiones-1)
+
+[7.2 Trabajos futuros	159](#trabajos-futuros)
+
+[**Referencias	161**](#referencias)
 
 # **Índice de figuras**
 
-[Figura 1\. Distribución de respondentes por ciclo (N=154). Fuente: elaboración propia a partir de la encuesta (Anexo D).	11](#figura-1.-distribución-de-respondentes-por-ciclo-\(n=154\).-fuente:-elaboración-propia-a-partir-de-la-encuesta-\(anexo-d\).)
+[Figura 1\. Distribución de respondentes por ciclo (N=154). Fuente: elaboración propia a partir de la encuesta (Anexo D).	12](#figura-1.-distribución-de-respondentes-por-ciclo-\(n=154\).-fuente:-elaboración-propia-a-partir-de-la-encuesta-\(anexo-d\).)
 
-[Figura 2\. Árbol de problemas	12](#figura-2.-árbol-de-problemas)
+[Figura 2\. Árbol de problemas	13](#figura-2.-árbol-de-problemas)
 
-[Figura 3\. Facilidad percibida para identificar conocimientos previos antes de abordar un tema nuevo (1 \= nada fácil, 5 \= muy fácil; N=154). Fuente: elaboración propia (Anexo D).	15](#figura-3.-facilidad-percibida-para-identificar-conocimientos-previos-antes-de-abordar-un-tema-nuevo-\(1-=-nada-fácil,-5-=-muy-fácil;-n=154\).-fuente:-elaboración-propia-\(anexo-d\).)
+[Figura 3\. Facilidad percibida para identificar conocimientos previos antes de abordar un tema nuevo (1 \= nada fácil, 5 \= muy fácil; N=154). Fuente: elaboración propia (Anexo D).	16](#figura-3.-facilidad-percibida-para-identificar-conocimientos-previos-antes-de-abordar-un-tema-nuevo-\(1-=-nada-fácil,-5-=-muy-fácil;-n=154\).-fuente:-elaboración-propia-\(anexo-d\).)
 
-[Figura 4\. Criterios usados para planificar cursos electivos (opción múltiple; N=154). Fuente: elaboración propia (Anexo D)	18](#figura-4.-criterios-usados-para-planificar-cursos-electivos-\(opción-múltiple;-n=154\).-fuente:-elaboración-propia-\(anexo-d\))
+[Figura 4\. Criterios usados para planificar cursos electivos (opción múltiple; N=154). Fuente: elaboración propia (Anexo D)	19](#figura-4.-criterios-usados-para-planificar-cursos-electivos-\(opción-múltiple;-n=154\).-fuente:-elaboración-propia-\(anexo-d\))
 
 [Figura 5\. Jerarquía de clases de la ontología visualizada en Protégé (OntoGraf). Fuente: elaboración propia.	66](#figura-5.-jerarquía-de-clases-de-la-ontología-visualizada-en-protégé-\(ontograf\).-fuente:-elaboración-propia.)
 
-[Figura 6\. Diagrama de contexto del sistema (nivel 1 del modelo C4). Fuente: elaboración propia.	89](#figura-6.-diagrama-de-contexto-del-sistema-\(nivel-1-del-modelo-c4\).-fuente:-elaboración-propia.)
+[Figura 6\. Diagrama de contexto del sistema (nivel 1 del modelo C4). Fuente: elaboración propia.	90](#figura-6.-diagrama-de-contexto-del-sistema-\(nivel-1-del-modelo-c4\).-fuente:-elaboración-propia.)
 
-[Figura 7\. Diagrama de contenedores del sistema (nivel 2 del modelo C4). Fuente: elaboración propia.	90](#figura-7.-diagrama-de-contenedores-del-sistema-\(nivel-2-del-modelo-c4\).-fuente:-elaboración-propia.)
+[Figura 7\. Diagrama de contenedores del sistema (nivel 2 del modelo C4). Fuente: elaboración propia.	91](#figura-7.-diagrama-de-contenedores-del-sistema-\(nivel-2-del-modelo-c4\).-fuente:-elaboración-propia.)
 
-[Figura 8\. Componentes de la API (nivel 3 del modelo C4). Fuente: elaboración propia.	93](#figura-8.-componentes-de-la-api-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+[Figura 8\. Componentes de la API (nivel 3 del modelo C4). Fuente: elaboración propia.	94](#figura-8.-componentes-de-la-api-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
 
-[Figura 9\. Componentes del worker de ingesta (nivel 3 del modelo C4). Fuente: elaboración propia.	93](#figura-9.-componentes-del-worker-de-ingesta-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+[Figura 9\. Componentes del worker de ingesta (nivel 3 del modelo C4). Fuente: elaboración propia.	94](#figura-9.-componentes-del-worker-de-ingesta-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
 
-[Figura 10\. Componentes de los procesos de construcción (nivel 3 del modelo C4). Fuente: elaboración propia.	95](#figura-10.-componentes-de-los-procesos-de-construcción-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+[Figura 10\. Componentes de los procesos de construcción (nivel 3 del modelo C4). Fuente: elaboración propia.	96](#figura-10.-componentes-de-los-procesos-de-construcción-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
 
-[Figura 11\. Flujo de la ingesta de un documento. Fuente: elaboración propia.	96](#figura-11.-flujo-de-la-ingesta-de-un-documento.-fuente:-elaboración-propia.)
+[Figura 11\. Flujo de la ingesta de un documento. Fuente: elaboración propia.	97](#figura-11.-flujo-de-la-ingesta-de-un-documento.-fuente:-elaboración-propia.)
 
-[Figura 12\. Diagrama de despliegue del prototipo. Fuente: elaboración propia.	97](#figura-12.-diagrama-de-despliegue-del-prototipo.-fuente:-elaboración-propia.)
+[Figura 12\. Diagrama de despliegue del prototipo. Fuente: elaboración propia.	98](#figura-12.-diagrama-de-despliegue-del-prototipo.-fuente:-elaboración-propia.)
+
+[Figura 13\. Wireframe de la pantalla C: un tema en foco con lo que lo rodea. Fuente: elaboración propia.	137](#figura-13.-wireframe-de-la-pantalla-c:-un-tema-en-foco-con-lo-que-lo-rodea.-fuente:-elaboración-propia.)
+
+[Figura 14\. Wireframe de la pantalla D: la vista "Qué necesitas antes" de un concepto. Fuente: elaboración propia.	138](#figura-14.-wireframe-de-la-pantalla-d:-la-vista-"qué-necesitas-antes"-de-un-concepto.-fuente:-elaboración-propia.)
+
+[Figura 15\. Componentes de la aplicación web (nivel 3 del modelo C4). Fuente: elaboración propia.	139](#figura-15.-componentes-de-la-aplicación-web-\(nivel-3-del-modelo-c4\).-fuente:-elaboración-propia.)
+
+[Figura 16\. Inicio del prototipo: las áreas de CS2023 y los cursos con sílabo. Fuente: elaboración propia.	145](#figura-16.-inicio-del-prototipo:-las-áreas-de-cs2023-y-los-cursos-con-sílabo.-fuente:-elaboración-propia.)
+
+[Figura 17\. Un tema en foco con lo que lo rodea. Fuente: elaboración propia.	145](#figura-17.-un-tema-en-foco-con-lo-que-lo-rodea.-fuente:-elaboración-propia.)
+
+[Figura 18\. El camino hasta un concepto, agrupado por cursos. Fuente: elaboración propia.	146](#figura-18.-el-camino-hasta-un-concepto,-agrupado-por-cursos.-fuente:-elaboración-propia.)
+
+[Figura 19\. Una relación seleccionada, con el sílabo que la afirma. Fuente: elaboración propia.	148](#figura-19.-una-relación-seleccionada,-con-el-sílabo-que-la-afirma.-fuente:-elaboración-propia.)
+
+[Figura 20\. Panel del operador: la auditoría de cierre de una corrida, regla por regla. Fuente: elaboración propia.	150](#figura-20.-panel-del-operador:-la-auditoría-de-cierre-de-una-corrida,-regla-por-regla.-fuente:-elaboración-propia.)
 
 # **Índice de tablas**
 
-[Tabla 1\. Ficha técnica de la encuesta de orientación del aprendizaje	9](#tabla-1.-ficha-técnica-de-la-encuesta-de-orientación-del-aprendizaje)
+[Tabla 1\. Ficha técnica de la encuesta de orientación del aprendizaje	11](#tabla-1.-ficha-técnica-de-la-encuesta-de-orientación-del-aprendizaje)
 
-[Tabla 2\. Mapeo de resultados, medios de verificación e indicadores del objetivo O 1	21](#tabla-2.-mapeo-de-resultados,-medios-de-verificación-e-indicadores-del-objetivo-o-1)
+[Tabla 2\. Mapeo de resultados, medios de verificación e indicadores del objetivo O 1	22](#tabla-2.-mapeo-de-resultados,-medios-de-verificación-e-indicadores-del-objetivo-o-1)
 
-[Tabla 3\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 2	22](#tabla-3.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-2)
+[Tabla 3\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 2	23](#tabla-3.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-2)
 
-[Tabla 4\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 3	24](#tabla-4.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-3)
+[Tabla 4\. Mapeo de resultado, medios de verificación e indicadores del objetivo O 3	25](#tabla-4.-mapeo-de-resultado,-medios-de-verificación-e-indicadores-del-objetivo-o-3)
 
-[Tabla 5\. Herramientas, métodos y procedimientos por resultado	26](#tabla-5.-herramientas,-métodos-y-procedimientos-por-resultado)
+[Tabla 5\. Herramientas, métodos y procedimientos por resultado	27](#tabla-5.-herramientas,-métodos-y-procedimientos-por-resultado)
 
-[Tabla 6\. Uso de la técnica PICOC	44](#tabla-6.-uso-de-la-técnica-picoc)
+[Tabla 6\. Uso de la técnica PICOC	45](#tabla-6.-uso-de-la-técnica-picoc)
 
-[Tabla 7\. Palabras clave organizadas con técnica PICOC por pregunta	46](#tabla-7.-palabras-clave-organizadas-con-técnica-picoc-por-pregunta)
+[Tabla 7\. Palabras clave organizadas con técnica PICOC por pregunta	47](#tabla-7.-palabras-clave-organizadas-con-técnica-picoc-por-pregunta)
 
-[Tabla 8\. Resultados de documentos en búsquedas y filtración	48](#tabla-8.-resultados-de-documentos-en-búsquedas-y-filtración)
+[Tabla 8\. Resultados de documentos en búsquedas y filtración	49](#tabla-8.-resultados-de-documentos-en-búsquedas-y-filtración)
 
-[Tabla 9\. Documentos seleccionados finales	48](#tabla-9.-documentos-seleccionados-finales)
+[Tabla 9\. Documentos seleccionados finales	49](#tabla-9.-documentos-seleccionados-finales)
 
-[Tabla 10\. Formulario de extracción de datos para la pregunta P1	52](#tabla-10.-formulario-de-extracción-de-datos-para-la-pregunta-p1)
+[Tabla 10\. Formulario de extracción de datos para la pregunta P1	53](#tabla-10.-formulario-de-extracción-de-datos-para-la-pregunta-p1)
 
-[Tabla 11\. Formulario de extracción de datos para la pregunta P2	53](#tabla-11.-formulario-de-extracción-de-datos-para-la-pregunta-p2)
+[Tabla 11\. Formulario de extracción de datos para la pregunta P2	54](#tabla-11.-formulario-de-extracción-de-datos-para-la-pregunta-p2)
 
-[Tabla 12\. Formulario de extracción de datos para la pregunta P3	53](#tabla-12.-formulario-de-extracción-de-datos-para-la-pregunta-p3)
+[Tabla 12\. Formulario de extracción de datos para la pregunta P3	54](#tabla-12.-formulario-de-extracción-de-datos-para-la-pregunta-p3)
 
-[Tabla 13\. Propiedades de objeto de la ontología.	67](#tabla-13.-propiedades-de-objeto-de-la-ontología.)
+[Tabla 13\. Propiedades de objeto de la ontología.	68](#tabla-13.-propiedades-de-objeto-de-la-ontología.)
 
-[Tabla 14\. Atributos de calidad del módulo del grafo de conocimiento	78](#tabla-14.-atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
+[Tabla 14\. Atributos de calidad del módulo del grafo de conocimiento	79](#tabla-14.-atributos-de-calidad-del-módulo-del-grafo-de-conocimiento)
 
-[Tabla 15\. Escenarios de calidad de los atributos definidos	79](#tabla-15.-escenarios-de-calidad-de-los-atributos-definidos)
+[Tabla 15\. Escenarios de calidad de los atributos definidos	80](#tabla-15.-escenarios-de-calidad-de-los-atributos-definidos)
 
-[Tabla 16\. Tipos de arista del grafo y pares de etiquetas admitidos	82](#tabla-16.-tipos-de-arista-del-grafo-y-pares-de-etiquetas-admitidos)
+[Tabla 16\. Tipos de arista del grafo y pares de etiquetas admitidos	83](#tabla-16.-tipos-de-arista-del-grafo-y-pares-de-etiquetas-admitidos)
 
-[Tabla 17\. Propiedades de nodo y de arista	83](#tabla-17.-propiedades-de-nodo-y-de-arista)
+[Tabla 17\. Propiedades de nodo y de arista	84](#tabla-17.-propiedades-de-nodo-y-de-arista)
 
-[Tabla 18\. Reglas de integridad del grafo	84](#tabla-18.-reglas-de-integridad-del-grafo)
+[Tabla 18\. Reglas de integridad del grafo	85](#tabla-18.-reglas-de-integridad-del-grafo)
 
-[Tabla 19\. Reglas del módulo	85](#tabla-19.-reglas-del-módulo)
+[Tabla 19\. Reglas del módulo	86](#tabla-19.-reglas-del-módulo)
 
-[Tabla 20\. Decisiones de arquitectura del módulo	86](#tabla-20.-decisiones-de-arquitectura-del-módulo)
+[Tabla 20\. Decisiones de arquitectura del módulo	87](#tabla-20.-decisiones-de-arquitectura-del-módulo)
 
-[Tabla 21\. Mecanismo que impide cada regla en la ingesta	94](#tabla-21.-mecanismo-que-impide-cada-regla-en-la-ingesta)
+[Tabla 21\. Mecanismo que impide cada regla en la ingesta	96](#tabla-21.-mecanismo-que-impide-cada-regla-en-la-ingesta)
 
-[Tabla 22\. Casos de prueba de extracción y resumen de la anotación de referencia	102](#tabla-22.-casos-de-prueba-de-extracción-y-resumen-de-la-anotación-de-referencia)
+[Tabla 22\. Casos de prueba de extracción y resumen de la anotación de referencia	105](#tabla-22.-casos-de-prueba-de-extracción-y-resumen-de-la-anotación-de-referencia)
 
-[Tabla 23\. Trazabilidad de los atributos de calidad	106](#tabla-23.-trazabilidad-de-los-atributos-de-calidad)
+[Tabla 23\. Trazabilidad de los atributos de calidad	109](#tabla-23.-trazabilidad-de-los-atributos-de-calidad)
+
+[Tabla 24\. Rutas de la API del módulo	114](#tabla-24.-rutas-de-la-api-del-módulo)
+
+[Tabla 25\. Resultados de los casos de prueba de extracción	117](#tabla-25.-resultados-de-los-casos-de-prueba-de-extracción)
+
+[Tabla 26\. Contraste de la anotación y del pipeline con las extracciones de los participantes	119](#tabla-26.-contraste-de-la-anotación-y-del-pipeline-con-las-extracciones-de-los-participantes)
+
+[Tabla 27\. Resultados de los casos de prueba de relaciones	121](#tabla-27.-resultados-de-los-casos-de-prueba-de-relaciones)
+
+[Tabla 28\. Verificación de los atributos de calidad del módulo	122](#tabla-28.-verificación-de-los-atributos-de-calidad-del-módulo)
+
+[Tabla 29\. Atributos de calidad del mecanismo de navegación	133](#tabla-29.-atributos-de-calidad-del-mecanismo-de-navegación)
+
+[Tabla 30\. Casos de uso del mecanismo de navegación	135](#tabla-30.-casos-de-uso-del-mecanismo-de-navegación)
+
+[Tabla 31\. Propuestas de navegación evaluadas	136](#tabla-31.-propuestas-de-navegación-evaluadas)
+
+[Tabla 32\. Decisiones de diseño del mecanismo de navegación	141](#tabla-32.-decisiones-de-diseño-del-mecanismo-de-navegación)
+
+[Tabla 33\. Cobertura de los casos de uso en el prototipo	144](#tabla-33.-cobertura-de-los-casos-de-uso-en-el-prototipo)
+
+[Tabla 34\. Resultados de las pruebas con usuarios	152](#tabla-34.-resultados-de-las-pruebas-con-usuarios)
+
+[Tabla 35\. Verificación de los atributos del mecanismo de navegación	153](#tabla-35.-verificación-de-los-atributos-del-mecanismo-de-navegación)
 
 1. # **Generalidades** {#generalidades}
 
@@ -545,7 +599,7 @@ Las decisiones arquitectónicas de mayor impacto se documentarán mediante **Arc
 
 **Fase 5 \- Diseño de casos de prueba de la ingesta**
 
-Se define el conjunto de casos de prueba que verificarán la extracción del pipeline sobre el conjunto piloto, incluyendo la anotación de referencia contra la que se compara la extracción y el criterio de aceptación de precisión. Este documento es el medio de verificación de la ingesta y será ejecutado en R4.
+Se define el conjunto de casos de prueba que verificarán la extracción del pipeline sobre el conjunto piloto, incluyendo la anotación de referencia contra la que se compara la extracción, el criterio de aceptación de precisión y los casos que evalúan las relaciones que el pipeline establece. Este documento es el medio de verificación de la ingesta y será ejecutado en R4.
 
 4. #### **Procedimiento para la construcción del módulo de KG y pipeline \- R4** {#procedimiento-para-la-construcción-del-módulo-de-kg-y-pipeline---r4}
 
@@ -561,7 +615,7 @@ Preprocesamiento documental: Los sílabos en formato PDF se pre-procesan con lib
 
 Extracción semántica con LLM: Mediante PydanticAI se orquesta la llamada al LLM seleccionado con prompts estructurados que instruyen al modelo a extraer únicamente entidades y relaciones definidas en la T-Box. La salida del LLM es un grafo parcial en formato JSON estructurado.
 
-Carga en Neo4j: las entidades y relaciones extraídas se traducen a sentencias Cypher para su persistencia. Se implementa una estrategia de merge que reconcilia las entidades extraídas con la capa de referencia: cuando un concepto extraído de un sílabo coincide con un nodo del backbone, se enlaza a este en lugar de crear un duplicado; cuando no existe correspondencia, se crea como instancia institucional enlazada a la unidad de conocimiento que le corresponde. El pipeline no crea ni modifica nodos de la capa de referencia.
+Carga en Neo4j: las entidades y relaciones extraídas se traducen a sentencias Cypher para su persistencia. Se implementa una estrategia de merge que reconcilia las entidades extraídas con la capa de referencia: cuando un tema extraído de un sílabo coincide con un nodo del backbone, se enlaza a este en lugar de crear un duplicado; cuando no existe correspondencia, se crea como instancia institucional enlazada a la unidad de conocimiento que le corresponde. El pipeline no crea ni modifica nodos de la capa de referencia.
 
 **Fase 3 \- Implementación de la API REST**
 
@@ -569,7 +623,11 @@ Se implementará el backend con Python y FastAPI, exponiendo los endpoints neces
 
 **Fase 4 \- Validación del pipeline**
 
-La precisión del pipeline se evaluará ejecutando sobre el conjunto piloto los casos de prueba documentados en R3, que comparan las entidades extraídas con una anotación de referencia adjudicada por el autor. El criterio de aceptación es una precisión mayor o igual al 75 % sobre el conjunto de pruebas. Aplica a las instancias institucionales extraídas; no a la capa de referencia, curada y verificada en R2.
+El pipeline se evaluará ejecutando sobre el conjunto piloto los casos de prueba documentados en R3, en una sola corrida de medición con el código y el prompt congelados. Las pruebas son de tres tipos:
+
+- Extracción de entidades: los temas y conceptos que el pipeline extrae de cada sílabo se comparan con una anotación de referencia, elaborada con una guía de anotación y contrastada con la extracción independiente de dos estudiantes. El criterio de aceptación es una precisión mayor o igual al 75 % sobre el conjunto de pruebas. Aplica a las instancias institucionales extraídas; no a la capa de referencia, curada y verificada en R2. Se reportan, además, la exhaustividad, la precisión en los sílabos que no se usaron para ajustar el prompt y la fusión de nodos entre sílabos.  
+- Relaciones: la precisión de entidades no muestra si el grafo está bien conectado, así que el autor juzga sobre el grafo final, con una guía de evaluación escrita antes del primer juicio, el enlace de cada tema con su unidad de CS2023 y una muestra aleatoria, con semilla fija, de las relaciones de prerrequisito, de especialización y de concepto requerido por un curso. Son medidas descriptivas, sin umbral, que no cambian el criterio de aceptación.  
+- Atributos de calidad: cada atributo de calidad definido en R3 se verifica con la prueba o la medida que le asigna su trazabilidad.
 
 5. #### **Procedimiento para la documentación del mecanismo de navegación \- R5** {#procedimiento-para-la-documentación-del-mecanismo-de-navegación---r5}
 
@@ -636,6 +694,7 @@ Para automatizar la extracción de información desde sílabos y otros documento
 Esta elección resulta más adecuada que una aproximación más generalista con LangChain para el núcleo de poblamiento ontológico. LangChain ofrece una arquitectura de agente preconstruida e integraciones amplias; sin embargo, allí la salida estructurada es una capacidad dentro de un ecosistema más amplio, mientras que en PydanticAI la validación tipada y el control del esquema constituyen el centro del diseño (LangChain, s. f.; Pydantic, 2024/2026). Para un pipeline cuyo foco es la consistencia semántica, la normalización y la trazabilidad, esa diferencia es metodológicamente relevante.
 
 La conversión de los sílabos a texto se realizará con Docling (Livathinos et al., 2025), que convierte el PDF en Markdown y conserva sus encabezados y listas mediante modelos de análisis de diseño. La extracción depende de esa estructura, porque un tema es el encabezado que agrupa ítems. Se prefiere a los extractores de texto plano, que la pierden, y a los servicios en la nube, que envían el documento a un tercero: Docling corre localmente y su licencia es MIT.
+
 Extracción con LLM: Se prioriza el uso de modelos con alta capacidad de razonamiento para identificar relaciones complejas que no siempre son explícitas en el texto del sílabo.
 
 7. #### **Git y Github para versionado y repositorio de código y documentación** {#git-y-github-para-versionado-y-repositorio-de-código-y-documentación}
@@ -1324,7 +1383,7 @@ Terminada la anotación de los 13 sílabos, una pasada de consolidación hizo do
 * Revisó que las reglas de la guía se hubieran aplicado igual en todos los sílabos y registró cada corrección.  
 * Asignó un identificador global a cada noción. Las entradas de distintos sílabos que nombran lo mismo comparten identificador, aunque una sea tema y otra concepto.
 
-Se escalaron 13 decisiones, y la consolidación registró 73 correcciones. Antes de congelar la anotación, una revisión de coherencia completó con su núcleo la etiqueta de 9 entradas que nombraban partes que no se entienden solas (por ejemplo, «estructura» pasó a «estructura de directorios»). Para contrastar la anotación con un criterio humano, dos personas ajenas a su elaboración, con los cursos aprobados, extraen por separado los temas y conceptos de dos sílabos, sin la guía de anotación y sin ver la anotación ni las salidas del pipeline. Los dos sílabos se eligieron antes de la extracción, sobre la anotación congelada, por ser los extremos de la anotación entre los cursos que no son de proyecto, cuyo sílabo describe sobre todo el proyecto y nombra pocos saberes: 1INF37, el de más entradas (89), y 1INF27, el de mayor proporción de aceptables (10 de 39). Juntos sumaban 128 entradas, el 17 % del total. La anotación se congela antes de la comparación, y el contraste se reporta contra esa versión. Terminada la adjudicación, y antes de ingestar los dos sílabos en la medición, se corrige solo lo que la adjudicación clasifica como falla de la anotación: resultó una entrada aceptable de 1INF27, retirada por ser un implícito que no es inequívoco. El autor compara cada extracción con la anotación por noción, sin considerar el tipo ni el nivel, con la normalización de las reglas de emparejamiento. En la extracción del segundo participante, además, clasifica cada discrepancia en una categoría fijada antes de recibir las extracciones; las del primero se reportan sin clasificar, como cota inferior del acuerdo. Se reportan, por participante, la proporción de lo extraído que la anotación registra y la proporción de las nociones de la anotación que el participante extrajo; para el segundo, también el conteo de cada categoría, y, como referencia, el acuerdo entre los dos participantes. Tras la ejecución de los casos de prueba, las mismas extracciones permiten medir la precisión del pipeline en esos dos sílabos sin pasar por la anotación. Las constancias de los participantes y sus extracciones están en el Anexo N; el protocolo completo, en el repositorio del proyecto.
+Se escalaron 13 decisiones, y la consolidación registró 73 correcciones. Antes de congelar la anotación, una revisión de coherencia completó con su núcleo la etiqueta de 9 entradas que nombraban partes que no se entienden solas (por ejemplo, "estructura" pasó a "estructura de directorios"). Para contrastar la anotación con un criterio humano, dos personas ajenas a su elaboración, con los cursos aprobados, extraen por separado los temas y conceptos de dos sílabos, sin la guía de anotación y sin ver la anotación ni las salidas del pipeline. Los dos sílabos se eligieron antes de la extracción, sobre la anotación congelada, por ser los extremos de la anotación entre los cursos que no son de proyecto, cuyo sílabo describe sobre todo el proyecto y nombra pocos saberes: 1INF37, el de más entradas (89), y 1INF27, el de mayor proporción de aceptables (10 de 39). Juntos sumaban 128 entradas, el 17 % del total. La anotación se congela antes de la comparación, y el contraste se reporta contra esa versión. Terminada la adjudicación, y antes de ingestar los dos sílabos en la medición, se corrige solo lo que la adjudicación clasifica como falla de la anotación: resultó una entrada aceptable de 1INF27, retirada por ser un implícito que no es inequívoco. El autor compara cada extracción con la anotación por noción, sin considerar el tipo ni el nivel, con la normalización de las reglas de emparejamiento. En la extracción del segundo participante, además, clasifica cada discrepancia en una categoría fijada antes de recibir las extracciones; las del primero se reportan sin clasificar, como cota inferior del acuerdo. Se reportan, por participante, la proporción de lo extraído que la anotación registra y la proporción de las nociones de la anotación que el participante extrajo; para el segundo, también el conteo de cada categoría, y, como referencia, el acuerdo entre los dos participantes. Tras la ejecución de los casos de prueba, las mismas extracciones permiten medir la precisión del pipeline en esos dos sílabos sin pasar por la anotación. Las constancias de los participantes y sus extracciones están en el Anexo N; el protocolo completo, en el repositorio del proyecto.
 
 3. #### **Casos de prueba** {#casos-de-prueba}
 
@@ -1340,7 +1399,7 @@ Cada sílabo constituye un caso de prueba (identificadores “CP-01” a “CP-1
 
 La precisión que reporta el indicador de R4 es la suma de aciertos de CP-01 a CP-13 dividida entre la suma de ítems de sus lotes aceptados. El conjunto de casos se aprueba si esa precisión es mayor o igual a 75 %, el umbral del indicador de R4 (Tabla 3).
 
-De forma complementaria, y sin cambiar el indicador, se reportan la exhaustividad y la F1, por caso y en total. La exhaustividad es la proporción de nociones que el sílabo nombra en al menos una entrada obligatoria y que el lote recupera; una noción cuenta como recuperada si se consumió alguna de sus entradas. Las entradas aceptables no se exigen, porque la guía las marca como opcionales: suman como acierto, pero no penalizan si faltan. Como la precisión, la exhaustividad depende de la coincidencia de nombres y es una cota inferior.
+De forma complementaria, y sin cambiar el indicador, se reportan la exhaustividad y la F1, por caso y en total. La exhaustividad es la proporción de nociones que el sílabo nombra en al menos una entrada obligatoria y que el lote recupera; una noción cuenta como recuperada si se consumió alguna de sus entradas. Las entradas aceptables no se exigen, porque la guía las marca como opcionales: suman como acierto, pero no penalizan si faltan. Como la precisión, la exhaustividad depende de la coincidencia de nombres, con los sesgos que se describen al final de las reglas de emparejamiento.
 
 Un caso adicional, CP-14, se evalúa sobre el grafo final, una vez ejecutado CP-13, y mide la fusión entre sílabos.
 
@@ -1383,7 +1442,7 @@ El caso con mayor proporción de aceptables es CP-13: 15 de sus 32 entradas. Su 
 * Aceptables: Una entrada aceptable extraída cuenta como acierto.  
 * Tipo: El tipo no interviene en el emparejamiento. La concordancia de tipo, es decir, el porcentaje de aciertos cuyo tipo coincide con el de la entrada consumida, se reporta aparte.
 
-Como el emparejamiento exige coincidencia de nombres, una extracción correcta con una redacción que la anotación no registra cuenta como falso positivo. La precisión obtenida es, por tanto, una cota inferior.
+El emparejamiento por nombres puede sesgar la medida en las dos direcciones. Hacia abajo, un ítem correcto con una redacción que la anotación no registra, ni como etiqueta ni como nombre alternativo, cuenta como falso positivo: ocurre con las paráfrasis y con los ítems que dividen o agrupan el contenido de otra forma que la anotación. Hacia arriba, un nombre alternativo demasiado general puede emparejar con un ítem que no corresponde a la noción. La anotación también puede errar en los dos sentidos: una omisión convierte en falso positivo un ítem correcto, y una entrada que el sílabo no sustenta convierte en acierto el ítem que la reproduce. La precisión y la exhaustividad obtenidas no son, por tanto, cotas de las reales, sino medidas frente a esta anotación y estas reglas. Por eso, al reportarlas, se cuantifica cada sesgo que pueda identificarse, y el contraste con los participantes examina las omisiones y las inclusiones de la anotación.
 
 5. #### **Medidas de fusión** {#medidas-de-fusión}
 
@@ -1442,47 +1501,214 @@ La documentación fue revisada y aprobada por el experto en Ingeniería del Cono
 
 El indicador comprometido para R3, la validación con respuesta positiva del experto en Ingeniería de Conocimiento, se cumple.
 
-3. ## **Discusión** {#discusión-1}
+3. ## **Módulo de gestión del grafo de conocimiento implementado** {#módulo-de-gestión-del-grafo-de-conocimiento-implementado}
 
-Esta discusión cubre R3; la de R4 se incorporará con su implementación.
+Este resultado se obtuvo con las cuatro fases del procedimiento descrito en el capítulo 1: la preparación del entorno de datos (fase 1), el pipeline de ingesta (fase 2), la API (fase 3\) y la validación del pipeline (fase 4), que se reporta en la sección de verificación. El módulo implementa la arquitectura de R3: sus componentes, almacenes y caminos de escritura son los de las Figuras 7 a 11, y sus reglas, las de las Tablas 18 a 21\. Está escrito en Python, con el driver oficial de Neo4j 5.28, Docling 2.135, PydanticAI 2.54 y FastAPI 0.142. Lo acompañan 542 pruebas automatizadas, 124 de ellas contra una base Neo4j, que escriben solo dentro de transacciones que se revierten. El código fuente está en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/src](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/src).
+
+1. ### **Preparación del entorno de datos** {#preparación-del-entorno-de-datos}
+
+La base de grafos es Neo4j 5.26.28 LTS, en su edición Community, tanto en desarrollo como en el despliegue (ADR-001 y ADR-005). Lo que el grafo admite no se escribe en la base, sino en el esquema del grafo, un módulo de Python que leen el extractor, el validador, las escrituras y la auditoría (ADR-008). De ese esquema salen las ocho restricciones de unicidad de clave, una por etiqueta, que impiden RI-01 (Tabla 21), y un índice de texto completo sobre los nombres, que usa la búsqueda de la navegación.
+
+La carga de la capa de referencia proyecta los dos archivos de R1 y R2 con código propio (ADR-002). Antes de tocar la base, comprueba que cada constructo de esos archivos tenga su fila en la correspondencia del Anexo K, proyecta la capa de referencia y valida en memoria el lote resultante contra las mismas reglas que aplica la ingesta. Solo entonces vacía la base, crea las restricciones y el índice, y escribe en una sola transacción 180 nodos y 341 aristas: las 17 áreas y las 162 unidades de conocimiento de CS2023, el recurso que representa al estándar, 162 aristas de partonomía y 179 de procedencia. La carga termina con una auditoría de las 15 reglas. En la corrida de medición tomó dos segundos, y su auditoría no encontró violaciones.
+
+El conjunto piloto son los 13 sílabos del semestre 2026-2 de la Tabla 22, que se ingestan en el orden de esa tabla.
+
+2. ### **Pipeline de ingesta** {#pipeline-de-ingesta}
+
+El pipeline sigue el flujo de la Figura 11\. El operador sube el PDF de un sílabo, con su tipo y con el código y el nombre de su curso; la API registra la corrida y lanza el worker, que procesa las corridas pendientes una tras otra (ADR-007). Cada corrida pasa por las tres etapas que el capítulo 1 prevé.
+
+**Preprocesamiento documental:** Docling convierte el PDF en Markdown y conserva sus encabezados y listas, de los que depende la distinción entre tema y concepto. El texto completo del sílabo va al modelo en una sola llamada, sin dividirlo en fragmentos.
+
+**Extracción semántica:** PydanticAI pide al modelo una salida tipada, en modo estricto contra el esquema de salida (ADR-015). La petición reúne tres partes: las instrucciones de extracción, que forman parte del código; el vocabulario del grafo, que es la instantánea de todos los nodos que existen al empezar la corrida, bajo referencias cortas (ADR-011); y el texto del sílabo. Las unidades de CS2023 llegan al modelo con su nombre y el de su área. La salida contiene los temas del sílabo con sus conceptos, la unidad a la que pertenece cada tema nuevo, los prerrequisitos y las especializaciones entre conceptos y los conceptos que el curso requiere. Cada mención trae además la cita del sílabo que la sustenta, y cada relación, una justificación breve. Ninguna de las dos va al grafo: se guardan con la salida del modelo en el almacén operacional, para revisar después cada corrida.
+
+**Enlace y carga en Neo4j:** El enlace es código determinista. Un elemento que el modelo identifica como existente se resuelve a la clave de ese nodo. Uno que el modelo da por nuevo se compara, por su nombre normalizado y dentro de su clase, con los nodos de la instantánea: si coincide, se reutiliza el nodo existente; si no, recibe una clave nueva. Así, un tema o un concepto que ya creó un sílabo anterior se enlaza en lugar de duplicarse. Todo tema nuevo se une a una unidad de CS2023, y todo concepto, a su tema. Esto precisa lo que anticipa el capítulo 1, donde un concepto que coincide con un nodo del backbone se enlaza a él: como la capa de referencia llega solo hasta las unidades de conocimiento, el enlace con ella pasa siempre por la unidad del tema, y la reutilización se da entre nodos institucionales. El validador comprueba el lote contra la instantánea, y el repositorio lo escribe con sentencias Cypher de forma fija, que fijan la capa y la procedencia; ninguna arista sale de un nodo de la capa de referencia. Cerrada la escritura, el lote se guarda en el almacén de hechos, y la auditoría de las 15 reglas cierra la corrida.
+
+Durante el desarrollo apareció un caso que la arquitectura no anticipaba: el modelo nombraba aparte dos menciones que el enlace resolvía al mismo nodo, como “Hilos” y un “Hilo” ya existente, y la relación entre ellas se convertía en una arista de un nodo hacia sí mismo, que RM-04 rechaza como ciclo. Como esa relación no afirma nada, el enlace dejó de escribirla.
+
+**Ajuste del prompt**: Las instrucciones de extracción se ajustaron como establece la sección 5.2.5.1: contra la anotación ya congelada, con los 11 sílabos de ajuste ingestados por separado sobre la capa de referencia sola, y sin ejecutar nunca 1INF27 ni 1INF37. Hubo cuatro versiones. Los cambios de estructura se probaron con un modelo de desarrollo, Sonnet, de Anthropic, servido localmente sin costo; con él, la precisión pasó de 78,3 % en la primera versión a 85,0 % en la tercera, y la exhaustividad, de 69,3 % a 86,2 %. Las reglas que se agregaron salen de la guía de anotación, como partir un ítem compuesto repitiendo lo que comparte o no tomar como saber la organización del proyecto del curso. Sus ejemplos se tomaron de dominios ajenos a los 13 sílabos. El ajuste fino se hizo con el modelo de la medición, “gpt-6.1-sol” de OpenAI: con la tercera versión obtuvo 81,4 % de precisión, y con la cuarta, que corrige tres patrones de error de ese modelo, 83,8 %. Se fijó de antemano que la cuarta versión se quedaría solo si no bajaba la precisión. Cada versión se midió con una sola corrida por sílabo, y entre dos versiones un mismo sílabo varió hasta diez puntos sin que un cambio del prompt lo explicara. Antes de congelar el código, una ingesta en cadena de los 11 sílabos, en el orden de la medición y con el modelo final, aceptó los 11 al primer intento, con auditorías limpias y 81,8 % de precisión.
+
+El código se congeló en el tag “codigo-congelado-2026-11-16”, con la cuarta versión del prompt y el esfuerzo de razonamiento en \`medium\`. Ese valor se fijó sin compararlo con otros: ADR-015 solo exige que quede escrito en la configuración. La temperatura no se envía, porque el modelo no la admite con razonamiento activo, y el proveedor no documenta una semilla.
+
+3. ### **Interfaz programática** {#interfaz-programática}
+
+La API, construida con FastAPI, expone el módulo sin que su cliente conozca Cypher. Se ejecuta en un solo proceso y nunca escribe en el grafo (ADR-007). Sus rutas se dividen en tres grupos, que presenta la Tabla 24\.
+
+###### **Tabla 24\. Rutas de la API del módulo** {#tabla-24.-rutas-de-la-api-del-módulo}
+
+| Grupo | Ruta | Qué hace |
+| :---- | :---- | :---- |
+| Operación, con token | POST /api/runs | Recibe un documento con su tipo y el código y el nombre de su curso, registra la corrida y lanza el worker |
+|  | GET /api/runs, GET /api/runs/{id} | Lista las corridas; da una corrida con el reporte de auditoría que la cerró |
+|  | GET /api/runs/{id}/discards | Da los hechos descartados de una corrida rechazada, con su lote o la salida del modelo |
+|  | GET /api/audit-reports/latest | Da el último reporte de auditoría y si la ingesta puede continuar |
+|  | GET /api/mode | Indica si el sistema corre en modo ensayo |
+| Navegación, pública | GET /api/search | Busca elementos y cursos por su nombre o código |
+|  | GET /api/overview | Da las áreas de CS2023 con sus conteos y los cursos con sílabo |
+|  | GET /api/nodes | Da un nodo con sus vecinos |
+|  | GET /api/concepts/prerequisites | Da los prerrequisitos de un concepto, con su cierre transitivo |
+|  | GET /api/courses/prerequisites | Da lo que un curso enseña y requiere, y los cursos que enseñan lo requerido |
+|  | GET /api/elements/location | Da de qué es parte un elemento, hasta su área, y qué lo compone |
+|  | GET /api/elements/resources | Da los recursos de un elemento o un curso, agregados sobre sus partes |
+|  | GET /api/learning-path | Da qué aprender antes de un elemento o un curso, agrupado por tema, curso o área |
+|  | GET /api/concepts/specializations | Da de qué es tipo un concepto y qué es tipo de él |
+| Documentos, pública | GET /resources/{clave} | Sirve el PDF de un recurso, en la dirección que registra su localizador |
+
+Las rutas de navegación responden siempre con la misma forma: un subgrafo de nodos y aristas, cada uno con su procedencia. Las seis últimas responden las preguntas de competencia de la ontología, con las consultas derivadas que R3 dejó fuera del almacenamiento (DD-07); las rutas de inicio y de modo ensayo se agregaron durante R6. La especificación OpenAPI que genera FastAPI documenta cada ruta con sus parámetros y el esquema de su respuesta, y la guía de operación del repositorio añade ejemplos de uso. Ambas están en https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs y en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba/resultados-r4](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba/resultados-r4). 
+
+4. ### **Verificación de R4** {#verificación-de-r4}
+
+   1. #### **Verificación y mediciones** {#verificación-y-mediciones-2}
+
+R4 se comprometió a un módulo implementado que incluye el pipeline de ingesta automatizada de sílabos y una API documentada para la consulta y la gestión del grafo. Su medio de verificación es el código fuente, la documentación técnica de la API y el reporte de extracción sobre el conjunto de pruebas (Tabla 3). El código y la API se describen en las secciones anteriores. El reporte se obtuvo con la fase 4 del procedimiento del capítulo 1, que ejecuta los casos de prueba de la sección 5.2.5, y se completa con la verificación de los atributos de calidad prevista en la Tabla 23\. Los reportes del evaluador, los contrastes, los juicios de las relaciones y las mediciones de los atributos están en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba/resultados-r4](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba/resultados-r4).
+
+**Corrida de medición:** Se ejecutó el 16 de noviembre de 2026, en una sola sesión, con el código congelado y la anotación corregida (744 entradas). Se cargó la capa de referencia y se ingestaron los 13 sílabos en el orden de la Tabla 22\. El almacén operacional registró para cada corrida el nombre que devolvió el proveedor, “gpt-6.1-sol”, los parámetros de generación y la versión del prompt. Los 13 sílabos se aceptaron al primer intento, sin usar el reintento interno y sin hechos descartados, de modo que no hubo intentos rechazados que medir aparte. Cada ingesta tomó entre 53 s y 2 min 3 s. La entrada al modelo creció con el vocabulario del grafo: de 8 968 tokens en el primer sílabo a 25 733 en el último, con un total de 237 457 tokens de entrada y 70 068 de salida. El grafo final tiene 818 nodos y 2 898 aristas; su capa institucional suma 638 nodos, entre ellos 78 temas y 533 conceptos.
+
+Hubo un incidente: En el sexto sílabo, 1INF30, el proceso del worker terminó por un fallo de una librería nativa mientras se leía el PDF, antes de llamar al modelo y antes de escribir en el grafo. Esa corrida quedó registrada como interrumpida, y la cadena se reanudó desde 1INF30, sobre el mismo grafo, sin repetir los cinco sílabos anteriores y sin haber calculado ninguna medida. Como no produjo contenido que juzgar, se trató como una corrida fallida, que no cuenta como intento (sección 5.2.5.1). No se identificó la causa exacta del fallo.
+
+**Casos de prueba de extracción:** La Tabla 25 presenta CP-01 a CP-13 con las reglas de emparejamiento de la sección 5.2.5.4, y los totales de los 13 casos, de los 11 sílabos del ajuste y de los dos retenidos.
+
+###### **Tabla 25\. Resultados de los casos de prueba de extracción** {#tabla-25.-resultados-de-los-casos-de-prueba-de-extracción}
+
+| Caso | Sílabo | Ítems | Aciertos | Falsos positivos | Precisión | Exhaustividad | F1 |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| CP-01 | 1INF25 | 74 | 61 | 13 | 82,4 % | 80,3 % | 81,3 % |
+| CP-02\* | 1INF27 | 37 | 25 | 12 | 67,6 % | 86,2 % | 75,8 % |
+| CP-03 | 1INF33 | 70 | 54 | 16 | 77,1 % | 87,1 % | 81,8 % |
+| CP-04 | 1INF49 | 48 | 37 | 11 | 77,1 % | 82,2 % | 79,6 % |
+| CP-05 | 1INF29 | 69 | 60 | 9 | 87,0 % | 85,7 % | 86,3 % |
+| CP-06 | 1INF30 | 67 | 63 | 4 | 94,0 % | 88,7 % | 91,3 % |
+| CP-07 | 1INF31 | 41 | 38 | 3 | 92,7 % | 97,4 % | 95,0 % |
+| CP-08 | 1INF32 | 20 | 17 | 3 | 85,0 % | 94,4 % | 89,5 % |
+| CP-09 | 1INF24 | 76 | 62 | 14 | 81,6 % | 87,3 % | 84,4 % |
+| CP-10 | 1INF50 | 19 | 17 | 2 | 89,5 % | 94,4 % | 91,9 % |
+| CP-11\* | 1INF37 | 81 | 68 | 13 | 84,0 % | 85,0 % | 84,5 % |
+| CP-12 | 1INF54 | 23 | 19 | 4 | 82,6 % | 64,3 % | 72,3 % |
+| CP-13 | 1INF47 | 15 | 12 | 3 | 80,0 % | 64,7 % | 71,5 % |
+| Total, 13 casos |  | 640 | 533 | 107 | 83,3 % | 85,1 % | 84,2 % |
+| Sílabos del ajuste, 11 |  | 522 | 440 | 82 | 84,3 % | 85,0 % | 84,7 % |
+| Sílabos retenidos, 2 |  | 118 | 93 | 25 | 78,8 % | 85,3 % | 81,9 % |
+
+\*Sílabo retenido: ningún paso del ajuste del prompt lo usó.
+
+La precisión sobre los 13 casos es de 83,3 %, con una exhaustividad de 85,1 %. El 97,0 % de los aciertos tiene el tipo de la entrada que consumió. Por caso, la precisión va de 67,6 % a 94,0 %, y solo CP-02 queda bajo 75 %. La exhaustividad más baja es la de CP-12 y CP-13, los dos cursos de proyecto, cuyos sílabos nombran pocos saberes en los contenidos.
+
+Los dos sílabos retenidos dan 78,8 %, cinco puntos y medio menos que los 11 del ajuste, y el caso más bajo de los 13 es un retenido, CP-02. En ese caso, 8 de sus 12 falsos positivos salen de una misma frase del sílabo, «Estrategias de búsqueda y recorrido sobre listas, árboles, tablas y grafos». El pipeline la partió en ocho combinaciones, como «Estrategias de búsqueda sobre grafos»; la anotación registra esas combinaciones como entradas aceptables, pero con otra redacción, como “Búsqueda en grafos”, y el emparejamiento por nombres no las reconoce. Sin esas ocho, la precisión de CP-02 sería de 86,2 %. El otro retenido, CP-11, da 84,0 %, igual que el promedio de los sílabos del ajuste.
+
+Con la definición de ítem anterior al cambio de la sección 5.2.5.1, que contaba también los conceptos que el lote solo alcanza por una relación, la precisión total sería de 77,9 %. Son 48 conceptos de ese tipo en los 13 lotes, y 3 de ellos habrían acertado. El cambio se decidió antes de ejecutar los sílabos retenidos y la corrida de medición, y el asesor lo aprobó después.
+
+**Fusión entre sílabos (CP-14):** Sobre el grafo final, 513 nodos consumieron al menos una entrada de la anotación. Hay una noción duplicada, en dos nodos de concepto: “Prototipado (UI Design)” y “Prototipado de solución”. Hay nueve nociones partidas, que quedaron como tema en un nodo y como concepto en otro, como el tema “FUNCIONES” y el concepto “Funciones”, y ninguna fusión errónea. Ninguno de estos casos involucra un nodo creado por un sílabo retenido.
+
+**Contraste con las extracciones de los participantes:** Las extracciones de los dos participantes se compararon con la anotación congelada, por noción, como fija la sección 5.2.5.2, y con los lotes del pipeline para los mismos dos sílabos. La Tabla 26 presenta las medidas.
+
+###### **Tabla 26\. Contraste de la anotación y del pipeline con las extracciones de los participantes** {#tabla-26.-contraste-de-la-anotación-y-del-pipeline-con-las-extracciones-de-los-participantes}
+
+| Medida | Participante 1 | Participante 2 |
+| :---- | :---- | :---- |
+| Filas extraídas de 1INF27 y 1INF37 | 88 | 58 |
+| Filas que la anotación registra, por nombre | 60 (68,2 %) | 46 (79,3 %) |
+| Filas que la anotación registra, tras la adjudicación | \- | 53 (91,4 %) |
+| Nociones de la anotación que el participante extrajo, de 124 | 61 (49,2 %) | 47 (37,9 %); 54 (43,5 %) tras la adjudicación |
+| Nociones obligatorias que el participante extrajo, de 109 | 59 (54,1 %) | 47 (43,1 %) |
+| Ítems del pipeline que el participante registra, por nombre, de 118 | 46 (39,0 %) | 38 (32,2 %) |
+
+Los participantes extrajeron menos de la mitad de las nociones que registra la anotación, y la mayor parte de lo que extrajeron está en ella. En el segundo participante, la adjudicación clasificó las discrepancias así. De sus 12 filas sin correspondencia por nombre, 7 nombran una noción de la anotación con otra redacción, 4 responden a un criterio distinto del de la guía y 1 no la sustenta el sílabo. De las 77 nociones de la anotación sin fila suya, 7 ya estaban emparejadas, 53 las nombra el sílabo y la guía las incluye, 16 responden a un criterio distinto y 1 es una inclusión indebida de la anotación: la entrada de 1INF27 que se retiró antes de la medición. La adjudicación no encontró omisiones de la anotación. En el primer participante, que no extrajo de la bibliografía de 1INF37 por una indicación dada en la sesión, la proporción de sus filas de ese sílabo que la anotación registra es de 45 de 64 (70,3 %), y baja a 45 de 76 (59,2 %) si cada una de las 12 referencias de la bibliografía hubiera dado una fila sin correspondencia. Entre los dos participantes coinciden 29 nombres: la mitad de los nombres del segundo (29 de 58\) y un tercio de los del primero (29 de 88).
+
+La última fila mide, sin pasar por la anotación, cuánto de lo que el pipeline extrajo de los dos sílabos retenidos registra también el participante. Es una cifra automática, por nombre exacto: los ítems del pipeline que no coinciden con ninguna fila no se adjudicaron, y una adjudicación solo podría sumar coincidencias, así que es una cota inferior de esa coincidencia. No es una precisión, porque el participante extrajo menos de la mitad de las nociones.
+
+**Casos de prueba de relaciones (CP-15 y CP-16):** El autor juzgó las relaciones del grafo final con la guía de evaluación del repositorio, escrita y versionada antes del primer juicio. Para CP-15 se dispuso, junto a cada tema, la lista de sus conceptos y los tópicos de la unidad asignada, copiados del documento de CS2023 (Kumar et al., 2024). La muestra de CP-16 se obtuvo con una semilla fija, sobre las aristas ordenadas por la clave de sus extremos. La Tabla 27 presenta el resultado.
+
+###### **Tabla 27\. Resultados de los casos de prueba de relaciones** {#tabla-27.-resultados-de-los-casos-de-prueba-de-relaciones}
+
+| Caso | Relación | En el grafo | Juzgadas | Correctas | Aceptables | Incorrectas |
+| :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+| CP-15 | Tema a unidad de CS2023 | 78 | 78 | 52 (66,7 %) | 15 (19,2 %) | 11 (14,1 %) |
+| CP-16 | Prerrequisito | 499 | 30 | 23 (76,7 %) | \- | 7 (23,3 %) |
+| CP-16 | Especialización | 94 | 30 | 30 (100 %) | \- | 0 |
+| CP-16 | Concepto requerido por un curso | 38 | 30 | 19 (63,3 %) | \- | 11 (36,7 %) |
+
+En CP-15, 67 de los 78 temas (85,9 %) quedaron en una unidad que cubre su contenido por completo o en parte. Los errores se concentran en un área: las seis aristas hacia la unidad Software Development Practices son incorrectas, y siete de las once incorrectas son temas de 1INF37, un sílabo retenido, sobre proceso y gestión del software (estimación, ciclo de vida, calidad de proceso, desarrollo ágil). Los tópicos de esa unidad tratan pruebas básicas, entornos de desarrollo, legibilidad y especificación de módulos, y para tres de los once temas no se identificó en CS2023 una unidad que los cubra. Las aceptables son, sobre todo, temas que una unidad cubre en parte y otra con más precisión.
+
+En CP-16, las 30 especializaciones de la muestra son correctas. Los siete prerrequisitos incorrectos unen conceptos relacionados en los que comprender uno no exige conocer el otro, como “Bytecode” y la compilación desde la línea de comandos; ninguno tiene la dirección invertida. El concepto requerido es la relación más débil: en ocho de las once incorrectas, el curso enseña el concepto con otras palabras o dentro de otro tema, y en las otras tres no lo necesita.
+
+**Atributos de calidad:** La Tabla 28 cierra la verificación con el resultado de cada atributo, frente a la verificación que la Tabla 23 previó para R4.
+
+###### **Tabla 28\. Verificación de los atributos de calidad del módulo** {#tabla-28.-verificación-de-los-atributos-de-calidad-del-módulo}
+
+| Atributo | Verificación prevista | Resultado |
+| :---- | :---- | :---- |
+| AC-01 | Auditoría sin violaciones al cierre de la corrida de medición; hechos rechazados por documento y por regla | Las 14 auditorías de la corrida (la carga y las 13 ingestas) dan cero violaciones en las 15 reglas. Ningún hecho rechazado en los 13 documentos |
+| AC-02 | Una prueba negativa por regla; el reporte cubre las 15 reglas en una sola ejecución | 32 violaciones inyectadas, al menos una por regla, y la auditoría detecta cada una. Cada reporte de la corrida cubre las 15 reglas en una sola ejecución |
+| AC-03 | RM-03 sin violaciones tras la corrida de medición; en R6, un caso abre el documento del que procede una afirmación | RM-03 sin violaciones en las 13 ingestas. En R6, CA-10 abrió el sílabo que afirma una relación en las tres sesiones con usuarios (sección 6.5.1) |
+| AC-04 | Se corrige una etiqueta de la capa de referencia, se carga y se reaplica | Se cambió la etiqueta en español de una unidad de CS2023. La carga y la reaplicación tomaron 12 s, sin llamadas al modelo de lenguaje. La capa institucional quedó idéntica: 638 nodos y 2 557 aristas, con sus propiedades. Ambas auditorías, sin violaciones |
+| AC-05 | Los cinco patrones desde todos sus nodos de partida, diez ejecuciones tras el calentamiento; mediana y percentil 95 bajo un segundo | Con el grafo final, la mediana de cada patrón va de 0 a 1 ms y el percentil 95, de 1 a 2 ms; la ejecución más lenta tomó 16 ms. La primera ejecución, con la caché de planes vacía, tomó entre 100 y 187 ms |
+
+AC-01, AC-02 y AC-03 se verificaron sobre la corrida de medición. AC-04 y AC-05 se verificaron el 22 de noviembre de 2026, sobre el mismo grafo reconstruido en un despliegue local con la configuración de Docker Compose del prototipo: Neo4j 5.26.28 Community, seis procesadores y 15,6 GiB de memoria. No se midieron en la instancia del servidor. Para AC-04, la etiqueta se corrigió en una copia del archivo de la capa de referencia, y al terminar se restauró el grafo original. Para AC-05, el patrón más exigente, el prerrequisito elevado a tema, curso o área, se ejecutó 24 090 veces desde 803 nodos de partida. Ninguna llamada al modelo de lenguaje es posible en los procesos de construcción, porque estos no leen la configuración del proveedor; además, el almacén operacional tenía las mismas 14 corridas y los mismos tokens antes y después.
+
+2. #### **Indicador** {#indicador-1}
+
+El indicador comprometido para R4 es la verificación de una precisión de entidades extraídas mayor o igual a 75 %, mediante una anotación de referencia adjudicada por el autor. La precisión, calculada como la suma de aciertos de CP-01 a CP-13 dividida entre la suma de ítems de sus lotes aceptados, es de 83,3 % (533 de 640). Por lo tanto, el indicador se cumple. Los dos sílabos retenidos, que ningún paso del ajuste usó, dan 78,8 %, también sobre el umbral.
+
+4. ## **Discusión** {#discusión-1}
+
+Esta discusión cubre los resultados obtenidos en este capítulo (R3 y R4).
 
 1. ### **Resumen de los resultados** {#resumen-de-los-resultados}
 
-R3 especifica el módulo del grafo antes de implementarlo. Cinco atributos de calidad fijan lo que el módulo debe garantizar; los tres de prioridad alta exigen que el grafo cumpla lo que la ontología declara, que eso pueda demostrarse sin inspeccionar el código y que toda afirmación institucional remita al documento del que se derivó. El modelo de datos traduce la ontología a un grafo de propiedades con ocho tipos de arista y conserva como diez reglas de integridad lo que el razonador comprobaba; otras cinco reglas provienen de decisiones del propio módulo. La arquitectura se documenta en los tres niveles del modelo C4, junto con el flujo de la ingesta y el despliegue, y se sustenta en quince ADRs. Por último, dieciséis casos de prueba fijan cómo se medirá la ingesta: trece comparan la extracción con una anotación de referencia de 744 entradas sobre los 13 sílabos del piloto, que corresponden a 663 nociones distintas; uno mide la fusión entre sílabos y dos, la corrección de las relaciones. La documentación fue aprobada por el experto en Ingeniería del Conocimiento.
+R3 especifica el módulo del grafo antes de implementarlo. Cinco atributos de calidad fijan lo que el módulo debe garantizar; los tres de prioridad alta exigen que el grafo cumpla lo que la ontología declara, que eso pueda demostrarse sin inspeccionar el código y que toda afirmación institucional remita al documento del que se derivó. El modelo de datos traduce la ontología a un grafo de propiedades con ocho tipos de arista y conserva como diez reglas de integridad lo que el razonador comprobaba; otras cinco reglas provienen de decisiones del propio módulo. La arquitectura se documenta en los tres niveles del modelo C4, junto con el flujo de la ingesta y el despliegue, y se sustenta en quince ADRs. Por último, dieciséis casos de prueba fijan cómo se mide la ingesta: trece comparan la extracción con una anotación de referencia de 744 entradas sobre los 13 sílabos del piloto, que corresponden a 663 nociones distintas; uno mide la fusión entre sílabos y dos, la corrección de las relaciones. La documentación fue aprobada por el experto en Ingeniería del Conocimiento.
+
+R4 lleva esa especificación a un módulo en funcionamiento. A partir de los 13 sílabos del piloto, el pipeline pobló sin intervención manual la capa institucional del grafo, con temas, conceptos y relaciones de prerrequisito y de especialización enlazados a CS2023, y la API la pone a disposición de la navegación. En la corrida de medición, todos los sílabos se aceptaron al primer intento y ninguna auditoría encontró violaciones. La extracción alcanzó una precisión de 83,3 % sobre el umbral comprometido de 75 %, y de 78,8 % en los dos sílabos que no se usaron para ajustar el prompt. La mayoría de las relaciones juzgadas son correctas, aunque con diferencias marcadas entre tipos. Los cinco atributos de calidad tienen ahora un valor medido.
 
 2. ### **Interpretación de los resultados** {#interpretación-de-los-resultados}
 
-El capítulo 1 sitúa la diferencia entre el sistema propuesto y la IA generativa de propósito general en la distinción entre una respuesta plausible y una respuesta trazable. R3 traslada esa distinción al diseño: lo que el sistema presente debe cumplir la ontología y remitir a un documento que puede abrirse. Lo que estos resultados significan es que ninguna de esas dos propiedades depende del modelo de lenguaje que puebla el grafo. El modelo propone hechos, pero no escribe; lo que se escribe pasa antes por las reglas de las Tablas 18 y 19, y la procedencia la fija la escritura, no el modelo. En R1 y R2, la conformidad con la ontología la comprobaba HermiT (capítulo 4). Sin razonador en ejecución, R3 la conserva como reglas que se impiden al escribir y se comprueban en la auditoría, de modo que lo verificado en R1 y R2 no se pierde cuando el grafo empieza a crecer de forma automática.
+El capítulo 1 sitúa la diferencia entre el sistema propuesto y la IA generativa de propósito general en la distinción entre una respuesta plausible y una respuesta trazable. R3 traslada esa distinción al diseño: lo que el sistema presente debe cumplir la ontología y remitir a un documento que puede abrirse. Lo que estos resultados significan es que ninguna de esas dos propiedades depende del modelo de lenguaje que puebla el grafo. El modelo propone hechos, pero no escribe; lo que se escribe pasa antes por las reglas de las Tablas 18 y 19, y la procedencia la fija la escritura, no el modelo. En R1 y R2, la conformidad con la ontología la comprobaba HermiT (capítulo 4). Sin razonador en ejecución, R3 la conserva como reglas que se impiden al escribir y se comprueban en la auditoría, de modo que lo verificado en R1 y R2 no se pierde cuando el grafo crece de forma automática. R4 lo confirma en la práctica: un grafo poblado por un modelo de lenguaje, sin revisión manual de sus hechos, cerró las 14 auditorías de la medición sin violaciones (Tabla 28).
 
 Conviene precisar qué garantiza este diseño y qué no. Las reglas aseguran que un hecho tenga una forma que la ontología admite, no que sea verdadero: un concepto que el sílabo no menciona puede cumplirlas todas. Por eso la medida del pipeline no es la conformidad con la ontología, que el diseño asegura de antemano, sino la precisión y la exhaustividad frente a la anotación de referencia y la corrección de las relaciones, reportadas junto con los hechos descartados. Esa separación entre lo que se garantiza por construcción y lo que se mide es la que da sentido al indicador de R4.
 
-La anotación de referencia ofrece, además, una primera lectura del corpus. Solo 47 de las 663 nociones aparecen en más de un sílabo: al nivel en que los sílabos nombran su contenido, la superposición entre cursos es escasa, y la fusión entre sílabos que mide el caso de prueba 14 depende de un conjunto pequeño de nodos. A su vez, las 28 nociones anotadas como tema en un sílabo y como concepto en otro muestran que esa distinción depende de cómo cada sílabo organiza su contenido y no de la noción misma, lo que justifica que el tipo no intervenga en el emparejamiento.
+La precisión de 83,3 % significa que cinco de cada seis temas y conceptos que el grafo atribuye a un sílabo los nombra ese sílabo, con la granularidad que fija la anotación. Debe leerse contra dos referentes. El primero es el umbral, que se fijó por debajo de lo que reportan los trabajos más cercanos (nota 3): la medición lo supera por ocho puntos, y también lo supera la definición de ítem anterior al cambio (77,9 %), de modo que ese cambio no decide el veredicto. El segundo es la regla de emparejamiento, que puede sesgar la cifra en las dos direcciones (sección 5.2.5.4). El sesgo a la baja se pudo medir donde más pesa: en CP-02, ocho de los doce falsos positivos son combinaciones que la anotación acepta con otras palabras. El sesgo al alza, el de los nombres alternativos demasiado generales y el de las entradas que el sílabo no sustenta, no se midió en los 13 sílabos; en los dos del contraste, la adjudicación encontró una sola entrada indebida, que se retiró antes de la medición. Por eso la cifra no es una cota de la fidelidad del grafo a sus documentos. Lo que sí puede afirmarse es que el veredicto soporta un error considerable de ese tipo: aun sin descontar el sesgo a la baja, la precisión quedaría bajo el umbral solo si 54 de los 533 aciertos (10,1 %) fueran espurios.
+
+La diferencia entre los sílabos retenidos y los del ajuste (78,8 % frente a 84,3 %) es el optimismo que la sección 5.2.5.1 anticipaba, y su dirección es la esperada. Su tamaño, en cambio, no puede atribuirse solo al ajuste. La diferencia se concentra en un solo sílabo, porque el otro retenido, CP-11, iguala el promedio del ajuste, y en ese sílabo se debe sobre todo a una frase. A ello se suma que el modelo no es determinista: no admite temperatura con razonamiento activo ni semilla, y durante el ajuste un mismo sílabo varió hasta diez puntos entre corridas sin un cambio del prompt que lo explicara. Con una sola corrida por sílabo, el sobreajuste del prompt y la variación entre corridas no pueden separarse. Lo que sí permiten afirmar los retenidos es que el prompt no está atado a los sílabos con que se ajustó: con sílabos que no vio, el pipeline siguió por encima del umbral.
+
+En las relaciones, los resultados separan lo que el modelo infiere bien de lo que no. La especialización, que se lee en la propia estructura del sílabo, fue correcta en toda la muestra. El prerrequisito, que es la relación central de la ontología, fue correcto en 23 de 30 casos, y sus errores son dependencias que no son tales entre conceptos relacionados. Con ello se ejercita por primera vez la capacidad que el capítulo 4 dejó pendiente, inferir dependencias conceptuales, ahora con 499 aristas de prerrequisito en el grafo. El concepto requerido es la relación más débil, porque el modelo marca como requerido lo que el curso enseña con otras palabras. Esto importa para la navegación, ya que «Cursos que conviene llevar antes», en R6, parte de esas aristas. El enlace con CS2023 ubicó el 85,9 % de los temas en una unidad que cubre su contenido, y los errores se concentran en los temas de proceso y gestión del software. Dos causas se combinan allí. Las unidades llegan al modelo solo con su nombre, de modo que una unidad llamada Software Development Practices atrae temas de proceso que sus tópicos no cubren. Además, CS2023 cubre poco ese contenido, porque es un currículo de Ciencias de la Computación: para tres temas no hay unidad que los cubra, el límite del backbone que el capítulo 1 anticipa al dejar SWEBOK solo como referencia de alineación.
+
+El contraste con los participantes no contradice la anotación. Los dos extrajeron menos de la mitad de las nociones que ella registra, la mayor parte de lo que extrajeron está en ella y la adjudicación no encontró omisiones. La única falla que encontró, una inclusión indebida, se corrigió. Lo que el contraste muestra, sobre todo, es que la anotación es más exhaustiva que la extracción de una persona sin guía, y eso explica también por qué los participantes registran solo entre un tercio y dos quintos de los ítems del pipeline. Esa cifra no mide la precisión del pipeline, sino cuánto coincide con una extracción humana más escueta.
+
+La anotación de referencia ofrece, además, una lectura del corpus. Solo 47 de las 663 nociones aparecen en más de un sílabo: al nivel en que los sílabos nombran su contenido, la superposición entre cursos es escasa, y la fusión que mide CP-14 depende de un conjunto pequeño de nodos. Sobre ese conjunto, el enlace no produjo fusiones erróneas y dejó una sola noción duplicada. A su vez, las 28 nociones anotadas como tema en un sílabo y como concepto en otro muestran que esa distinción depende de cómo cada sílabo organiza su contenido y no de la noción misma. Las nueve nociones partidas de CP-14 son ese mismo fenómeno en el grafo, y justifican que el tipo no intervenga en el emparejamiento.
 
 3. ### **Los resultados en el contexto de la revisión de la literatura** {#los-resultados-en-el-contexto-de-la-revisión-de-la-literatura}
 
-En cuanto a la arquitectura, el resultado es consistente con la literatura. La revisión identificó un patrón recurrente de cuatro capas (ingesta, extracción, almacenamiento en grafo y exposición) y la adopción casi general de Neo4j (Liu, 2024; Xu & Che, 2025; Wang, 2025; Z. Li et al., 2023), y los contenedores de R3 siguen ese patrón. El trabajo más cercano es el de S. Li et al. (2026), que combina Neo4j, SQLite y un modelo de lenguaje consumido por API; la diferencia está en el papel de SQLite, que allí guarda las cuentas de usuario y aquí el estado de las ingestas, los descartes y los reportes de auditoría. En la exposición del conocimiento, R3 se ubica junto al único trabajo que ofrece una API (Wang, 2025), frente al predominio de la visualización integrada.
+En cuanto a la arquitectura, el resultado es consistente con la literatura. La revisión identificó un patrón recurrente de cuatro capas (ingesta, extracción, almacenamiento en grafo y exposición) y la adopción casi general de Neo4j (Liu, 2024; Xu & Che, 2025; Wang, 2025; Z. Li et al., 2023), y los contenedores de R3 siguen ese patrón. El trabajo más cercano es el de S. Li et al. (2026), que combina Neo4j, SQLite y un modelo de lenguaje consumido por API; la diferencia está en el papel de SQLite, que allí guarda las cuentas de usuario y aquí el estado de las ingestas, los descartes y los reportes de auditoría. En la exposición del conocimiento, R3 y R4 se ubican junto al único trabajo que ofrece una API (Wang, 2025), frente al predominio de la visualización integrada.
 
-En cuanto al control de calidad del contenido, el resultado se separa de la mayoría. La revisión concluyó que la madurez arquitectónica de estos sistemas supera su capacidad de validar el conocimiento que representan, y que prácticamente todos mantienen la intervención humana como control de calidad (Pan et al., 2023; Xu & Che, 2025; Y. Liu et al., 2026). R3 desplaza ese control: los hechos no se revisan uno a uno, sino que se someten a las reglas del grafo antes de escribirse, y la revisión se concentra en la anotación de referencia contra la que se mide la extracción. Los formularios de extracción no registran cómo esos sistemas trasladan las restricciones de su ontología al grafo ni cómo comprueban que se cumplan, de modo que la comparación en ese punto no puede establecerse con el material disponible.
+En cuanto a la precisión de la extracción, el resultado es consistente con los trabajos más cercanos. S. Li et al. (2026) reportan una precisión de entidades de entre 80,1 % y 84,7 % sobre tres sílabos, y Xu y Che (2025), de entre 81,7 % y 88,2 % con cuatro modelos de lenguaje sobre un curso. El 83,3 % de R4 cae dentro de ese rango, en condiciones que juegan en su contra: los sílabos están en español y llegan como PDF, y el emparejamiento exige el nombre normalizado frente a una anotación adjudicada. El cálculo también difiere: la medida de R4 suma aciertos e ítems de todos los casos, mientras que el promedio de S. Li et al. es por curso. La comparación tiene un límite: ninguno de los dos trabajos describe cómo se construyó su anotación de referencia, de modo que no puede afirmarse que la diferencia de condiciones favorezca o perjudique a R4 en una magnitud concreta. Xu y Che (2025) reconocen, además, el mismo sesgo que muestra CP-02: los modelos extraen con una granularidad más fina que la anotación, y esas entidades tienden a contarse como falsos positivos.
 
-En cuanto a la medición, el resultado responde a dos problemas que la revisión señala y comparte un tercero. Ante la escasez de conjuntos anotados para el dominio educativo (Y. Liu et al., 2026), la anotación de los 13 sílabos ofrece una referencia propia para el piloto. Ante la dificultad para controlar la granularidad que reportan Xu y Che (2025), la anotación fija esa granularidad por la estructura del sílabo, y lo que el pipeline extraiga fuera de ella cuenta como falso positivo. Comparte, en cambio, la limitación que señalan Lissandrini et al. (2025): una métrica que no considera la similitud semántica penaliza respuestas equivalentes. El emparejamiento por nombres tiene ese mismo sesgo, y por eso la precisión se declara como cota inferior.
+En las relaciones, la comparación es más débil. S. Li et al. (2026) reportan una precisión de relaciones de entre 72,8 % y 75,6 %, y Xu y Che (2025), de entre 87,6 % y 91,2 %, ambas contra una anotación. R4 obtiene 76,7 % en prerrequisitos y 100 % en especializaciones, por juicio del autor sobre una muestra de 30 aristas por tipo. Las cifras son del mismo orden que las de S. Li et al., pero no son comparables: allí se cuentan todas las relaciones frente a una referencia anotada, y aquí se juzga una muestra sin anotación previa.
+
+En cuanto al control de calidad del contenido, el resultado se separa de la mayoría. La revisión concluyó que la madurez arquitectónica de estos sistemas supera su capacidad de validar el conocimiento que representan, y que prácticamente todos mantienen la intervención humana como control de calidad (Pan et al., 2023; Xu & Che, 2025; Y. Liu et al., 2026). R3 desplaza ese control: los hechos no se revisan uno a uno, sino que se someten a las reglas del grafo antes de escribirse, y la revisión se concentra en la anotación de referencia contra la que se mide la extracción. R4 muestra que ese desplazamiento es viable en el piloto: ningún hecho se revisó a mano antes de escribirse, y el grafo cumplió las 15 reglas. Los formularios de extracción no registran cómo esos sistemas trasladan las restricciones de su ontología al grafo ni cómo comprueban que se cumplan, de modo que la comparación en ese punto no puede establecerse con el material disponible.
+
+En cuanto a la medición, el resultado responde a dos problemas que la revisión señala y comparte un tercero. Ante la escasez de conjuntos anotados para el dominio educativo (Y. Liu et al., 2026), la anotación de los 13 sílabos ofrece una referencia propia para el piloto, contrastada con dos extracciones humanas independientes. Ante la dificultad para controlar la granularidad que reportan Xu y Che (2025), la anotación fija esa granularidad por la estructura del sílabo, y lo que el pipeline extraiga fuera de ella cuenta como falso positivo. Comparte, en cambio, la limitación que señalan Lissandrini et al. (2025): una métrica que no considera la similitud semántica penaliza respuestas equivalentes. El emparejamiento por nombres tiene ese mismo sesgo, como muestra CP-02, aunque no es el único: sus nombres alternativos también pueden producir aciertos que no corresponden.
 
 4. ### **Generalización de los resultados** {#generalización-de-los-resultados}
 
-Los resultados de R3 se generalizan de forma distinta. El procedimiento de transición, que convierte cada axioma que el razonador deja de comprobar en una regla que se impide al escribir y se detecta en la auditoría, no depende del dominio curricular: es aplicable a cualquier ontología que use los constructos que cubre el Anexo K y se cargue en un grafo de propiedades sin razonador. Lo mismo vale para las decisiones que sostienen los atributos de calidad, como el escritor único, el almacén de hechos o la reconstrucción sin modelo de lenguaje. Esa transferibilidad, sin embargo, es una propiedad del diseño y no un resultado comprobado, porque el módulo aún no se ha implementado.
+Los resultados de este capítulo se generalizan de forma distinta. El procedimiento de transición, que convierte cada axioma que el razonador deja de comprobar en una regla que se impide al escribir y se detecta en la auditoría, no depende del dominio curricular: es aplicable a cualquier ontología que use los constructos que cubre el Anexo K y se cargue en un grafo de propiedades sin razonador. Lo mismo vale para las decisiones que sostienen los atributos de calidad, como el escritor único, el almacén de hechos o la reconstrucción sin modelo de lenguaje. R4 comprueba que esas decisiones funcionan juntas en los tres caminos de escritura, pero con una sola ontología y un solo dominio: su transferencia a otros sigue siendo una propiedad del diseño.
 
-Los casos de prueba no se generalizan: la anotación es específica de los 13 sílabos del semestre 2026-2, y la precisión que se obtenga quedará atada al orden de ingesta fijado. Es transferible el protocolo con que se construyeron (anotación por sílabo, consolidación con identificadores globales y reglas de emparejamiento), aplicable a cualquier conjunto de documentos que organice su contenido en temas y conceptos.
+La precisión de la extracción no se generaliza más allá de las condiciones en que se midió: 13 sílabos de un mismo semestre y una misma carrera, un orden de ingesta fijo, un solo modelo, cuya versión el proveedor no fija, y una corrida por sílabo. Los dos retenidos indican que el prompt no está atado a los sílabos del ajuste, pero son dos y no se eligieron al azar, por lo que no hay evidencia suficiente para afirmar que otros sílabos de la carrera, o los mismos en otro semestre, alcanzarían la misma precisión. Tampoco la escala se generaliza: la entrada al modelo casi se triplicó entre el primer sílabo y el último, porque cada corrida recibe el vocabulario completo del grafo (ADR-011), y ese diseño no alcanza al catálogo completo de la carrera. Es transferible, en cambio, el protocolo de medición (anotación por sílabo, consolidación con identificadores globales, reglas de emparejamiento, sílabos retenidos y juicio de relaciones con una guía y una semilla fijadas antes), aplicable a cualquier conjunto de documentos que organice su contenido en temas y conceptos.
 
 5. ### **Limitaciones de los resultados** {#limitaciones-de-los-resultados}
 
-En primer lugar, R3 especifica, pero no comprueba. Las medidas de los cinco atributos de calidad y la precisión de la extracción se obtienen en R4; hasta entonces, los atributos tienen medidas definidas, pero no valores. La validación experta, además, la realizó un único especialista que es también el asesor del proyecto, por lo que acredita la revisión de un experto del área, pero no un consenso sobre las decisiones tomadas.
+En primer lugar, la validación experta de R3 la realizó un único especialista, que es también el asesor del proyecto, por lo que acredita la revisión de un experto del área, pero no un consenso sobre las decisiones tomadas.
 
-Segundo, varias garantías dependen de condiciones de operación que el sistema no impone, coherentes con un prototipo de un solo operador. El escritor único supone que la API corre en un solo proceso y que el operador sube un documento a la vez; nada impide que coincidan dos *workers*, o un proceso de construcción con un *worker* (ADR-007). Una interrupción del worker no se recupera automáticamente, y la corrida puede quedar en curso o escrita sin persistir (ADR-007). Una corrida ya escrita no puede retirarse (ADR-009), y lo que una versión nueva de un sílabo deja de afirmar permanece en el grafo con su procedencia anterior (ADR-006). Esta última es relevante porque los contenidos de un mismo curso varían entre ciclos (L. Flores, entrevista, 2026). Por último, los localizadores llevan escrita la dirección del host en que se subió cada documento: en un grafo reconstruido en otro host, la aplicación web abre los documentos por su ruta, pero otro cliente de la API recibiría una dirección que ya no responde (ADR-009 y ADR-013).
+Segundo, varias garantías dependen de condiciones de operación que el sistema no impone, coherentes con un prototipo de un solo operador. El escritor único supone que la API corre en un solo proceso y que el operador sube un documento a la vez; nada impide que coincidan dos *workers*, o un proceso de construcción con un *worker* (ADR-007). Una interrupción del worker no se recupera automáticamente, y la corrida puede quedar en curso o escrita sin persistir (ADR-007); la medición lo encontró en la corrida de 1INF30, que hubo que reanudar a mano y cuya causa no se identificó. Una corrida ya escrita no puede retirarse (ADR-009), y lo que una versión nueva de un sílabo deja de afirmar permanece en el grafo con su procedencia anterior (ADR-006). Esta última es relevante porque los contenidos de un mismo curso varían entre ciclos (L. Flores, entrevista, 2026). Por último, los localizadores llevan escrita la dirección del host en que se subió cada documento: en un grafo reconstruido en otro host, la aplicación web abre los documentos por su ruta, pero otro cliente de la API recibiría una dirección que ya no responde (ADR-009 y ADR-013).
 
-Tercero, dos decisiones de la ingesta valen solo para el piloto. El rechazo es de todo o nada por documento, lo que castiga más a los sílabos largos (ADR-010), y el extractor recibe el vocabulario completo del grafo en cada corrida, lo que es viable con 13 sílabos, pero no con el catálogo completo de la carrera (ADR-011).
+Tercero, dos decisiones de la ingesta valen solo para el piloto. El rechazo es de todo o nada por documento, lo que castiga más a los sílabos largos (ADR-010), y el extractor recibe el vocabulario completo del grafo en cada corrida, lo que es viable con 13 sílabos, pero no con el catálogo completo de la carrera (ADR-011). A ello se suma que las unidades de CS2023 llegan al modelo solo con su nombre, sin sus tópicos, lo que contribuye a los errores del enlace con CS2023.
 
-Cuarto, la anotación de referencia la produjo un modelo de lenguaje, un sílabo por sesión, y el autor adjudicó solo las decisiones que la guía no resolvía y la única entrada que el contraste mostró indebida. Dos personas independientes extraen dos sílabos por su cuenta, sin la guía, y sus extracciones se contrastan con la anotación. El contraste cubre el 17 % de las entradas, no es concluyente, clasifica las discrepancias de un solo participante y no examina los nombres alternativos de la anotación, que producen aciertos espurios si son demasiado generales. En 1INF37, el primer participante no extrajo de la bibliografía, por una indicación dada en la sesión de explicación; su acuerdo en ese sílabo se reporta con una cota que la considera. No hay un segundo anotador que siga la guía ni una medida de acuerdo sobre los trece. El prompt se ajustó con la anotación de 11 de los 13 sílabos, de modo que la precisión total es optimista respecto de sílabos nuevos; la de los dos retenidos es la lectura sin ese sesgo, pero son solo dos y no se eligieron al azar. El emparejamiento exige coincidencia de nombres, por lo que la precisión y la exhaustividad son cotas inferiores. Y repetir un sílabo rechazado, hasta tres veces, conserva la primera corrida que el sistema acepta; como la validación comprueba la forma y no la veracidad, esa selección no eleva la precisión de forma directa, y la precisión de los intentos rechazados se reporta para comprobarlo.
+Cuarto, la anotación de referencia la produjo un modelo de lenguaje, un sílabo por sesión, y el autor adjudicó solo las decisiones que la guía no resolvía y la única entrada que el contraste mostró indebida. Dos estudiantes con los cursos aprobados, y no especialistas, extrajeron dos sílabos por su cuenta, sin la guía. El contraste cubre el 17 % de las entradas, no es concluyente, clasifica las discrepancias de un solo participante y no examina los nombres alternativos de la anotación, que producen aciertos espurios si son demasiado generales. En 1INF37, el primer participante no extrajo de la bibliografía, por una indicación dada en la sesión de explicación; su acuerdo en ese sílabo se reporta con una cota que la considera. No hay un segundo anotador que siga la guía ni una medida de acuerdo sobre los trece. La coincidencia del pipeline con los participantes se reporta solo por nombre exacto, sin adjudicar. El prompt se ajustó con la anotación de 11 de los 13 sílabos, de modo que la precisión total es optimista respecto de sílabos nuevos; la de los dos retenidos es la lectura sin ese sesgo, pero son solo dos y no se eligieron al azar. Por último, el emparejamiento por nombres subestima la precisión y la exhaustividad ante una paráfrasis y puede sobrestimarlas por esos nombres alternativos, de modo que ninguna de las dos es una cota de su valor real; solo el primer sesgo se cuantificó, en CP-02.
 
-Quinto, las relaciones se evalúan por juicio del autor sobre la salida, sin anotación previa. CP-15 cubre todos los enlaces con CS2023, pero CP-16 solo una muestra de las relaciones entre conceptos, y ninguno de los dos puede medir qué relaciones correctas dejó de establecer el pipeline.
+Quinto, las relaciones se evalúan por juicio del autor sobre la salida, sin anotación previa y sin un segundo evaluador. CP-15 cubre todos los enlaces con CS2023, pero CP-16 solo una muestra de 30 aristas por tipo, y ninguno de los dos puede medir qué relaciones correctas dejó de establecer el pipeline. Además, la corrección se mide por arista, mientras que la navegación encadena y agrega las aristas. Un prerrequisito incorrecto aparece en los prerrequisitos transitivos de cada concepto que lo alcanza y en el camino hasta una meta, y un concepto requerido incorrecto agrega a «Cursos que conviene llevar antes» los cursos que lo enseñan. No se midió cuántas respuestas de la navegación contienen al menos una arista incorrecta, así que las proporciones de la Tabla 27 no equivalen a la corrección de esas respuestas.
+
+Sexto, la medición es una sola corrida por sílabo con un modelo que no puede fijarse por completo. El proveedor no publica una versión fechada de “gpt-6.1-sol”, el modelo no admite temperatura con razonamiento activo ni semilla, y el esfuerzo de razonamiento se fijó en “medium” sin compararlo con otros valores (ADR-015). Repetir la corrida podría dar otra precisión, y la variación entre corridas no se midió. Por la misma razón, la diferencia entre los sílabos retenidos y los del ajuste no puede atribuirse solo al sobreajuste del prompt.
+
+Séptimo, la medición no ejercitó el rechazo. Los 13 sílabos se aceptaron al primer intento y ningún hecho se descartó, de modo que la capacidad del validador de detener un lote inválido descansa en las pruebas automatizadas y no en la corrida, y la precisión de los intentos rechazados que prevé la sección 5.2.5.1 no tuvo casos que medir.
+
+Octavo, AC-04 y AC-05 se verificaron en un despliegue local, con la misma configuración y el mismo grafo, pero no en la instancia del servidor que describe la Tabla 15\. AC-04 se comprobó, además, con la corrección de una sola etiqueta; una corrección que cambie una clave o la estructura de la capa de referencia queda fuera de la reconstrucción y exige una migración propia.
 
 6. # **Mecanismo de navegación y descubrimiento semántico** {#mecanismo-de-navegación-y-descubrimiento-semántico}
 
@@ -1492,13 +1718,13 @@ Este capítulo presenta los resultados del objetivo específico O3: diseñar e i
 
 2. ## **Documentación del mecanismo de navegación** {#documentación-del-mecanismo-de-navegación}
 
-Este resultado se obtuvo con las dos fases del procedimiento descrito en el capítulo 1\. En la primera se definieron los atributos de calidad del mecanismo, se especificaron los casos de uso, se evaluaron tres propuestas de interfaz sobre datos reales y se diseñaron los flujos y los wireframes de la elegida. En la segunda se documentó la arquitectura de la aplicación web con el modelo C4 y se registraron sus decisiones como ADRs. Las maquetas y los casos de uso se publican en el repositorio del proyecto, en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5); el modelo de arquitectura y los ADRs, junto con los del capítulo anterior.
+Este resultado se obtuvo con las dos fases del procedimiento descrito en el capítulo 1\\. En la primera se definieron los atributos de calidad del mecanismo, se especificaron los casos de uso, se evaluaron tres propuestas de interfaz sobre datos reales y se diseñaron los flujos y los wireframes de la elegida. En la segunda se documentó la arquitectura de la aplicación web con el modelo C4 y se registraron sus decisiones como ADRs. Las maquetas y los casos de uso se publican en el repositorio del proyecto, en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5); el modelo de arquitectura y los ADRs, junto con los del capítulo anterior.
 
 1. ### **Atributos de calidad del mecanismo de navegación** {#atributos-de-calidad-del-mecanismo-de-navegación}
 
-Los cinco atributos de calidad del capítulo anterior son del módulo del grafo. De ellos, la interfaz hereda AC-03: el estudiante debe poder remitir a su fuente lo que el sistema le presenta. El diseño de la interfaz responde además a dos atributos propios, que la Tabla 24 define con el vocabulario de la norma ISO/IEC 25010:2023, en su característica de capacidad de interacción.
+Los cinco atributos de calidad del capítulo anterior son del módulo del grafo. De ellos, la interfaz hereda AC-03: el estudiante debe poder remitir a su fuente lo que el sistema le presenta. El diseño de la interfaz responde además a dos atributos propios, que la Tabla 29 define con el vocabulario de la norma ISO/IEC 25010:2023, en su característica de capacidad de interacción.
 
-###### **Tabla 24\. Atributos de calidad del mecanismo de navegación**
+###### **Tabla 29\. Atributos de calidad del mecanismo de navegación** {#tabla-29.-atributos-de-calidad-del-mecanismo-de-navegación}
 
 | ID | Propiedad | Origen | Prioridad | Verificación en R6 |
 | :---- | :---- | :---- | :---- | :---- |
@@ -1509,14 +1735,14 @@ AN-01 corresponde a la operabilidad y a la capacidad de aprendizaje de la norma,
 
 2. ### **Casos de uso** {#casos-de-uso}
 
-Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecnología, como casos de uso esenciales: cada uno enuncia la intención del actor y la respuesta del sistema (Constantine & Lockwood, 1999). Son once: diez del estudiante, que consulta y navega el grafo sin escribir en él, y uno del operador, que carga documentos y revisa su ingesta. La Tabla 25 los resume con la necesidad que atiende cada uno y la pregunta de competencia de la ontología a la que responde. Las necesidades son funcionalidades de la encuesta de orientación del aprendizaje (Anexo D), y el porcentaje que las acompaña es la proporción de los 154 encuestados que eligió cada una entre las que querría en el sistema.
+Los casos de uso se escribieron antes que cualquier pantalla y sin suponer tecnología, como casos de uso esenciales: cada uno enuncia la intención del actor y la respuesta del sistema (Constantine & Lockwood, 1999). Son once: diez del estudiante, que consulta y navega el grafo sin escribir en él, y uno del operador, que carga documentos y revisa su ingesta. La Tabla 30 los resume con la necesidad que atiende cada uno y la pregunta de competencia de la ontología a la que responde. Las necesidades son funcionalidades de la encuesta de orientación del aprendizaje (Anexo D), y el porcentaje que las acompaña es la proporción de los 154 encuestados que eligió cada una entre las que querría en el sistema.
 
-###### **Tabla 25\. Casos de uso del mecanismo de navegación**
+###### **Tabla 30\. Casos de uso del mecanismo de navegación** {#tabla-30.-casos-de-uso-del-mecanismo-de-navegación}
 
 | Caso de uso | Actor | Necesidad que atiende (Anexo D) | Pregunta de competencia |
 | :---: | :---: | :---: | :---: |
-| CU-1. Encontrar por dónde empezar | Estudiante | Descubrir temas (52,6 %) | — |
-| CU-2. Explorar lo que rodea a un elemento | Estudiante | Entender cómo se conectan las áreas (61,0 %) | — |
+| CU-1. Encontrar por dónde empezar | Estudiante | Descubrir temas (52,6 %) | \- |
+| CU-2. Explorar lo que rodea a un elemento | Estudiante | Entender cómo se conectan las áreas (61,0 %) | \- |
 | CU-3. Saber qué conceptos necesito antes de aprender uno | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC1 |
 | CU-4. Saber qué pide un curso y qué curso conviene llevar antes | Estudiante | Ver qué conceptos previos necesito (83,1 %) | PC2 |
 | CU-5. Ubicar un concepto o tema dentro de la carrera | Estudiante | Entender cómo se conectan las áreas (61,0 %) | PC3 |
@@ -1531,31 +1757,31 @@ Las siete preguntas de competencia de la ontología quedan cubiertas, cada una p
 
 3. ### **Propuestas evaluadas** {#propuestas-evaluadas}
 
-Para elegir el enfoque de navegación se construyeron tres maquetas navegables, cada una con un enfoque distinto, más un panel del operador común. Las tres resuelven los mismos once casos de uso, usan el mismo vocabulario en pantalla y se alimentan de los mismos datos: las respuestas reales de la API del módulo sobre la capa de referencia y cuatro sílabos de desarrollo, capturadas el 29 de octubre de 2026\. Lo que la API todavía no entrega se rotula en pantalla como simulado. Un mismo recorrido de seis pasos permite compararlas sobre la misma historia. La Tabla 26 resume la comparación.
+Para elegir el enfoque de navegación se construyeron tres maquetas navegables, cada una con un enfoque distinto, más un panel del operador común. Las tres resuelven los mismos once casos de uso, usan el mismo vocabulario en pantalla y se alimentan de los mismos datos: las respuestas reales de la API del módulo sobre la capa de referencia y cuatro sílabos de desarrollo, capturadas el 29 de octubre de 2026\. Lo que la API todavía no entrega se rotula en pantalla como simulado. Un mismo recorrido de seis pasos permite compararlas sobre la misma historia. La Tabla 31 resume la comparación.
 
-###### **Tabla 26\. Propuestas de navegación evaluadas**
+###### **Tabla 31\. Propuestas de navegación evaluadas** {#tabla-31.-propuestas-de-navegación-evaluadas}
 
 | Propuesta | Enfoque | Necesidad que atiende mejor | Punto débil | Esfuerzo de implementación |
 | :---- | :---- | :---- | :---- | :---- |
-| P1. Constelación | El lienzo del grafo es el protagonista: un elemento en foco, lo que lo rodea y una vista por cada pregunta sobre el mismo lienzo | Entender cómo se conectan las áreas y descubrir temas | Legibilidad y accesibilidad de un lienzo cuando la respuesta es grande | Alto |
-| P2. Catálogo | Fichas con dirección propia; el grafo es un mapa secundario del vecindario | Encontrar recursos de estudio | El grafo queda en segundo plano | Bajo |
-| P3. Itinerario | Se elige una meta y se ve el camino hasta ella como un mapa de líneas | Ver qué conceptos previos se necesitan | Depende de que el elemento elegido como meta tenga prerrequisitos: con los datos de desarrollo, solo 35 de 485 los tienen | Medio |
+| P1: Constelación | El lienzo del grafo es el protagonista: un elemento en foco, lo que lo rodea y una vista por cada pregunta sobre el mismo lienzo | Entender cómo se conectan las áreas y descubrir temas | Legibilidad y accesibilidad de un lienzo cuando la respuesta es grande | Alto |
+| P2: Catálogo | Fichas con dirección propia; el grafo es un mapa secundario del vecindario | Encontrar recursos de estudio | El grafo queda en segundo plano | Bajo |
+| P3: Itinerario | Se elige una meta y se ve el camino hasta ella como un mapa de líneas | Ver qué conceptos previos se necesitan | Depende de que el elemento elegido como meta tenga prerrequisitos: con los datos de desarrollo, solo 35 de 485 los tienen | Medio |
 
-Se eligió P1. Es la única que muestra el grafo como grafo y responde las siete preguntas de competencia sobre un mismo dibujo, sin que el estudiante pierda de vista el elemento, que es lo que AN-01 exige y lo que el objetivo O3 pide: explorar de forma visual las relaciones a distintos niveles. P2 responde qué hay sobre un elemento, pero no cómo se conecta con lo demás. P3 responde en una pantalla la necesidad más votada, pero su pantalla principal queda vacía para la mayoría de las metas, porque los caminos del grafo de desarrollo son pocos y no pasan de dos pasos. El costo de la elección es que P1 es la más exigente de construir y de leer, lo que se declara entre las limitaciones.
+Se eligió P1: Es la única que muestra el grafo como grafo y responde las siete preguntas de competencia sobre un mismo dibujo, sin que el estudiante pierda de vista el elemento, que es lo que AN-01 exige y lo que el objetivo O3 pide: explorar de forma visual las relaciones a distintos niveles. P2 responde qué hay sobre un elemento, pero no cómo se conecta con lo demás. P3 responde en una pantalla la necesidad más votada, pero su pantalla principal queda vacía para la mayoría de las metas, porque los caminos del grafo de desarrollo son pocos y no pasan de dos pasos. El costo de la elección es que P1 es la más exigente de construir y de leer, lo que se declara entre las limitaciones.
 
 4. ### **Flujos e interfaz** {#flujos-e-interfaz}
 
-En P1 siempre hay un elemento en foco, y el estudiante se mueve haciendo clic de punto en punto. Sobre el mapa, una cabecera nombra el foco y ofrece lo que se puede preguntar sobre él; cada pregunta reordena el mismo lienzo con la respuesta de una consulta del módulo y dibuja solo lo que la responde, con una frase que da la respuesta y otra que dice cómo leer el dibujo. A la derecha, un panel lee el foco como ficha, con las mismas secciones en texto. La interfaz no muestra códigos ni términos del modelo: la pregunta de competencia PC1, por ejemplo, aparece como «Qué necesitas antes».
+En P1 siempre hay un elemento en foco, y el estudiante se mueve haciendo clic de punto en punto. Sobre el mapa, una cabecera nombra el foco y ofrece lo que se puede preguntar sobre él; cada pregunta reordena el mismo lienzo con la respuesta de una consulta del módulo y dibuja solo lo que la responde, con una frase que da la respuesta y otra que dice cómo leer el dibujo. A la derecha, un panel lee el foco como ficha, con las mismas secciones en texto. La interfaz no muestra códigos ni términos del modelo: la pregunta de competencia PC1, por ejemplo, aparece como "Qué necesitas antes".
 
-Para cada caso de uso del estudiante se escribió un flujo, es decir, los pasos con que esta interfaz lo resuelve, con ejemplos del grafo de desarrollo. Los wireframes son seis pantallas, tomadas de la maqueta: el inicio (A), los resultados de búsqueda (B), el foco con lo que lo rodea (C), la vista activa para una pregunta (D), el panel del foco (E) y la relación seleccionada con su fuente (F). La Figura 13 muestra la pantalla C y la Figura 14, la pantalla D para la pregunta «Qué necesitas antes».
+Para cada caso de uso del estudiante se escribió un flujo, es decir, los pasos con que esta interfaz lo resuelve, con ejemplos del grafo de desarrollo. Los wireframes son seis pantallas, tomadas de la maqueta: el inicio (A), los resultados de búsqueda (B), el foco con lo que lo rodea (C), la vista activa para una pregunta (D), el panel del foco (E) y la relación seleccionada con su fuente (F). La Figura 13 muestra la pantalla C y la Figura 14, la pantalla D para la pregunta "Qué necesitas antes".
 
 ![][image13]
 
-##### **Figura 13\. Wireframe de la pantalla C: un tema en foco con lo que lo rodea. Fuente: elaboración propia.**
+##### **Figura 13\. Wireframe de la pantalla C: un tema en foco con lo que lo rodea. Fuente: elaboración propia.** {#figura-13.-wireframe-de-la-pantalla-c:-un-tema-en-foco-con-lo-que-lo-rodea.-fuente:-elaboración-propia.}
 
 ![][image14]
 
-##### **Figura 14\. Wireframe de la pantalla D: la vista «Qué necesitas antes» de un concepto. Fuente: elaboración propia.**
+##### **Figura 14\. Wireframe de la pantalla D: la vista "Qué necesitas antes" de un concepto. Fuente: elaboración propia.** {#figura-14.-wireframe-de-la-pantalla-d:-la-vista-"qué-necesitas-antes"-de-un-concepto.-fuente:-elaboración-propia.}
 
 En la Figura 13, el tema en foco ocupa el centro y sus doce vecinos directos se reparten en dos alas, con el nombre de cada relación escrito sobre sus líneas; el panel de la derecha repite lo mismo como lista. En la Figura 14, los prerrequisitos del concepto se ordenan en columnas por distancia y las flechas van de lo que se aprende primero a lo que lo necesita; un clic en una flecha muestra el sílabo que la afirma. En ambas, la forma distingue la procedencia: hexágono para lo que viene de CS2023 y círculo para lo que viene de un sílabo. Cada elemento del lienzo se puede recorrer con el teclado y lleva un texto que lo nombra, y el panel repite como lista todo lo dibujado. Los diez flujos y las quince capturas, con el caso de uso de cada una, están en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5/p1-lienzo](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r5/p1-lienzo).
 
@@ -1565,13 +1791,13 @@ Los niveles 1 y 2 del modelo C4 son los del capítulo anterior (Figuras 6 y 7): 
 
 ![][image15]
 
-##### **Figura 15\. Componentes de la aplicación web (nivel 3 del modelo C4). Fuente: elaboración propia.**
+##### **Figura 15\. Componentes de la aplicación web (nivel 3 del modelo C4). Fuente: elaboración propia.** {#figura-15.-componentes-de-la-aplicación-web-(nivel-3-del-modelo-c4).-fuente:-elaboración-propia.}
 
 El estado de la exploración es el centro: guarda el foco, la pregunta elegida y lo visitado, y de él dependen el lienzo del grafo, la cabecera de contexto, el panel del foco y la línea de paradas que resume un camino. El buscador y el inicio son los dos puntos de entrada. Un único componente, el cliente de la API, habla con las rutas de navegación del módulo; el panel del foco, además, abre el documento de cada sílabo. El panel del operador es un componente aparte, que usa las rutas de operación con su token.
 
-La Tabla 27 resume las cuatro decisiones de este resultado, con la alternativa principal que descartó cada una y los atributos a los que responde, el principal primero. Entre ellas están las dos que el procedimiento pedía: el framework y la librería de visualización. El texto completo puede consultarse junto con las demás decisiones del sistema, en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones).
+La Tabla 32 resume las cuatro decisiones de este resultado, con la alternativa principal que descartó cada una y los atributos a los que responde, el principal primero. Entre ellas están las dos que el procedimiento pedía: el framework y la librería de visualización. El texto completo puede consultarse junto con las demás decisiones del sistema, en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/decisiones).    
 
-###### **Tabla 27\. Decisiones de diseño del mecanismo de navegación**
+###### **Tabla 32\. Decisiones de diseño del mecanismo de navegación** {#tabla-32.-decisiones-de-diseño-del-mecanismo-de-navegación}
 
 | ADR | Decisión | Alternativa principal descartada | Justificación | Atributos |
 | :---- | :---- | :---- | :---- | :---- |
@@ -1584,33 +1810,33 @@ Los dos criterios que el procedimiento nombraba para elegir la librería se reso
 
 3. ## **Verificación de R5** {#verificación-de-r5}
 
-   1. ### **Verificación y mediciones** {#verificación-y-mediciones-2}
+   1. ### **Verificación y mediciones** {#verificación-y-mediciones-3}
 
 R5 se comprometió a especificar las tecnologías a emplear, los componentes internos del sistema y las decisiones de diseño y arquitectura evaluadas. Su medio de verificación es el reporte técnico del mecanismo de navegación (Tabla 4), que es esta sección. Cada parte se encuentra en:
 
-* Las tecnologías: ADR-017 y ADR-018, resumidos en la Tabla 27\.
+* Las tecnologías: ADR-017 y ADR-018, resumidos en la Tabla 32\.
 
 * Los componentes internos: la Figura 15, vista del mismo modelo que las Figuras 6 a 12\.
 
-* Las decisiones de diseño y arquitectura evaluadas: las tres propuestas de la Tabla 26 y ADR-016 a ADR-019, en el repositorio.
+* Las decisiones de diseño y arquitectura evaluadas: las tres propuestas de la Tabla 31 y ADR-016 a ADR-019, en el repositorio.
 
 * Los flujos y los wireframes: las Figuras 13 y 14 y, en el repositorio, los diez flujos y las quince capturas.
 
-Cada atributo de la Tabla 24 queda atendido por al menos una decisión y tiene una verificación definida en R6: el plan de pruebas de R6 tiene un caso por cada caso de uso del estudiante, y el caso que corresponde a CU-10 abre el documento del que procede una afirmación, que es la comprobación de AC-03 anunciada en la Tabla 23\.
+Cada atributo de la Tabla 29 queda atendido por al menos una decisión y tiene una verificación definida en R6: el plan de pruebas de R6 tiene un caso por cada caso de uso del estudiante, y el caso que corresponde a CU-10 abre el documento del que procede una afirmación, que es la comprobación de AC-03 anunciada en la Tabla 23\.
 
 2. ### **Validación de experto** {#validación-de-experto-1}
 
-\[FALTA: validación pendiente. Al obtenerla: «La documentación fue revisada y aprobada por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión cubrió los casos de uso, las propuestas evaluadas, los flujos y wireframes, los atributos de calidad y la arquitectura con sus decisiones. El registro de esa validación se adjunta como evidencia en el Anexo O».\]
+La documentación fue revisada y aprobada por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión cubrió los casos de uso, las propuestas evaluadas, los flujos y wireframes, los atributos de calidad y la arquitectura con sus decisiones. **El registro de esa validación se adjunta como evidencia en el Anexo O**.
 
-3. ### **Indicador** {#indicador-1}
+3. ### **Indicador** {#indicador-2}
 
-\[FALTA: veredicto del indicador de R5, la validación con respuesta positiva del experto en Ingeniería de Conocimiento. Depende de la validación anterior.\]
+El indicador comprometido para R5, la validación con respuesta positiva del experto en Ingeniería de Conocimiento, se cumple.
 
 4. ## **Prototipo de navegación** {#prototipo-de-navegación}
 
-Este resultado se obtuvo con la primera fase del procedimiento descrito en el capítulo 1: el diseño de R5 se implementó como una aplicación web que consume la API del módulo. Se partió de la maqueta de la propuesta elegida y se avanzó en iteraciones cortas, comprobadas con un recorrido automático de los casos de prueba (sección siguiente). El prototipo, que en la interfaz se llama InfoKnows, es una aplicación de una sola página construida con Svelte 5.57.3, Vite 8.3.8 y D3 7.9.2 (ADR-017 y ADR-018). Su código fuente está en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/web](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/web).
+Este resultado se obtuvo con la primera fase del procedimiento descrito en el capítulo 1: el diseño de R5 se implementó como una aplicación web que consume la API del módulo. Se partió de la maqueta de la propuesta elegida y se avanzó en iteraciones cortas, comprobadas con un recorrido automático de los casos de prueba (sección siguiente). El prototipo, que en la interfaz se llama InfoKnows, es una aplicación de una sola página construida con Svelte 5.57.3, Vite 8.3.8 y D3 7.9.2 (ADR-017 y ADR-018). Su código fuente está en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/web](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/web).  
 
-   1. ### **Consumo del módulo como caja negra** {#consumo-del-módulo-como-caja-negra}
+1. ### **Consumo del módulo como caja negra** {#consumo-del-módulo-como-caja-negra}
 
 La aplicación no conoce Cypher ni accede a la base de grafos. Un único componente, el cliente de la API (Figura 15), llama a nueve rutas de navegación del módulo (la búsqueda, el inicio, el detalle de un nodo y una por cada pregunta de competencia) y abre los documentos en la dirección que el módulo les asigna. Toda respuesta tiene la misma forma, un subgrafo de nodos y aristas con su procedencia, y la aplicación solo lo ordena y lo dibuja: no deriva nodos ni relaciones, ni corrige los nombres, que muestra como los tomó el grafo del sílabo, por ejemplo en mayúsculas. Por eso lo que el estudiante ve es lo que el módulo responde, y conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse.
 
@@ -1618,57 +1844,57 @@ R6 agregó al módulo una sola ruta, la del inicio, que devuelve las áreas con 
 
 2. ### **Cobertura de los casos de uso** {#cobertura-de-los-casos-de-uso}
 
-La interfaz sigue los flujos y los wireframes de R5: un elemento en foco en el centro de un lienzo, ocho preguntas sobre ese foco que reordenan el mismo lienzo y un panel lateral que lo lee como ficha (ADR-016). La Tabla 28 indica, para cada caso de uso de la Tabla 25, dónde se resuelve en la interfaz, qué ruta del módulo lo responde y qué caso de prueba lo verifica.
+La interfaz sigue los flujos y los wireframes de R5: un elemento en foco en el centro de un lienzo, ocho preguntas sobre ese foco que reordenan el mismo lienzo y un panel lateral que lo lee como ficha (ADR-016). La Tabla 33 indica, para cada caso de uso de la Tabla 30, dónde se resuelve en la interfaz, qué ruta del módulo lo responde y qué caso de prueba lo verifica.
 
-###### **Tabla 28\. Cobertura de los casos de uso en el prototipo**
+###### **Tabla 33\. Cobertura de los casos de uso en el prototipo** {#tabla-33.-cobertura-de-los-casos-de-uso-en-el-prototipo}
 
 | Caso de uso | En la interfaz | Ruta del módulo | Caso de prueba |
 | :---- | :---- | :---- | :---- |
 | CU-1 | Inicio y buscador | Inicio; búsqueda | CA-01 |
-| CU-2 | «Lo que lo rodea»; clic en un vecino; **+** en un vecino | Detalle de un nodo | CA-02 |
-| CU-3 | «Qué necesitas antes» | Prerrequisitos de un concepto | CA-03 |
-| CU-4 | «Cursos que conviene llevar antes» | Prerrequisitos de un curso | CA-04 |
-| CU-5 | «Dónde está en la carrera» | Ubicación de un elemento | CA-05 |
-| CU-6 | «Qué contiene» | Ubicación de un elemento | CA-06 |
-| CU-7 | «Material de estudio» | Recursos de un elemento; documento | CA-07 |
-| CU-8 | «Camino hasta aquí», con «Ver por» tema, curso o área | Camino de aprendizaje | CA-08 |
-| CU-9 | «Tipos» | Especializaciones de un concepto | CA-09 |
-| CU-10 | Fuente en la ficha, relación seleccionada e interruptor «Fuentes» | Procedencia en toda respuesta; documento | CA-10 |
+| CU-2 | "Lo que lo rodea"; clic en un vecino; \+ en un vecino | Detalle de un nodo | CA-02 |
+| CU-3 | "Qué necesitas antes" | Prerrequisitos de un concepto | CA-03 |
+| CU-4 | "Cursos que conviene llevar antes" | Prerrequisitos de un curso | CA-04 |
+| CU-5 | "Dónde está en la carrera" | Ubicación de un elemento | CA-05 |
+| CU-6 | "Qué contiene" | Ubicación de un elemento | CA-06 |
+| CU-7 | "Material de estudio" | Recursos de un elemento; documento | CA-07 |
+| CU-8 | "Camino hasta aquí", con "Ver por" tema, curso o área | Camino de aprendizaje | CA-08 |
+| CU-9 | "Tipos" | Especializaciones de un concepto | CA-09 |
+| CU-10 | Fuente en la ficha, relación seleccionada e interruptor "Fuentes" | Procedencia en toda respuesta; documento | CA-10 |
 | CU-11 | Panel del operador | Rutas de operación | CA-11 |
 
 Los diez casos de uso del estudiante se resuelven sobre el mismo lienzo, sin cambiar de pantalla, y el del operador, en un panel aparte. La Figura 16 muestra el inicio; la Figura 17, un tema en foco con lo que lo rodea, y la Figura 18, el camino hasta un concepto, agrupado por cursos.
 
-![](r6/capturas/A-inicio.png)
+![][image16]
 
-##### **Figura 16\. Inicio del prototipo: las áreas de CS2023 y los cursos con sílabo. Fuente: elaboración propia.**
+##### **Figura 16\. Inicio del prototipo: las áreas de CS2023 y los cursos con sílabo. Fuente: elaboración propia.** {#figura-16.-inicio-del-prototipo:-las-áreas-de-cs2023-y-los-cursos-con-sílabo.-fuente:-elaboración-propia.}
 
-![](r6/capturas/C-foco-lo-que-lo-rodea.png)
+![][image17]
 
-##### **Figura 17\. Un tema en foco con lo que lo rodea. Fuente: elaboración propia.**
+##### **Figura 17\. Un tema en foco con lo que lo rodea. Fuente: elaboración propia.** {#figura-17.-un-tema-en-foco-con-lo-que-lo-rodea.-fuente:-elaboración-propia.}
 
-![](r6/capturas/D4-camino-hasta-aqui-por-curso.png)
+![][image18]
 
-##### **Figura 18\. El camino hasta un concepto, agrupado por cursos. Fuente: elaboración propia.**
+##### **Figura 18\. El camino hasta un concepto, agrupado por cursos. Fuente: elaboración propia.** {#figura-18.-el-camino-hasta-un-concepto,-agrupado-por-cursos.-fuente:-elaboración-propia.}
 
-En la Figura 16, las 17 áreas de CS2023 rodean a los 13 cursos con sílabo, y las 10 áreas que ya tienen temas de los sílabos se distinguen de las demás, con sus cifras; el panel lista lo mismo en texto. En la Figura 17, el tema «ADMINISTRACIÓN DE MEMORIA» tiene nueve vecinos directos, agrupados por relación, y los vecinos de esos vecinos aparecen apagados. En la Figura 18, los cuatro conceptos que «Memoria virtual» necesita antes se ordenan por distancia, y sobre ellos están los dos cursos que los enseñan; el «¿Por qué?» de cada curso muestra las relaciones que lo justifican, con su fuente. Las 24 capturas del prototipo, con el caso de uso de cada una, están en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r6](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r6).
+En la Figura 16, las 17 áreas de CS2023 rodean a los 13 cursos con sílabo, y las 10 áreas que ya tienen temas de los sílabos se distinguen de las demás, con sus cifras; el panel lista lo mismo en texto. En la Figura 17, el tema "ADMINISTRACIÓN DE MEMORIA" tiene nueve vecinos directos, agrupados por relación, y los vecinos de esos vecinos aparecen apagados. En la Figura 18, los cuatro conceptos que "Memoria virtual" necesita antes se ordenan por distancia, y sobre ellos están los dos cursos que los enseñan; el "¿Por qué?" de cada curso muestra las relaciones que lo justifican, con su fuente. Las 24 capturas del prototipo, con el caso de uso de cada una, están en [el repositorio de GitHub](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/docs/r6).
 
-Frente a la maqueta de R5, el prototipo cambió en dos puntos. Primero, no incluye el recorrido sugerido de la maqueta, que habría mostrado a los participantes de las pruebas cómo resolver varias de sus tareas; el inicio ofrece, en su lugar, nombres tomados al azar del grafo cargado. Segundo, con el grafo de los 13 sílabos, el camino hasta un curso ya no sale vacío. Para un curso hay entonces dos respuestas que pueden diferir: «Cursos que conviene llevar antes» parte de lo que el curso pide, y «Camino hasta aquí», de lo que necesitan antes los conceptos que enseña. Con Sistemas Operativos (1INF29) como meta, por ejemplo, la primera da Programación 2 y Algoritmia y Estructura de Datos, y la segunda suma Programación 3 (1INF30), que el plan de estudios ubica en el mismo nivel. La interfaz dice cuál es cuál y enlaza una con la otra.
+Frente a la maqueta de R5, el prototipo cambió en dos puntos. Primero, no incluye el recorrido sugerido de la maqueta, que habría mostrado a los participantes de las pruebas cómo resolver varias de sus tareas; el inicio ofrece, en su lugar, nombres tomados al azar del grafo cargado. Segundo, con el grafo de los 13 sílabos, el camino hasta un curso ya no sale vacío. Para un curso hay entonces dos respuestas que pueden diferir: "Cursos que conviene llevar antes" parte de lo que el curso pide, y "Camino hasta aquí", de lo que necesitan antes los conceptos que enseña. Con Sistemas Operativos (1INF29) como meta, por ejemplo, la primera da Programación 2 y Algoritmia y Estructura de Datos, y la segunda suma Programación 3 (1INF30), que el plan de estudios ubica en el mismo nivel. La interfaz dice cuál es cuál y enlaza una con la otra.
 
 3. ### **Atributos de calidad del prototipo** {#atributos-de-calidad-del-prototipo}
 
-Cada atributo de la Tabla 24 se atiende así:
+Cada atributo de la Tabla 29 se atiende así:
 
-* AN-01: Las ocho preguntas son pestañas sobre el mismo foco. Al elegir una, el lienzo cambia de disposición sin que el foco salga del centro, y una cabecera la responde en una frase. Lo que no cabe con nombre legible se resume y el detalle queda en la ficha: por ejemplo, un área con más de 24 conceptos se dibuja solo hasta los temas, y la cabecera lo dice. La interfaz no muestra códigos ni términos del modelo.
+* **AN-01:** Las ocho preguntas son pestañas sobre el mismo foco. Al elegir una, el lienzo cambia de disposición sin que el foco salga del centro, y una cabecera la responde en una frase. Lo que no cabe con nombre legible se resume y el detalle queda en la ficha: por ejemplo, un área con más de 24 conceptos se dibuja solo hasta los temas, y la cabecera lo dice. La interfaz no muestra códigos ni términos del modelo.
 
-* AN-02: La capa se distingue por forma, hexágono para CS2023 y círculo para los sílabos, y se repite en texto en la ficha, en el buscador y en el texto accesible de cada nodo (ADR-019); el color solo indica la clase de un nodo o el tipo de una relación. Todo lo que el lienzo dibuja está también como lista en la ficha, y cada nodo es un elemento del documento que se recorre con el teclado.
+* **AN-02:** La capa se distingue por forma, hexágono para CS2023 y círculo para los sílabos, y se repite en texto en la ficha, en el buscador y en el texto accesible de cada nodo (ADR-019); el color solo indica la clase de un nodo o el tipo de una relación. Todo lo que el lienzo dibuja está también como lista en la ficha, y cada nodo es un elemento del documento que se recorre con el teclado.
 
-* AC-03: Cada elemento y cada relación institucional muestran el sílabo que los afirma, con un enlace que abre su PDF, y los de la capa de referencia remiten a la publicación de CS2023. El interruptor «Fuentes» dibuja además la línea que une cada elemento con su documento. La Figura 19 muestra una relación seleccionada con su fuente.
+* **AC-03**: Cada elemento y cada relación institucional muestran el sílabo que los afirma, con un enlace que abre su PDF, y los de la capa de referencia remiten a la publicación de CS2023. El interruptor "Fuentes" dibuja además la línea que une cada elemento con su documento. La Figura 19 muestra una relación seleccionada con su fuente.
 
-![](r6/capturas/F1-relacion-seleccionada.png)
+![][image19]
 
-##### **Figura 19\. Una relación seleccionada, con el sílabo que la afirma. Fuente: elaboración propia.**
+##### **Figura 19\. Una relación seleccionada, con el sílabo que la afirma. Fuente: elaboración propia.** {#figura-19.-una-relación-seleccionada,-con-el-sílabo-que-la-afirma.-fuente:-elaboración-propia.}
 
-En la Figura 19, la vista «Qué necesitas antes» ordena en columnas los prerrequisitos de «Memoria virtual». Al seleccionar la flecha que llega desde «Paginación», el panel muestra la relación y el sílabo de 1INF29 que la afirma, con el enlace para abrirlo.
+En la Figura 19, la vista "Qué necesitas antes" ordena en columnas los prerrequisitos de “Memoria virtual”. Al seleccionar la flecha que llega desde “Paginación”, el panel muestra la relación y el sílabo de 1INF29 que la afirma, con el enlace para abrirlo.
 
 4. ### **Despliegue del prototipo** {#despliegue-del-prototipo}
 
@@ -1676,25 +1902,25 @@ El prototipo se desplegó como describe la Figura 12, en una instancia EC2 de la
 
 5. ## **Verificación de R6** {#verificación-de-r6}
 
-   1. ### **Verificación y mediciones** {#verificación-y-mediciones-3}
+   1. ### **Verificación y mediciones** {#verificación-y-mediciones-4}
 
 R6 se comprometió a un prototipo que consume el módulo R4 como caja negra y permite al estudiante explorar relaciones conceptuales, visualizar prerrequisitos e identificar recorridos entre conceptos o temas. Su medio de verificación es el código fuente, junto con los casos de prueba documentados y sus resultados (Tabla 4). El código se describe en la sección anterior. Los casos de prueba se aplicaron conforme a la segunda fase del procedimiento del capítulo 1, de dos formas: la revisión del asesor sobre un video del recorrido y las pruebas con usuarios reales. Antes de ambas se hizo un recorrido técnico automático.
 
-**Plan de pruebas.** El plan tiene once casos, uno por caso de uso: CA-01 a CA-10, del estudiante, y CA-11, del operador. Cada caso es una tarea con su entrada, sus pasos, el resultado esperado de cada paso y un criterio de aprobación. Los casos nombran los elementos por su papel (un tema, un concepto, un curso), y una hoja de datos fija qué elemento ocupa cada papel y qué debe mostrar cada paso con el grafo de la corrida final de R4. La hoja se fijó antes de la primera sesión y no cambió entre sesiones. La exploración de nodo en nodo que exige el indicador es CA-02, y el acceso a recursos asociados, CA-07 y CA-10. El plan y su hoja de datos están en [https\://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba).
+**Plan de pruebas:** El plan tiene once casos, uno por caso de uso: CA-01 a CA-10, del estudiante, y CA-11, del operador. Cada caso es una tarea con su entrada, sus pasos, el resultado esperado de cada paso y un criterio de aprobación. Los casos nombran los elementos por su papel (un tema, un concepto, un curso), y una hoja de datos fija qué elemento ocupa cada papel y qué debe mostrar cada paso con el grafo de la corrida final de R4. La hoja se fijó antes de la primera sesión y no cambió entre sesiones. La exploración de nodo en nodo que exige el indicador es CA-02, y el acceso a recursos asociados, CA-07 y CA-10. El plan y su hoja de datos están en [el repositorio de casos de prueba](https://github.com/giano-montano/informatics-engineering-knowledge-graph/tree/dev/casos-de-prueba).
 
-**Recorrido técnico.** Un guion automático, escrito con Playwright, recorrió CA-01 a CA-10 sobre el despliegue con Docker Compose, una vez con el puntero y otra solo con el teclado, y comparó cada dato que el plan pide con lo que respondía la API en ese momento. Se cumplieron las 66 comprobaciones: los 32 pasos del plan, más uno que comprueba el interruptor «Fuentes», en las dos modalidades. CA-11 escribe en el grafo, así que se recorrió en un entorno de ensayo aparte. Allí el modelo de lenguaje se simuló con un servicio que devuelve la salida guardada de una corrida real de la cadena final, y el resto de la ingesta fue el de producción. Se cumplieron sus cinco pasos: la corrida terminó en 1 min 44 s, sin descartes y con la auditoría de cierre sin violaciones en las 15 reglas, y escribió los mismos 21 nodos y 51 aristas que la corrida real. La Figura 20 muestra esa auditoría en el panel del operador.
+**Recorrido técnico:** Un guion automático, escrito con Playwright, recorrió CA-01 a CA-10 sobre el despliegue con Docker Compose, una vez con el puntero y otra solo con el teclado, y comparó cada dato que el plan pide con lo que respondía la API en ese momento. Se cumplieron las 66 comprobaciones: los 32 pasos del plan, más uno que comprueba el interruptor "Fuentes", en las dos modalidades. CA-11 escribe en el grafo, así que se recorrió en un entorno de ensayo aparte. Allí el modelo de lenguaje se simuló con un servicio que devuelve la salida guardada de una corrida real de la cadena final, y el resto de la ingesta fue el de producción. Se cumplieron sus cinco pasos: la corrida terminó en 1 min 44 s, sin descartes y con la auditoría de cierre sin violaciones en las 15 reglas, y escribió los mismos 21 nodos y 51 aristas que la corrida real. La Figura 20 muestra esa auditoría en el panel del operador.
 
-![](r6/capturas/O5-auditoria-de-cierre.png)
+![][image20]
 
-##### **Figura 20\. Panel del operador: la auditoría de cierre de una corrida, regla por regla. Fuente: elaboración propia.**
+##### **Figura 20\. Panel del operador: la auditoría de cierre de una corrida, regla por regla. Fuente: elaboración propia.** {#figura-20.-panel-del-operador:-la-auditoría-de-cierre-de-una-corrida,-regla-por-regla.-fuente:-elaboración-propia.}
 
 En la Figura 20, la corrida de ensayo figura como terminada, y su auditoría de cierre lista cada regla de las Tablas 18 y 19 con cero violaciones. El recorrido técnico no es evidencia del indicador: comprueba que cada paso puede darse y que la interfaz muestra lo que responde la API, no que una persona encuentre sola cada paso. Tampoco comprueba que el PDF se dibuje en el navegador ni la lectura con un lector de pantalla.
 
-**Pruebas con usuarios.** Tres estudiantes de Ingeniería Informática, de segundo, quinto y sexto ciclo (usuarios 1, 2 y 3), ejecutaron CA-01 a CA-10 sobre el prototipo desplegado, el 22 de noviembre de 2026. Las sesiones fueron remotas: cada participante manejó la aplicación en su navegador y compartió su pantalla. Las tres siguieron el mismo guion, de unos cuarenta minutos: una capacitación de diez minutos con elementos de un curso que ninguna tarea usa, Bases de Datos, y las diez tareas, leídas tal cual y sin nombrar botones ni vistas. Antes hubo dos sesiones piloto con una versión anterior del guion, que no se cuentan: en ellas algunas tareas se leyeron con otra redacción, varios pasos alternativos no se leyeron y la capacitación omitió el botón que trae las conexiones de un vecino. El guion se aclaró antes de las tres sesiones que se reportan. En los pilotos tampoco se observó una falla del sistema.
+**Pruebas con usuarios:** Tres estudiantes de Ingeniería Informática, de segundo, quinto y sexto ciclo (usuarios 1, 2 y 3), ejecutaron CA-01 a CA-10 sobre el prototipo desplegado, el 22 de noviembre de 2026\. Las sesiones fueron remotas: cada participante manejó la aplicación en su navegador y compartió su pantalla. Las tres siguieron el mismo guion, de unos cuarenta minutos: una capacitación de diez minutos con elementos de un curso que ninguna tarea usa, Bases de Datos, y las diez tareas, leídas tal cual y sin nombrar botones ni vistas. Antes hubo dos sesiones piloto con una versión anterior del guion, que no se cuentan: en ellas algunas tareas se leyeron con otra redacción, varios pasos alternativos no se leyeron y la capacitación omitió el botón que trae las conexiones de un vecino. El guion se aclaró antes de las tres sesiones que se reportan. En los pilotos tampoco se observó una falla del sistema.
 
-El evaluador, que fue el autor, no ofreció ayuda; si el participante la pedía, le daba la indicación mínima para seguir y la anotaba. Un caso se aprobó si el sistema mostró el resultado esperado en cada paso, con o sin indicación. Se reprobó por uso si el participante se rindió o respondió sin llegar a ese resultado, y por el sistema si este mostró algo distinto de lo esperado o falló. Aparte se registró si el participante completó el caso sin indicación, que es la medida de uso de AN-01. Los pasos que el evaluador no llegó a leer no se contaron. CA-11 no se ejecutó con los usuarios. La Tabla 29 presenta el resultado de cada caso por participante.
+El evaluador, que fue el autor, no ofreció ayuda; si el participante la pedía, le daba la indicación mínima para seguir y la anotaba. Un caso se aprobó si el sistema mostró el resultado esperado en cada paso, con o sin indicación. Se reprobó por uso si el participante se rindió o respondió sin llegar a ese resultado, y por el sistema si este mostró algo distinto de lo esperado o falló. Aparte se registró si el participante completó el caso sin indicación, que es la medida de uso de AN-01. Los pasos que el evaluador no llegó a leer no se contaron. CA-11 no se ejecutó con los usuarios. La Tabla 34 presenta el resultado de cada caso por participante.
 
-###### **Tabla 29\. Resultados de las pruebas con usuarios**
+###### **Tabla 34\. Resultados de las pruebas con usuarios** {#tabla-34.-resultados-de-las-pruebas-con-usuarios}
 
 | Caso | Usuario 1 | Usuario 2 | Usuario 3 |
 | :---- | :---- | :---- | :---- |
@@ -1708,48 +1934,50 @@ El evaluador, que fue el autor, no ofreció ayuda; si el participante la pedía,
 | CA-08 | Reprobado (uso) | Aprobado, con indicación | Aprobado |
 | CA-09 | Aprobado | Reprobado (uso) | Aprobado |
 | CA-10 | Aprobado | Aprobado | Aprobado |
-| **Aprobados** | 6 | 7 | 9 |
-| **Completados sin indicación** | 6 | 6 | 9 |
+| Aprobados | 6 | 7 | 9 |
+| Completados sin indicación | 6 | 6 | 9 |
 
-\* Sin su último paso, el que trae las conexiones de un vecino, que no llegó a leerse por un corte de la conexión.
+Sin su último paso, el que trae las conexiones de un vecino, que no llegó a leerse por un corte de la conexión.
 
 Se aprobaron 22 de los 30 casos (73 %), frente al mínimo de 21, y 21 se completaron sin indicación (70 %). Los ocho reprobados lo fueron por uso y ninguno por el sistema. CA-03 se reprobó en las tres sesiones: ningún participante encontró el porqué de un prerrequisito, que se lee seleccionando la relación; uno dijo no saberlo, otro lo supuso sin comprobarlo y el tercero lo buscó sin hallarlo. Con el usuario 1 se reprobaron además CA-04 y CA-06, en los que respondió desde otra vista que la que la tarea pedía, y CA-08, en el que no explicó por qué pasar por un curso. El usuario 2 se rindió en CA-02, al no recordar cómo traer las conexiones de un vecino, y en CA-09, porque no sabía qué es una llamada al sistema. Solo el usuario 2 recibió indicaciones: una en CA-08, con la que llegó al resultado esperado, y otra en un paso de CA-03, ya reprobado. La exploración de nodo en nodo (CA-02) se aprobó en dos de las tres sesiones, y el acceso a recursos asociados (CA-07 y CA-10), en las tres.
 
-La Tabla 30 cierra la verificación con el resultado de cada atributo de la Tabla 24.
+La Tabla 35 cierra la verificación con el resultado de cada atributo de la Tabla 29\.
 
-###### **Tabla 30\. Verificación de los atributos del mecanismo de navegación**
+###### **Tabla 35\. Verificación de los atributos del mecanismo de navegación** {#tabla-35.-verificación-de-los-atributos-del-mecanismo-de-navegación}
 
 | Atributo | Verificación prevista | Resultado |
 | :---- | :---- | :---- |
 | AN-01 | Un caso de prueba por caso de uso del estudiante | Con los tres usuarios, 21 de 30 casos completados sin indicación; cada caso de uso se completó así al menos una vez, salvo CU-3 (CA-03) |
 | AN-02 | La procedencia de cada elemento se distingue por forma y texto, y todo lo dibujado está también como lista de texto | En el recorrido técnico, la búsqueda muestra en texto la clase y el origen de cada resultado (CA-01), y la ubicación, la capa de cada eslabón (CA-05); ningún vecino del mapa falta en la lista de la ficha (CA-02), y los 33 pasos se cumplen solo con el teclado |
-| AC-03 | Un caso abre el documento del que procede una afirmación (Tabla 23) | CA-10, paso 2: el PDF del sílabo que afirma la relación abre en el recorrido técnico; con los usuarios, aprobado sin indicación en las tres sesiones |
+| AC-03 | Un caso abre el documento del que procede una afirmación (Tabla 23\) | CA-10, paso 2: el PDF del sílabo que afirma la relación abre en el recorrido técnico; con los usuarios, aprobado sin indicación en las tres sesiones |
 
 AN-02 se verifica en el recorrido técnico porque es una propiedad de la interfaz y no de su uso; queda fuera la lectura con un lector de pantalla real. AN-01 y AC-03 se verifican con los usuarios, porque exigen que una persona encuentre la respuesta sin ayuda.
 
 2. ### **Validación de experto** {#validación-de-experto-2}
 
-\[FALTA: validación pendiente. Al obtenerla: «El recorrido de los once casos del plan, grabado en video con la hoja de datos vigente, fue revisado y validado por escrito por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión comprobó que el sistema muestra el resultado esperado en cada paso, incluida la carga de un documento por el operador. El registro de esa validación se adjunta como evidencia en el Anexo P».\]
+El recorrido de los once casos del plan, grabado en video con la hoja de datos vigente, fue revisado y validado por escrito por el experto en Ingeniería del Conocimiento y asesor, Andrés Melgar. La revisión comprobó que el sistema muestra el resultado esperado en cada paso, incluida la carga de un documento por el operador. El registro de esa validación se adjunta como evidencia **en el Anexo P**.
 
-3. ### **Indicador** {#indicador-2}
+3. ### **Indicador** {#indicador-3}
 
-El indicador comprometido para R6 tiene dos partes. La primera es la validación con respuesta positiva del experto en Ingeniería de Conocimiento: \[FALTA: «se cumple» al obtenerse la validación de la sección anterior\]. La segunda es la aprobación de al menos el 70 % de las pruebas con al menos tres usuarios reales, y se cumple: se aprobaron 22 de 30 casos (73 %), ninguno se reprobó por el sistema, y el sistema respondió correctamente en la exploración por nodo (CA-02), en dos de las tres sesiones, y en el acceso a recursos asociados (CA-07 y CA-10), en las tres. Por lo tanto, el indicador \[FALTA: «se cumple» con la validación del experto\].
+El indicador comprometido para R6 tiene dos partes. La primera es la validación con respuesta positiva del experto en Ingeniería de Conocimiento: se cumple. La segunda es la aprobación de al menos el 70 % de las pruebas con al menos tres usuarios reales, y se cumple: se aprobaron 22 de 30 casos (73 %), ninguno se reprobó por el sistema, y el sistema respondió correctamente en la exploración por nodo (CA-02), en dos de las tres sesiones, y en el acceso a recursos asociados (CA-07 y CA-10), en las tres. Por lo tanto, el indicador se cumple.
 
 6. ## **Discusión** {#discusión-2}
+
+Esta discusión cubre lo obtenido en los resultados 5 y 6.
 
 1. ### **Resumen de los resultados** {#resumen-de-los-resultados-1}
 
 R5 especifica el mecanismo de navegación antes de implementarlo. Dos atributos de calidad fijan lo que la interfaz debe garantizar. Once casos de uso fijan lo que el estudiante y el operador pueden hacer, y cada pregunta de competencia de la ontología tiene el suyo. De tres propuestas de interfaz evaluadas sobre los mismos datos reales se eligió la que pone el grafo en el centro, y para ella se diseñaron diez flujos y seis pantallas. Esos atributos, más la procedencia heredada del módulo, motivan cuatro decisiones, entre ellas el framework y la librería de visualización, y la aplicación web queda descompuesta en nueve componentes.
 
-R6 lleva ese diseño a un prototipo desplegado que el estudiante usa desde el navegador. El prototipo resuelve los once casos de uso consumiendo el módulo solo a través de su API, a la que agregó una única ruta, y dibuja únicamente lo que esta responde. Un recorrido automático confirmó que cada paso del plan de pruebas puede darse con el puntero y solo con el teclado, y que la interfaz muestra lo que responde la API. Con tres usuarios, el sistema mostró el resultado esperado en 22 de 30 casos (73 %), sobre el 70 % comprometido, y 21 se completaron sin indicación; ningún caso se reprobó por una falla del sistema. \[FALTA: resultado de la validación del experto\].
+R6 lleva ese diseño a un prototipo desplegado que el estudiante usa desde el navegador. El prototipo resuelve los once casos de uso consumiendo el módulo solo a través de su API, a la que agregó una única ruta, y dibuja únicamente lo que esta responde. Un recorrido automático confirmó que cada paso del plan de pruebas puede darse con el puntero y solo con el teclado, y que la interfaz muestra lo que responde la API. Con tres usuarios, el sistema mostró el resultado esperado en 22 de 30 casos (73 %), sobre el 70 % comprometido, y 21 se completaron sin indicación; ningún caso se reprobó por una falla del sistema.
 
 2. ### **Interpretación de los resultados** {#interpretación-de-los-resultados-1}
 
 El problema que motiva esta tesis se manifiesta en tres efectos: el tiempo que el estudiante dedica a identificar los prerrequisitos de un tema, la búsqueda dispersa de material sin anclaje al currículo y la planificación del recorrido por canales informales. R5 asigna a cada efecto los casos de uso que lo atienden: los prerrequisitos de un concepto y el camino hasta una meta (CU-3 y CU-8) para el primero; el material de estudio y su fuente (CU-7 y CU-10) para el segundo; y lo que pide un curso y la ubicación de un elemento en la carrera (CU-4 y CU-5) para el tercero. Las pruebas de R6 muestran si un estudiante, con una capacitación breve, obtiene esas respuestas por su cuenta, y en buena parte lo hace. El material de estudio y su fuente (CA-07 y CA-10) y la ubicación de un elemento (CA-05) se obtuvieron en las tres sesiones, y lo que pide un curso (CA-04) y el camino hasta una meta (CA-08), en dos. La excepción es el porqué de un prerrequisito (CA-03), que ningún participante encontró. No muestran que el uso del prototipo reduzca esos efectos, medida que se propone como trabajo futuro.
 
-Las causas de los reprobados separan dos fuentes de fallo. Ninguno se debió al sistema: los ocho fueron de uso, casos en que el participante no llegó a la pregunta que la tarea pedía, y casi no hubo indicaciones, por lo que las dos cifras de la Tabla 29 difieren en un solo caso. Las fallas se concentraron en controles poco visibles más que en respuestas equivocadas: el porqué de una relación, que solo aparece al seleccionarla (CA-03), y la vista adecuada cuando dos preguntas se parecen (CA-04 y CA-06). Lo que falta, entonces, es hacer más visibles esas preguntas, no corregir lo que responden; la limitación octava lo recoge.
+Las causas de los reprobados separan dos fuentes de fallo. Ninguno se debió al sistema: los ocho fueron de uso, casos en que el participante no llegó a la pregunta que la tarea pedía, y casi no hubo indicaciones, por lo que las dos cifras de la Tabla 34 difieren en un solo caso. Las fallas se concentraron en controles poco visibles más que en respuestas equivocadas: el porqué de una relación, que solo aparece al seleccionarla (CA-03), y la vista adecuada cuando dos preguntas se parecen (CA-04 y CA-06). Lo que falta, entonces, es hacer más visibles esas preguntas, no corregir lo que responden; la limitación octava lo recoge.
 
-Lo que estos resultados significan, además, es que el diseño de la interfaz se decidió frente a datos y no frente a supuestos. Las tres propuestas se probaron con las respuestas reales del módulo, y fueron esos datos los que descartaron una de ellas: un diseño centrado en caminos de aprendizaje parecía el más alineado con la necesidad más votada de la encuesta, pero en el grafo de desarrollo solo 35 de 485 metas posibles tienen camino (Tabla 26).
+Lo que estos resultados significan, además, es que el diseño de la interfaz se decidió frente a datos y no frente a supuestos. Las tres propuestas se probaron con las respuestas reales del módulo, y fueron esos datos los que descartaron una de ellas: un diseño centrado en caminos de aprendizaje parecía el más alineado con la necesidad más votada de la encuesta, pero en el grafo de desarrollo solo 35 de 485 metas posibles tienen camino (Tabla 31).
 
 También significan que la interfaz no agrega conocimiento al que el módulo entrega. Cada vista dibuja la respuesta de una consulta y no agrega relaciones propias. Por eso lo que el estudiante ve conserva las dos propiedades que el capítulo anterior aseguró: cumple la ontología y remite a un documento que puede abrirse. R6 lo comprueba en el recorrido técnico, que comparó cada dato de la pantalla con la respuesta de la API, y en CA-10, donde el estudiante abre el documento del que procede una relación. La contracara es que la interfaz muestra los datos tal como los extrajo el pipeline: un nombre en mayúsculas o con un espacio de más se ve así, y la corrección de lo que se muestra depende de la precisión de R4, no de R6.
 
@@ -1783,7 +2011,7 @@ Sexto, lo que las pruebas comprueban es que la interfaz muestra lo que responde 
 
 Séptimo, la demostración del panel del operador usó un modelo de lenguaje simulado. La llamada a un proveedor real se ejercitó en la corrida final de R4, no desde el prototipo.
 
-Octavo, la interfaz exige más de lo que deja una capacitación breve. Las pruebas no encontraron fallas del sistema, pero sí controles que los participantes no hallaron solos. Ninguno descubrió sin ayuda que el porqué de una relación se lee seleccionándola. La diferencia entre lo que un curso pide y lo que enseña, que separa «Cursos que conviene llevar antes» de «Camino hasta aquí», tuvo que explicarse en la capacitación y aun así confundió a un participante. Un participante notó también que el mapa se recarga al traer las conexiones de un vecino, sin un control para retirarlas. Además, el nombre «Dónde está en la carrera» hace esperar un curso o un ciclo, cuando la vista responde con la unidad y el área de CS2023 a las que pertenece el elemento; la confusión crece cuando un área y un curso se llaman igual, como Sistemas Operativos. Corregir estos puntos exige cambiar la interfaz y repetir las pruebas, y queda como trabajo futuro.
+Octavo, la interfaz exige más de lo que deja una capacitación breve. Las pruebas no encontraron fallas del sistema, pero sí controles que los participantes no hallaron solos. Ninguno descubrió sin ayuda que el porqué de una relación se lee seleccionándola. La diferencia entre lo que un curso pide y lo que enseña, que separa "Cursos que conviene llevar antes" de "Camino hasta aquí", tuvo que explicarse en la capacitación y aun así confundió a un participante. Un participante notó también que el mapa se recarga al traer las conexiones de un vecino, sin un control para retirarlas. Además, el nombre "Dónde está en la carrera" hace esperar un curso o un ciclo, cuando la vista responde con la unidad y el área de CS2023 a las que pertenece el elemento; la confusión crece cuando un área y un curso se llaman igual, como Sistemas Operativos. Corregir estos puntos exige cambiar la interfaz y repetir las pruebas, y queda como trabajo futuro.
 
 7. # **Conclusiones y trabajos futuros** {#conclusiones-y-trabajos-futuros}
 
@@ -1833,11 +2061,11 @@ Gruber, T. R. (1993). A translation approach to portable ontology specifications
 
 Gunarathne, W. K. T. M., Chootong, C., Sommool, W., Ochirbat, A., Chen, Y.-C., Reisman, S., & Shih, T. K. (2018). *Web-Based Learning Object Search Engine Solution Together with Data Visualization: The Case of MERLOT II*. *1*, 1026-1031. Scopus. [https\://doi.org/10.1109/COMPSAC.2018.00179](https://doi.org/10.1109/COMPSAC.2018.00179)
 
-Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The elements of statistical learning: Data mining, inference, and prediction* (2.ª ed.). Springer. [https\://doi.org/10.1007/978-0-387-84858-7](https://doi.org/10.1007/978-0-387-84858-7)
+Hastie, T., Tibshirani, R., & Friedman, J. (2009). *The elements of statistical learning: Data mining, inference, and prediction* (2.ª ed.). Springer. [https\://doi.org/10.1007/978-0-387-84858-7](https://doi.org/10.1007/978-0-387-84858-7) 
 
 Huang, J., Lai, F., Zheng, Z., Lai, R., Chen, X., Tian, J., & Zheng, Y. (2026). Design and Evaluation of a Question-Answering System Based on Knowledge Graph-Augmented Large Language Models in K–12 Artificial Intelligence Curriculum. *Applied Sciences*, *16*(7), 3552\. [https\://doi.org/10.3390/app16073552](https://doi.org/10.3390/app16073552)
 
-International Organization for Standardization & International Electrotechnical Commission. (2023). Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — Product quality model (ISO/IEC 25010:2023).
+International Organization for Standardization & International Electrotechnical Commission. (2023). Systems and software engineering \- Systems and software Quality Requirements and Evaluation (SQuaRE) \- Product quality model (ISO/IEC 25010:2023).
 
 Kitchenham, B., & Charters, S. (2007). *Guidelines for performing Systematic Literature Reviews in Software Engineering*. *2*.
 
@@ -1863,7 +2091,7 @@ Liu, P., & Zhan, C. (2025). *Research on Visual Learning Platform for Database P
 
 Liu, Y., Zuo, Q., Zhang, S., Li, Y., Wang, C., Han, F., & Cheng, X. (2026). *Research on Triple Joint Extraction Method of Knowledge Graph for Education Domain*. 134-139. Scopus. [https\://doi.org/10.1145/3785987.3786009](https://doi.org/10.1145/3785987.3786009)
 
-Livathinos, N., Auer, C., Lysak, M., Nassar, A., Dolfi, M., Vagenas, P., Berrospi Ramis, C., Omenetti, M., Dinkla, K., Kim, Y., Gupta, S., Teixeira de Lima, R., Weber, V., Morin, L., Meijer, I., Kuropiatnyk, V., & Staar, P. W. J. (2025). *Docling: An efficient open-source toolkit for AI-driven document conversion*. AAAI 25 Workshop on Open-Source AI for Mainstream Use. [https\://arxiv.org/abs/2501.17887](https://arxiv.org/abs/2501.17887)
+Livathinos, N., Auer, C., Lysak, M., Nassar, A., Dolfi, M., Vagenas, P., Berrospi Ramis, C., Omenetti, M., Dinkla, K., Kim, Y., Gupta, S., Teixeira de Lima, R., Weber, V., Morin, L., Meijer, I., Kuropiatnyk, V., & Staar, P. W. J. (2025). *Docling: An efficient open-source toolkit for AI-driven document conversion*. AAAI 25 Workshop on Open-Source AI for Mainstream Use. [https\://arxiv.org/abs/2501.17887](https://arxiv.org/abs/2501.17887) 
 
 Millman, K., & Aivazis, M. (2011). Python for Scientists and Engineers. *Computing in Science & Engineering*, *13*, 9-12. [https\://doi.org/10.1109/MCSE.2011.36](https://doi.org/10.1109/MCSE.2011.36)
 
@@ -1875,13 +2103,15 @@ Nguyen, T., Vu, N., & Ly, B. (2022). *An approach to constructing a graph data r
 
 Nygard, M. (2011, noviembre 15). *Documenting Architecture Decisions*. Cognitect.Com. [https\://www\.cognitect.com/blog/2011/11/15/documenting-architecture-decisions](https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
 
+Noy, N., & Mcguinness, D. (2001). Ontology Development 101: A Guide to Creating Your First Ontology. Knowledge Systems Laboratory, 32.
+
 Oprea, M. (2020). *An Educational Ontology for Formal Languages and Compilers*. 54-60. Scopus. [https\://www\.scopus.com/pages/publications/85103847070?origin=resultslist](https://www.scopus.com/pages/publications/85103847070?origin=resultslist)
 
 *OWL 2 Web Ontology Language Document Overview 2nd Edition*. (2012). [https\://www\.w3.org/TR/owl2-overview/](https://www.w3.org/TR/owl2-overview/)
 
 Pan, J., Liu, J., Wei, D., Zhuang, J., Qiu, S., & Du, J. (2023). *Knowledge Graph for University Course Construction Based on Gated Graph Attention Networks*. 60-65. Scopus. [https\://doi.org/10.1109/MLCR61158.2023.00021](https://doi.org/10.1109/MLCR61158.2023.00021)
 
-Perez, E., Kiela, D., & Cho, K. (2021). True few-shot learning with language models. En M. Ranzato, A. Beygelzimer, Y. Dauphin, P. S. Liang, & J. Wortman Vaughan (Eds.), *Advances in Neural Information Processing Systems* (Vol. 34, pp. 11054–11070). Curran Associates. [https\://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html](https://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html)
+Perez, E., Kiela, D., & Cho, K. (2021). True few-shot learning with language models. En M. Ranzato, A. Beygelzimer, Y. Dauphin, P. S. Liang, & J. Wortman Vaughan (Eds.), *Advances in Neural Information Processing Systems* (Vol. 34, pp. 11054–11070). Curran Associates. [https\://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html](https://proceedings.neurips.cc/paper/2021/hash/5c04925674920eb58467fb52ce4ef728-Abstract.html) 
 
 *Protégé*. (s. f.). Recuperado 15 de mayo de 2026, de [https\://protege.stanford.edu/](https://protege.stanford.edu/)
 
@@ -1891,7 +2121,7 @@ Ramírez, S. (s. f.). *FastAPI*. Recuperado 15 de mayo de 2026, de [https\://fas
 
 *RDF 1.1 Concepts and Abstract Syntax*. (2014). [https\://www\.w3.org/TR/rdf11-concepts/](https://www.w3.org/TR/rdf11-concepts/)
 
-Sclar, M., Choi, Y., Tsvetkov, Y., & Suhr, A. (2024). Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. En *The Twelfth International Conference on Learning Representations (ICLR 2024)*. [https\://arxiv.org/abs/2310.11324](https://arxiv.org/abs/2310.11324)
+Sclar, M., Choi, Y., Tsvetkov, Y., & Suhr, A. (2024). Quantifying language models' sensitivity to spurious features in prompt design or: How I learned to start worrying about prompt formatting. En The Twelfth International Conference on Learning Representations (ICLR 2024). [https\://arxiv.org/abs/2310.11324](https://arxiv.org/abs/2310.11324) 
 
 Singhal, A. (2012, mayo 16). *Introducing the Knowledge Graph: Things, not strings*. Google. [https\://blog.google/products-and-platforms/products/search/introducing-knowledge-graph-things-not/](https://blog.google/products-and-platforms/products/search/introducing-knowledge-graph-things-not/)
 
@@ -2077,7 +2307,7 @@ Las tareas se derivan directamente de la estructura de descomposición del traba
 
 La Figura A.1. presenta el diagrama de Gantt del cronograma del proyecto y la Tabla A.2. presenta la lista de tareas con las dependencias, duración, esfuerzo, costo y periodo.
 
-![][image16]
+![][image21]
 
 **Figura A.1. Diagrama de Gantt del cronograma del proyecto**
 
@@ -2187,7 +2417,7 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 
 # **Anexo P: Constancia de validación experta del Resultado 6**
 
-\[FALTA: enlace a la constancia de validación del asesor sobre el video del recorrido.\]
+[https\://docs.google.com/document/d/1kFPAR7dYBXb7woUUmma2AJiFIX5jdAzVuRrLIwUrgIU/edit?usp=sharing](https://docs.google.com/document/d/1kFPAR7dYBXb7woUUmma2AJiFIX5jdAzVuRrLIwUrgIU/edit?usp=sharing) 
 
 [^1]:  Recuperado el 18 de junio del 2026 a las 20:40 h (UTC-5) de [https\://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee\_INFORMATICA-2026-1.pdf](https://facultad-ciencias-ingenieria.pucp.edu.pe/wp-content/uploads/2026/03/ppee_INFORMATICA-2026-1.pdf)y visible en el anexo F.
 
@@ -2197,4 +2427,4 @@ Distingue equipo humano (por horas de esfuerzo), equipamiento (depreciación lin
 
 [^4]:  OntoGraf representa la jerarquía de subsunción y no rotula las propiedades de objeto, que se detallan en la Tabla 13\. Por esa misma limitación no se visualizan las relaciones de Recurso de Aprendizaje con Curso y con Elemento de Conocimiento (isAbout/hasResource y wasDerivedFrom).
 
-[^5]: Las seis propiedades de la columna Inversa se declaran explícitamente en la ontología; con ellas el total asciende a diecisiete propiedades de objeto. «Simple» indica una propiedad no transitiva, condición que OWL exige para admitir restricciones de cardinalidad. hasPart hereda dominio y rango de isPartOf por inversión.
+[^5]: Las seis propiedades de la columna Inversa se declaran explícitamente en la ontología; con ellas el total asciende a diecisiete propiedades de objeto. "Simple" indica una propiedad no transitiva, condición que OWL exige para admitir restricciones de cardinalidad. hasPart hereda dominio y rango de isPartOf por inversión.

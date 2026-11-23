@@ -1,0 +1,1655 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "IEKG API",
+  "summary": "Knowledge graph of the Informatics Engineering curriculum: operation, navigation and documents.",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/api/runs": {
+   "get": {
+    "tags": [
+     "operation"
+    ],
+    "summary": "List Runs",
+    "operationId": "list_runs_api_runs_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RunSummary"
+         },
+         "type": "array",
+         "title": "Response List Runs Api Runs Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "operation"
+    ],
+    "summary": "Submit Run",
+    "description": "Record a pending run for the document and launch the worker if none is active (ADR-007).",
+    "operationId": "submit_run_api_runs_post",
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_submit_run_api_runs_post"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubmittedRun"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Not a PDF, or a declaration it lacks"
+     },
+     "503": {
+      "description": "The worker could not be launched; nothing was recorded"
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/runs/{run_id}": {
+   "get": {
+    "tags": [
+     "operation"
+    ],
+    "summary": "Get Run",
+    "description": "The run as recorded, with the audit report that closed it if it wrote.",
+    "operationId": "get_run_api_runs__run_id__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "run_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Run Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RunDetail"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No such run"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/runs/{run_id}/discards": {
+   "get": {
+    "tags": [
+     "operation"
+    ],
+    "summary": "Get Discards",
+    "description": "What a rejected run discarded; empty for a run that was not rejected.",
+    "operationId": "get_discards_api_runs__run_id__discards_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "run_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Run Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RunDiscards"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No such run"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/mode": {
+   "get": {
+    "tags": [
+     "operation"
+    ],
+    "summary": "Operation Mode",
+    "description": "Whether submissions are rehearsals that never reach the graph (ADR-013, amendment 2026-11).",
+    "operationId": "operation_mode_api_mode_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/OperationMode"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/audit-reports/latest": {
+   "get": {
+    "tags": [
+     "operation"
+    ],
+    "summary": "Latest Audit Report",
+    "description": "The latest audit report and the state of the audit gate it sets (ADR-007).",
+    "operationId": "latest_audit_report_api_audit_reports_latest_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LatestAuditReport"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/search": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Search",
+    "description": "Knowledge elements and courses whose names or code start with every word, by score (RF-18).\n\nAccents and case are ignored. At most ``MAX_SEARCH_RESULTS`` nodes.",
+    "operationId": "search_api_search_get",
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 200,
+       "description": "Words of a name or a course code.",
+       "title": "Q"
+      },
+      "description": "Words of a name or a course code."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/overview": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Overview",
+    "description": "Every knowledge area, with how many units, topics and concepts are part of it, and every course.\n\nWhere a student starts without a name. No edge between them is returned.",
+    "operationId": "overview_api_overview_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/nodes": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Node Detail",
+    "description": "The node with its properties, its direct neighbors and a few of theirs, by any edge but WAS_DERIVED_FROM.",
+    "operationId": "node_detail_api_nodes_get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The key of the node; an IRI in the reference layer.",
+       "title": "Key"
+      },
+      "description": "The key of the node; an IRI in the reference layer."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No node of the expected class with this key"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/concepts/prerequisites": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Concept Prerequisites",
+    "description": "The prerequisites of a concept, transitively and with bounded depth (RF-11).",
+    "operationId": "concept_prerequisites_api_concepts_prerequisites_get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The key of the node; an IRI in the reference layer.",
+       "title": "Key"
+      },
+      "description": "The key of the node; an IRI in the reference layer."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No node of the expected class with this key"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/courses/prerequisites": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Course Prerequisites",
+    "description": "What a course teaches and requires, and the courses that teach what it requires (RF-12).",
+    "operationId": "course_prerequisites_api_courses_prerequisites_get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The key of the node; an IRI in the reference layer.",
+       "title": "Key"
+      },
+      "description": "The key of the node; an IRI in the reference layer."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No node of the expected class with this key"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/elements/location": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Element Location",
+    "description": "What a knowledge element is part of, up to its area, and what is part of it (RF-13).",
+    "operationId": "element_location_api_elements_location_get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The key of the node; an IRI in the reference layer.",
+       "title": "Key"
+      },
+      "description": "The key of the node; an IRI in the reference layer."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No node of the expected class with this key"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/elements/resources": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Element Resources",
+    "description": "The learning resources about an element or a course, and about any of its parts (RF-14).",
+    "operationId": "element_resources_api_elements_resources_get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The key of the node; an IRI in the reference layer.",
+       "title": "Key"
+      },
+      "description": "The key of the node; an IRI in the reference layer."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No node of the expected class with this key"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/learning-path": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Learning Path",
+    "description": "What to learn before a concept, topic, unit, area or course, lifted to the grain (RF-15).\n\n``depth`` is 0 inside the target; for a prerequisite, its distance from\nthe target, and for a node of the grain, that of its nearest prerequisite.",
+    "operationId": "learning_path_api_learning_path_get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The key of the node; an IRI in the reference layer.",
+       "title": "Key"
+      },
+      "description": "The key of the node; an IRI in the reference layer."
+     },
+     {
+      "name": "grain",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "enum": [
+        "topic",
+        "course",
+        "area"
+       ],
+       "type": "string",
+       "description": "The unit of the answer: topics, courses or areas.",
+       "title": "Grain"
+      },
+      "description": "The unit of the answer: topics, courses or areas."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No node of the expected class with this key"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/concepts/specializations": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Concept Specializations",
+    "description": "What a concept is a kind of, and what is a kind of it, transitively (RF-16).",
+    "operationId": "concept_specializations_api_concepts_specializations_get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 1,
+       "description": "The key of the node; an IRI in the reference layer.",
+       "title": "Key"
+      },
+      "description": "The key of the node; an IRI in the reference layer."
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubgraphView"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "No node of the expected class with this key"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/resources/{key}": {
+   "get": {
+    "tags": [
+     "navigation"
+    ],
+    "summary": "Get Document",
+    "description": "Served only while the graph has the resource: after a load, not until the reapplication.",
+    "operationId": "get_document_resources__key__get",
+    "parameters": [
+     {
+      "name": "key",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Key"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/pdf": {}
+      }
+     },
+     "404": {
+      "description": "Not a resource of the graph"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AuditGate": {
+    "properties": {
+     "state": {
+      "type": "string",
+      "enum": [
+       "open",
+       "closed"
+      ],
+      "title": "State"
+     },
+     "reason": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reason",
+      "description": "Why it is closed; null when open."
+     }
+    },
+    "type": "object",
+    "required": [
+     "state",
+     "reason"
+    ],
+    "title": "AuditGate"
+   },
+   "AuditReportView": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "created_at": {
+      "type": "string",
+      "title": "Created At"
+     },
+     "origin": {
+      "type": "string",
+      "title": "Origin",
+      "description": "The write path that opened it: load, ingestion or reapplication."
+     },
+     "run_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Run Id"
+     },
+     "completed": {
+      "type": "boolean",
+      "title": "Completed",
+      "description": "False while the write path that opened it has not audited the graph."
+     },
+     "violations": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Violations",
+      "description": "Null while the report is open."
+     },
+     "rules": {
+      "items": {
+       "$ref": "#/components/schemas/RuleResultView"
+      },
+      "type": "array",
+      "title": "Rules"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "created_at",
+     "origin",
+     "run_id",
+     "completed",
+     "violations",
+     "rules"
+    ],
+    "title": "AuditReportView",
+    "examples": [
+     {
+      "completed": true,
+      "created_at": "2026-10-08T15:03:38+00:00",
+      "id": 12,
+      "origin": "ingestion",
+      "rules": [
+       {
+        "rule": "RI-01",
+        "sample": [],
+        "violations": 0
+       }
+      ],
+      "run_id": "7",
+      "violations": 0
+     }
+    ]
+   },
+   "Body_submit_run_api_runs_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     },
+     "resource_type": {
+      "type": "string",
+      "title": "Resource Type"
+     },
+     "course_code": {
+      "type": "string",
+      "title": "Course Code"
+     },
+     "course_name": {
+      "type": "string",
+      "title": "Course Name"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file",
+     "resource_type",
+     "course_code",
+     "course_name"
+    ],
+    "title": "Body_submit_run_api_runs_post"
+   },
+   "DiscardView": {
+    "properties": {
+     "rule": {
+      "type": "string",
+      "title": "Rule",
+      "description": "The integrity rule (RI, RM) or the output check (EX) it violates."
+     },
+     "fact": {
+      "type": "string",
+      "title": "Fact"
+     },
+     "message": {
+      "type": "string",
+      "title": "Message"
+     }
+    },
+    "type": "object",
+    "required": [
+     "rule",
+     "fact",
+     "message"
+    ],
+    "title": "DiscardView"
+   },
+   "EdgeView": {
+    "properties": {
+     "type": {
+      "type": "string",
+      "title": "Type"
+     },
+     "source": {
+      "type": "string",
+      "title": "Source",
+      "description": "The key of the node it leaves, in the direction of the asserted property."
+     },
+     "target": {
+      "type": "string",
+      "title": "Target"
+     },
+     "provenance": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Provenance",
+      "description": "The key of the resource it was derived from, among the nodes; null in the reference layer."
+     }
+    },
+    "type": "object",
+    "required": [
+     "type",
+     "source",
+     "target",
+     "provenance"
+    ],
+    "title": "EdgeView"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "LatestAuditReport": {
+    "properties": {
+     "gate": {
+      "$ref": "#/components/schemas/AuditGate"
+     },
+     "report": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/AuditReportView"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Null if no write path has recorded one yet."
+     }
+    },
+    "type": "object",
+    "required": [
+     "gate",
+     "report"
+    ],
+    "title": "LatestAuditReport",
+    "examples": [
+     {
+      "gate": {
+       "reason": "latest report with violations",
+       "state": "closed"
+      },
+      "report": {
+       "completed": true,
+       "created_at": "2026-10-08T15:03:38+00:00",
+       "id": 12,
+       "origin": "ingestion",
+       "rules": [
+        {
+         "rule": "RI-08",
+         "sample": [
+          "x (Topic) is not part of any KnowledgeUnit"
+         ],
+         "violations": 1
+        }
+       ],
+       "run_id": "7",
+       "violations": 1
+      }
+     }
+    ]
+   },
+   "NodeView": {
+    "properties": {
+     "key": {
+      "type": "string",
+      "title": "Key"
+     },
+     "label": {
+      "type": "string",
+      "title": "Label",
+      "description": "Its class, the most specific one."
+     },
+     "name_es": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name Es"
+     },
+     "name_en": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name En"
+     },
+     "layer": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Layer",
+      "description": "reference or institutional (RM-01)."
+     },
+     "course_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Course Code",
+      "description": "Only on a course."
+     },
+     "locator": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Locator",
+      "description": "Only on a learning resource: where its document is."
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description",
+      "description": "Only on the node a detail is about."
+     },
+     "depth": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Depth",
+      "description": "Where the pattern measures it: the distance from the starting node."
+     },
+     "score": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Score",
+      "description": "Only in a search: the relevance of the match."
+     },
+     "more_neighbors": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "More Neighbors",
+      "description": "Only in a detail: whether the node has neighbors left out."
+     },
+     "units": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Units",
+      "description": "Only on an area of the overview: the units that are part of it."
+     },
+     "topics": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Topics",
+      "description": "Only on an area of the overview: the topics under its units."
+     },
+     "concepts": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Concepts",
+      "description": "Only on an area of the overview: the concepts under those topics."
+     }
+    },
+    "type": "object",
+    "required": [
+     "key",
+     "label",
+     "name_es",
+     "name_en",
+     "layer"
+    ],
+    "title": "NodeView"
+   },
+   "OperationMode": {
+    "properties": {
+     "rehearsal": {
+      "type": "boolean",
+      "title": "Rehearsal"
+     }
+    },
+    "type": "object",
+    "required": [
+     "rehearsal"
+    ],
+    "title": "OperationMode",
+    "description": "Whether the operation routes run in rehearsal mode (ADR-013, amendment 2026-11).",
+    "examples": [
+     {
+      "rehearsal": true
+     }
+    ]
+   },
+   "RuleResultView": {
+    "properties": {
+     "rule": {
+      "type": "string",
+      "title": "Rule"
+     },
+     "violations": {
+      "type": "integer",
+      "title": "Violations"
+     },
+     "sample": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Sample",
+      "description": "Up to a few of the violating nodes or edges."
+     }
+    },
+    "type": "object",
+    "required": [
+     "rule",
+     "violations",
+     "sample"
+    ],
+    "title": "RuleResultView"
+   },
+   "RunDetail": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status",
+      "description": "One of: pending, running, completed, rejected, failed, written_not_persisted, stopped_by_audit (ADR-010)."
+     },
+     "created_at": {
+      "type": "string",
+      "title": "Created At"
+     },
+     "started_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Started At"
+     },
+     "finished_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Finished At"
+     },
+     "resource_key": {
+      "type": "string",
+      "title": "Resource Key",
+      "description": "The key of the learning resource, and of its document."
+     },
+     "resource_type": {
+      "type": "string",
+      "title": "Resource Type"
+     },
+     "course_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Course Code"
+     },
+     "course_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Course Name"
+     },
+     "file_name": {
+      "type": "string",
+      "title": "File Name"
+     },
+     "model": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model",
+      "description": "The model as the provider named it (RF-25)."
+     },
+     "model_settings": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model Settings"
+     },
+     "prompt_version": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prompt Version"
+     },
+     "content_retries": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Content Retries"
+     },
+     "input_tokens": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Input Tokens",
+      "description": "Summed over every response of the model, retries included."
+     },
+     "output_tokens": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Output Tokens",
+      "description": "Summed over every response of the model, retries included."
+     },
+     "error": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Error"
+     },
+     "audit_report": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/AuditReportView"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "The report of the audit that closed the run, if any."
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "status",
+     "created_at",
+     "started_at",
+     "finished_at",
+     "resource_key",
+     "resource_type",
+     "course_code",
+     "course_name",
+     "file_name",
+     "model",
+     "model_settings",
+     "prompt_version",
+     "content_retries",
+     "input_tokens",
+     "output_tokens",
+     "error",
+     "audit_report"
+    ],
+    "title": "RunDetail"
+   },
+   "RunDiscards": {
+    "properties": {
+     "discards": {
+      "items": {
+       "$ref": "#/components/schemas/DiscardView"
+      },
+      "type": "array",
+      "title": "Discards"
+     },
+     "batch": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Batch",
+      "description": "The whole candidate batch of a rejected run (RF-05)."
+     },
+     "raw_output": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Raw Output",
+      "description": "The model's output when it never became a batch (EX-01)."
+     }
+    },
+    "type": "object",
+    "required": [
+     "discards",
+     "batch",
+     "raw_output"
+    ],
+    "title": "RunDiscards",
+    "examples": [
+     {
+      "batch": {
+       "edges": [],
+       "nodes": []
+      },
+      "discards": [
+       {
+        "fact": "(a)-[:PART_OF]->(b)",
+        "message": "Concept PART_OF Course",
+        "rule": "RI-05"
+       }
+      ]
+     }
+    ]
+   },
+   "RunSummary": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status",
+      "description": "One of: pending, running, completed, rejected, failed, written_not_persisted, stopped_by_audit (ADR-010)."
+     },
+     "created_at": {
+      "type": "string",
+      "title": "Created At"
+     },
+     "finished_at": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Finished At"
+     },
+     "resource_type": {
+      "type": "string",
+      "title": "Resource Type"
+     },
+     "course_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Course Code"
+     },
+     "course_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Course Name"
+     },
+     "file_name": {
+      "type": "string",
+      "title": "File Name"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "status",
+     "created_at",
+     "finished_at",
+     "resource_type",
+     "course_code",
+     "course_name",
+     "file_name"
+    ],
+    "title": "RunSummary",
+    "examples": [
+     {
+      "course_code": "1INF33",
+      "course_name": "Bases de Datos",
+      "created_at": "2026-10-08T15:02:11+00:00",
+      "file_name": "silabo-1INF33.pdf",
+      "finished_at": "2026-10-08T15:03:40+00:00",
+      "id": 7,
+      "resource_type": "Sílabo",
+      "status": "completed"
+     }
+    ]
+   },
+   "SubgraphView": {
+    "properties": {
+     "nodes": {
+      "items": {
+       "$ref": "#/components/schemas/NodeView"
+      },
+      "type": "array",
+      "title": "Nodes"
+     },
+     "edges": {
+      "items": {
+       "$ref": "#/components/schemas/EdgeView"
+      },
+      "type": "array",
+      "title": "Edges"
+     }
+    },
+    "type": "object",
+    "required": [
+     "nodes",
+     "edges"
+    ],
+    "title": "SubgraphView",
+    "examples": [
+     {
+      "edges": [
+       {
+        "provenance": "fadc…",
+        "source": "15d8…",
+        "target": "9a1c…",
+        "type": "HAS_PREREQUISITE"
+       },
+       {
+        "provenance": "fadc…",
+        "source": "15d8…",
+        "target": "fadc…",
+        "type": "WAS_DERIVED_FROM"
+       },
+       {
+        "provenance": "fadc…",
+        "source": "9a1c…",
+        "target": "fadc…",
+        "type": "WAS_DERIVED_FROM"
+       }
+      ],
+      "nodes": [
+       {
+        "depth": 0,
+        "key": "15d8…",
+        "label": "Concept",
+        "layer": "institutional",
+        "name_es": "Variables estáticas"
+       },
+       {
+        "depth": 1,
+        "key": "9a1c…",
+        "label": "Concept",
+        "layer": "institutional",
+        "name_es": "Punteros"
+       },
+       {
+        "key": "fadc…",
+        "label": "LearningResource",
+        "layer": "institutional",
+        "locator": "http://localhost:8000/resources/fadc…",
+        "name_es": "Sílabo 1INF25"
+       }
+      ]
+     }
+    ]
+   },
+   "SubmittedRun": {
+    "properties": {
+     "run_id": {
+      "type": "integer",
+      "title": "Run Id"
+     },
+     "worker_launched": {
+      "type": "boolean",
+      "title": "Worker Launched",
+      "description": "False if a worker was already running: it takes the run in turn."
+     }
+    },
+    "type": "object",
+    "required": [
+     "run_id",
+     "worker_launched"
+    ],
+    "title": "SubmittedRun",
+    "examples": [
+     {
+      "run_id": 7,
+      "worker_launched": true
+     }
+    ]
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  },
+  "securitySchemes": {
+   "HTTPBearer": {
+    "type": "http",
+    "description": "The operator token (ADR-013).",
+    "scheme": "bearer"
+   }
+  }
+ }
+}

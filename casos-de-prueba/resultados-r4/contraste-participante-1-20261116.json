@@ -1,0 +1,1141 @@
+{
+  "gold": "var\\gold-congelada.tsv",
+  "gold_meta": "# gold_consolidado | silabos=13 | guia=v2.1 | fecha=2026-10-02 | consolidador=Claude Opus 5.5",
+  "from_run": 1,
+  "to_run": null,
+  "measured_at": "2026-11-16T18:15:12-05:00",
+  "syllabi": [
+    {
+      "syllabus": "1INF27",
+      "reviewer_rows": 24,
+      "repeated_rows": 0,
+      "reviewer_registered": {
+        "count": 15,
+        "of": 24,
+        "proportion": 0.625
+      },
+      "notions_extracted": {
+        "count": 15,
+        "of": 39,
+        "proportion": 0.38461538461538464
+      },
+      "mandatory_extracted": {
+        "count": 14,
+        "of": 29,
+        "proportion": 0.4827586206896552
+      },
+      "acceptable_extracted": {
+        "count": 1,
+        "of": 10,
+        "proportion": 0.1
+      },
+      "type_agreement": {
+        "count": 7,
+        "of": 15,
+        "proportion": 0.4666666666666667
+      },
+      "reviewer_only": [
+        {
+          "name": "Aplicación de algoritmos a diversos casos de ingeniería, ordenamiento y búsqueda.",
+          "text": "Aplicación de algoritmos a diversos casos de ingeniería, ordenamiento y búsqueda.",
+          "comment": ""
+        },
+        {
+          "name": "Estrategias de búsqueda y recorrido sobre listas, árboles, tablas y grafos",
+          "text": "Estrategias de búsqueda y recorrido sobre listas, árboles, tablas y grafos",
+          "comment": ""
+        },
+        {
+          "name": "Tablas",
+          "text": "Tablas",
+          "comment": ""
+        },
+        {
+          "name": "Cálculo del tiempo de ejecución de algoritmos",
+          "text": "Cálculo del tiempo de ejecución de algoritmos",
+          "comment": ""
+        },
+        {
+          "name": "Algoritmos",
+          "text": "estructuras y algoritmos que pueden ser usados",
+          "comment": ""
+        },
+        {
+          "name": "Inplementación de software",
+          "text": "para la implementación de una solución informática",
+          "comment": ""
+        },
+        {
+          "name": "fundamentos del análisis de la eficiencia de algoritmos",
+          "text": "fundamentos del análisis de la eficiencia de algoritmos",
+          "comment": ""
+        },
+        {
+          "name": "especificación formal e implementación de los tipos de datos",
+          "text": "especificación formal e implementación de los tipos de datos",
+          "comment": ""
+        },
+        {
+          "name": "Lenguajes de programación",
+          "text": "lenguajes de programación.",
+          "comment": ""
+        }
+      ],
+      "annotation_only": [
+        {
+          "global_id": "G-0079",
+          "entry": "1INF27-001",
+          "label": "Técnicas algorítmicas básicas para la resolución de problemas",
+          "level": "obligatoria",
+          "evidence": "TÉCNICAS ALGORÍTMICAS BÁSICAS PARA LA RESOLUCIÓN DE PROBLEMAS"
+        },
+        {
+          "global_id": "G-0083",
+          "entry": "1INF27-005",
+          "label": "Ordenamiento",
+          "level": "obligatoria",
+          "evidence": "Aplicación a diversos casos de ingeniería, ordenamiento y búsqueda"
+        },
+        {
+          "global_id": "G-0084",
+          "entry": "1INF27-006",
+          "label": "Búsqueda",
+          "level": "obligatoria",
+          "evidence": "Aplicación a diversos casos de ingeniería, ordenamiento y búsqueda"
+        },
+        {
+          "global_id": "G-0086",
+          "entry": "1INF27-008",
+          "label": "Esquemas algorítmicos",
+          "level": "aceptable",
+          "evidence": "la presentación de los esquemas algorítmicos"
+        },
+        {
+          "global_id": "G-0089",
+          "entry": "1INF27-011",
+          "label": "Especificaciones de tipos abstractos de datos",
+          "level": "obligatoria",
+          "evidence": "Especificaciones de tipos abstractos de datos"
+        },
+        {
+          "global_id": "G-0091",
+          "entry": "1INF27-013",
+          "label": "Pilas",
+          "level": "obligatoria",
+          "evidence": "listas, pilas, colas, árboles, tablas y grafos"
+        },
+        {
+          "global_id": "G-0092",
+          "entry": "1INF27-014",
+          "label": "Colas",
+          "level": "obligatoria",
+          "evidence": "listas, pilas, colas, árboles, tablas y grafos"
+        },
+        {
+          "global_id": "G-0094",
+          "entry": "1INF27-017",
+          "label": "Árboles binarios",
+          "level": "obligatoria",
+          "evidence": "árboles binarios"
+        },
+        {
+          "global_id": "G-0095",
+          "entry": "1INF27-018",
+          "label": "Árboles binarios de búsqueda",
+          "level": "obligatoria",
+          "evidence": "árboles binarios de búsqueda"
+        },
+        {
+          "global_id": "G-0097",
+          "entry": "1INF27-020",
+          "label": "Estrategias de búsqueda",
+          "level": "obligatoria",
+          "evidence": "Estrategias de búsqueda y recorrido sobre listas, árboles, tablas y grafos"
+        },
+        {
+          "global_id": "G-0098",
+          "entry": "1INF27-021",
+          "label": "Estrategias de recorrido",
+          "level": "obligatoria",
+          "evidence": "Estrategias de búsqueda y recorrido sobre listas, árboles, tablas y grafos"
+        },
+        {
+          "global_id": "G-0099",
+          "entry": "1INF27-022",
+          "label": "Búsqueda en listas",
+          "level": "aceptable",
+          "evidence": "búsqueda y recorrido sobre listas"
+        },
+        {
+          "global_id": "G-0100",
+          "entry": "1INF27-023",
+          "label": "Búsqueda en árboles",
+          "level": "aceptable",
+          "evidence": "búsqueda y recorrido sobre listas, árboles"
+        },
+        {
+          "global_id": "G-0101",
+          "entry": "1INF27-024",
+          "label": "Búsqueda en tablas hash",
+          "level": "aceptable",
+          "evidence": "búsqueda y recorrido sobre listas, árboles, tablas"
+        },
+        {
+          "global_id": "G-0102",
+          "entry": "1INF27-025",
+          "label": "Búsqueda en grafos",
+          "level": "aceptable",
+          "evidence": "búsqueda y recorrido sobre listas, árboles, tablas y grafos"
+        },
+        {
+          "global_id": "G-0103",
+          "entry": "1INF27-026",
+          "label": "Recorrido de listas",
+          "level": "aceptable",
+          "evidence": "búsqueda y recorrido sobre listas"
+        },
+        {
+          "global_id": "G-0104",
+          "entry": "1INF27-027",
+          "label": "Recorrido de árboles",
+          "level": "aceptable",
+          "evidence": "búsqueda y recorrido sobre listas, árboles"
+        },
+        {
+          "global_id": "G-0105",
+          "entry": "1INF27-028",
+          "label": "Recorrido de grafos",
+          "level": "aceptable",
+          "evidence": "búsqueda y recorrido sobre listas, árboles, tablas y grafos"
+        },
+        {
+          "global_id": "G-0106",
+          "entry": "1INF27-029",
+          "label": "Complejidad y eficiencia algorítmica",
+          "level": "obligatoria",
+          "evidence": "COMPLEJIDAD Y EFICIENCIA ALGORÍTMICA"
+        },
+        {
+          "global_id": "G-0107",
+          "entry": "1INF27-030",
+          "label": "Análisis de la eficiencia de algoritmos",
+          "level": "obligatoria",
+          "evidence": "fundamentos del análisis de la eficiencia de algoritmos"
+        },
+        {
+          "global_id": "G-0108",
+          "entry": "1INF27-031",
+          "label": "Soporte matemático",
+          "level": "obligatoria",
+          "evidence": "Soporte matemático"
+        },
+        {
+          "global_id": "G-0110",
+          "entry": "1INF27-033",
+          "label": "Notación O grande",
+          "level": "aceptable",
+          "evidence": "Medidas asintóticas"
+        },
+        {
+          "global_id": "G-0111",
+          "entry": "1INF27-034",
+          "label": "Cálculo del tiempo de ejecución",
+          "level": "obligatoria",
+          "evidence": "Cálculo del tiempo de ejecución"
+        },
+        {
+          "global_id": "G-0112",
+          "entry": "1INF27-035",
+          "label": "Hashing",
+          "level": "obligatoria",
+          "evidence": "HASHING"
+        }
+      ],
+      "adjudicated": {
+        "pending": 33,
+        "reviewer_registered": {
+          "count": 15,
+          "of": 24,
+          "proportion": 0.625
+        },
+        "notions_extracted": {
+          "count": 15,
+          "of": 39,
+          "proportion": 0.38461538461538464
+        },
+        "categories": {
+          "revisor": {
+            "misma_nocion": 0,
+            "omision": 0,
+            "criterio": 0,
+            "no_sustentada": 0
+          },
+          "anotacion": {
+            "misma_nocion": 0,
+            "no_extraida": 0,
+            "inclusion_indebida": 0,
+            "criterio": 0
+          }
+        },
+        "missing_aliases": 0
+      },
+      "pipeline": {
+        "run_id": 2,
+        "pipeline_registered": {
+          "count": 14,
+          "of": 37,
+          "proportion": 0.3783783783783784
+        },
+        "pipeline_only": [
+          {
+            "key": "2164d487-6134-4025-b2ff-7d10c71ab298",
+            "label": "Topic",
+            "name": "TÉCNICAS ALGORÍTMICAS BÁSICAS PARA LA RESOLUCIÓN DE PROBLEMAS"
+          },
+          {
+            "key": "2c138826-6e6a-4503-b67d-e9f23374d701",
+            "label": "Concept",
+            "name": "Ordenamiento"
+          },
+          {
+            "key": "6cb3ff08-b4c0-4a6d-97c8-b2cc27f92c2f",
+            "label": "Concept",
+            "name": "Búsqueda"
+          },
+          {
+            "key": "2ed513a6-4dad-4cf1-ae76-b110f4cfc7d5",
+            "label": "Concept",
+            "name": "Programación"
+          },
+          {
+            "key": "9fab15ce-e267-4d13-a149-8bfaf1922db5",
+            "label": "Topic",
+            "name": "ESTRUCTURAS DE DATOS (TAD) Y SUS IMPLEMENTACIONES"
+          },
+          {
+            "key": "d4e93b00-cacf-48d7-ad02-f53b506912c6",
+            "label": "Concept",
+            "name": "Especificaciones de tipos abstractos de datos"
+          },
+          {
+            "key": "926608af-5625-44e1-8610-8f59cfff03d1",
+            "label": "Concept",
+            "name": "Pilas"
+          },
+          {
+            "key": "526d2da0-f8c3-4db0-bafd-3ec6601959bd",
+            "label": "Concept",
+            "name": "Colas"
+          },
+          {
+            "key": "e94fa142-8600-48e8-a652-ab8e345895fd",
+            "label": "Concept",
+            "name": "Estrategias de búsqueda sobre listas"
+          },
+          {
+            "key": "ff23ff10-b71a-4962-997b-2f518b7e1180",
+            "label": "Concept",
+            "name": "Estrategias de búsqueda sobre árboles"
+          },
+          {
+            "key": "7f376ec8-e610-43b3-98e0-293918046e6d",
+            "label": "Concept",
+            "name": "Estrategias de búsqueda sobre tablas"
+          },
+          {
+            "key": "c11a2e12-cd7a-429a-b5aa-bca22c1afc96",
+            "label": "Concept",
+            "name": "Estrategias de búsqueda sobre grafos"
+          },
+          {
+            "key": "b075b671-ed12-4a21-a372-ec761d3c5ae2",
+            "label": "Concept",
+            "name": "Estrategias de recorrido sobre listas"
+          },
+          {
+            "key": "6abceb6f-5257-4653-80d4-bee0c1d52a0f",
+            "label": "Concept",
+            "name": "Estrategias de recorrido sobre árboles"
+          },
+          {
+            "key": "107a52b2-d723-4586-9e54-c7f4e8f3a982",
+            "label": "Concept",
+            "name": "Estrategias de recorrido sobre tablas"
+          },
+          {
+            "key": "f5fe45a0-c509-4bc4-8cda-845f8455f1b0",
+            "label": "Concept",
+            "name": "Estrategias de recorrido sobre grafos"
+          },
+          {
+            "key": "92db22df-b19e-4592-9d19-7d1b6e3efe13",
+            "label": "Concept",
+            "name": "Tipos de datos"
+          },
+          {
+            "key": "56416cd2-f72e-4348-8740-41e46db65393",
+            "label": "Concept",
+            "name": "Árboles binarios"
+          },
+          {
+            "key": "02d912a8-7799-4eb0-a649-2596dd9008e0",
+            "label": "Concept",
+            "name": "Árboles binarios de búsqueda"
+          },
+          {
+            "key": "20c2d7fd-6cb0-4f51-bf42-ae3561e5fe07",
+            "label": "Topic",
+            "name": "COMPLEJIDAD Y EFICIENCIA ALGORÍTMICA"
+          },
+          {
+            "key": "9030d6af-d945-44c0-aac2-76550caa91ae",
+            "label": "Concept",
+            "name": "Cálculo del tiempo de ejecución"
+          },
+          {
+            "key": "ef5f29fa-b11a-4684-a738-d7a2af018d66",
+            "label": "Concept",
+            "name": "Análisis de la eficiencia de algoritmos"
+          },
+          {
+            "key": "2482b694-5eaf-4ee6-874c-4794a438f825",
+            "label": "Topic",
+            "name": "HASHING"
+          }
+        ],
+        "adjudicated": null
+      }
+    },
+    {
+      "syllabus": "1INF37",
+      "reviewer_rows": 64,
+      "repeated_rows": 0,
+      "reviewer_registered": {
+        "count": 45,
+        "of": 64,
+        "proportion": 0.703125
+      },
+      "notions_extracted": {
+        "count": 46,
+        "of": 85,
+        "proportion": 0.5411764705882353
+      },
+      "mandatory_extracted": {
+        "count": 45,
+        "of": 80,
+        "proportion": 0.5625
+      },
+      "acceptable_extracted": {
+        "count": 1,
+        "of": 5,
+        "proportion": 0.2
+      },
+      "type_agreement": {
+        "count": 4,
+        "of": 45,
+        "proportion": 0.08888888888888889
+      },
+      "reviewer_only": [
+        {
+          "name": "Automatizacion de datos e información",
+          "text": "automatización de datos e información",
+          "comment": ""
+        },
+        {
+          "name": "Tecnologías de información",
+          "text": "tecnologías informáticas",
+          "comment": ""
+        },
+        {
+          "name": "Diseño en ingeniería",
+          "text": "Diseño en ingeniería",
+          "comment": ""
+        },
+        {
+          "name": "Implementación de software",
+          "text": "implementa e implanta soluciones para problemas",
+          "comment": ""
+        },
+        {
+          "name": "Implantación de software",
+          "text": "implementa e implanta soluciones para problemas",
+          "comment": ""
+        },
+        {
+          "name": "Ética",
+          "text": "Responsabilidad y ética profesional: Reconoce responsabilidades profesionales y éticas. A la vez emite juicios informados, que deben considerar el impacto de las soluciones informáticas en emite juicios informados, que deben considerar el impacto de las soluciones informáticas en",
+          "comment": ""
+        },
+        {
+          "name": "Ciclo de vida de proyecto",
+          "text": "del ciclo de vida",
+          "comment": ""
+        },
+        {
+          "name": "-Calidad de producto software: modelos y estándares",
+          "text": "-Calidad de producto software: modelos y estándares",
+          "comment": ""
+        },
+        {
+          "name": "-Calidad de proceso software: modelos y estándares",
+          "text": "-Calidad de proceso software: modelos y estándares",
+          "comment": ""
+        },
+        {
+          "name": "-Relación entre ingeniería de software e ingeniería de sistemas",
+          "text": "-Relación entre ingeniería de software e ingeniería de sistemas",
+          "comment": ""
+        },
+        {
+          "name": "-Enfoque de desarrollo predictivo y adaptativo",
+          "text": "-Enfoque de desarrollo predictivo y adaptativo",
+          "comment": ""
+        },
+        {
+          "name": "-Metodologías ágiles: XP, Kanban, Lean",
+          "text": "-Metodologías ágiles: XP, Kanban, Lean",
+          "comment": ""
+        },
+        {
+          "name": "-Metodologías y modelos de ciclo de vida (cascada, evolutivo, incremental)",
+          "text": "-Metodologías y modelos de ciclo de vida (cascada, evolutivo, incremental)",
+          "comment": ""
+        },
+        {
+          "name": "-Importancia de la gestión de configuración",
+          "text": "-Importancia de la gestión de configuración",
+          "comment": ""
+        },
+        {
+          "name": "-Importancia de la calidad",
+          "text": "-Importancia de la calidad",
+          "comment": ""
+        },
+        {
+          "name": "-Aseguramiento y Control de Calidad",
+          "text": "-Aseguramiento y Control de Calidad",
+          "comment": ""
+        },
+        {
+          "name": "-Modelos de madurez (CMMI, MPS, MoProSoft, ISO 29110)",
+          "text": "-Modelos de madurez (CMMI, MPS, MoProSoft, ISO 29110)",
+          "comment": ""
+        },
+        {
+          "name": "-Modelos de calidad de la ISO 25000: interna, externa y calidad en uso",
+          "text": "-Modelos de calidad de la ISO 25000: interna, externa y calidad en uso",
+          "comment": ""
+        },
+        {
+          "name": "-Fundamentos de mantenimiento de software",
+          "text": "-Fundamentos de mantenimiento de software",
+          "comment": ""
+        }
+      ],
+      "annotation_only": [
+        {
+          "global_id": "G-0541",
+          "entry": "1INF37-003",
+          "label": "Calidad de producto software",
+          "level": "obligatoria",
+          "evidence": "Calidad de producto software: modelos y estándares"
+        },
+        {
+          "global_id": "G-0542",
+          "entry": "1INF37-004",
+          "label": "Calidad de proceso software",
+          "level": "obligatoria",
+          "evidence": "Calidad de proceso software: modelos y estándares"
+        },
+        {
+          "global_id": "G-0543",
+          "entry": "1INF37-005",
+          "label": "Ingeniería de software",
+          "level": "obligatoria",
+          "evidence": "Relación entre ingeniería de software e ingeniería de sistemas"
+        },
+        {
+          "global_id": "G-0544",
+          "entry": "1INF37-006",
+          "label": "Ingeniería de sistemas",
+          "level": "obligatoria",
+          "evidence": "Relación entre ingeniería de software e ingeniería de sistemas"
+        },
+        {
+          "global_id": "G-0535",
+          "entry": "1INF37-007",
+          "label": "Desarrollo de software ágil",
+          "level": "obligatoria",
+          "evidence": "DESARROLLO DE SOFTWARE AGIL"
+        },
+        {
+          "global_id": "G-0545",
+          "entry": "1INF37-008",
+          "label": "Enfoque de desarrollo predictivo",
+          "level": "obligatoria",
+          "evidence": "Enfoque de desarrollo predictivo y adaptativo"
+        },
+        {
+          "global_id": "G-0546",
+          "entry": "1INF37-009",
+          "label": "Enfoque de desarrollo adaptativo",
+          "level": "obligatoria",
+          "evidence": "Enfoque de desarrollo predictivo y adaptativo"
+        },
+        {
+          "global_id": "G-0547",
+          "entry": "1INF37-010",
+          "label": "Enfoques de desarrollo",
+          "level": "aceptable",
+          "evidence": "Enfoque de desarrollo predictivo y adaptativo"
+        },
+        {
+          "global_id": "G-0551",
+          "entry": "1INF37-014",
+          "label": "Metodologías ágiles",
+          "level": "obligatoria",
+          "evidence": "Metodologías ágiles: XP, Kanban, Lean"
+        },
+        {
+          "global_id": "G-0552",
+          "entry": "1INF37-015",
+          "label": "XP",
+          "level": "obligatoria",
+          "evidence": "Metodologías ágiles: XP, Kanban, Lean"
+        },
+        {
+          "global_id": "G-0553",
+          "entry": "1INF37-016",
+          "label": "Kanban",
+          "level": "obligatoria",
+          "evidence": "Metodologías ágiles: XP, Kanban, Lean"
+        },
+        {
+          "global_id": "G-0554",
+          "entry": "1INF37-017",
+          "label": "Lean",
+          "level": "obligatoria",
+          "evidence": "Metodologías ágiles: XP, Kanban, Lean"
+        },
+        {
+          "global_id": "G-0556",
+          "entry": "1INF37-019",
+          "label": "Metodologías y modelos de ciclo de vida",
+          "level": "obligatoria",
+          "evidence": "METODOLOGÍAS Y MODELOS DE CICLO DE VIDA"
+        },
+        {
+          "global_id": "G-0561",
+          "entry": "1INF37-024",
+          "label": "Modelo en cascada",
+          "level": "obligatoria",
+          "evidence": "Metodologías y modelos de ciclo de vida (cascada, evolutivo, incremental)"
+        },
+        {
+          "global_id": "G-0562",
+          "entry": "1INF37-025",
+          "label": "Modelo evolutivo",
+          "level": "obligatoria",
+          "evidence": "Metodologías y modelos de ciclo de vida (cascada, evolutivo, incremental)"
+        },
+        {
+          "global_id": "G-0563",
+          "entry": "1INF37-026",
+          "label": "Modelo incremental",
+          "level": "obligatoria",
+          "evidence": "Metodologías y modelos de ciclo de vida (cascada, evolutivo, incremental)"
+        },
+        {
+          "global_id": "G-0565",
+          "entry": "1INF37-028",
+          "label": "Gestión de configuración",
+          "level": "obligatoria",
+          "evidence": "GESTIÓN DE CONFIGURACIÓN"
+        },
+        {
+          "global_id": "G-0568",
+          "entry": "1INF37-032",
+          "label": "Integración continua",
+          "level": "obligatoria",
+          "evidence": "Integración Continua"
+        },
+        {
+          "global_id": "G-0570",
+          "entry": "1INF37-034",
+          "label": "Calidad de software",
+          "level": "obligatoria",
+          "evidence": "Importancia de la calidad"
+        },
+        {
+          "global_id": "G-0571",
+          "entry": "1INF37-035",
+          "label": "Aseguramiento de calidad",
+          "level": "obligatoria",
+          "evidence": "Aseguramiento y Control de Calidad"
+        },
+        {
+          "global_id": "G-0572",
+          "entry": "1INF37-036",
+          "label": "Control de calidad",
+          "level": "obligatoria",
+          "evidence": "Aseguramiento y Control de Calidad"
+        },
+        {
+          "global_id": "G-0575",
+          "entry": "1INF37-040",
+          "label": "Estimación y cronograma de software",
+          "level": "obligatoria",
+          "evidence": "ESTIMACIÓN Y CRONOGRAMA DE SOFTWARE"
+        },
+        {
+          "global_id": "G-0582",
+          "entry": "1INF37-048",
+          "label": "Modelos de madurez",
+          "level": "obligatoria",
+          "evidence": "Modelos de madurez (CMMI, MPS, MoProSoft, ISO 29110)"
+        },
+        {
+          "global_id": "G-0583",
+          "entry": "1INF37-049",
+          "label": "CMMI",
+          "level": "obligatoria",
+          "evidence": "Modelos de madurez (CMMI, MPS, MoProSoft, ISO 29110)"
+        },
+        {
+          "global_id": "G-0584",
+          "entry": "1INF37-050",
+          "label": "MPS",
+          "level": "obligatoria",
+          "evidence": "Modelos de madurez (CMMI, MPS, MoProSoft, ISO 29110)"
+        },
+        {
+          "global_id": "G-0585",
+          "entry": "1INF37-051",
+          "label": "MoProSoft",
+          "level": "obligatoria",
+          "evidence": "Modelos de madurez (CMMI, MPS, MoProSoft, ISO 29110)"
+        },
+        {
+          "global_id": "G-0586",
+          "entry": "1INF37-052",
+          "label": "ISO 29110",
+          "level": "obligatoria",
+          "evidence": "Modelos de madurez (CMMI, MPS, MoProSoft, ISO 29110)"
+        },
+        {
+          "global_id": "G-0589",
+          "entry": "1INF37-056",
+          "label": "Modelos de calidad de la ISO 25000",
+          "level": "obligatoria",
+          "evidence": "Modelos de calidad de la ISO 25000: interna, externa y calidad en uso"
+        },
+        {
+          "global_id": "G-0590",
+          "entry": "1INF37-057",
+          "label": "ISO 25000",
+          "level": "obligatoria",
+          "evidence": "Modelos de calidad de la ISO 25000"
+        },
+        {
+          "global_id": "G-0591",
+          "entry": "1INF37-058",
+          "label": "Calidad interna",
+          "level": "obligatoria",
+          "evidence": "interna, externa y calidad en uso"
+        },
+        {
+          "global_id": "G-0592",
+          "entry": "1INF37-059",
+          "label": "Calidad externa",
+          "level": "obligatoria",
+          "evidence": "interna, externa y calidad en uso"
+        },
+        {
+          "global_id": "G-0593",
+          "entry": "1INF37-060",
+          "label": "Calidad en uso",
+          "level": "obligatoria",
+          "evidence": "interna, externa y calidad en uso"
+        },
+        {
+          "global_id": "G-0364",
+          "entry": "1INF37-063",
+          "label": "Despliegue del software",
+          "level": "obligatoria",
+          "evidence": "DESPLIEGUE DEL SOFTWARE"
+        },
+        {
+          "global_id": "G-0602",
+          "entry": "1INF37-070",
+          "label": "Mantenimiento de software",
+          "level": "obligatoria",
+          "evidence": "MANTENIMIENTO DE SOFTWARE"
+        },
+        {
+          "global_id": "G-0608",
+          "entry": "1INF37-077",
+          "label": "Gestión del proyecto de desarrollo de software",
+          "level": "obligatoria",
+          "evidence": "GESTIÓN DEL PROYECTO DE DESARROLLO DE SOFTWARE"
+        },
+        {
+          "global_id": "G-0616",
+          "entry": "1INF37-085",
+          "label": "Procesos del ciclo de vida de software",
+          "level": "obligatoria",
+          "evidence": "procesos del ciclo de vida de software"
+        },
+        {
+          "global_id": "G-0235",
+          "entry": "1INF37-087",
+          "label": "Requisitos funcionales",
+          "level": "aceptable",
+          "evidence": "requisitos funcionales y no funcionales"
+        },
+        {
+          "global_id": "G-0236",
+          "entry": "1INF37-088",
+          "label": "Requisitos no funcionales",
+          "level": "aceptable",
+          "evidence": "requisitos funcionales y no funcionales"
+        },
+        {
+          "global_id": "G-0380",
+          "entry": "1INF37-089",
+          "label": "Arquitectura de software",
+          "level": "aceptable",
+          "evidence": "Diseña una arquitectura"
+        }
+      ],
+      "adjudicated": {
+        "pending": 58,
+        "reviewer_registered": {
+          "count": 45,
+          "of": 64,
+          "proportion": 0.703125
+        },
+        "notions_extracted": {
+          "count": 46,
+          "of": 85,
+          "proportion": 0.5411764705882353
+        },
+        "categories": {
+          "revisor": {
+            "misma_nocion": 0,
+            "omision": 0,
+            "criterio": 0,
+            "no_sustentada": 0
+          },
+          "anotacion": {
+            "misma_nocion": 0,
+            "no_extraida": 0,
+            "inclusion_indebida": 0,
+            "criterio": 0
+          }
+        },
+        "missing_aliases": 0
+      },
+      "pipeline": {
+        "run_id": 12,
+        "pipeline_registered": {
+          "count": 32,
+          "of": 81,
+          "proportion": 0.3950617283950617
+        },
+        "pipeline_only": [
+          {
+            "key": "c3d08087-2d81-4300-9ae5-14f32169a4c6",
+            "label": "Topic",
+            "name": "DESARROLLO DE SOFTWARE AGIL"
+          },
+          {
+            "key": "cd991034-c279-4c3a-84b5-39a2bcdd15ae",
+            "label": "Concept",
+            "name": "Enfoque de desarrollo predictivo"
+          },
+          {
+            "key": "719f4167-0a7c-4703-8e1d-a19302dea889",
+            "label": "Concept",
+            "name": "Enfoque de desarrollo adaptativo"
+          },
+          {
+            "key": "b2246925-4fd0-4fe7-882a-856537b6beb8",
+            "label": "Concept",
+            "name": "Metodologías ágiles"
+          },
+          {
+            "key": "8dcda5ad-46e0-49ea-aa38-696332d03a74",
+            "label": "Concept",
+            "name": "XP"
+          },
+          {
+            "key": "436d8a19-8071-4b07-a2aa-b73bf74f210b",
+            "label": "Concept",
+            "name": "Kanban"
+          },
+          {
+            "key": "0ee5228b-c9b9-4398-948e-121a69fd47eb",
+            "label": "Concept",
+            "name": "Lean"
+          },
+          {
+            "key": "eba15851-625f-4342-b0ca-f19b3a0114ab",
+            "label": "Concept",
+            "name": "Scrum"
+          },
+          {
+            "key": "6c8de064-5901-416d-94cd-2f114e873143",
+            "label": "Topic",
+            "name": "METODOLOGÍAS Y MODELOS DE CICLO DE VIDA"
+          },
+          {
+            "key": "b121ba83-4863-498a-993c-00f255e8b614",
+            "label": "Concept",
+            "name": "Ingeniería de software"
+          },
+          {
+            "key": "daa09f70-8612-4f10-9cb0-01d89b1ebcd1",
+            "label": "Concept",
+            "name": "Ingeniería de sistemas"
+          },
+          {
+            "key": "7e102276-358d-4286-894f-28d2aa8b6e32",
+            "label": "Concept",
+            "name": "Cascada"
+          },
+          {
+            "key": "ec89a6b2-b11f-46ca-a792-00997de525eb",
+            "label": "Concept",
+            "name": "Modelo de ciclo de vida evolutivo"
+          },
+          {
+            "key": "ce0bc7cb-c675-4667-a81e-f78c02a923c1",
+            "label": "Concept",
+            "name": "Modelo de ciclo de vida incremental"
+          },
+          {
+            "key": "00df3116-9d3d-46d7-9fe2-d7257291dbc7",
+            "label": "Concept",
+            "name": "Ciclo de vida"
+          },
+          {
+            "key": "5a429a5b-a55a-4232-aad6-8b970af9badb",
+            "label": "Concept",
+            "name": "Procesos del ciclo de vida de software"
+          },
+          {
+            "key": "e33be14e-994c-4875-ad3e-8463d8c07d39",
+            "label": "Concept",
+            "name": "Propuestas metodológicas"
+          },
+          {
+            "key": "c71d4dc0-4e38-449b-88d6-cacc696d99e8",
+            "label": "Topic",
+            "name": "GESTIÓN DE CONFIGURACIÓN"
+          },
+          {
+            "key": "2859a951-e979-4fba-ab16-fff81ce482c6",
+            "label": "Concept",
+            "name": "Integración Continua"
+          },
+          {
+            "key": "258251a7-7391-4c32-8d3a-f4cb5b7766d7",
+            "label": "Topic",
+            "name": "VERIFICACIÓN, VALIDACIÓN Y PRUEBAS DE SOFTWARE"
+          },
+          {
+            "key": "0aa458d7-ecc2-4299-8100-6a6864cb53b3",
+            "label": "Concept",
+            "name": "Calidad"
+          },
+          {
+            "key": "fb089a7c-ca14-4814-a54a-12951286a8e6",
+            "label": "Concept",
+            "name": "Aseguramiento de Calidad"
+          },
+          {
+            "key": "1a7e7042-0635-4194-96db-416dcf3a7848",
+            "label": "Concept",
+            "name": "Control de Calidad"
+          },
+          {
+            "key": "3425dbed-1941-44ae-81b6-a0930028916a",
+            "label": "Topic",
+            "name": "ESTIMACIÓN Y CRONOGRAMA DE SOFTWARE"
+          },
+          {
+            "key": "874878f4-9336-484c-9793-c979afbc8cdb",
+            "label": "Topic",
+            "name": "CALIDAD DE PROCESO SOFTWARE"
+          },
+          {
+            "key": "10459d22-5e64-4462-8f1b-df43fb12c069",
+            "label": "Concept",
+            "name": "Modelos de calidad de proceso software"
+          },
+          {
+            "key": "5135cfb1-a740-4894-957f-a00617b4cf45",
+            "label": "Concept",
+            "name": "Estándares de calidad de proceso software"
+          },
+          {
+            "key": "d6fd7f66-3aec-4383-b74f-bfe012e28206",
+            "label": "Concept",
+            "name": "Modelos de madurez"
+          },
+          {
+            "key": "cddfb443-30e6-42b7-a3b2-d04586560d71",
+            "label": "Concept",
+            "name": "CMMI"
+          },
+          {
+            "key": "c70da007-e146-44b1-875c-6d81f702be07",
+            "label": "Concept",
+            "name": "MPS"
+          },
+          {
+            "key": "ffde2ebb-a6de-4674-afe2-261a2db2a2de",
+            "label": "Concept",
+            "name": "MoProSoft"
+          },
+          {
+            "key": "3fced5e2-7663-48f2-a871-47cc92b612d6",
+            "label": "Concept",
+            "name": "ISO 29110"
+          },
+          {
+            "key": "a6b97385-75b9-412b-9249-95456536c4cb",
+            "label": "Topic",
+            "name": "CALIDAD DE PRODUCTO SOFTWARE"
+          },
+          {
+            "key": "1bd755ff-74aa-426a-84f8-a8c540b9aed8",
+            "label": "Concept",
+            "name": "Modelos de calidad de producto software"
+          },
+          {
+            "key": "7b89cf2e-06ca-42cb-bfda-31595e9dee4f",
+            "label": "Concept",
+            "name": "Estándares de calidad de producto software"
+          },
+          {
+            "key": "27f48cf5-1cee-4796-831b-79a5321d9207",
+            "label": "Concept",
+            "name": "Modelos de calidad de la ISO 25000"
+          },
+          {
+            "key": "329a643a-efad-42f4-b34a-011e69f32825",
+            "label": "Concept",
+            "name": "Calidad interna"
+          },
+          {
+            "key": "26b38fb9-5c5c-4385-a34a-3bdda5472dcd",
+            "label": "Concept",
+            "name": "Calidad externa"
+          },
+          {
+            "key": "e40a1174-6907-4fad-abd2-3e3ed15c64ae",
+            "label": "Concept",
+            "name": "Calidad en uso"
+          },
+          {
+            "key": "4c5ca777-3799-4f38-adc7-5575c40fd1fd",
+            "label": "Concept",
+            "name": "Requerimientos de calidad"
+          },
+          {
+            "key": "0741bb92-4b95-4226-b850-38a002d6a12c",
+            "label": "Topic",
+            "name": "DESPLIEGUE DEL SOFTWARE"
+          },
+          {
+            "key": "c8e088ad-a2ee-40a8-97d2-cee3fefc8f03",
+            "label": "Topic",
+            "name": "MANTENIMIENTO DE SOFTWARE"
+          },
+          {
+            "key": "64713d51-e6ce-4d2f-a21b-fff9c9c9d15d",
+            "label": "Topic",
+            "name": "GESTIÓN DEL PROYECTO DE DESARROLLO DE SOFTWARE"
+          },
+          {
+            "key": "af5f0714-14fc-4af6-bd12-40fe32904e5c",
+            "label": "Concept",
+            "name": "Inicio del proyecto"
+          },
+          {
+            "key": "e7b18660-5ea6-40ed-ad22-7a131dd54c08",
+            "label": "Concept",
+            "name": "Definición del alcance"
+          },
+          {
+            "key": "ef095409-65d6-4258-8219-b3eea791e61e",
+            "label": "Concept",
+            "name": "Revisión del proyecto"
+          },
+          {
+            "key": "fa100875-7da5-4b59-b5db-7177ae891c53",
+            "label": "Concept",
+            "name": "Evaluación del proyecto"
+          },
+          {
+            "key": "f5223d9a-16d3-4b99-917b-b0a3b9349a37",
+            "label": "Concept",
+            "name": "Cierre del proyecto"
+          },
+          {
+            "key": "be86cacd-7b30-4c18-a958-57cf8aef8fb0",
+            "label": "Concept",
+            "name": "Gestión de proyectos"
+          }
+        ],
+        "adjudicated": null
+      }
+    }
+  ],
+  "totals": {
+    "reviewer_registered": {
+      "count": 60,
+      "of": 88,
+      "proportion": 0.6818181818181818
+    },
+    "notions_extracted": {
+      "count": 61,
+      "of": 124,
+      "proportion": 0.49193548387096775
+    },
+    "mandatory_extracted": {
+      "count": 59,
+      "of": 109,
+      "proportion": 0.5412844036697247
+    },
+    "acceptable_extracted": {
+      "count": 2,
+      "of": 15,
+      "proportion": 0.13333333333333333
+    },
+    "type_agreement": {
+      "count": 11,
+      "of": 60,
+      "proportion": 0.18333333333333332
+    },
+    "pipeline_registered": {
+      "count": 46,
+      "of": 118,
+      "proportion": 0.3898305084745763
+    },
+    "adjudicated": {
+      "reviewer_registered": {
+        "count": 60,
+        "of": 88,
+        "proportion": 0.6818181818181818
+      },
+      "notions_extracted": {
+        "count": 61,
+        "of": 124,
+        "proportion": 0.49193548387096775
+      },
+      "pipeline_registered": null
+    }
+  }
+}

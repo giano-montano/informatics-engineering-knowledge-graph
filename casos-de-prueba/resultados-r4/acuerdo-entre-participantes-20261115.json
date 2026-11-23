@@ -1,0 +1,51 @@
+{
+  "review_dir": "casos-de-prueba\\revision\\revisor-2",
+  "other_review_dir": "casos-de-prueba\\revision\\revisor-1",
+  "measured_at": "2026-11-15T13:53:15-05:00",
+  "syllabi": [
+    {
+      "syllabus": "1INF27",
+      "names": 22,
+      "other_names": 24,
+      "shared": 11,
+      "other_has": {
+        "count": 11,
+        "of": 22,
+        "proportion": 0.5
+      },
+      "has_of_other": {
+        "count": 11,
+        "of": 24,
+        "proportion": 0.4583333333333333
+      }
+    },
+    {
+      "syllabus": "1INF37",
+      "names": 36,
+      "other_names": 64,
+      "shared": 18,
+      "other_has": {
+        "count": 18,
+        "of": 36,
+        "proportion": 0.5
+      },
+      "has_of_other": {
+        "count": 18,
+        "of": 64,
+        "proportion": 0.28125
+      }
+    }
+  ],
+  "totals": {
+    "other_has": {
+      "count": 29,
+      "of": 58,
+      "proportion": 0.5
+    },
+    "has_of_other": {
+      "count": 29,
+      "of": 88,
+      "proportion": 0.32954545454545453
+    }
+  }
+}

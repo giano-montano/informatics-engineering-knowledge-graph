@@ -1,0 +1,1867 @@
+{
+  "gold": "casos-de-prueba\\gold\\gold_consolidado.tsv",
+  "gold_meta": "# gold_consolidado | silabos=13 | guia=v2.1 | fecha=2026-10-02 | consolidador=Claude Opus 5.5",
+  "from_run": 1,
+  "to_run": null,
+  "measured_at": "2026-11-16T17:45:32-05:00",
+  "mode": "chain",
+  "held_out": [
+    "1INF27",
+    "1INF37"
+  ],
+  "hidden": [],
+  "not_run": [],
+  "threshold": 0.75,
+  "passes": true,
+  "cases": [
+    {
+      "case": "CP-01",
+      "syllabus": "1INF25",
+      "run_id": 1,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 0,
+      "related_hits": 0,
+      "items": 74,
+      "hits": 61,
+      "mandatory_notions": 76,
+      "recovered": 61,
+      "type_matches": 58,
+      "false_positives": 13,
+      "precision": 0.8243243243243243,
+      "recall": 0.8026315789473685,
+      "f1": 0.8133333333333335,
+      "type_agreement": 0.9508196721311475,
+      "precision_with_related": 0.8243243243243243,
+      "most_hits": 61,
+      "false_positive_items": [
+        {
+          "key": "ef92007e-170a-4118-9db4-52a8f9cf8f4a",
+          "label": "Concept",
+          "name": "Sobrecarga de funciones no ligados a objetos"
+        },
+        {
+          "key": "e1eb50a5-e1e9-4956-ae20-88c1ea0be331",
+          "label": "Concept",
+          "name": "Memoria dinámica"
+        },
+        {
+          "key": "9a5af144-4220-4d1b-ab22-4569cf15fcc1",
+          "label": "Concept",
+          "name": "Memoria"
+        },
+        {
+          "key": "66d0a2a4-6736-448d-97b5-83734cdd0881",
+          "label": "Concept",
+          "name": "Especificadores de acceso a miembros públicos"
+        },
+        {
+          "key": "e41d517c-37c2-4283-9f7a-815c218826e1",
+          "label": "Concept",
+          "name": "Especificadores de acceso a miembros privados"
+        },
+        {
+          "key": "473f4fe9-7b55-4020-8947-1553ee787c0f",
+          "label": "Concept",
+          "name": "Especificador de acceso a miembros protegido"
+        },
+        {
+          "key": "57e2906d-4c0d-4eab-857d-89a1b6620e25",
+          "label": "Concept",
+          "name": "Nomenclatura de punteros a objetos"
+        },
+        {
+          "key": "080cb658-a655-4969-a084-b52ac2ca2c2f",
+          "label": "Concept",
+          "name": "Historia del lenguaje de programación Java"
+        },
+        {
+          "key": "d62b2faa-5a68-4700-8a31-d0fa964b55e4",
+          "label": "Concept",
+          "name": "Características del lenguaje de programación Java"
+        },
+        {
+          "key": "1cfa2cdb-3e6a-40d0-844e-fdf08333e6c3",
+          "label": "Concept",
+          "name": "Ingreso de dato"
+        },
+        {
+          "key": "09bf507e-492b-4d6d-b87c-9c493f433877",
+          "label": "Concept",
+          "name": "Salida de dato"
+        },
+        {
+          "key": "d83c17fd-ba97-412d-add1-ecf061806f11",
+          "label": "Concept",
+          "name": "Ingreso de datos en consola"
+        },
+        {
+          "key": "563fcb7a-dfad-4dc6-b015-849d951e7140",
+          "label": "Concept",
+          "name": "Salida de datos en consola"
+        }
+      ],
+      "related_items": [],
+      "missed_notions": [
+        {
+          "global_id": "G-0010",
+          "entry": "1INF25-010",
+          "label": "Arreglos vs. punteros"
+        },
+        {
+          "global_id": "G-0014",
+          "entry": "1INF25-014",
+          "label": "Asignación dinámica de memoria"
+        },
+        {
+          "global_id": "G-0020",
+          "entry": "1INF25-020",
+          "label": "Manejo de memoria dinámica"
+        },
+        {
+          "global_id": "G-0021",
+          "entry": "1INF25-021",
+          "label": "Manejo de memoria"
+        },
+        {
+          "global_id": "G-0025",
+          "entry": "1INF25-025",
+          "label": "Definición de clases"
+        },
+        {
+          "global_id": "G-0026",
+          "entry": "1INF25-026",
+          "label": "Creación de objetos"
+        },
+        {
+          "global_id": "G-0027",
+          "entry": "1INF25-027",
+          "label": "Implementación de clases"
+        },
+        {
+          "global_id": "G-0032",
+          "entry": "1INF25-032",
+          "label": "Especificador de acceso público"
+        },
+        {
+          "global_id": "G-0033",
+          "entry": "1INF25-033",
+          "label": "Especificador de acceso privado"
+        },
+        {
+          "global_id": "G-0044",
+          "entry": "1INF25-045",
+          "label": "Especificador de acceso protegido"
+        },
+        {
+          "global_id": "G-0063",
+          "entry": "1INF25-065",
+          "label": "Historia de Java"
+        },
+        {
+          "global_id": "G-0064",
+          "entry": "1INF25-066",
+          "label": "Características de Java"
+        },
+        {
+          "global_id": "G-0070",
+          "entry": "1INF25-072",
+          "label": "Declaración de clases"
+        },
+        {
+          "global_id": "G-0072",
+          "entry": "1INF25-074",
+          "label": "Ingreso y salida de datos en consola"
+        },
+        {
+          "global_id": "G-0077",
+          "entry": "1INF25-079",
+          "label": "Implementación de GUI"
+        }
+      ]
+    },
+    {
+      "case": "CP-02",
+      "syllabus": "1INF27",
+      "run_id": 2,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 2,
+      "related_hits": 0,
+      "items": 37,
+      "hits": 25,
+      "mandatory_notions": 29,
+      "recovered": 25,
+      "type_matches": 25,
+      "false_positives": 12,
+      "precision": 0.6756756756756757,
+      "recall": 0.8620689655172413,
+      "f1": 0.7575757575757576,
+      "type_agreement": 1.0,
+      "precision_with_related": 0.6410256410256411,
+      "most_hits": 25,
+      "false_positive_items": [
+        {
+          "key": "510f3c46-af0f-4852-beb0-b87c1907a330",
+          "label": "Concept",
+          "name": "Algoritmos"
+        },
+        {
+          "key": "2ed513a6-4dad-4cf1-ae76-b110f4cfc7d5",
+          "label": "Concept",
+          "name": "Programación"
+        },
+        {
+          "key": "c8296801-2311-46e5-a819-4c1999978810",
+          "label": "Concept",
+          "name": "Tablas"
+        },
+        {
+          "key": "e94fa142-8600-48e8-a652-ab8e345895fd",
+          "label": "Concept",
+          "name": "Estrategias de búsqueda sobre listas"
+        },
+        {
+          "key": "ff23ff10-b71a-4962-997b-2f518b7e1180",
+          "label": "Concept",
+          "name": "Estrategias de búsqueda sobre árboles"
+        },
+        {
+          "key": "7f376ec8-e610-43b3-98e0-293918046e6d",
+          "label": "Concept",
+          "name": "Estrategias de búsqueda sobre tablas"
+        },
+        {
+          "key": "c11a2e12-cd7a-429a-b5aa-bca22c1afc96",
+          "label": "Concept",
+          "name": "Estrategias de búsqueda sobre grafos"
+        },
+        {
+          "key": "b075b671-ed12-4a21-a372-ec761d3c5ae2",
+          "label": "Concept",
+          "name": "Estrategias de recorrido sobre listas"
+        },
+        {
+          "key": "6abceb6f-5257-4653-80d4-bee0c1d52a0f",
+          "label": "Concept",
+          "name": "Estrategias de recorrido sobre árboles"
+        },
+        {
+          "key": "107a52b2-d723-4586-9e54-c7f4e8f3a982",
+          "label": "Concept",
+          "name": "Estrategias de recorrido sobre tablas"
+        },
+        {
+          "key": "f5fe45a0-c509-4bc4-8cda-845f8455f1b0",
+          "label": "Concept",
+          "name": "Estrategias de recorrido sobre grafos"
+        },
+        {
+          "key": "92db22df-b19e-4592-9d19-7d1b6e3efe13",
+          "label": "Concept",
+          "name": "Tipos de datos"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "dfe59ceb-c136-42e9-83d6-9240b769361e",
+          "label": "Concept",
+          "name": "Clases auto referenciadas"
+        },
+        {
+          "key": "e1eb50a5-e1e9-4956-ae20-88c1ea0be331",
+          "label": "Concept",
+          "name": "Memoria dinámica"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0088",
+          "entry": "1INF27-010",
+          "label": "Tipos abstractos de datos"
+        },
+        {
+          "global_id": "G-0097",
+          "entry": "1INF27-020",
+          "label": "Estrategias de búsqueda"
+        },
+        {
+          "global_id": "G-0098",
+          "entry": "1INF27-021",
+          "label": "Estrategias de recorrido"
+        },
+        {
+          "global_id": "G-0108",
+          "entry": "1INF27-031",
+          "label": "Soporte matemático"
+        }
+      ]
+    },
+    {
+      "case": "CP-03",
+      "syllabus": "1INF33",
+      "run_id": 3,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 2,
+      "related_hits": 0,
+      "items": 70,
+      "hits": 54,
+      "mandatory_notions": 62,
+      "recovered": 54,
+      "type_matches": 54,
+      "false_positives": 16,
+      "precision": 0.7714285714285715,
+      "recall": 0.8709677419354839,
+      "f1": 0.8181818181818182,
+      "type_agreement": 1.0,
+      "precision_with_related": 0.75,
+      "most_hits": 54,
+      "false_positive_items": [
+        {
+          "key": "a65c173a-b5e7-40fb-9ed0-f347e4fd121a",
+          "label": "Topic",
+          "name": "PRESENTACIÓN DEL CURSO Y CONCEPTOS BÁSICOS"
+        },
+        {
+          "key": "445d1337-680e-4a2d-8c0f-8198a1ab08df",
+          "label": "Concept",
+          "name": "Clasificación de Modelos de Datos"
+        },
+        {
+          "key": "22a8d412-1b98-4f46-8bf6-8f8bc0024ea4",
+          "label": "Concept",
+          "name": "Estructura del Modelo Relacional"
+        },
+        {
+          "key": "5678f527-bbf1-4a2a-bde4-9e4a989d8e66",
+          "label": "Concept",
+          "name": "Modelos de base de datos"
+        },
+        {
+          "key": "c7d88be0-cf8c-4f61-a128-5c00605885ac",
+          "label": "Concept",
+          "name": "Información empresarial"
+        },
+        {
+          "key": "5c1c847e-2e28-45c5-9629-ea8d6319dfd0",
+          "label": "Concept",
+          "name": "Convenciones de modelamiento"
+        },
+        {
+          "key": "4010e188-af34-4af1-91d7-d4533616087d",
+          "label": "Concept",
+          "name": "Creación de tablas"
+        },
+        {
+          "key": "0b02b043-afeb-4d07-b2c4-9a1a89cec0c5",
+          "label": "Concept",
+          "name": "Modificación de tablas"
+        },
+        {
+          "key": "0e33149e-2bb2-41d8-8b93-7db5a50da1de",
+          "label": "Concept",
+          "name": "Borrado de tablas"
+        },
+        {
+          "key": "c1ab81b9-f5c7-44da-82e5-7e847f824392",
+          "label": "Concept",
+          "name": "Modificación de columnas"
+        },
+        {
+          "key": "0dcd0a0d-7fba-4a5f-b27d-17d5e30a4e0b",
+          "label": "Concept",
+          "name": "Modificación de constraints"
+        },
+        {
+          "key": "f9bf6106-6994-40b4-acd5-9eef9f9675ac",
+          "label": "Concept",
+          "name": "Estructura de disparadores"
+        },
+        {
+          "key": "00631e10-db79-475b-9054-0ce5efb6508f",
+          "label": "Concept",
+          "name": "Tipos de disparadores"
+        },
+        {
+          "key": "c18a7559-c80e-4b52-93be-e6b76da6ec57",
+          "label": "Concept",
+          "name": "Before"
+        },
+        {
+          "key": "b0c946bc-e059-4ee3-b4fe-320d6e07b0b8",
+          "label": "Concept",
+          "name": "After"
+        },
+        {
+          "key": "b21a8d61-5a23-4232-b5aa-71d2f5a17413",
+          "label": "Concept",
+          "name": "Errores de disparadores"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "2ed513a6-4dad-4cf1-ae76-b110f4cfc7d5",
+          "label": "Concept",
+          "name": "Programación"
+        },
+        {
+          "key": "92db22df-b19e-4592-9d19-7d1b6e3efe13",
+          "label": "Concept",
+          "name": "Tipos de datos"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0117",
+          "entry": "1INF33-001",
+          "label": "paradigma relacional para bases de datos"
+        },
+        {
+          "global_id": "G-0137",
+          "entry": "1INF33-023",
+          "label": "Modelos de Datos"
+        },
+        {
+          "global_id": "G-0146",
+          "entry": "1INF33-033",
+          "label": "tablas"
+        },
+        {
+          "global_id": "G-0147",
+          "entry": "1INF33-034",
+          "label": "columnas"
+        },
+        {
+          "global_id": "G-0148",
+          "entry": "1INF33-035",
+          "label": "constraints"
+        },
+        {
+          "global_id": "G-0173",
+          "entry": "1INF33-064",
+          "label": "Disparadores BEFORE"
+        },
+        {
+          "global_id": "G-0174",
+          "entry": "1INF33-065",
+          "label": "Disparadores AFTER"
+        },
+        {
+          "global_id": "G-0175",
+          "entry": "1INF33-066",
+          "label": "Manejo de errores"
+        }
+      ]
+    },
+    {
+      "case": "CP-04",
+      "syllabus": "1INF49",
+      "run_id": 4,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 2,
+      "related_hits": 0,
+      "items": 48,
+      "hits": 37,
+      "mandatory_notions": 45,
+      "recovered": 37,
+      "type_matches": 37,
+      "false_positives": 11,
+      "precision": 0.7708333333333334,
+      "recall": 0.8222222222222222,
+      "f1": 0.7956989247311829,
+      "type_agreement": 1.0,
+      "precision_with_related": 0.74,
+      "most_hits": 37,
+      "false_positive_items": [
+        {
+          "key": "ad9d8893-6375-4ab8-824f-93ea1838860d",
+          "label": "Concept",
+          "name": "Obtención de requisitos"
+        },
+        {
+          "key": "2a5860de-2150-47cb-8ce4-ac63ca780b80",
+          "label": "Concept",
+          "name": "Proceso de diseño de la Experiencia Usuario (UX Design)"
+        },
+        {
+          "key": "89ba4a79-baeb-4c3d-8e9a-2d0ab5d64985",
+          "label": "Concept",
+          "name": "Técnicas para el proceso de diseño de la Experiencia de Usuario"
+        },
+        {
+          "key": "0ffdff75-f19b-454c-9a15-de58b1874024",
+          "label": "Concept",
+          "name": "Herramientas para el proceso de diseño de la Experiencia de Usuario"
+        },
+        {
+          "key": "48a1f4bc-ad8e-4f96-a8ec-d676ae2c08e2",
+          "label": "Concept",
+          "name": "Diversidad de los usuarios"
+        },
+        {
+          "key": "8bb9336a-b2fc-468b-bd24-f64b2ad35bad",
+          "label": "Concept",
+          "name": "Diversidad de otros interesados"
+        },
+        {
+          "key": "d51843eb-f01d-4f6e-989d-c785b173dc89",
+          "label": "Concept",
+          "name": "Requisitos en entornos ágiles"
+        },
+        {
+          "key": "255d294b-eced-4530-8fc1-6ad253ae6f9b",
+          "label": "Concept",
+          "name": "Requisitos en entornos tradicionales"
+        },
+        {
+          "key": "10ccd8a5-e0ba-4d1d-8f84-cdea7f05a315",
+          "label": "Concept",
+          "name": "Diagramas de clase de UML"
+        },
+        {
+          "key": "0660aff2-f3bd-4900-91b1-41e0f270a6f1",
+          "label": "Concept",
+          "name": "Validación del producto de software"
+        },
+        {
+          "key": "a97b3c26-ad19-4ecd-8c3d-19b5beb61c14",
+          "label": "Concept",
+          "name": "Verificación del producto de software"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "af92c0cc-a875-448c-83f9-6efd22f25062",
+          "label": "Concept",
+          "name": "Clases"
+        },
+        {
+          "key": "2ed513a6-4dad-4cf1-ae76-b110f4cfc7d5",
+          "label": "Concept",
+          "name": "Programación"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0187",
+          "entry": "1INF49-004",
+          "label": "Términos utilizados en la construcción de software"
+        },
+        {
+          "global_id": "G-0189",
+          "entry": "1INF49-007",
+          "label": "casos de uso"
+        },
+        {
+          "global_id": "G-0076",
+          "entry": "1INF49-018",
+          "label": "interfaces gráficas de usuario"
+        },
+        {
+          "global_id": "G-0208",
+          "entry": "1INF49-027",
+          "label": "Los requisitos en entornos ágiles y tradicionales"
+        },
+        {
+          "global_id": "G-0210",
+          "entry": "1INF49-029",
+          "label": "UML"
+        },
+        {
+          "global_id": "G-0211",
+          "entry": "1INF49-030",
+          "label": "Los diagramas de clase de UML"
+        },
+        {
+          "global_id": "G-0213",
+          "entry": "1INF49-032",
+          "label": "Representando conceptos con diagramas de clases"
+        },
+        {
+          "global_id": "G-0217",
+          "entry": "1INF49-036",
+          "label": "Validación y verificación del producto de software"
+        }
+      ]
+    },
+    {
+      "case": "CP-05",
+      "syllabus": "1INF29",
+      "run_id": 5,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 2,
+      "related_hits": 0,
+      "items": 69,
+      "hits": 60,
+      "mandatory_notions": 70,
+      "recovered": 60,
+      "type_matches": 60,
+      "false_positives": 9,
+      "precision": 0.8695652173913043,
+      "recall": 0.8571428571428571,
+      "f1": 0.8633093525179856,
+      "type_agreement": 1.0,
+      "precision_with_related": 0.8450704225352113,
+      "most_hits": 60,
+      "false_positive_items": [
+        {
+          "key": "3f65f557-3da6-41d3-b767-06ee256009b0",
+          "label": "Concept",
+          "name": "Papel de sistemas operativos"
+        },
+        {
+          "key": "41a5a5d0-bd73-4ceb-8da8-980a1573aeff",
+          "label": "Concept",
+          "name": "Propósito de sistemas operativos"
+        },
+        {
+          "key": "688cb27d-fc67-4282-b9f4-c4e3510ba62d",
+          "label": "Concept",
+          "name": "Llamadas al sistema para manejo de archivos"
+        },
+        {
+          "key": "9420e48d-57f7-4bf5-b772-b73420ee19b4",
+          "label": "Concept",
+          "name": "Llamadas al sistema para manejo de directorios"
+        },
+        {
+          "key": "c78ef8fa-caa7-4363-94f9-6be42a88b940",
+          "label": "Concept",
+          "name": "Funcionamiento de los computadores"
+        },
+        {
+          "key": "085513c8-bdd7-4b22-95db-210d52afa450",
+          "label": "Concept",
+          "name": "Planificación no-apropiativa (nonpreemptive)"
+        },
+        {
+          "key": "4e10fe13-c6c0-4fb8-a03b-fd1f7abec5bb",
+          "label": "Concept",
+          "name": "Asuntos de tiempo real"
+        },
+        {
+          "key": "da2b132d-9ac2-4c9e-8d8d-2c90af87df9e",
+          "label": "Concept",
+          "name": "Datos"
+        },
+        {
+          "key": "e4301737-c163-4787-8d7e-6bdb1d835f24",
+          "label": "Concept",
+          "name": "Operaciones de archivos"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "2ed513a6-4dad-4cf1-ae76-b110f4cfc7d5",
+          "label": "Concept",
+          "name": "Programación"
+        },
+        {
+          "key": "9a5af144-4220-4d1b-ab22-4569cf15fcc1",
+          "label": "Concept",
+          "name": "Memoria"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0242",
+          "entry": "1INF29-001",
+          "label": "funcionamiento de los sistemas operativos"
+        },
+        {
+          "global_id": "G-0243",
+          "entry": "1INF29-002",
+          "label": "procesos"
+        },
+        {
+          "global_id": "G-0247",
+          "entry": "1INF29-007",
+          "label": "Papel y propósito de sistemas operativos"
+        },
+        {
+          "global_id": "G-0255",
+          "entry": "1INF29-016",
+          "label": "Llamadas al sistema para manejo de archivos y directorios"
+        },
+        {
+          "global_id": "G-0265",
+          "entry": "1INF29-026",
+          "label": "Comunicación entre procesos"
+        },
+        {
+          "global_id": "G-0275",
+          "entry": "1INF29-036",
+          "label": "no-apropiativa (nonpreemptive)"
+        },
+        {
+          "global_id": "G-0279",
+          "entry": "1INF29-040",
+          "label": "tiempo real"
+        },
+        {
+          "global_id": "G-0293",
+          "entry": "1INF29-054",
+          "label": "Protección"
+        },
+        {
+          "global_id": "G-0298",
+          "entry": "1INF29-060",
+          "label": "Datos de archivos"
+        },
+        {
+          "global_id": "G-0300",
+          "entry": "1INF29-062",
+          "label": "Operaciones sobre archivos"
+        }
+      ]
+    },
+    {
+      "case": "CP-06",
+      "syllabus": "1INF30",
+      "run_id": 7,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 9,
+      "related_hits": 0,
+      "items": 67,
+      "hits": 63,
+      "mandatory_notions": 71,
+      "recovered": 63,
+      "type_matches": 60,
+      "false_positives": 4,
+      "precision": 0.9402985074626866,
+      "recall": 0.8873239436619719,
+      "f1": 0.9130434782608696,
+      "type_agreement": 0.9523809523809523,
+      "precision_with_related": 0.8289473684210527,
+      "most_hits": 63,
+      "false_positive_items": [
+        {
+          "key": "bd7342de-4b7f-465f-b8fb-d2845ccf096b",
+          "label": "Concept",
+          "name": "Marcos de trabajo (frameworks)"
+        },
+        {
+          "key": "924b47b4-1cad-45cf-a313-1b1b77e3586f",
+          "label": "Concept",
+          "name": "Eventos"
+        },
+        {
+          "key": "8842e26b-c417-461e-99af-0b6f2fe3c655",
+          "label": "Concept",
+          "name": "Diseño de reportes"
+        },
+        {
+          "key": "718b7ea2-aede-4aba-a452-80fabcc8bb21",
+          "label": "Concept",
+          "name": "Consumo de fuentes de datos"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "eced53ef-e705-4a64-b667-7c7085551252",
+          "label": "Concept",
+          "name": "Bases de datos"
+        },
+        {
+          "key": "eb9b12e3-25cc-46a8-9ba4-9c39e357fea2",
+          "label": "Concept",
+          "name": "Lenguaje estructurado de consultas (SQL)"
+        },
+        {
+          "key": "92db22df-b19e-4592-9d19-7d1b6e3efe13",
+          "label": "Concept",
+          "name": "Tipos de datos"
+        },
+        {
+          "key": "ae013b68-315b-4f6b-af50-d968d85ccf4e",
+          "label": "Concept",
+          "name": "Métodos"
+        },
+        {
+          "key": "795a8bb9-fb12-41e2-aac8-05172e50fcdf",
+          "label": "Concept",
+          "name": "Funciones"
+        },
+        {
+          "key": "1ec13d2e-2642-44b5-b356-704c97d663da",
+          "label": "Concept",
+          "name": "Métodos virtuales"
+        },
+        {
+          "key": "72d598f5-02e1-4330-a99b-8de1ebb3a95f",
+          "label": "Concept",
+          "name": "Punteros en herencia"
+        },
+        {
+          "key": "c4aeff92-603e-4a19-9fef-90f416f01833",
+          "label": "Concept",
+          "name": "Modelo de proceso"
+        },
+        {
+          "key": "aeb71bc4-9819-4adc-9fe5-f44332a05c43",
+          "label": "Concept",
+          "name": "Secciones críticas"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0318",
+          "entry": "1INF30-005",
+          "label": "Principios de Programación Orientada a Objetos"
+        },
+        {
+          "global_id": "G-0321",
+          "entry": "1INF30-012",
+          "label": "Instancias"
+        },
+        {
+          "global_id": "G-0330",
+          "entry": "1INF30-026",
+          "label": "Marcos de trabajo"
+        },
+        {
+          "global_id": "G-0344",
+          "entry": "1INF30-040",
+          "label": "Programación con JavaScript"
+        },
+        {
+          "global_id": "G-0076",
+          "entry": "1INF30-043",
+          "label": "Interfaces gráficas de usuario"
+        },
+        {
+          "global_id": "G-0348",
+          "entry": "1INF30-045",
+          "label": "Manejo de eventos"
+        },
+        {
+          "global_id": "G-0369",
+          "entry": "1INF30-070",
+          "label": "Diseño de reportes en JasperSoft Studio"
+        },
+        {
+          "global_id": "G-0377",
+          "entry": "1INF30-078",
+          "label": "Fuentes de datos"
+        }
+      ]
+    },
+    {
+      "case": "CP-07",
+      "syllabus": "1INF31",
+      "run_id": 8,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 3,
+      "related_hits": 0,
+      "items": 41,
+      "hits": 38,
+      "mandatory_notions": 39,
+      "recovered": 38,
+      "type_matches": 37,
+      "false_positives": 3,
+      "precision": 0.926829268292683,
+      "recall": 0.9743589743589743,
+      "f1": 0.9500000000000001,
+      "type_agreement": 0.9736842105263158,
+      "precision_with_related": 0.8636363636363636,
+      "most_hits": 38,
+      "false_positive_items": [
+        {
+          "key": "a1dcf7b3-e35f-4c70-b3df-157bb47dba79",
+          "label": "Concept",
+          "name": "Identificación de componentes"
+        },
+        {
+          "key": "114ea1fc-eb25-470d-92ba-f12a527c5c03",
+          "label": "Concept",
+          "name": "Documentando la arquitectura"
+        },
+        {
+          "key": "b566bf6d-37b8-45b7-bcab-66d40dea0f9c",
+          "label": "Concept",
+          "name": "arc 42"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "9a11623a-d8f9-4db0-8f2b-0769a263c456",
+          "label": "Concept",
+          "name": "Requisitos de software"
+        },
+        {
+          "key": "c83c78cb-a4bd-4304-8339-465b4b5c74ec",
+          "label": "Concept",
+          "name": "Construcción del software"
+        },
+        {
+          "key": "924b47b4-1cad-45cf-a313-1b1b77e3586f",
+          "label": "Concept",
+          "name": "Eventos"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0394",
+          "entry": "1INF31-019",
+          "label": "Documentando la arquitectura (arc 42)"
+        }
+      ]
+    },
+    {
+      "case": "CP-08",
+      "syllabus": "1INF32",
+      "run_id": 9,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 2,
+      "related_hits": 0,
+      "items": 20,
+      "hits": 17,
+      "mandatory_notions": 18,
+      "recovered": 17,
+      "type_matches": 16,
+      "false_positives": 3,
+      "precision": 0.85,
+      "recall": 0.9444444444444444,
+      "f1": 0.8947368421052632,
+      "type_agreement": 0.9411764705882353,
+      "precision_with_related": 0.7727272727272727,
+      "most_hits": 17,
+      "false_positive_items": [
+        {
+          "key": "1bdb6347-00ed-4ee9-9312-6614469ecf41",
+          "label": "Concept",
+          "name": "Algoritmos de mayor complejidad"
+        },
+        {
+          "key": "84425489-069e-4ecf-b11a-907667b82416",
+          "label": "Concept",
+          "name": "Componentes de algoritmos genéticos"
+        },
+        {
+          "key": "6b6647b5-965b-4dc3-92fb-6ab61c3ffcc0",
+          "label": "Concept",
+          "name": "Operadores de algoritmos genéticos"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "510f3c46-af0f-4852-beb0-b87c1907a330",
+          "label": "Concept",
+          "name": "Algoritmos"
+        },
+        {
+          "key": "92db22df-b19e-4592-9d19-7d1b6e3efe13",
+          "label": "Concept",
+          "name": "Tipos de datos"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0436",
+          "entry": "1INF32-017",
+          "label": "Operadores genéticos"
+        }
+      ]
+    },
+    {
+      "case": "CP-09",
+      "syllabus": "1INF24",
+      "run_id": 10,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 5,
+      "related_hits": 0,
+      "items": 76,
+      "hits": 62,
+      "mandatory_notions": 71,
+      "recovered": 62,
+      "type_matches": 59,
+      "false_positives": 14,
+      "precision": 0.8157894736842105,
+      "recall": 0.8732394366197183,
+      "f1": 0.8435374149659864,
+      "type_agreement": 0.9516129032258065,
+      "precision_with_related": 0.7654320987654321,
+      "most_hits": 62,
+      "false_positive_items": [
+        {
+          "key": "46dc2756-4a04-4323-b342-8a82d846ab0c",
+          "label": "Concept",
+          "name": "Objetivos de las definiciones"
+        },
+        {
+          "key": "70b05824-ed58-42be-93a8-f8be4d262d20",
+          "label": "Concept",
+          "name": "Enfoques de las definiciones"
+        },
+        {
+          "key": "e6a0d7de-ebc3-4998-9347-05c2b4c08c7a",
+          "label": "Concept",
+          "name": "Problema desde la perspectiva de IA"
+        },
+        {
+          "key": "b8f9d6f8-d078-490d-b5f0-fd6de22c9970",
+          "label": "Concept",
+          "name": "Espacios de estado en un problema"
+        },
+        {
+          "key": "066de886-b4b5-4c8e-b43a-0197ac4a5c52",
+          "label": "Topic",
+          "name": "Algoritmos heurísticos, metaheurísticos y bioinspirados"
+        },
+        {
+          "key": "fff83a77-a4ab-4982-a457-e5377772a1d9",
+          "label": "Concept",
+          "name": "Búsquedas metaheurísticas"
+        },
+        {
+          "key": "40a140cf-634d-4b04-acfd-63d442212560",
+          "label": "Concept",
+          "name": "Búsquedas bioinspiradas"
+        },
+        {
+          "key": "da2b132d-9ac2-4c9e-8d8d-2c90af87df9e",
+          "label": "Concept",
+          "name": "Datos"
+        },
+        {
+          "key": "acb60ba5-5f55-4839-94b2-65a92aa3b51d",
+          "label": "Concept",
+          "name": "Algoritmo KNearest Neighbors (KNN) para regresión"
+        },
+        {
+          "key": "6ac52b1a-8951-4710-85fc-c3291b900422",
+          "label": "Concept",
+          "name": "Redes perceptron multicapa (MLP)"
+        },
+        {
+          "key": "852e681a-0384-495e-b32c-cffca3625188",
+          "label": "Concept",
+          "name": "Cuestiones éticas de IA"
+        },
+        {
+          "key": "f778cc18-1161-4f77-b35f-5d411a0f6943",
+          "label": "Concept",
+          "name": "Aprendizaje de los sistemas expertos"
+        },
+        {
+          "key": "0cc3ba80-b602-47f8-a9dc-07ba0cc2cd0f",
+          "label": "Concept",
+          "name": "Reglas"
+        },
+        {
+          "key": "ff5c89df-62ce-4778-bf10-7e0ca213976c",
+          "label": "Concept",
+          "name": "Algoritmos de inferencia"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "510f3c46-af0f-4852-beb0-b87c1907a330",
+          "label": "Concept",
+          "name": "Algoritmos"
+        },
+        {
+          "key": "a55b49d6-877e-4695-bc2a-a0a8aa771b0f",
+          "label": "Concept",
+          "name": "Grafos"
+        },
+        {
+          "key": "669340db-54db-4666-b115-258cc385b4f6",
+          "label": "Concept",
+          "name": "Optimización combinatoria"
+        },
+        {
+          "key": "2a8670cf-06c5-4b44-b619-ffe1bd4a666c",
+          "label": "Concept",
+          "name": "Árboles"
+        },
+        {
+          "key": "a0662cc4-c4db-451a-94d7-ccd66c8f8ab0",
+          "label": "Concept",
+          "name": "Teoría de conjuntos"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0444",
+          "entry": "1INF24-003",
+          "label": "Definición de Inteligencia Artificial"
+        },
+        {
+          "global_id": "G-0445",
+          "entry": "1INF24-004",
+          "label": "Enfoques de las definiciones de IA"
+        },
+        {
+          "global_id": "G-0448",
+          "entry": "1INF24-007",
+          "label": "Definición de un problema desde la perspectiva de IA"
+        },
+        {
+          "global_id": "G-0456",
+          "entry": "1INF24-015",
+          "label": "Espacios de estado"
+        },
+        {
+          "global_id": "G-0430",
+          "entry": "1INF24-026",
+          "label": "Metaheurísticas"
+        },
+        {
+          "global_id": "G-0481",
+          "entry": "1INF24-045",
+          "label": "Reducción dimensional"
+        },
+        {
+          "global_id": "G-0487",
+          "entry": "1INF24-051",
+          "label": "Algoritmo K-Nearest Neighbors (KNN) para regresión"
+        },
+        {
+          "global_id": "G-0498",
+          "entry": "1INF24-062",
+          "label": "Redes perceptron multicapa"
+        },
+        {
+          "global_id": "G-0506",
+          "entry": "1INF24-070",
+          "label": "Aprendizaje en sistemas expertos"
+        }
+      ]
+    },
+    {
+      "case": "CP-10",
+      "syllabus": "1INF50",
+      "run_id": 11,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 8,
+      "related_hits": 1,
+      "items": 19,
+      "hits": 17,
+      "mandatory_notions": 18,
+      "recovered": 17,
+      "type_matches": 17,
+      "false_positives": 2,
+      "precision": 0.8947368421052632,
+      "recall": 0.9444444444444444,
+      "f1": 0.918918918918919,
+      "type_agreement": 1.0,
+      "precision_with_related": 0.6666666666666666,
+      "most_hits": 17,
+      "false_positive_items": [
+        {
+          "key": "3b6336dc-8a72-4846-b135-e425d5b7285f",
+          "label": "Concept",
+          "name": "Patrones de diseño de acceso a base de datos"
+        },
+        {
+          "key": "4606b1c5-de69-4bbc-a4ea-e263ac62b401",
+          "label": "Concept",
+          "name": "Componentes"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "af92c0cc-a875-448c-83f9-6efd22f25062",
+          "label": "Concept",
+          "name": "Clases"
+        },
+        {
+          "key": "b277510a-7022-46f4-8b5d-aecbee6b0eec",
+          "label": "Concept",
+          "name": "Relaciones entre clases"
+        },
+        {
+          "key": "9a11623a-d8f9-4db0-8f2b-0769a263c456",
+          "label": "Concept",
+          "name": "Requisitos de software"
+        },
+        {
+          "key": "c83c78cb-a4bd-4304-8339-465b4b5c74ec",
+          "label": "Concept",
+          "name": "Construcción del software"
+        },
+        {
+          "key": "0340f3e4-1ad6-4502-9775-6ae1e3e07f3a",
+          "label": "Concept",
+          "name": "Persistencia de objetos"
+        },
+        {
+          "key": "6ae98ac0-02bc-4231-8837-6d10404a23b3",
+          "label": "Concept",
+          "name": "Conexión a base de datos"
+        },
+        {
+          "key": "b7456067-4dd9-4778-8b8d-1cd5eff0c5a1",
+          "label": "Concept",
+          "name": "Objetos"
+        },
+        {
+          "key": "10ccd8a5-e0ba-4d1d-8f84-cdea7f05a315",
+          "label": "Concept",
+          "name": "Diagramas de clase de UML"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0525",
+          "entry": "1INF50-008",
+          "label": "Patrones de interacción con base de datos"
+        }
+      ]
+    },
+    {
+      "case": "CP-11",
+      "syllabus": "1INF37",
+      "run_id": 12,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 5,
+      "related_hits": 1,
+      "items": 81,
+      "hits": 68,
+      "mandatory_notions": 80,
+      "recovered": 68,
+      "type_matches": 65,
+      "false_positives": 13,
+      "precision": 0.8395061728395061,
+      "recall": 0.85,
+      "f1": 0.84472049689441,
+      "type_agreement": 0.9558823529411765,
+      "precision_with_related": 0.8023255813953488,
+      "most_hits": 68,
+      "false_positive_items": [
+        {
+          "key": "ec89a6b2-b11f-46ca-a792-00997de525eb",
+          "label": "Concept",
+          "name": "Modelo de ciclo de vida evolutivo"
+        },
+        {
+          "key": "ce0bc7cb-c675-4667-a81e-f78c02a923c1",
+          "label": "Concept",
+          "name": "Modelo de ciclo de vida incremental"
+        },
+        {
+          "key": "e33be14e-994c-4875-ad3e-8463d8c07d39",
+          "label": "Concept",
+          "name": "Propuestas metodológicas"
+        },
+        {
+          "key": "10459d22-5e64-4462-8f1b-df43fb12c069",
+          "label": "Concept",
+          "name": "Modelos de calidad de proceso software"
+        },
+        {
+          "key": "5135cfb1-a740-4894-957f-a00617b4cf45",
+          "label": "Concept",
+          "name": "Estándares de calidad de proceso software"
+        },
+        {
+          "key": "1bd755ff-74aa-426a-84f8-a8c540b9aed8",
+          "label": "Concept",
+          "name": "Modelos de calidad de producto software"
+        },
+        {
+          "key": "7b89cf2e-06ca-42cb-bfda-31595e9dee4f",
+          "label": "Concept",
+          "name": "Estándares de calidad de producto software"
+        },
+        {
+          "key": "4c5ca777-3799-4f38-adc7-5575c40fd1fd",
+          "label": "Concept",
+          "name": "Requerimientos de calidad"
+        },
+        {
+          "key": "af5f0714-14fc-4af6-bd12-40fe32904e5c",
+          "label": "Concept",
+          "name": "Inicio del proyecto"
+        },
+        {
+          "key": "e7b18660-5ea6-40ed-ad22-7a131dd54c08",
+          "label": "Concept",
+          "name": "Definición del alcance"
+        },
+        {
+          "key": "ef095409-65d6-4258-8219-b3eea791e61e",
+          "label": "Concept",
+          "name": "Revisión del proyecto"
+        },
+        {
+          "key": "fa100875-7da5-4b59-b5db-7177ae891c53",
+          "label": "Concept",
+          "name": "Evaluación del proyecto"
+        },
+        {
+          "key": "be86cacd-7b30-4c18-a958-57cf8aef8fb0",
+          "label": "Concept",
+          "name": "Gestión de proyectos"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "c83c78cb-a4bd-4304-8339-465b4b5c74ec",
+          "label": "Concept",
+          "name": "Construcción del software"
+        },
+        {
+          "key": "9a11623a-d8f9-4db0-8f2b-0769a263c456",
+          "label": "Concept",
+          "name": "Requisitos de software"
+        },
+        {
+          "key": "8743395a-8f54-4949-820a-10162f519f83",
+          "label": "Concept",
+          "name": "Atributos de calidad"
+        },
+        {
+          "key": "95b726fc-4c50-413a-990c-9419a6f89426",
+          "label": "Concept",
+          "name": "Despliegue"
+        },
+        {
+          "key": "376d6a64-3beb-45e8-8387-44049b3288ac",
+          "label": "Concept",
+          "name": "Modelos de ciclo de vida del Desarrollo de Software"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0562",
+          "entry": "1INF37-025",
+          "label": "Modelo evolutivo"
+        },
+        {
+          "global_id": "G-0563",
+          "entry": "1INF37-026",
+          "label": "Modelo incremental"
+        },
+        {
+          "global_id": "G-0573",
+          "entry": "1INF37-037",
+          "label": "Verificación de software"
+        },
+        {
+          "global_id": "G-0574",
+          "entry": "1INF37-038",
+          "label": "Validación de software"
+        },
+        {
+          "global_id": "G-0531",
+          "entry": "1INF37-039",
+          "label": "Pruebas de software"
+        },
+        {
+          "global_id": "G-0590",
+          "entry": "1INF37-057",
+          "label": "ISO 25000"
+        },
+        {
+          "global_id": "G-0594",
+          "entry": "1INF37-061",
+          "label": "Requisitos de calidad de producto"
+        },
+        {
+          "global_id": "G-0597",
+          "entry": "1INF37-065",
+          "label": "Consideraciones técnicas del despliegue"
+        },
+        {
+          "global_id": "G-0598",
+          "entry": "1INF37-066",
+          "label": "Consideraciones procedimentales del despliegue"
+        },
+        {
+          "global_id": "G-0603",
+          "entry": "1INF37-072",
+          "label": "Aspectos clave en mantenimiento del software"
+        },
+        {
+          "global_id": "G-0609",
+          "entry": "1INF37-078",
+          "label": "Inicio y definición del alcance"
+        },
+        {
+          "global_id": "G-0612",
+          "entry": "1INF37-081",
+          "label": "Revisión y evaluación"
+        }
+      ]
+    },
+    {
+      "case": "CP-12",
+      "syllabus": "1INF54",
+      "run_id": 13,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 4,
+      "related_hits": 0,
+      "items": 23,
+      "hits": 19,
+      "mandatory_notions": 28,
+      "recovered": 18,
+      "type_matches": 17,
+      "false_positives": 4,
+      "precision": 0.8260869565217391,
+      "recall": 0.6428571428571429,
+      "f1": 0.7230443974630022,
+      "type_agreement": 0.8947368421052632,
+      "precision_with_related": 0.7037037037037037,
+      "most_hits": 19,
+      "false_positive_items": [
+        {
+          "key": "9e639a30-930e-4675-be7f-18aa03b9cc14",
+          "label": "Concept",
+          "name": "Verificación"
+        },
+        {
+          "key": "82a2583c-5139-4a74-a8f1-82a7b70f5b1c",
+          "label": "Concept",
+          "name": "Validación"
+        },
+        {
+          "key": "510f3c46-af0f-4852-beb0-b87c1907a330",
+          "label": "Concept",
+          "name": "Algoritmos"
+        },
+        {
+          "key": "a3562d17-acfe-4981-8fce-88f64afc0ffb",
+          "label": "Concept",
+          "name": "Diseño de soluciones informáticas"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "9a11623a-d8f9-4db0-8f2b-0769a263c456",
+          "label": "Concept",
+          "name": "Requisitos de software"
+        },
+        {
+          "key": "4606b1c5-de69-4bbc-a4ea-e263ac62b401",
+          "label": "Concept",
+          "name": "Componentes"
+        },
+        {
+          "key": "c83c78cb-a4bd-4304-8339-465b4b5c74ec",
+          "label": "Concept",
+          "name": "Construcción del software"
+        },
+        {
+          "key": "ce618ca9-3122-4b83-a0fb-0c451c9c900b",
+          "label": "Concept",
+          "name": "Procesos de la gestión de configuración"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0618",
+          "entry": "1INF54-002",
+          "label": "Definición del alcance del proyecto"
+        },
+        {
+          "global_id": "G-0623",
+          "entry": "1INF54-007",
+          "label": "Técnicas de análisis"
+        },
+        {
+          "global_id": "G-0624",
+          "entry": "1INF54-008",
+          "label": "Revisión de productos"
+        },
+        {
+          "global_id": "G-0625",
+          "entry": "1INF54-009",
+          "label": "Comparación de productos"
+        },
+        {
+          "global_id": "G-0626",
+          "entry": "1INF54-011",
+          "label": "Lista de exigencias"
+        },
+        {
+          "global_id": "G-0630",
+          "entry": "1INF54-016",
+          "label": "Revisión técnica o documental de soluciones similares"
+        },
+        {
+          "global_id": "G-0217",
+          "entry": "1INF54-018",
+          "label": "Verificación y validación"
+        },
+        {
+          "global_id": "G-0640",
+          "entry": "1INF54-030",
+          "label": "Catálogo de pruebas de aceptación"
+        },
+        {
+          "global_id": "G-0641",
+          "entry": "1INF54-032",
+          "label": "Reporte de ejecución de pruebas"
+        },
+        {
+          "global_id": "G-0643",
+          "entry": "1INF54-034",
+          "label": "Producto empaquetado"
+        }
+      ]
+    },
+    {
+      "case": "CP-13",
+      "syllabus": "1INF47",
+      "run_id": 14,
+      "status": "completed",
+      "model": "gpt-6.1-sol",
+      "prompt_version": "501988180f16",
+      "attempts": 1,
+      "accepted": true,
+      "related": 4,
+      "related_hits": 1,
+      "items": 15,
+      "hits": 12,
+      "mandatory_notions": 17,
+      "recovered": 11,
+      "type_matches": 12,
+      "false_positives": 3,
+      "precision": 0.8,
+      "recall": 0.6470588235294118,
+      "f1": 0.7154471544715447,
+      "type_agreement": 1.0,
+      "precision_with_related": 0.6842105263157895,
+      "most_hits": 12,
+      "false_positive_items": [
+        {
+          "key": "52343325-dedb-4b89-9cc9-3ab7a530815e",
+          "label": "Concept",
+          "name": "Modelos de análisis de sistemas"
+        },
+        {
+          "key": "8f021cb9-0a07-4135-9f5c-9db8209f073e",
+          "label": "Concept",
+          "name": "Modelos de diseño de sistemas"
+        },
+        {
+          "key": "8fcc9e9e-f2c1-421e-aa73-dce83e3fbfac",
+          "label": "Concept",
+          "name": "Evaluación del diseño de interfaces de usuario"
+        }
+      ],
+      "related_items": [
+        {
+          "key": "9a11623a-d8f9-4db0-8f2b-0769a263c456",
+          "label": "Concept",
+          "name": "Requisitos de software"
+        },
+        {
+          "key": "2ed513a6-4dad-4cf1-ae76-b110f4cfc7d5",
+          "label": "Concept",
+          "name": "Programación"
+        },
+        {
+          "key": "36bec549-bc6d-43da-99ee-c6bbeecc8244",
+          "label": "Concept",
+          "name": "Diseño de interfaz gráfica"
+        },
+        {
+          "key": "8743395a-8f54-4949-820a-10162f519f83",
+          "label": "Concept",
+          "name": "Atributos de calidad"
+        }
+      ],
+      "missed_notions": [
+        {
+          "global_id": "G-0647",
+          "entry": "1INF47-004",
+          "label": "modelos de análisis y diseño de sistemas"
+        },
+        {
+          "global_id": "G-0648",
+          "entry": "1INF47-005",
+          "label": "análisis y diseño de sistemas"
+        },
+        {
+          "global_id": "G-0197",
+          "entry": "1INF47-006",
+          "label": "diseño de interfaces de usuario"
+        },
+        {
+          "global_id": "G-0652",
+          "entry": "1INF47-011",
+          "label": "modelos para la fase de análisis"
+        },
+        {
+          "global_id": "G-0653",
+          "entry": "1INF47-012",
+          "label": "fase de análisis"
+        },
+        {
+          "global_id": "G-0656",
+          "entry": "1INF47-017",
+          "label": "plan de implantación"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "all": {
+      "cases": 13,
+      "related": 48,
+      "related_hits": 3,
+      "items": 640,
+      "hits": 533,
+      "mandatory_notions": 624,
+      "recovered": 531,
+      "type_matches": 517,
+      "false_positives": 107,
+      "precision": 0.8328125,
+      "recall": 0.8509615384615384,
+      "f1": 0.8417892069383967,
+      "type_agreement": 0.9699812382739212,
+      "precision_with_related": 0.7790697674418605
+    },
+    "tuning": {
+      "cases": 11,
+      "related": 41,
+      "related_hits": 2,
+      "items": 522,
+      "hits": 440,
+      "mandatory_notions": 515,
+      "recovered": 438,
+      "type_matches": 427,
+      "false_positives": 82,
+      "precision": 0.842911877394636,
+      "recall": 0.8504854368932039,
+      "f1": 0.8466817211292605,
+      "type_agreement": 0.9704545454545455,
+      "precision_with_related": 0.7850799289520426
+    },
+    "held_out": {
+      "cases": 2,
+      "related": 7,
+      "related_hits": 1,
+      "items": 118,
+      "hits": 93,
+      "mandatory_notions": 109,
+      "recovered": 93,
+      "type_matches": 90,
+      "false_positives": 25,
+      "precision": 0.788135593220339,
+      "recall": 0.8532110091743119,
+      "f1": 0.8193832599118943,
+      "type_agreement": 0.967741935483871,
+      "precision_with_related": 0.752
+    }
+  },
+  "rejected_attempts": [],
+  "fusion": {
+    "nodes_with_hits": 513,
+    "duplicated_notions": 1,
+    "surplus_nodes": 1,
+    "split_notions": 9,
+    "wrong_fusions": 0,
+    "excepted_fusions": 0,
+    "duplicated_notions_with_held_out": 0,
+    "wrong_fusions_with_held_out": 0,
+    "duplicates": [
+      {
+        "global_id": "G-0198",
+        "label": "Concept",
+        "nodes": [
+          {
+            "key": "e505da36-7f50-4adc-8f92-2c42dcf01aeb",
+            "label": "Concept",
+            "name": "Prototipado (UI Design)"
+          },
+          {
+            "key": "ae381ee0-c6e9-4363-bef7-047df75cec34",
+            "label": "Concept",
+            "name": "Prototipado de solución"
+          }
+        ],
+        "held_out": false
+      }
+    ],
+    "split": [
+      {
+        "global_id": "G-0001",
+        "nodes": [
+          {
+            "key": "0b5dd8cc-56fb-48fe-aa8f-695af96f51b8",
+            "label": "Topic",
+            "name": "FUNCIONES"
+          },
+          {
+            "key": "795a8bb9-fb12-41e2-aac8-05172e50fcdf",
+            "label": "Concept",
+            "name": "Funciones"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0039",
+        "nodes": [
+          {
+            "key": "7ac8782f-979e-478f-92e2-b58c6374fbb2",
+            "label": "Topic",
+            "name": "HERENCIA"
+          },
+          {
+            "key": "8bdc71f0-bfa6-45b7-a478-e32a6fe6a405",
+            "label": "Concept",
+            "name": "Herencia"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0062",
+        "nodes": [
+          {
+            "key": "b9bc0c77-498f-4cc2-9f24-f389cfc45001",
+            "label": "Topic",
+            "name": "LENGUAJE DE PROGRAMACIÓN JAVA"
+          },
+          {
+            "key": "6303f1ca-aa7d-47b7-8a59-5ce5886e683c",
+            "label": "Concept",
+            "name": "Java"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0364",
+        "nodes": [
+          {
+            "key": "95b726fc-4c50-413a-990c-9419a6f89426",
+            "label": "Concept",
+            "name": "Despliegue"
+          },
+          {
+            "key": "0741bb92-4b95-4226-b850-38a002d6a12c",
+            "label": "Topic",
+            "name": "DESPLIEGUE DEL SOFTWARE"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0380",
+        "nodes": [
+          {
+            "key": "7830b9d9-76fb-46c7-9c9c-953f183f101b",
+            "label": "Topic",
+            "name": "ARQUITECTURA DE SOFTWARE"
+          },
+          {
+            "key": "f4a452b4-068d-44ae-a26c-23320a943554",
+            "label": "Concept",
+            "name": "Arquitectura del software"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0425",
+        "nodes": [
+          {
+            "key": "9609c33b-a463-4e0d-a7e9-1eb679b7a716",
+            "label": "Topic",
+            "name": "HEURÍSTICAS"
+          },
+          {
+            "key": "6f408090-183b-4329-8a65-5d54b142e67e",
+            "label": "Concept",
+            "name": "Métodos heurísticos"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0531",
+        "nodes": [
+          {
+            "key": "3591cb44-7274-48eb-9299-178ee3ae86df",
+            "label": "Topic",
+            "name": "PRUEBAS DE SOFTWARE"
+          },
+          {
+            "key": "43000cc4-35e9-4ff2-97b9-0aa1e2102399",
+            "label": "Concept",
+            "name": "Pruebas de software"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0535",
+        "nodes": [
+          {
+            "key": "7805f570-4f9e-4a04-9c22-161469c019de",
+            "label": "Concept",
+            "name": "Desarrollo Ágil"
+          },
+          {
+            "key": "c3d08087-2d81-4300-9ae5-14f32169a4c6",
+            "label": "Topic",
+            "name": "DESARROLLO DE SOFTWARE AGIL"
+          }
+        ]
+      },
+      {
+        "global_id": "G-0541",
+        "nodes": [
+          {
+            "key": "a6b97385-75b9-412b-9249-95456536c4cb",
+            "label": "Topic",
+            "name": "CALIDAD DE PRODUCTO SOFTWARE"
+          },
+          {
+            "key": "ad0a8fea-21e5-48b7-a6aa-18c9b3c82d17",
+            "label": "Concept",
+            "name": "Calidad del producto software"
+          }
+        ]
+      }
+    ],
+    "wrong": [],
+    "excepted": []
+  },
+  "warnings": []
+}
